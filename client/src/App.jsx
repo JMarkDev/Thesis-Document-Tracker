@@ -1,9 +1,13 @@
 import "./App.css";
+import { Routes, Route, useNavigate } from "react-router-dom";
+import PageNotFound from "./pages/PageNotFound";
 
 function App() {
   return (
     <>
-      <h1 className="text-red-500">Document tracker</h1>
+      <Routes>
+        <Route path="/*" element={<PageNotFound />} />
+      </Routes>
     </>
   );
 }
