@@ -12,7 +12,7 @@ const Deadline = sequelize.define("deadlines", {
     allowNull: false,
   },
   documentType: {
-    type: DataTypes.STRING(255),
+    type: DataTypes.STRING,
     allowNull: true,
   },
   esuCampus: {
