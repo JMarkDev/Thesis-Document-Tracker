@@ -30,10 +30,14 @@ const User = sequelize.define(
       allowNull: false,
     },
     designation: {
-      type: DataTypes.STRING(100),
+      type: DataTypes.JSON,
       allowNull: true,
     },
     esuCampus: {
+      type: DataTypes.STRING(250),
+      allowNull: true,
+    },
+    officeName: {
       type: DataTypes.STRING(250),
       allowNull: true,
     },
@@ -43,6 +47,10 @@ const User = sequelize.define(
     },
     password: {
       type: DataTypes.STRING(250),
+      allowNull: false,
+    },
+    status: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
     createdAt: {

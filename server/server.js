@@ -3,10 +3,16 @@ const database = require("./src/configs/database");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const { Server } = require("socket.io");
-const app = express();
 const http = require("http");
-const PORT = process.env.PORT || 5000;
 const cors = require("cors");
+
+const verifyToken = require("./src/middlewares/verifyToken");
+const refreshToken = require("./src/middlewares/refreshToken");
+const authRoute = require("./src/routes/authRoute");
+const userRoute = require("./src/routes/userRoute");
+
+const app = express();
+const PORT = process.env.PORT || 5000;
 
 // Middleware setup
 app.use(cors());
@@ -20,6 +26,23 @@ app.get("/uploads/:filename", (req, res) => {
   const filename = req.params.filename;
   res.sendFile(`${__dirname}/uploads/${filename}`);
 });
+
+// public routes no token required
+app.use("/auth", authRoute);
+
+// refresh token route
+app.use("/refresh", refreshToken, async (req, res) => {
+  return res.json({ message: "refresh" });
+});
+
+//protected route
+app.use("/protected", verifyToken, async (req, res) => {
+  return res.json({
+    message: "You are authorized to access this protected resources.",
+  });
+});
+
+app.use("/user", userRoute);
 
 // Server setup
 const server = http.createServer(app);
@@ -36,20 +59,12 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
   console.log("User connected", socket.id);
 
-  // handle event when client disconnects
   socket.on("disconnect", () => {
     console.log("User disconnected");
   });
-
-  // socket.on("send_notification", (data) => {
-  //   socket.broadcast.emit("receive_notification", data);
-  // });
-
-  // socket.on("send_attendee_notification", (data) => {
-  //   socket.broadcast.emit("receive_attendee_notification", data);
-  // });
 });
 
+// if (process.env.DEVELOPMENT !== "test") {
 server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
   database.authenticate();
@@ -62,5 +77,6 @@ server.listen(PORT, () => {
       console.error("Error connecting to the database: ", error);
     });
 });
+// }
 
 module.exports = app;

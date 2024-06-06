@@ -33,7 +33,6 @@ const sendOTP = async ({ email, subject, message, duration = 1 }) => {
             <p style="font-size: 16px; color: #555; margin-bottom: 10px;">Please note that this OTP is valid <b>for ${duration} minute(s)</b>.</p>
         
             <p style="font-size: 16px; color: #777; margin-top: 20px;">For security reasons, please do not share your OTP with anyone.</p>
-        
             `,
     };
 
