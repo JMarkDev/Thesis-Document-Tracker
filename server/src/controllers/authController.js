@@ -5,6 +5,8 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const sequelize = require("../configs/database");
 const saltsRounds = 10;
+const { createdAt } = require("../utils/formattedTime");
+require("dotenv").config();
 
 const alreadyRegistered = async (email) => {
   return await userModel.findOne({
@@ -27,7 +29,6 @@ const handleRegister = async (req, res) => {
     officeName,
     role,
     password,
-    status,
   } = req.body;
 
   try {
@@ -58,8 +59,8 @@ const handleRegister = async (req, res) => {
         officeName: officeName,
         role: role,
         password: hashPassword,
-        status: status,
-        createdAt: new Date(),
+        status: "pending",
+        createdAt: createdAt,
       });
 
       return res.status(201).json({

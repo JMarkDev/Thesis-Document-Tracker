@@ -30,7 +30,6 @@ describe("POST /auth/register", () => {
       officeName: "",
       role: "faculty",
       password: "password",
-      status: "pending",
     };
 
     userModel.create.mockResolvedValue(mockNewUser);

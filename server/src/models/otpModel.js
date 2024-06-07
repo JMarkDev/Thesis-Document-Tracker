@@ -1,5 +1,6 @@
 const sequelize = require("../configs/database");
 const { DataTypes } = require("sequelize");
+const createdAt = require("../utils/formattedTime");
 
 const Otp = sequelize.define(
   "otp",
@@ -20,7 +21,7 @@ const Otp = sequelize.define(
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
-      defaultValue: new Date(),
+      defaultValue: DataTypes.NOW,
     },
     expiresAt: {
       type: DataTypes.DATE,
@@ -30,6 +31,7 @@ const Otp = sequelize.define(
   {
     tableName: "otp",
     freezeTableName: true,
+    timestamps: false,
   }
 );
 

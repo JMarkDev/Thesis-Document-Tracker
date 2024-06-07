@@ -1,4 +1,6 @@
 const jwt = require("jsonwebtoken");
+require("dotenv").config();
+
 const refreshToken = (req, res, next) => {
   try {
     const refreshToken = req.cookies.refreshToken;
@@ -6,7 +8,7 @@ const refreshToken = (req, res, next) => {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    jwt.verify(refreshToken, "refresh_token_secret", (err, decoded) => {
+    jwt.verify(refreshToken, process.env.REFRESH_TOKEN, (err, decoded) => {
       if (err) {
         return res.status(401).json({ error: "Unauthorized" });
       }
