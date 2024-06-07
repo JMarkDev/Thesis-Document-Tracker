@@ -1,21 +1,11 @@
 const userModel = require("../models/userModel");
 const otpController = require("../controllers/otpController");
-const date = require("date-and-time");
-const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const sequelize = require("../configs/database");
 const saltsRounds = 10;
 const { createdAt } = require("../utils/formattedTime");
+const { Sequelize } = require("sequelize");
 require("dotenv").config();
-
-const alreadyRegistered = async (email) => {
-  return await userModel.findOne({
-    where: {
-      email: email,
-      status: "verified",
-    },
-  });
-};
+const fs = require("fs");
 
 const handleRegister = async (req, res) => {
   const {
@@ -32,7 +22,12 @@ const handleRegister = async (req, res) => {
   } = req.body;
 
   try {
-    const verifyUser = await alreadyRegistered(email);
+    const verifyUser = await userModel.findOne({
+      where: {
+        email,
+        [Sequelize.Op.or]: [{ status: "verified" }, { status: "approved" }],
+      },
+    });
     if (verifyUser) {
       return res.status(400).json({ message: "User already exists" });
     } else {
@@ -46,10 +41,25 @@ const handleRegister = async (req, res) => {
       // send OTP to email
       await otpController.postOTP(email);
 
+      // upload image
+      let newFileName = null;
+      if (req.file) {
+        let filetype = req.file.mimetype.split("/")[1];
+        newFileName = req.file.filename + "." + filetype;
+        fs.rename(
+          `./uploads/${req.file.filename}`,
+          `./uploads/${newFileName}`,
+          async (err) => {
+            if (err) throw err;
+            console.log("uploaded successfully");
+          }
+        );
+      }
+
       const hashPassword = await bcrypt.hash(password, saltsRounds);
 
       await userModel.create({
-        image: image,
+        image: newFileName ? `/uploads/${newFileName}` : null,
         firstName: firstName,
         lastName: lastName,
         middleInitial: middleInitial,
@@ -69,6 +79,7 @@ const handleRegister = async (req, res) => {
       });
     }
   } catch (error) {
+    console.error(error);
     return res.status(500).json({ Error: "Register error in server" });
   }
 };
@@ -77,11 +88,10 @@ const handleLogin = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // const verifyUser = await alreadyRegistered(email);
     const user = await userModel.findOne({
       where: {
         email: email,
-        status: "verified",
+        [Sequelize.Op.or]: [{ status: "verified" }, { status: "approved" }],
       },
     });
 
@@ -89,45 +99,27 @@ const handleLogin = async (req, res) => {
       return res.status(400).json({ message: "User not found" });
     }
 
+    //Check if the user is a faculty and their account is approved
+
+    if (user.role === "faculty" && user.status === "verified") {
+      return res.status(400).json({
+        message:
+          "Please wait for your account to be approved by the registrar.",
+      });
+    }
+
     const matchPassword = await bcrypt.compare(password, user.password);
 
     if (matchPassword) {
-      // const token = jwt.sign({ email: email }, process.env.SECRET_KEY, {
-      //   expiresIn: "30m",
-      // });
-
-      const accessToken = jwt.sign({ email: email }, process.env.ACCESS_TOKEN, {
-        expiresIn: "30m",
-      });
-
-      const refreshToken = jwt.sign(
-        { email: email },
-        process.env.REFRESH_TOKEN,
-        {
-          expiresIn: "30m",
-        }
-      );
-
-      // Set a secure HTTP-only cookie
-      res.cookie("accessToken", accessToken, {
-        httpOnly: true,
-        maxAge: 30 * 60 * 1000, // 30 minutes
-      });
-
-      // Set a secure HTTP-only cookie
-      res.cookie("refreshToken", refreshToken, {
-        httpOnly: true,
-        maxAge: 30 * 60 * 1000, // 30 minutes
-      });
-
-      return res.status(200).json({
+      await otpController.postOTP(email);
+      return res.status(201).json({
         status: "success",
-        message: "Login Successfully!",
+        message: `Verification OTP sent to ${email}`,
       });
     } else {
       return res.status(400).json({
         status: "error",
-        message: "Invalid email or password",
+        message: "Invalid password",
       });
     }
   } catch (error) {
