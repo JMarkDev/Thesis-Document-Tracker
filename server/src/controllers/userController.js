@@ -18,7 +18,7 @@ const approveFaculty = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const approvedFaculty = await userModel.update(
+    await userModel.update(
       {
         status: "approved",
         updatedAt: createdAt,
@@ -31,9 +31,8 @@ const approveFaculty = async (req, res) => {
     );
 
     return res.status(200).json({
-      approvedFaculty,
       status: "success",
-      message: "Approved Successfully",
+      message: "Account approved successfully",
     });
   } catch (error) {
     return res.status(500).json({ Error: "Approved faculty error in server" });

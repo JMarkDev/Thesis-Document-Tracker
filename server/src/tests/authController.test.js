@@ -23,7 +23,7 @@ describe("POST authentication", () => {
       firstName: "WMSU-ESU",
       lastName: "Document Tracker",
       middleInitial: "A",
-      email: "jmseroy@gmail.com",
+      email: "test@gmail.com",
       birthDate: "10/10/1990",
       contactNumber: "09123456789",
       designation: "Intructor",
@@ -76,6 +76,7 @@ describe("POST authentication", () => {
       message: `Verification OTP sent to ${loginUser.email}`,
     });
 
+    // its been called 2 times cause check if the user exists and then again to verify the password.
     expect(userModel.findOne).toHaveBeenCalledTimes(2); // Check if findOnce was called
   }, 10000);
 });

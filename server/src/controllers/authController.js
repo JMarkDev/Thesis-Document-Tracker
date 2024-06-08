@@ -104,11 +104,9 @@ const handleLogin = async (req, res) => {
     }
 
     //Check if the user is a faculty and their account is approved
-
     if (user.role === "faculty" && user.status === "verified") {
       return res.status(400).json({
-        message:
-          "Please wait for your account to be approved by the registrar.",
+        message: "Please wait for the registrar to approve your account.",
       });
     }
 
