@@ -32,4 +32,5 @@ const sendEmail = async (mailOptions) => {
 
 module.exports = {
   sendEmail,
+  closeTransporter: () => transporter.close(), // Add this function to close the transporter
 };

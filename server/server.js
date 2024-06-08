@@ -64,19 +64,19 @@ io.on("connection", (socket) => {
   });
 });
 
-// if (process.env.DEVELOPMENT !== "test") {
-server.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-  database.authenticate();
-  database
-    .sync({ force: true })
-    .then(() => {
-      console.log("Database connected successfully");
-    })
-    .catch((error) => {
-      console.error("Error connecting to the database: ", error);
-    });
-});
-// }
+if (process.env.DEVELOPMENT !== "test") {
+  server.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+    database.authenticate();
+    database
+      .sync({ force: false })
+      .then(() => {
+        console.log("Database connected successfully");
+      })
+      .catch((error) => {
+        console.error("Error connecting to the database: ", error);
+      });
+  });
+}
 
 module.exports = app;

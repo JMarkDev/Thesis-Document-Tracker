@@ -100,13 +100,13 @@ const handleLogin = async (req, res) => {
     });
 
     if (!user) {
-      return res.status(400).json({ message: "User not found" });
+      return res.status(404).json({ message: "User not found" });
     }
 
     //Check if the user is a faculty and their account is approved
 
     if (user.role === "faculty" && user.status === "verified") {
-      return res.status(400).json({
+      return res.status(404).json({
         message:
           "Please wait for your account to be approved by the registrar.",
       });
@@ -116,12 +116,12 @@ const handleLogin = async (req, res) => {
 
     if (matchPassword) {
       await otpController.postOTP(email);
-      return res.status(201).json({
+      return res.status(200).json({
         status: "success",
         message: `Verification OTP sent to ${email}`,
       });
     } else {
-      return res.status(400).json({
+      return res.status(404).json({
         status: "error",
         message: "Invalid password",
       });
