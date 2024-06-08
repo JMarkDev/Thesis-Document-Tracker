@@ -25,6 +25,8 @@ describe("POST /auth/register", () => {
       lastName: "Soy",
       middleInitial: "M",
       email: "jy@gmail.com",
+      birthDate: "10/10/1990",
+      contactNumber: "09123456789",
       designation: "Intructor",
       esuCampus: "WMSU-ESU PAGADIAN CAMPUS",
       officeName: "",
@@ -41,7 +43,7 @@ describe("POST /auth/register", () => {
 
     expect(response.body).toEqual({
       status: "success",
-      message: `Verification OTP send to ${mockNewUser.email}`,
+      message: `Verification OTP sent to ${mockNewUser.email}`,
     });
 
     // Check if userModel.create was called once

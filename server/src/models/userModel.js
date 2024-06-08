@@ -29,6 +29,14 @@ const User = sequelize.define(
       type: DataTypes.STRING(100),
       allowNull: false,
     },
+    birthDate: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    contactNumber: {
+      type: DataTypes.STRING(20),
+      allowNull: false,
+    },
     designation: {
       type: DataTypes.JSON,
       allowNull: true,

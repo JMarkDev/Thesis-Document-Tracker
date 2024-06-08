@@ -20,7 +20,6 @@ const sendOTP = async ({ email, subject, message, duration = 1 }) => {
 
     //generate pin
     const generatedOtp = await generatedOTP();
-    console.log(generatedOTP);
 
     //send email
     const mailOptions = {

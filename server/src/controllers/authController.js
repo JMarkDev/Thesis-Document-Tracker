@@ -14,6 +14,8 @@ const handleRegister = async (req, res) => {
     lastName,
     middleInitial,
     email,
+    birthDate,
+    contactNumber,
     designation,
     esuCampus,
     officeName,
@@ -64,6 +66,8 @@ const handleRegister = async (req, res) => {
         lastName: lastName,
         middleInitial: middleInitial,
         email: email,
+        birthDate: birthDate,
+        contactNumber: contactNumber,
         designation: designation,
         esuCampus: esuCampus,
         officeName: officeName,
@@ -123,6 +127,7 @@ const handleLogin = async (req, res) => {
       });
     }
   } catch (error) {
+    console.log(error);
     return res.status(500).json({ Error: "Login error in server" });
   }
 };
