@@ -77,6 +77,5 @@ describe("POST authentication", () => {
     });
 
     expect(userModel.findOne).toHaveBeenCalledTimes(2); // Check if findOnce was called
-    console.log(userModel.findOne.mock.calls);
   }, 10000);
 });
