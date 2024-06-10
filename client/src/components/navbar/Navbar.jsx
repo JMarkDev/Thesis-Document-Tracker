@@ -18,7 +18,7 @@ const Navbar = () => {
             <li>
               <Link
                 to=""
-                className="px-4 py-[8px] bg-yellow-600 rounded-lg hover:bg-yellow-700"
+                className="px-4 py-[8px] bg-yellow rounded-lg hover:bg-yellow_hover"
               >
                 Login
               </Link>
@@ -26,7 +26,7 @@ const Navbar = () => {
             <li>
               <Link
                 to=""
-                className="px-4 py-[8px] bg-yellow-600 rounded-lg hover:bg-yellow-700"
+                className="px-4 py-[8px]  bg-yellow rounded-lg hover:bg-yellow_hover"
               >
                 Register
               </Link>

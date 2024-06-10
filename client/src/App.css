@@ -8,3 +8,19 @@
   box-sizing: border-box;
   font-family: sans-serif, inter, roboto;
 }
+
+.text-wmsu {
+  color: #d4220d;
+  text-shadow: 2px 2px 0 #ffcc00, -2px -2px 0 #ffcc00, -2px 2px 0 #ffcc00,
+    2px -2px 0 #ffcc00, 2px 0 0 #ffcc00, 0 2px 0 #ffcc00, -2px 0 0 #ffcc00,
+    0 -2px 0 #ffcc00;
+}
+
+.text-document-tracker {
+  color: #8a7665;
+}
+
+.filter-orange {
+  filter: brightness(0) saturate(100%) invert(53%) sepia(80%) saturate(767%)
+    hue-rotate(340deg) brightness(94%) contrast(98%);
+}
