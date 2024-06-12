@@ -8,6 +8,7 @@ export default {
     extend: {
       colors: {
         main: "#aa0022",
+        main_hover: "#8a0620",
         yellow: "#de8f2f",
         yellow_hover: "#c77b1e",
       },

@@ -10,9 +10,7 @@ function App() {
     <>
       <Routes>
         <Route path="/" element={<Homepage />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-
+        <Route path="/home" element={<Homepage />} />
         <Route path="/*" element={<PageNotFound />} />
       </Routes>
     </>

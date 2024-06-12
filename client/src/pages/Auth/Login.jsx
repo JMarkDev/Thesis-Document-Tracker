@@ -11,9 +11,11 @@ const Login = ({ modal, closeModal, openRegister }) => {
           className="fixed inset-0 z-50 px-5 flex items-center justify-center w-full h-full bg-gray-800 bg-opacity-50 font-normal"
         >
           <div className="relative w-full max-w-lg  max-h-full">
-            <div className="relative text-gray-800 bg-white rounded-lg shadow ">
+            <div className="relative text-gray-800 bg-white rounded-xl shadow-lg ">
               <div className="flex items-center justify-center rounded-t">
-                <h1 className="md:text-2xl font-bold text-lg p-2">Sign In</h1>
+                <h1 className="md:text-2xl font-bold text-lg p-4">
+                  Sign in your account
+                </h1>
                 <button
                   type="button"
                   className="absolute right-2 top-2 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-6 h-6 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
@@ -40,8 +42,8 @@ const Login = ({ modal, closeModal, openRegister }) => {
               <div className="p-6 space-y-4 text-sm text-[#221f1f]">
                 <form action="">
                   <label
-                    for="website-admin"
-                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    htmlFor="email"
+                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                   >
                     Email
                   </label>
@@ -59,15 +61,15 @@ const Login = ({ modal, closeModal, openRegister }) => {
                     </span>
                     <input
                       type="text"
-                      id="website-admin"
-                      class="rounded-none rounded-e-lg bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-100 block flex-1 min-w-0 w-full text-sm p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                      placeholder="Bonnie Green"
+                      id="email"
+                      className="rounded-none rounded-e-lg bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-100 block flex-1 min-w-0 w-full text-sm p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                      placeholder="Enter your email"
                     />
                   </div>
 
                   <label
                     htmlFor="password"
-                    className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    className="block mb-2 mt-4 text-sm font-medium text-gray-900 dark:text-white"
                   >
                     Password
                   </label>
@@ -98,7 +100,7 @@ const Login = ({ modal, closeModal, openRegister }) => {
                   </div>
                   <button
                     type="submit"
-                    className="w-full mt-6 p-2 bg-main text-[#fff] text-lg rounded-lg"
+                    className="w-full mt-6 p-2 bg-main hover:bg-main_hover text-[#fff] md:text-lg text-sm rounded-lg"
                   >
                     Login
                   </button>

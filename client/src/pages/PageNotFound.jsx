@@ -7,7 +7,7 @@ function PageNotFound() {
   const goBack = () => {
     const userId = Cookies.get("userId");
     if (!userId) {
-      navigate("/login");
+      navigate("/home");
     } else {
       window.history.back();
     }
