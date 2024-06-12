@@ -49,7 +49,7 @@ const Homepage = () => {
             <input
               type="text"
               placeholder="Enter Tracking Number"
-              className="p-2 md:text-lg text-sm w-full rounded-lg border-2 outline-none border-[#8a7665] focus:border-[#c0834e] shadow-lg"
+              className="p-2 md:text-lg text-sm w-full rounded-lg border-2 outline-none border-[#8a7665] focus:outline-none focus:ring-0 focus:border-yellow shadow-lg"
             />
             <button className="absolute right-0 text-2xl bg-yellow hover:bg-yellow_hover md:h-12 p-2 rounded-lg">
               <IoSearchSharp />

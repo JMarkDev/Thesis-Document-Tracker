@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import Logo from "../../assets/images/document-tracking-3-768113.png";
-import { Link } from "react-router-dom";
+import Logo from "../../assets/images/logo with word (1).png";
 import Login from "../../pages/Auth/Login";
 import Register from "../../pages/Auth/Register";
 
@@ -28,11 +27,12 @@ const Navbar = () => {
   return (
     <div className="h-16 w-full flex items-center bg-main">
       <div className="mx-5 flex justify-between w-full">
-        <div className="flex items-center gap-2">
-          <img src={Logo} alt="logo" className="h-12" />
-          <h1 className="text-[#ffffff] font-bold md:text-xl text-md">
-            Document Tracker
-          </h1>
+        <div className="flex items-center gap-2 ">
+          <img src={Logo} alt="logo" className="h-8" />
+          {/* <div className="text-white font-bold leading-4 text-center">
+            <p className="text-lg">WMSU - ESU</p>
+            <p className="text-sm text-yellow">Document Tracker</p>
+          </div> */}
         </div>
 
         <div className="flex items-center">
