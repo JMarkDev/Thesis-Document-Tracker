@@ -8,7 +8,7 @@ const LayoutAdmin = ({ children }) => {
       <div className="w-64">
         <Sidebar />
       </div>
-      <div className="flex flex-col flex-grow">
+      <div className=" flex flex-col">
         <NavDashboard />
       </div>
       <div className="flex-grow p-4 mt-16">{children}</div>
