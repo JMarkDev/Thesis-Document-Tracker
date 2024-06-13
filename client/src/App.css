@@ -7,6 +7,8 @@
   padding: 0;
   box-sizing: border-box;
   font-family: sans-serif, inter, roboto;
+  /* scroll-padding-top: 1rem;
+  scroll-behavior: smooth; */
 }
 
 .text-wmsu {
@@ -23,4 +25,26 @@
 .filter-orange {
   filter: brightness(0) saturate(100%) invert(53%) sepia(80%) saturate(767%)
     hue-rotate(340deg) brightness(94%) contrast(98%);
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }

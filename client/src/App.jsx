@@ -11,6 +11,10 @@ import Documents from "./pages/Admin/Documents/Documents";
 import DocumentWorkflow from "./pages/Admin/DocumentWorkflows/DocumentWorkflow";
 import Offices from "./pages/Admin/Offices/Offices";
 import Reports from "./pages/Admin/Reports/Reports";
+import Faculty from "./pages/Admin/UserMagement/Faculty";
+import CampusAdmin from "./pages/Admin/UserMagement/CampusAdmin";
+import EsuRegistrar from "./pages/Admin/UserMagement/EsuRegistrar";
+import AdminStaff from "./pages/Admin/UserMagement/AdminStaff";
 
 function App() {
   const adminLinks = [
@@ -24,6 +28,22 @@ function App() {
     },
     { title: "Offices", path: "/offices", component: <Offices /> },
     { title: "Reports", path: "/reports", component: <Reports /> },
+    { title: "Faculty", path: "/users/faculty", component: <Faculty /> },
+    {
+      title: "Campus Admin",
+      path: "/users/campus-admin",
+      component: <CampusAdmin />,
+    },
+    {
+      title: "ESU Registrar",
+      path: "/users/esu-registrar",
+      component: <EsuRegistrar />,
+    },
+    {
+      title: "Admin Staff",
+      path: "/users/admin-staff",
+      component: <AdminStaff />,
+    },
   ];
   return (
     <>
