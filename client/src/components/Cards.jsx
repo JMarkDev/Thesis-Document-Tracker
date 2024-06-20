@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 const cardData = [
   { title: "Total Documents", value: 100 },
@@ -15,7 +15,7 @@ const Cards = () => {
 
   useEffect(() => {
     setData(cardData);
-  }, [cardData]);
+  }, []);
 
   const colors = [
     "#3ba840",
