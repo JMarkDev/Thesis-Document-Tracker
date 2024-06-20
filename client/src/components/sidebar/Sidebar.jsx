@@ -8,7 +8,7 @@ import { FaUsers } from "react-icons/fa";
 import { TbReportAnalytics } from "react-icons/tb";
 import { RiPieChart2Fill } from "react-icons/ri";
 import { BiLogOut } from "react-icons/bi";
-import { FiChevronDown, FiChevronLeft } from "react-icons/fi";
+import { FiChevronDown, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import Logo from "../../assets/images/logo with word.png";
 
 const Sidebar = ({ sidebar, handleBurger }) => {
@@ -48,15 +48,15 @@ const Sidebar = ({ sidebar, handleBurger }) => {
     <>
       {sidebar && (
         <div
-          className="fixed inset-0 bg-black opacity-50 z-30 sm:hidden"
+          className="fixed inset-0 bg-black opacity-50 z-30 md:hidden"
           onClick={handleBurger}
         ></div>
       )}
       <aside
         id="logo-sidebar"
-        className={`fixed top-0 left-0 z-40 w-64 h-screen md:bg-[#D4A4AC] transition-transform transform ${
+        className={`fixed top-0 left-0 z-40 w-64 h-screen bg-[#D4A4AC] transition-transform transform ${
           sidebar ? "translate-x-0" : "-translate-x-full"
-        } sm:translate-x-0 sm:relative sm:transform-none`}
+        } md:translate-x-0 md:relative md:transform-none`}
         aria-label="Sidebar"
       >
         <div className="fixed w-64 h-full px-3 py-4 overflow-y-auto bg-gray-300 border-2 border-l-0 border-main rounded-xl dark:bg-gray-800 ">
@@ -85,9 +85,9 @@ const Sidebar = ({ sidebar, handleBurger }) => {
                       </div>
                       <span className="text-xl">
                         {isUserManagementOpen ? (
-                          <FiChevronLeft />
-                        ) : (
                           <FiChevronDown />
+                        ) : (
+                          <FiChevronRight />
                         )}
                       </span>
                     </button>
