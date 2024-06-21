@@ -5,9 +5,10 @@ const cardData = [
   { title: "Received Documents", value: 100 },
   { title: "Incoming Documents", value: 100 },
   { title: "Delayed Documents", value: 100 },
-  { title: "Total ESU Campus", value: 100 },
+  { title: "Documents types", value: 100 },
   { title: "Total Offices", value: 100 },
-  { title: "Total Documents types", value: 100 },
+  { title: "Total ESU Campus", value: 100 },
+
   { title: "Total Faculties", value: 100 },
 ];
 const Cards = () => {
@@ -39,10 +40,10 @@ const Cards = () => {
       {data.map((card, index) => (
         <div
           key={index}
-          className="border-2  rounded-[20px] bg-gray-300 border-l-[6px] flex flex-col p-4 items-center cursor-pointer hover:shadow-lg transform hover:scale-[103%] transition duration-300 ease-out "
+          className="border-2  rounded-[20px] bg-gray-300 border-l-[6px] flex flex-col py-4 px-2 items-center cursor-pointer hover:shadow-lg transform hover:scale-[103%] transition duration-300 ease-out "
           style={{ borderColor: getNextColor() }}
         >
-          <h1 className="font-bold py-1 w-full text-center  text-main rounded-md">
+          <h1 className="font-bold py-1 w-full text-center  whitespace-nowrap text-main rounded-md">
             {card.title}
           </h1>
           <h1 className="mt-2 font-bold md:text-4xl text-xl text-[#333131]">

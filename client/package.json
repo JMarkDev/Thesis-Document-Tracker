@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@headlessui/react": "^2.0.4",
+    "@heroicons/react": "^2.1.4",
     "autoprefixer": "^10.4.19",
     "axios": "^1.6.8",
     "flowbite": "^2.3.0",

@@ -1,5 +1,3 @@
-import React from "react";
-
 const DocumentWorkflow = () => {
   return <div>DocumentWorkflow</div>;
 };

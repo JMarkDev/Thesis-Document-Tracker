@@ -8,17 +8,17 @@ const Documents = () => {
   return (
     <div className="">
       <div className="flex  flex-col xl:flex-row justify-between mb-8">
-        <div className="flex lg:w-1/3 w-full  items-center relative">
+        <div className="flex max-w-[450px] w-full  items-center relative">
           <input
             type="text"
             placeholder="Search..."
-            className=" rounded-lg w-full"
+            className="border border-[#d67c80] focus:border-blue  rounded-lg w-full bg-gray-100"
           />
-          <IoSearch className="text-2xl absolute right-0" />
+          <IoSearch className="text-2xl absolute right-2 text-gray-600" />
         </div>
 
         <div className="flex sm:justify-end justify-center flex-col lg:flex-row lg:items-center items-end  gap-3 xl:mt-0 mt-4">
-          <span className="">Filter documents by:</span>
+          <span className="text-gray-700">Filter documents by:</span>
           <div className="flex gap-3">
             <div>
               <DocumentType />

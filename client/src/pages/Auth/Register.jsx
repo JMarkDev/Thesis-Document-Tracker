@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import wmsuCampus from "../../utils/Campus";
 import Profile from "../../components/profile_image/Profile";
+import PropTypes from "prop-types";
 
 const Register = ({ modal, closeModal, openLogin }) => {
   const [esuCampus, setEsuCampus] = useState([]);
 
   useEffect(() => {
     setEsuCampus(wmsuCampus);
-  }, [wmsuCampus]);
+  }, []);
   return (
     <>
       {modal && (
@@ -250,6 +251,12 @@ const Register = ({ modal, closeModal, openLogin }) => {
       )}
     </>
   );
+};
+
+Register.propTypes = {
+  modal: PropTypes.boolean,
+  closeModal: PropTypes.boolean,
+  openLogin: PropTypes.boolean,
 };
 
 export default Register;

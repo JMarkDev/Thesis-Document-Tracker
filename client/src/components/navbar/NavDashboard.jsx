@@ -1,11 +1,11 @@
-import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import userIcon from "../../assets/images/wmsu logo.png";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { TiPlus } from "react-icons/ti";
 import { FaBars } from "react-icons/fa6";
+import PropTypes from "prop-types";
 
-const NavDashboard = ({ handleBurger, sidebar }) => {
+const NavDashboard = ({ handleBurger }) => {
   const pageTitles = {
     "/dashboard": "Dashboard",
     "/scan-now": "Scan Now",
@@ -20,7 +20,7 @@ const NavDashboard = ({ handleBurger, sidebar }) => {
   const location = useLocation();
   const title = pageTitles[location.pathname];
   return (
-    <div className="w-full md:w-[calc(100vw-16rem)] flex gap-5 items-center px-4 flex-grow fixed h-16 bg-[#D4A4AC]">
+    <div className="w-full z-20 md:w-[calc(100vw-16rem)] flex gap-5 items-center px-4 flex-grow fixed h-16 bg-[#D4A4AC]">
       <button
         onClick={handleBurger}
         aria-controls="logo-sidebar"
@@ -56,6 +56,10 @@ const NavDashboard = ({ handleBurger, sidebar }) => {
       </div>
     </div>
   );
+};
+
+NavDashboard.propTypes = {
+  handleBurger: PropTypes.func,
 };
 
 export default NavDashboard;

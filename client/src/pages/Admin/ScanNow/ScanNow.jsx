@@ -8,7 +8,7 @@ const ScanNow = () => {
           className="w-full rounded-lg"
         />
       </div>
-      <div className="flex mt-4 bg-gray-300 justify-center items-center h-[calc(100vh-140px)]  cursor-pointer">
+      <div className="flex mt-4 bg-gray-300 justify-center items-center h-[calc(100vh-160px)]  cursor-pointer">
         <button className="bg-main text-white px-10 py-2 rounded-lg">
           Scan Now
         </button>
