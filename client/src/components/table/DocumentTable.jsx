@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { FaEye, FaFileDownload } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const documentData = [
   {
@@ -231,9 +232,12 @@ const Table = () => {
                   <td className="px-6 py-4 whitespace-nowrap">{status}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{date}</td>
                   <td className="px-6 py-4 flex gap-3">
-                    <button className="px-4 py-2 text-lg bg-[#fca326] hover:bg-[#f58e40] text-white rounded-lg">
+                    <Link
+                      to={`/documents/${documentId}`}
+                      className="px-4 py-2 text-lg bg-[#fca326] hover:bg-[#f58e40] text-white rounded-lg"
+                    >
                       <FaEye />
-                    </button>
+                    </Link>
                     <button className="px-4 py-2 text-lg bg-[#3b9c3e] hover:bg-[#47a632] text-white rounded-lg">
                       <FaFileDownload />
                     </button>

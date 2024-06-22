@@ -15,6 +15,7 @@ import Faculty from "./pages/Admin/UserMagement/Faculty";
 import CampusAdmin from "./pages/Admin/UserMagement/CampusAdmin";
 import EsuRegistrar from "./pages/Admin/UserMagement/EsuRegistrar";
 import AdminStaff from "./pages/Admin/UserMagement/AdminStaff";
+import DocumentMetadata from "./components/DocumentMetadata";
 
 function App() {
   const adminLinks = [
@@ -43,6 +44,11 @@ function App() {
       title: "Admin Staff",
       path: "/users/admin-staff",
       component: <AdminStaff />,
+    },
+    {
+      title: "Document Details",
+      path: "/documents/:id",
+      component: <DocumentMetadata />,
     },
   ];
   return (

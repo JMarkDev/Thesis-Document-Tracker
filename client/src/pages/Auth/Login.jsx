@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-
+import PropTypes from "prop-types";
 const Login = ({ modal, closeModal, openRegister }) => {
   return (
     <>
@@ -105,7 +104,7 @@ const Login = ({ modal, closeModal, openRegister }) => {
                     Login
                   </button>
                   <p className="mt-4">
-                    Don't have an account?{" "}
+                    Don&apos;t have an account?{" "}
                     <span
                       onClick={openRegister}
                       className="text-blue-700 font-semibold cursor-pointer"
@@ -121,6 +120,12 @@ const Login = ({ modal, closeModal, openRegister }) => {
       )}
     </>
   );
+};
+
+Login.propTypes = {
+  modal: PropTypes.boolean,
+  closeModal: PropTypes.boolean,
+  openRegister: PropTypes.boolean,
 };
 
 export default Login;

@@ -1,8 +1,6 @@
-import Table from "../../../components/Table";
-import DocumentType from "../../../components/dropdown/DocumentType";
-import EsuCamus from "../../../components/dropdown/EsuCampus";
-import Status from "../../../components/dropdown/Status";
+import Table from "../../../components/table/DocumentTable";
 import { IoSearch } from "react-icons/io5";
+import Dropdown from "../../../components/dropdown/YearDropdown";
 
 const Documents = () => {
   return (
@@ -19,15 +17,15 @@ const Documents = () => {
 
         <div className="flex sm:justify-end justify-center flex-col lg:flex-row lg:items-center items-end  gap-3 xl:mt-0 mt-4">
           <span className="text-gray-700">Filter documents by:</span>
-          <div className="flex gap-3">
+          <div className="flex items-center gap-3">
             <div>
-              <DocumentType />
+              <Dropdown />
             </div>
             <div>
-              <EsuCamus />
+              <Dropdown />
             </div>
             <div>
-              <Status />
+              <Dropdown />
             </div>
           </div>
         </div>

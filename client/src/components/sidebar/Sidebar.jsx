@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { MdQrCodeScanner } from "react-icons/md";
 import { IoDocuments } from "react-icons/io5";
@@ -8,8 +8,9 @@ import { FaUsers } from "react-icons/fa";
 import { TbReportAnalytics } from "react-icons/tb";
 import { RiPieChart2Fill } from "react-icons/ri";
 import { BiLogOut } from "react-icons/bi";
-import { FiChevronDown, FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { FiChevronDown, FiChevronRight } from "react-icons/fi";
 import Logo from "../../assets/images/logo with word.png";
+import PropTypes from "prop-types";
 
 const Sidebar = ({ sidebar, handleBurger }) => {
   const location = useLocation();
@@ -127,6 +128,11 @@ const Sidebar = ({ sidebar, handleBurger }) => {
       </aside>
     </>
   );
+};
+
+Sidebar.propTypes = {
+  sidebar: PropTypes.bool,
+  handleBurger: PropTypes.func,
 };
 
 export default Sidebar;
