@@ -1,45 +1,11 @@
-import { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 
-const Stepper = () => {
+const Stepper = ({ data }) => {
   //first:bg-border-0 first:after:border-white last:bg-red-400
-  const [data, setData] = useState([]);
-
-  const documentHistory = [
-    { office: "Faculty", date: "01 Aug 2024, 01:00pm" },
-    {
-      office: "Registrar",
-      date: "01 Aug 2024, 01:00pm",
-    },
-    {
-      office: "OCI Dean Of ESU Office",
-      date: "01 Aug 2024, 01:00pm",
-    },
-    {
-      office: "Vice President for Academic Affairs Office",
-      date: "01 Aug 2024, 01:00pm",
-    },
-    {
-      office: "Human Resources Office",
-      date: "01 Aug 2024, 01:00pm",
-    },
-    {
-      office: "Accounting Office",
-      date: "01 Aug 2024, 01:00pm",
-    },
-    {
-      office: "Records Office",
-      date: "01 Aug 2024, 01:00pm",
-    },
-  ];
-
-  useEffect(() => {
-    setData(documentHistory);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <div>
-      <ol className="flex relative items-center h-40 w-full">
+      <ol className="flex  relative items-center h-40 w-full">
         {data.map((history, index) => (
           <li
             key={index}
@@ -47,23 +13,23 @@ const Stepper = () => {
               index === data.length - 1
                 ? "after:border-white"
                 : "after:border-yellow"
-            } flex w-full  items-center text-blue-600 dark:text-blue-500 after:content-[''] after:w-full after:h-1 after:border-b after:border-4 after:inline-block dark:after:border-blue-800`}
+            } flex w-full  items-center text-gray-600 dark:text-blue-500 after:content-[''] after:w-full after:h-1 after:border-1 after:border-4  after:inline-block dark:after:border-blue-800`}
           >
             <div className="">
               <div
                 className={`absolute ${
-                  index % 2 === 0 ? "top-0" : "bottom-0"
+                  index % 2 === 0 ? "lg:top-0" : "bottom-0"
                 } `}
               >
-                <p className="font-bold max-w-48">{history.office}</p>
-                <p className="text-[12px]">
+                <p className="font-bold text-sm max-w-40">{history.office}</p>
+                <p className="text-sm">
                   {history.office === "Faculty" ? "Uploaded: " : "Received: "}
                   {history.date}
                 </p>
               </div>
 
               {index === data.length - 1 ? (
-                <span className=" flex items-center justify-center w-10 h-10 bg-red-300 rounded-full lg:h-12 lg:w-12 dark:bg-blue-800 shrink-0">
+                <span className=" flex items-center justify-center w-8 h-8 bg-red-300 rounded-full lg:h-10 lg:w-10 dark:bg-blue-800 shrink-0">
                   <svg
                     className="w-4 h-4 text-blue-600 lg:w-5 lg:h-5 dark:text-gray-100"
                     aria-hidden="true"
@@ -75,7 +41,7 @@ const Stepper = () => {
                   </svg>
                 </span>
               ) : (
-                <span className=" flex items-center justify-center w-10 h-10 bg-red-300 rounded-full lg:h-12 lg:w-12 dark:bg-blue-800 shrink-0">
+                <span className=" flex items-center justify-center w-8 h-8 bg-red-300 rounded-full lg:h-10 lg:w-10 dark:bg-blue-800 shrink-0">
                   <svg
                     className="w-3.5 h-3.5 text-blue-600 lg:w-4 lg:h-4 dark:text-blue-300"
                     aria-hidden="true"
@@ -99,6 +65,10 @@ const Stepper = () => {
       </ol>
     </div>
   );
+};
+
+Stepper.propTypes = {
+  data: PropTypes.object,
 };
 
 export default Stepper;
