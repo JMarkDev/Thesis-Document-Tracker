@@ -68,7 +68,7 @@ const Stepper = ({ data }) => {
 };
 
 Stepper.propTypes = {
-  data: PropTypes.object,
+  data: PropTypes.array,
 };
 
 export default Stepper;

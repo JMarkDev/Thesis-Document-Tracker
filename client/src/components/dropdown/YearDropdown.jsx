@@ -6,25 +6,21 @@ import {
   Transition,
 } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/16/solid";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import PropTypes from "prop-types";
 
-export default function Dropdown() {
-  const [selectedYear, setSelectedYear] = useState("");
-  const years = [2024, 2025, 2026, 2027];
+export default function Dropdown({ data, option }) {
+  const [selectOption, setSelectOption] = useState(option);
 
-  useEffect(() => {
-    const currentYear = new Date().getFullYear();
-    setSelectedYear(currentYear);
-  }, []);
-
-  const handleYear = (year) => {
-    setSelectedYear(year);
+  const handleOption = (selected) => {
+    setSelectOption(selected);
   };
+
   return (
-    <div className="text-right">
+    <div className="text-right ">
       <Menu>
         <MenuButton className="inline-flex items-center gap-2 rounded-md bg-blue-600 hover:bg-blue-700 py-1.5 px-4 text-sm/6 font-semibold text-white ">
-          {selectedYear}
+          {selectOption}
           <ChevronDownIcon className="size-4 fill-white/60" />
         </MenuButton>
         <Transition
@@ -38,15 +34,15 @@ export default function Dropdown() {
         >
           <MenuItems
             anchor="bottom end"
-            className="w-40 text-gray-700 origin-top-right bg-gray-700  rounded-xl  p-1 text-sm/6"
+            className="min-w-40 text-gray-700 origin-top-right bg-gray-700  rounded-xl  p-1 text-sm/6"
           >
-            {years.map((year) => (
-              <MenuItem key={year}>
+            {data.map((options) => (
+              <MenuItem key={options}>
                 <button
-                  onClick={() => handleYear(year)}
-                  className="group flex w-full hover:bg-gray-300 items-center justify-center gap-2 rounded-lg py-1.5 px-3 "
+                  onClick={() => handleOption(options)}
+                  className="group flex w-full hover:bg-gray-300 items-center justify-start gap-2 rounded-lg py-1.5 px-3 "
                 >
-                  {year}
+                  {options}
                 </button>
               </MenuItem>
             ))}
@@ -56,3 +52,8 @@ export default function Dropdown() {
     </div>
   );
 }
+
+Dropdown.propTypes = {
+  data: PropTypes.array,
+  option: PropTypes.any,
+};

@@ -42,19 +42,6 @@ const DocumentDetails = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  /**
-   * 
-   *   {
-    documentId: "IDP-2024",
-    trackingNumber: "293412319023",
-    documentName: "IDP Pagadian Campus",
-    documentType: "IDP",
-    fileType: "CSV",
-    uploadedBy: "Josiel Mark Cute",
-    status: "received",
-    date: "2024-06-20",
-  },
-   */
   return (
     <div className="bg-white ">
       <div className="flex items-center gap-5">

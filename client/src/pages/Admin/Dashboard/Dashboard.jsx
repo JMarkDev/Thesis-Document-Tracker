@@ -4,6 +4,7 @@ import YearDropdown from "../../../components/dropdown/YearDropdown";
 import PieChart from "../../../components/charts/PieChart";
 
 const Dashboard = () => {
+  const year = [2024, 2025, 2026, 2027];
   return (
     <div className="w-full">
       <div className=" flex flex-wrap">
@@ -13,7 +14,7 @@ const Dashboard = () => {
         <div className=" w-full bg-white">
           <div className="flex p-2 bg-gray-400 justify-between items-center">
             <h1 className=" font-bold">Documents Received Chart</h1>
-            <YearDropdown />
+            <YearDropdown data={year} option={year[0]} />
           </div>
 
           <LineChartAdmin />
