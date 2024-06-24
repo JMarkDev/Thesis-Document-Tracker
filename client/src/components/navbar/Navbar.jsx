@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Logo from "../../assets/images/logo with word (1).png";
 import Login from "../../pages/Auth/Login";
 import Register from "../../pages/Auth/Register";

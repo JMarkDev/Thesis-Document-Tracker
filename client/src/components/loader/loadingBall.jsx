@@ -1,5 +1,3 @@
-// loadingBall.js
-import React from "react";
 import "./ballLoader.css";
 
 const LoadingBall = () => {

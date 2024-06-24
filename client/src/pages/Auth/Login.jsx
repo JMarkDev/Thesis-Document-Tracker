@@ -1,5 +1,31 @@
 import PropTypes from "prop-types";
+import { useState } from "react";
+import api from "../../api/api";
+import LoginLoading from "../../components/loader/LoginLoading";
 const Login = ({ modal, closeModal, openRegister }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setLoading] = useState(false);
+
+  const handleLogin = async (e) => {
+    setLoading(true);
+    e.preventDefault();
+    try {
+      const data = {
+        email: email,
+        password: password,
+      };
+
+      const response = await api.post("/auth/login", data, {
+        headers: { "Content-Type": "application/json" },
+      });
+      console.log(response.data);
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  };
+
   return (
     <>
       {modal && (
@@ -7,8 +33,9 @@ const Login = ({ modal, closeModal, openRegister }) => {
           id="default-modal"
           tabIndex="-1"
           aria-hidden={!modal}
-          className="fixed inset-0 z-50 px-5 flex items-center justify-center w-full h-full bg-gray-800 bg-opacity-50 font-normal"
+          className="fixed inset-0 z-[40] px-5 flex items-center justify-center w-full h-full bg-gray-800 bg-opacity-50 font-normal"
         >
+          {isLoading && <LoginLoading />}
           <div className="relative w-full max-w-lg  max-h-full">
             <div className="relative text-gray-800 bg-white rounded-xl shadow-lg ">
               <div className="flex items-center justify-center rounded-t">
@@ -39,7 +66,7 @@ const Login = ({ modal, closeModal, openRegister }) => {
               </div>
 
               <div className="p-6 space-y-4 text-sm text-[#221f1f]">
-                <form action="">
+                <form onSubmit={handleLogin}>
                   <label
                     htmlFor="email"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -63,6 +90,7 @@ const Login = ({ modal, closeModal, openRegister }) => {
                       id="email"
                       className="rounded-none rounded-e-lg bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-100 block flex-1 min-w-0 w-full text-sm p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       placeholder="Enter your email"
+                      onChange={(e) => setEmail(e.target.value)}
                     />
                   </div>
 
@@ -89,6 +117,7 @@ const Login = ({ modal, closeModal, openRegister }) => {
                       id="password"
                       className="rounded-none rounded-e-lg bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-100 block flex-1 min-w-0 w-full text-sm p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                       placeholder="Enter your password"
+                      onChange={(e) => setPassword(e.target.value)}
                     />
                   </div>
 
@@ -99,7 +128,10 @@ const Login = ({ modal, closeModal, openRegister }) => {
                   </div>
                   <button
                     type="submit"
-                    className="w-full mt-6 p-2 bg-main hover:bg-main_hover text-[#fff] md:text-lg text-sm rounded-lg"
+                    disabled={isLoading ? true : false}
+                    className={` ${
+                      isLoading ? "cursor-not-allowed" : "cursor-pointer"
+                    } w-full  mt-6 p-2 bg-main hover:bg-main_hover text-[#fff] md:text-lg text-sm rounded-lg`}
                   >
                     Login
                   </button>
@@ -123,9 +155,9 @@ const Login = ({ modal, closeModal, openRegister }) => {
 };
 
 Login.propTypes = {
-  modal: PropTypes.boolean,
-  closeModal: PropTypes.boolean,
-  openRegister: PropTypes.boolean,
+  modal: PropTypes.bool,
+  closeModal: PropTypes.func,
+  openRegister: PropTypes.func,
 };
 
 export default Login;
