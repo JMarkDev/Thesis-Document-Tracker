@@ -1,18 +1,15 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Back from "../../../components/buttons/Back";
 import Stepper from "../../../components/Stepper";
 import StepperMobile from "../../../components/StepperMobile";
 const DocumentDetails = () => {
   const [data, setData] = useState([]);
-  // const id = useParams();
-
-  // console.log(id)
 
   const documentHistory = [
     { office: "Faculty", date: "01 Aug 2024, 01:00pm" },
     {
-      office: "Registrar",
+      office: "ESU Pagadian Registrar",
       date: "01 Aug 2024, 01:00pm",
     },
     {

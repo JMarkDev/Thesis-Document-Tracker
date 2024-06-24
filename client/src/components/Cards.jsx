@@ -43,7 +43,7 @@ const Cards = () => {
           className="border-2  rounded-[20px] bg-gray-300 border-l-[6px] flex flex-col py-4 px-2 items-center cursor-pointer hover:shadow-lg transform hover:scale-[103%] transition duration-300 ease-out "
           style={{ borderColor: getNextColor() }}
         >
-          <h1 className="font-bold py-1 w-full text-center  whitespace-nowrap text-main rounded-md">
+          <h1 className="font-bold py-1 w-full text-center text-sm md:text-lg  whitespace-nowrap text-main rounded-md">
             {card.title}
           </h1>
           <h1 className="mt-2 font-bold md:text-4xl text-xl text-[#333131]">

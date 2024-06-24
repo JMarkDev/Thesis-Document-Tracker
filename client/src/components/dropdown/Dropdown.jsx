@@ -19,7 +19,7 @@ export default function Dropdown({ data, option }) {
   return (
     <div className="text-right ">
       <Menu>
-        <MenuButton className="inline-flex items-center gap-2 rounded-md bg-blue-600 hover:bg-blue-700 py-1.5 px-4 text-sm/6 font-semibold text-white ">
+        <MenuButton className="inline-flex items-center gap-2 rounded-md bg-blue-600 hover:bg-blue-700 py-1.5 px-2 text-sm/6 font-semibold text-white ">
           {selectOption}
           <ChevronDownIcon className="size-4 fill-white/60" />
         </MenuButton>

@@ -22,7 +22,7 @@ const Stepper = ({ data }) => {
                 } `}
               >
                 <p className="font-bold text-sm max-w-40">{history.office}</p>
-                <p className="text-sm">
+                <p className="text-sm md:text-[14px]">
                   {history.office === "Faculty" ? "Uploaded: " : "Received: "}
                   {history.date}
                 </p>

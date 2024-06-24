@@ -31,7 +31,7 @@ const cardData = [
   },
   {
     month: "Apr",
-    "IDP Pagadian Campus": 40,
+    "IDP Pagadian Campus": 99,
     "DTR Pagadian Campus": 20,
     "IOR Pagadian Campus": 10,
   },
@@ -108,7 +108,7 @@ const LineChartAdmin = () => {
           >
             <CartesianGrid strokeDasharray="6 6" />
             <XAxis dataKey="month" />
-            <YAxis />
+            <YAxis width={24} />
             <Tooltip />
             {/** Legend title of the event */}
             {/* <Legend /> */}

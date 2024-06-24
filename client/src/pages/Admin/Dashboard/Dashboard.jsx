@@ -1,6 +1,6 @@
 import Cards from "../../../components/Cards";
 import LineChartAdmin from "../../../components/charts/LineChartAdmin";
-import YearDropdown from "../../../components/dropdown/YearDropdown";
+import YearDropdown from "../../../components/dropdown/Dropdown";
 import PieChart from "../../../components/charts/PieChart";
 
 const Dashboard = () => {

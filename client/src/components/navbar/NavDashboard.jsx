@@ -31,7 +31,7 @@ const NavDashboard = ({ handleBurger }) => {
       </button>
       <div className="flex  justify-between items-center w-full">
         <h1 className="md:text-3xl text-xl font-bold text-main">{title}</h1>
-        <div className="flex  lg:text-[16px] text-sm gap-5">
+        <div className="flex  lg:text-[16px] text-sm gap-3">
           <div className="flex items-center gap-2">
             <button className="flex items-center">
               {" "}
@@ -44,9 +44,9 @@ const NavDashboard = ({ handleBurger }) => {
             <IoMdNotificationsOutline className="text-2xl " />
             <span className="hidden lg:block">Notifications</span>
           </button>
-          <div className="flex items-center gap-5">
+          <div className="flex items-center gap-3">
             <div className="flex-col flex">
-              <span className="font-bold">Byron Go Silk</span>
+              <span className="font-bold">Josiel mark</span>
               <span className="text-[12px]">Admin</span>
             </div>
 

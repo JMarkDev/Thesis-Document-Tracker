@@ -1,6 +1,6 @@
 import Table from "../../../components/table/DocumentTable";
 import { IoSearch } from "react-icons/io5";
-import Dropdown from "../../../components/dropdown/YearDropdown";
+import Dropdown from "../../../components/dropdown/Dropdown";
 import wmsuCampus from "../../../utils/Campus";
 import { useEffect, useState } from "react";
 
@@ -23,7 +23,7 @@ const Documents = () => {
             <input
               type="text"
               placeholder="Search..."
-              className="border border-[#d67c80] focus:border-blue  rounded-lg w-full bg-gray-100"
+              className="border border-[#d67c80] focus:border-blue  rounded-xl w-full bg-gray-100"
             />
             <IoSearch className="text-2xl absolute right-2 text-gray-600" />
           </div>
