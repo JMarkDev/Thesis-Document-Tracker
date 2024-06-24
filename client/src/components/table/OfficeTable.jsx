@@ -5,23 +5,38 @@ import { Link } from "react-router-dom";
 
 const documentData = [
   {
-    routeID: "IDP-2024",
-    documentType: "IOR (Internal Office Reports)",
+    officeID: "00-OFFICE",
+    officeName: "ESU Registrar",
+    date: "2024-06-06",
+  },
+  {
+    officeID: "01-OFFICE",
+    officeName: "OIC Dean of ESU Office",
     date: "2024-06-20",
   },
   {
-    routeID: "IDP-2024",
-    documentType: "IDP (Individual Development Plans)",
+    officeID: "02-OFFICE",
+    officeName: "Vice President For Academic Affairs Office",
     date: "2024-06-20",
   },
   {
-    routeID: "IDP-2024",
-    documentType: "DTR (Daily Time Record)",
+    officeID: "03-OFFICE",
+    officeName: "Human Resource Office)",
+    date: "2024-06-20",
+  },
+  {
+    officeID: "04-OFFICE",
+    officeName: "Accounting Office)",
+    date: "2024-06-20",
+  },
+  {
+    officeID: "05-OFFICE",
+    officeName: "Records Office)",
     date: "2024-06-20",
   },
 ];
 
-const DocumentWorkflow = () => {
+const Office = () => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -36,12 +51,12 @@ const DocumentWorkflow = () => {
             <tr>
               <th scope="col" className="px-6 py-3 whitespace-nowrap">
                 <div className="flex items-center  whitespace-nowrap">
-                  Route ID
+                  OFFICE ID
                 </div>
               </th>
               <th scope="col" className="px-6 py-3">
                 <div className="flex items-center  whitespace-nowrap">
-                  DOCUMENT TYPE
+                  OFFICE NAME
                 </div>
               </th>
 
@@ -56,7 +71,7 @@ const DocumentWorkflow = () => {
             </tr>
           </thead>
           <tbody>
-            {data.map(({ routeID, documentType, date }, index) => (
+            {data.map(({ officeID, officeName, date }, index) => (
               <tr
                 key={index}
                 className="bg-white dark:bg-gray-800 hover:bg-gray-100"
@@ -65,14 +80,14 @@ const DocumentWorkflow = () => {
                   scope="row"
                   className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                 >
-                  {routeID}
+                  {officeID}
                 </th>
 
-                <td className="px-6 py-4 whitespace-nowrap">{documentType}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{officeName}</td>
                 <td className="px-6 py-4 whitespace-nowrap">{date}</td>
                 <td className="px-6 py-4 flex gap-3 justify-center items-center">
                   <Link
-                    to={`/documents/${routeID}`}
+                    to={`/documents/${officeID}`}
                     className="px-4 py-2 text-lg bg-[#fca326] hover:bg-[#f58e40] text-white rounded-lg"
                   >
                     <FaEye className="h-5 w-5" />
@@ -94,4 +109,4 @@ const DocumentWorkflow = () => {
   );
 };
 
-export default DocumentWorkflow;
+export default Office;

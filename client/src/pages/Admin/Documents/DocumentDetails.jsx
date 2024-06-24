@@ -7,7 +7,7 @@ const DocumentDetails = () => {
   const [data, setData] = useState([]);
 
   const documentHistory = [
-    { office: "Faculty", date: "01 Aug 2024, 01:00pm" },
+    { office: "ESU Pagadian Faculty", date: "01 Aug 2024, 01:00pm" },
     {
       office: "ESU Pagadian Registrar",
       date: "01 Aug 2024, 01:00pm",

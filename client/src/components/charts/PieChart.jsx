@@ -3,14 +3,14 @@ import PropTypes from "prop-types";
 
 const COLORS = [
   "#4CAF50", // Received
-  "#FF9800", // Incoming
-  "#E91E63", // Delayed
+  "#4c8ee6", // Incoming
+  "#e6564c", // Delayed
 ];
 
 const sampleData = [
-  { status: "received", totalCount: 100 },
-  { status: "incoming", totalCount: 50 },
-  { status: "delayed", totalCount: 25 },
+  { status: "Completed", totalCount: 100 },
+  { status: "Incoming", totalCount: 50 },
+  { status: "Delayed", totalCount: 25 },
 ];
 
 const PieChartComponent = () => {

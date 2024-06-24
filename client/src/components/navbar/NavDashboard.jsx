@@ -30,7 +30,7 @@ const NavDashboard = ({ handleBurger }) => {
         <FaBars />
       </button>
       <div className="flex  justify-between items-center w-full">
-        <h1 className="md:text-3xl text-xl font-bold text-main">{title}</h1>
+        <h1 className="md:text-2xl text-lg font-bold text-main">{title}</h1>
         <div className="flex  lg:text-[16px] text-sm gap-3">
           <div className="flex items-center gap-2">
             <button className="flex items-center">
