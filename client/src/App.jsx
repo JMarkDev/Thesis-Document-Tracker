@@ -14,6 +14,7 @@ import CampusAdmin from "./pages/Admin/UserMagement/CampusAdmin";
 import EsuRegistrar from "./pages/Admin/UserMagement/EsuRegistrar";
 import AdminStaff from "./pages/Admin/UserMagement/AdminStaff";
 import DocumentDetails from "./pages/Admin/Documents/DocumentDetails";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   const adminLinks = [
@@ -51,6 +52,7 @@ function App() {
   ];
   return (
     <>
+      <ToastContainer />
       <Routes>
         <Route path="/" element={<Homepage />} />
         <Route path="/home" element={<Homepage />} />

@@ -5,8 +5,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/api";
 import LoginLoading from "../../components/loader/LoginLoading";
+import { useToast } from "../../hooks/useToast";
+import "react-toastify/dist/ReactToastify.css";
 
 const VerifyOTP = ({ email, closeOTP }) => {
+  const toast = useToast();
   const navigate = useNavigate();
   const [otp, setOtp] = useState(new Array(4).fill(""));
   const [loading, setLoading] = useState(false);
@@ -37,13 +40,14 @@ const VerifyOTP = ({ email, closeOTP }) => {
     };
     try {
       const response = await api.post("/auth/verify-otp", data);
-      console.log(response.data);
 
       if (response.data.status === "success") {
+        toast.success(response.data.message);
+
         closeOTP();
         setTimeout(() => {
           navigate("/dashboard");
-        }, 1000);
+        }, 2000);
       }
     } catch (error) {
       setErrorMessage(error.response.data.message);
@@ -52,60 +56,76 @@ const VerifyOTP = ({ email, closeOTP }) => {
     }
   };
 
+  const handleResend = async () => {
+    setLoading(true);
+    try {
+      const response = await api.post("/auth/resend-otp", { email: email });
+      if (response.data.status === "success") {
+        toast.success(response.data.message);
+        setLoading(false);
+      }
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  };
+
   const disableSubmit = otp.includes("") || otp.length < 4;
 
   return (
-    <div
-      id="default-modal"
-      tabIndex="-1"
-      className="fixed inset-0 z-[40] px-5 flex items-center justify-center w-full h-full bg-gray-800 bg-opacity-40 font-normal"
-    >
-      {loading && <LoginLoading />}
+    <>
+      <div
+        id="default-modal"
+        tabIndex="-1"
+        className="fixed inset-0 z-[40] px-5 flex items-center justify-center w-full h-full bg-gray-800 bg-opacity-40 font-normal"
+      >
+        {loading && <LoginLoading />}
 
-      <form className="otp-Form" onSubmit={handleSubmit}>
-        <span className="mainHeading">Enter OTP</span>
-        <img src={sentImage} alt="" className="w-32" />
-        <p className="otpSubheading">
-          Please enter the 4 digit OTP sent to <span>{email}</span>
-        </p>
-        <div className="inputContainer">
-          {otp.map((digit, index) => (
-            <input
-              key={index}
-              required
-              maxLength="1"
-              type="text"
-              className="otp-input"
-              id={`otp-input${index + 1}`}
-              value={digit}
-              onChange={(e) => handleChange(e, index)}
-            />
-          ))}
-        </div>
-        {errorMessage && (
-          <span className="text-red-600 text-sm">{errorMessage}</span>
-        )}
+        <form className="otp-Form" onSubmit={handleSubmit}>
+          <span className="mainHeading">Enter OTP</span>
+          <img src={sentImage} alt="" className="w-32" />
+          <p className="otpSubheading">
+            Please enter the 4 digit OTP sent to <span>{email}</span>
+          </p>
+          <div className="inputContainer">
+            {otp.map((digit, index) => (
+              <input
+                key={index}
+                required
+                maxLength="1"
+                type="text"
+                className="otp-input"
+                id={`otp-input${index + 1}`}
+                value={digit}
+                onChange={(e) => handleChange(e, index)}
+              />
+            ))}
+          </div>
+          {errorMessage && (
+            <span className="text-red-600 text-sm">{errorMessage}</span>
+          )}
 
-        <button
-          disabled={disableSubmit ? true : false}
-          className={`verifyButton ${
-            disableSubmit ? "cursor-not-allowed" : "cursor-pointer"
-          }`}
-          type="submit"
-        >
-          Verify
-        </button>
-        <button className="exitBtn" type="button" onClick={closeOTP}>
-          ×
-        </button>
-        <p className="resendNote">
-          Didn&apos;t receive the code?{" "}
-          <button className="resendBtn" type="button">
-            Resend Code
+          <button
+            disabled={disableSubmit ? true : false}
+            className={`verifyButton ${
+              disableSubmit ? "cursor-not-allowed" : "cursor-pointer"
+            }`}
+            type="submit"
+          >
+            Verify
           </button>
-        </p>
-      </form>
-    </div>
+          <button className="exitBtn" type="button" onClick={closeOTP}>
+            ×
+          </button>
+          <p className="resendNote">
+            Didn&apos;t receive the code?{" "}
+            <button onClick={handleResend} className="resendBtn" type="button">
+              Resend Code
+            </button>
+          </p>
+        </form>
+      </div>
+    </>
   );
 };
 

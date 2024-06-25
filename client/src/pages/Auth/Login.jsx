@@ -3,7 +3,10 @@ import { useState } from "react";
 import api from "../../api/api";
 import LoginLoading from "../../components/loader/LoginLoading";
 import VerifyOTP from "../Verification/VerifyOTP";
+import { useToast } from "../../hooks/useToast";
+
 const Login = ({ modal, closeModal, openRegister }) => {
+  const toast = useToast();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setLoading] = useState(false);
@@ -29,6 +32,10 @@ const Login = ({ modal, closeModal, openRegister }) => {
       });
 
       if (response.data.status === "success") {
+        setTimeout(() => {
+          toast.success(response.data.message);
+        }, 0);
+
         setLoading(false);
         setShowOTP(true);
       }
@@ -64,8 +71,8 @@ const Login = ({ modal, closeModal, openRegister }) => {
           aria-hidden={!modal}
           className="fixed inset-0 z-[40] px-5 flex items-center justify-center w-full h-full bg-gray-800 bg-opacity-40 font-normal"
         >
+          {" "}
           {isLoading && <LoginLoading />}
-
           <div className="relative w-full max-w-lg  max-h-full">
             <div className="relative text-gray-800 bg-white rounded-xl shadow-lg ">
               <div className="flex items-center justify-center rounded-t">
