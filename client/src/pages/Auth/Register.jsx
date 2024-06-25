@@ -4,11 +4,9 @@ import Profile from "../../components/profile_image/Profile";
 import PropTypes from "prop-types";
 
 const Register = ({ modal, closeModal, openLogin }) => {
-  const [esuCampus, setEsuCampus] = useState([]);
-
-  useEffect(() => {
-    setEsuCampus(wmsuCampus);
-  }, []);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  };
   return (
     <>
       {modal && (
@@ -64,7 +62,7 @@ const Register = ({ modal, closeModal, openLogin }) => {
                       <input
                         type="text"
                         id="username-error"
-                        class="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 dark:bg-gray-700 focus:border-red-500 block w-full p-2.5 dark:text-red-500 dark:placeholder-red-500 dark:border-red-500"
+                        className="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 dark:bg-gray-700 focus:border-red-500 block w-full p-2.5 dark:text-red-500 dark:placeholder-red-500 dark:border-red-500"
                         placeholder="Bonnie Green"
                       />
                       <p className="mt-2 text-sm text-red-600 dark:text-red-500">
@@ -77,7 +75,7 @@ const Register = ({ modal, closeModal, openLogin }) => {
                       <input
                         type="text"
                         id="first_name"
-                        className="block pb-2 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                        className="block pb-2 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-red-500 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                         placeholder=" "
                       />
                       <label
@@ -183,7 +181,7 @@ const Register = ({ modal, closeModal, openLogin }) => {
                       placeholder=" "
                     >
                       <option value="">Select ESU Campus</option>
-                      {esuCampus.map((campus, index) => (
+                      {wmsuCampus.map((campus, index) => (
                         <option
                           key={index}
                           value={campus}
@@ -254,9 +252,9 @@ const Register = ({ modal, closeModal, openLogin }) => {
 };
 
 Register.propTypes = {
-  modal: PropTypes.boolean,
-  closeModal: PropTypes.boolean,
-  openLogin: PropTypes.boolean,
+  modal: PropTypes.bool,
+  closeModal: PropTypes.func,
+  openLogin: PropTypes.func,
 };
 
 export default Register;

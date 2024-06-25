@@ -2,16 +2,11 @@ import Table from "../../../components/table/DocumentTable";
 import { IoSearch } from "react-icons/io5";
 import Dropdown from "../../../components/dropdown/Dropdown";
 import wmsuCampus from "../../../utils/Campus";
-import { useEffect, useState } from "react";
 
 const Documents = () => {
-  const [campus, setCampus] = useState([]);
   const documentType = ["IDP", "IOR", "DTR"];
   const documentStatus = ["incoming", "received", "delayed"];
 
-  useEffect(() => {
-    setCampus(wmsuCampus);
-  }, []);
   return (
     <div className="">
       <div className="flex  flex-col gap-5 justify-between mb-8">
@@ -33,7 +28,7 @@ const Documents = () => {
           <span className="text-gray-700">Filter documents by:</span>
           <div className="flex items-center gap-3">
             <div>
-              <Dropdown data={campus} option={"WMSU-ESU"} />
+              <Dropdown data={wmsuCampus} option={"WMSU-ESU"} />
             </div>
             <div>
               <Dropdown data={documentType} option={"Document type"} />
