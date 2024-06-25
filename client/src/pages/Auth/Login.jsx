@@ -30,6 +30,7 @@ const Login = ({ modal, closeModal, openRegister }) => {
 
       if (response.data.status === "success") {
         setLoading(false);
+        setShowOTP(true);
       }
       console.log(response.data);
     } catch (error) {
@@ -48,14 +49,20 @@ const Login = ({ modal, closeModal, openRegister }) => {
     }
   };
 
+  const closeOTP = () => {
+    setShowOTP(false);
+  };
+
   return (
     <>
-      {modal && (
+      {showOTP ? (
+        <VerifyOTP showOTP={showOTP} closeOTP={closeOTP} email={email} />
+      ) : (
         <div
           id="default-modal"
           tabIndex="-1"
           aria-hidden={!modal}
-          className="fixed inset-0 z-[40] px-5 flex items-center justify-center w-full h-full bg-gray-800 bg-opacity-50 font-normal"
+          className="fixed inset-0 z-[40] px-5 flex items-center justify-center w-full h-full bg-gray-800 bg-opacity-40 font-normal"
         >
           {isLoading && <LoginLoading />}
 
@@ -123,9 +130,6 @@ const Login = ({ modal, closeModal, openRegister }) => {
                   {emailError && (
                     <span className="text-red-500 text-sm">{emailError}</span>
                   )}
-                  {errorMessage && (
-                    <span className="text-red-500 text-sm">{errorMessage}</span>
-                  )}
 
                   <label
                     htmlFor="password"
@@ -162,6 +166,9 @@ const Login = ({ modal, closeModal, openRegister }) => {
                       {passwordError}
                     </span>
                   )}
+                  {errorMessage && (
+                    <span className="text-red-500 text-sm">{errorMessage}</span>
+                  )}
 
                   <div className="flex justify-end">
                     <span className="text-end mt-2  text-blue-600 hover:text-blue-800 cursor-pointer">
@@ -192,6 +199,9 @@ const Login = ({ modal, closeModal, openRegister }) => {
           </div>
         </div>
       )}
+      {/* {modal && (
+        
+      )} */}
     </>
   );
 };

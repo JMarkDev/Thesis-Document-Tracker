@@ -2,8 +2,6 @@ import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import PageNotFound from "./pages/PageNotFound";
 import Homepage from "./pages/Homepage";
-import Sidebar from "./components/sidebar/Sidebar";
-import Profile from "./pages/Faculty/Profile";
 import ScanNow from "./pages/Admin/ScanNow/ScanNow";
 import LayoutAdmin from "./components/layout/LayoutAdmin";
 import Dashboard from "./pages/Admin/Dashboard/Dashboard";

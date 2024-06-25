@@ -28,7 +28,6 @@ const Homepage = () => {
   return (
     <>
       <NavBar />
-
       <div className="relative w-full h-[calc(100vh-4rem)]">
         <img
           src={landingImg}

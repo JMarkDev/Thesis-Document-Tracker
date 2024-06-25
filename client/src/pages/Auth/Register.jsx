@@ -14,7 +14,7 @@ const Register = ({ modal, closeModal, openLogin }) => {
           id="default-modal"
           tabIndex="-1"
           aria-hidden={!modal}
-          className="fixed overflow-y-auto overflow-hidden  inset-0 z-50 px-5 flex items-center justify-center w-full h-full bg-gray-800 bg-opacity-50 font-normal"
+          className="fixed overflow-y-auto overflow-hidden  inset-0 z-50 px-5 flex items-center justify-center w-full h-full bg-gray-800 bg-opacity-40 font-normal"
         >
           <div className="relative w-full max-w-2xl max-h-full py-5 ">
             <div className="relative text-gray-800 bg-white rounded-xl shadow-lg">
