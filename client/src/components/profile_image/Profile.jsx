@@ -1,18 +1,21 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "./ProfileStyle.css";
 import { FaCamera } from "react-icons/fa";
+import PropTypes from "prop-types";
 
-const Profile = () => {
+const Profile = ({ setValue }) => {
   const [profilePic, setProfilePic] = useState(
     "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg"
   );
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
+    console.log(file);
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
         setProfilePic(e.target.result);
+        setValue("image", e.target.result);
       };
       reader.readAsDataURL(file);
     }
@@ -21,6 +24,7 @@ const Profile = () => {
   const handleUploadButtonClick = () => {
     document.getElementById("file-upload").click();
   };
+  console.log(profilePic);
 
   return (
     <div className="row ">
@@ -50,6 +54,10 @@ const Profile = () => {
       </div>
     </div>
   );
+};
+
+Profile.propTypes = {
+  setValue: PropTypes.func,
 };
 
 export default Profile;

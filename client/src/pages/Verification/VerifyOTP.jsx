@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import "./otp.css";
 import sentImage from "../../assets/images/send-email.jpg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/api";
 import LoginLoading from "../../components/loader/LoginLoading";
@@ -11,6 +11,7 @@ import "react-toastify/dist/ReactToastify.css";
 const VerifyOTP = ({ email, closeOTP }) => {
   const toast = useToast();
   const navigate = useNavigate();
+  const [countDown, setCountDown] = useState(0);
   const [otp, setOtp] = useState(new Array(4).fill(""));
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -45,9 +46,8 @@ const VerifyOTP = ({ email, closeOTP }) => {
         toast.success(response.data.message);
 
         closeOTP();
-        setTimeout(() => {
-          navigate("/dashboard");
-        }, 2000);
+
+        navigate("/dashboard");
       }
     } catch (error) {
       setErrorMessage(error.response.data.message);
@@ -62,6 +62,7 @@ const VerifyOTP = ({ email, closeOTP }) => {
       const response = await api.post("/auth/resend-otp", { email: email });
       if (response.data.status === "success") {
         toast.success(response.data.message);
+        setCountDown(60);
         setLoading(false);
       }
     } catch (error) {
@@ -70,8 +71,13 @@ const VerifyOTP = ({ email, closeOTP }) => {
     }
   };
 
-  const disableSubmit = otp.includes("") || otp.length < 4;
+  useEffect(() => {
+    if (countDown > 0) {
+      setTimeout(() => setCountDown(countDown - 1), 1000);
+    }
+  }, [countDown]);
 
+  const disableSubmit = otp.includes("") || otp.length < 4;
   return (
     <>
       <div
@@ -119,8 +125,17 @@ const VerifyOTP = ({ email, closeOTP }) => {
           </button>
           <p className="resendNote">
             Didn&apos;t receive the code?{" "}
-            <button onClick={handleResend} className="resendBtn" type="button">
-              Resend Code
+            <button
+              onClick={handleResend}
+              className={`resendBtn ${
+                countDown > 0 ? "cursor-not-allowed" : "cursor-pointer"
+              }`}
+              type="button"
+              disabled={countDown > 0}
+            >
+              {`${
+                countDown > 0 ? `Resend code in ${countDown}s` : "Resend Code"
+              }`}
             </button>
           </p>
         </form>

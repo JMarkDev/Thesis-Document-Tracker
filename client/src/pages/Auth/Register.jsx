@@ -1,21 +1,54 @@
-import { useEffect, useState } from "react";
 import wmsuCampus from "../../utils/Campus";
 import Profile from "../../components/profile_image/Profile";
 import PropTypes from "prop-types";
+import api from "../../api/api";
+import { useForm } from "react-hook-form";
+import LoginLoading from "../../components/loader/LoginLoading";
+import VerifyOTP from "../Verification/VerifyOTP";
+import { useState } from "react";
 
 const Register = ({ modal, closeModal, openLogin }) => {
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const { register, handleSubmit, setValue } = useForm();
+  const [showOTP, setShowOTP] = useState(false);
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const onSubmit = async (data) => {
+    setEmail(data.email);
+    data.role = "faculty";
+    console.log(data);
+    setLoading(true);
+
+    try {
+      const response = await api.post("/auth/register", data);
+      if (response.data.status === "success") {
+        setShowOTP(true);
+        setLoading(false);
+      }
+      console.log(data);
+      console.log(response.data);
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
   };
+
+  const closeOTP = () => {
+    setShowOTP(false);
+  };
+
   return (
     <>
-      {modal && (
+      {showOTP ? (
+        <VerifyOTP showOTP={showOTP} closeOTP={closeOTP} email={email} />
+      ) : (
         <div
           id="default-modal"
           tabIndex="-1"
           aria-hidden={!modal}
           className="fixed overflow-y-auto overflow-hidden  inset-0 z-50 px-5 flex items-center justify-center w-full h-full bg-gray-800 bg-opacity-40 font-normal"
         >
+          {loading && <LoginLoading />}
           <div className="relative w-full max-w-2xl max-h-full py-5 ">
             <div className="relative text-gray-800 bg-white rounded-xl shadow-lg">
               <div className="flex items-center justify-center">
@@ -46,33 +79,15 @@ const Register = ({ modal, closeModal, openLogin }) => {
               </div>
 
               <div className="p-6  space-y-4 text-sm text-[#221f1f]">
-                <form action="">
+                <form onSubmit={handleSubmit(onSubmit)}>
                   <div className="flex justify-center items-center">
-                    <Profile />
+                    <Profile setValue={setValue} />
                   </div>
 
                   <div className="flex justify-between md:flex-row flex-col gap-4 mt-4">
-                    {/* <div>
-                      <label
-                        htmlFor="username-error"
-                        className="block mb-2 text-sm font-medium text-red-700 dark:text-red-500"
-                      >
-                        Your name
-                      </label>
-                      <input
-                        type="text"
-                        id="username-error"
-                        className="bg-red-50 border border-red-500 text-red-900 placeholder-red-700 text-sm rounded-lg focus:ring-red-500 dark:bg-gray-700 focus:border-red-500 block w-full p-2.5 dark:text-red-500 dark:placeholder-red-500 dark:border-red-500"
-                        placeholder="Bonnie Green"
-                      />
-                      <p className="mt-2 text-sm text-red-600 dark:text-red-500">
-                        <span className="font-medium text-sm">
-                          First name is required!
-                        </span>
-                      </p>
-                    </div> */}
                     <div className="relative">
                       <input
+                        {...register("firstName")}
                         type="text"
                         id="first_name"
                         className="block pb-2 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-red-500 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
@@ -87,6 +102,7 @@ const Register = ({ modal, closeModal, openLogin }) => {
                     </div>
                     <div className="relative">
                       <input
+                        {...register("lastName")}
                         type="text"
                         id="last_name"
                         className="block  pb-2 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
@@ -101,6 +117,7 @@ const Register = ({ modal, closeModal, openLogin }) => {
                     </div>
                     <div className="relative">
                       <input
+                        {...register("middleInitial")}
                         type="text"
                         id="middle_initial"
                         className="block pb-2 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
@@ -116,6 +133,7 @@ const Register = ({ modal, closeModal, openLogin }) => {
                   </div>
                   <div className="relative mt-4">
                     <input
+                      {...register("email")}
                       type="text"
                       id="email"
                       className="block px-2.5 pb-2 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
@@ -131,6 +149,7 @@ const Register = ({ modal, closeModal, openLogin }) => {
                   <div className="flex justify-between md:flex-row flex-col gap-5">
                     <div className="relative mt-4 md:w-1/3">
                       <input
+                        {...register("birthDate")}
                         type="date"
                         id="birth_date"
                         className="block pb-2 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
@@ -146,6 +165,7 @@ const Register = ({ modal, closeModal, openLogin }) => {
 
                     <div className="relative mt-4 flex flex-grow">
                       <input
+                        {...register("contactNumber")}
                         type="number"
                         id="contact_number"
                         className="block pb-2 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
@@ -161,6 +181,7 @@ const Register = ({ modal, closeModal, openLogin }) => {
                   </div>
                   <div className="relative mt-4">
                     <input
+                      {...register("designation")}
                       type="text"
                       id="designation"
                       className="block px-2.5 pb-2 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
@@ -175,6 +196,7 @@ const Register = ({ modal, closeModal, openLogin }) => {
                   </div>
                   <div className="relative mt-4">
                     <select
+                      {...register("esuCampus")}
                       type="text"
                       id="esu_campus"
                       className="block px-2.5 pb-2 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
@@ -200,6 +222,7 @@ const Register = ({ modal, closeModal, openLogin }) => {
                   </div>
                   <div className="relative mt-4">
                     <input
+                      {...register("password")}
                       type="password"
                       id="password"
                       className="block px-2.5 pb-2 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
@@ -214,6 +237,7 @@ const Register = ({ modal, closeModal, openLogin }) => {
                   </div>
                   <div className="relative mt-4">
                     <input
+                      {...register("confirmPassword")}
                       type="password"
                       id="confirm_password"
                       className="block px-2.5 pb-2 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
@@ -247,6 +271,9 @@ const Register = ({ modal, closeModal, openLogin }) => {
           </div>
         </div>
       )}
+      {/* {modal && ( */}
+
+      {/* )} */}
     </>
   );
 };
