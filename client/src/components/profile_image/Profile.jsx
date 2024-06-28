@@ -10,7 +10,6 @@ const Profile = ({ setValue }) => {
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
-    console.log(file);
     if (file) {
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -24,7 +23,6 @@ const Profile = ({ setValue }) => {
   const handleUploadButtonClick = () => {
     document.getElementById("file-upload").click();
   };
-  console.log(profilePic);
 
   return (
     <div className="row ">

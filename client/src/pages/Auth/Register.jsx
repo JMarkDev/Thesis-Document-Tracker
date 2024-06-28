@@ -6,29 +6,92 @@ import { useForm } from "react-hook-form";
 import LoginLoading from "../../components/loader/LoginLoading";
 import VerifyOTP from "../Verification/VerifyOTP";
 import { useState } from "react";
+import { useToast } from "../../hooks/useToast";
 
 const Register = ({ modal, closeModal, openLogin }) => {
+  const toast = useToast();
   const { register, handleSubmit, setValue } = useForm();
   const [showOTP, setShowOTP] = useState(false);
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // Error state for backend validation messages
+  const [firstnameError, setFirstnameError] = useState("");
+  const [lastnameError, setLastnameError] = useState("");
+  const [middleInitialError, setMiddleInitialError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [birthDateError, setBirthDateError] = useState("");
+  const [contactError, setContactError] = useState("");
+  const [designationError, setDesignationError] = useState("");
+  const [esuError, setEsuError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [confirmPasswordError, setConfirmpasswordError] = useState("");
+
   const onSubmit = async (data) => {
     setEmail(data.email);
     data.role = "faculty";
-    console.log(data);
     setLoading(true);
 
+    setFirstnameError("");
+    setLastnameError("");
+    setMiddleInitialError("");
+    setEmailError("");
+    setBirthDateError("");
+    setContactError("");
+    setDesignationError("");
+    setEsuError("");
+    setPasswordError("");
+    setConfirmpasswordError("");
+
     try {
-      const response = await api.post("/auth/register", data);
+      const response = await api.post("/auth/register", data, {
+        headers: { "Content-Type": "application/json" },
+      });
       if (response.data.status === "success") {
+        toast.success(response.data.message);
         setShowOTP(true);
         setLoading(false);
       }
-      console.log(data);
-      console.log(response.data);
     } catch (error) {
       setLoading(false);
+      if (data.esuCampus === "") {
+        setEsuError("ESU Campus is required");
+      }
+      if (error.response.data.errors) {
+        error.response.data.errors.forEach((error) => {
+          switch (error.path) {
+            case "firstName":
+              setFirstnameError(error.msg);
+              break;
+            case "lastName":
+              setLastnameError(error.msg);
+              break;
+            case "middleInitial":
+              setMiddleInitialError(error.msg);
+              break;
+            case "email":
+              setEmailError(error.msg);
+              break;
+            case "birthDate":
+              setBirthDateError(error.msg);
+              break;
+            case "contactNumber":
+              setContactError(error.msg);
+              break;
+            case "designation":
+              setDesignationError(error.msg);
+              break;
+            case "password":
+              setPasswordError(error.msg);
+              break;
+            case "confirmPassword":
+              setConfirmpasswordError(error.msg);
+              break;
+            default:
+              console.log(error);
+          }
+        });
+      }
       console.log(error);
     }
   };
@@ -85,170 +148,259 @@ const Register = ({ modal, closeModal, openLogin }) => {
                   </div>
 
                   <div className="flex justify-between md:flex-row flex-col gap-4 mt-4">
-                    <div className="relative">
-                      <input
-                        {...register("firstName")}
-                        type="text"
-                        id="first_name"
-                        className="block pb-2 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-red-500 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                        placeholder=" "
-                      />
-                      <label
-                        htmlFor="first_name"
-                        className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"
-                      >
-                        First Name
-                      </label>
-                    </div>
-                    <div className="relative">
-                      <input
-                        {...register("lastName")}
-                        type="text"
-                        id="last_name"
-                        className="block  pb-2 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                        placeholder=" "
-                      />
-                      <label
-                        htmlFor="last_name"
-                        className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"
-                      >
-                        Last Name
-                      </label>
-                    </div>
-                    <div className="relative">
-                      <input
-                        {...register("middleInitial")}
-                        type="text"
-                        id="middle_initial"
-                        className="block pb-2 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                        placeholder=" "
-                      />
-                      <label
-                        htmlFor="middle_initial"
-                        className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"
-                      >
-                        Middle Initial
-                      </label>
-                    </div>
-                  </div>
-                  <div className="relative mt-4">
-                    <input
-                      {...register("email")}
-                      type="text"
-                      id="email"
-                      className="block px-2.5 pb-2 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                      placeholder=" "
-                    />
-                    <label
-                      htmlFor="email"
-                      className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"
-                    >
-                      Email Address
-                    </label>
-                  </div>
-                  <div className="flex justify-between md:flex-row flex-col gap-5">
-                    <div className="relative mt-4 md:w-1/3">
-                      <input
-                        {...register("birthDate")}
-                        type="date"
-                        id="birth_date"
-                        className="block pb-2 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                        placeholder=" "
-                      />
-                      <label
-                        htmlFor="birth_date"
-                        className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"
-                      >
-                        Birth Date
-                      </label>
+                    <div className="flex flex-col">
+                      <div className="relative">
+                        <input
+                          {...register("firstName")}
+                          type="text"
+                          id="first_name"
+                          className={`${
+                            firstnameError
+                              ? "border-red-500 "
+                              : "border-gray-300 "
+                          } block pb-2 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 appearance-none   focus:outline-none focus:ring-0 focus:border-blue-600 peer`}
+                          placeholder=" "
+                        />
+                        <label
+                          htmlFor="first_name"
+                          className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"
+                        >
+                          First Name
+                        </label>
+                      </div>
+                      {firstnameError && (
+                        <span className="text-red-500">{firstnameError}</span>
+                      )}
                     </div>
 
-                    <div className="relative mt-4 flex flex-grow">
+                    <div className="flex flex-col">
+                      <div className="relative">
+                        <input
+                          {...register("lastName")}
+                          type="text"
+                          id="last_name"
+                          className={`${
+                            lastnameError
+                              ? "border-red-500 "
+                              : "border-gray-300 "
+                          } block pb-2 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 appearance-none   focus:outline-none focus:ring-0 focus:border-blue-600 peer`}
+                          placeholder=" "
+                        />
+                        <label
+                          htmlFor="last_name"
+                          className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"
+                        >
+                          Last Name
+                        </label>
+                      </div>
+                      {lastnameError && (
+                        <span className="text-red-500">{lastnameError}</span>
+                      )}
+                    </div>
+                    <div className="flex flex-col">
+                      <div className="relative">
+                        <input
+                          {...register("middleInitial")}
+                          type="text"
+                          id="middle_initial"
+                          className={`${
+                            middleInitialError
+                              ? "border-red-500 "
+                              : "border-gray-300 "
+                          } block pb-2 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 appearance-none   focus:outline-none focus:ring-0 focus:border-blue-600 peer`}
+                          placeholder=" "
+                        />
+                        <label
+                          htmlFor="middle_initial"
+                          className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"
+                        >
+                          Middle Initial
+                        </label>
+                      </div>
+                      {middleInitialError && (
+                        <span className="text-red-500">
+                          {middleInitialError}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex flex-col">
+                    <div className="relative mt-4">
                       <input
-                        {...register("contactNumber")}
-                        type="number"
-                        id="contact_number"
-                        className="block pb-2 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                        {...register("email")}
+                        type="text"
+                        id="email"
+                        className={`${
+                          emailError ? "border-red-500 " : "border-gray-300 "
+                        } block pb-2 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 appearance-none   focus:outline-none focus:ring-0 focus:border-blue-600 peer`}
                         placeholder=" "
                       />
                       <label
-                        htmlFor="contact_number"
+                        htmlFor="email"
                         className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"
                       >
-                        Contact Number
+                        Email Address
                       </label>
                     </div>
+                    {emailError && (
+                      <span className="text-red-500">{emailError}</span>
+                    )}
                   </div>
-                  <div className="relative mt-4">
-                    <input
-                      {...register("designation")}
-                      type="text"
-                      id="designation"
-                      className="block px-2.5 pb-2 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                      placeholder=" "
-                    />
-                    <label
-                      htmlFor="designation"
-                      className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"
-                    >
-                      Designation
-                    </label>
-                  </div>
-                  <div className="relative mt-4">
-                    <select
-                      {...register("esuCampus")}
-                      type="text"
-                      id="esu_campus"
-                      className="block px-2.5 pb-2 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                      placeholder=" "
-                    >
-                      <option value="">Select ESU Campus</option>
-                      {wmsuCampus.map((campus, index) => (
-                        <option
-                          key={index}
-                          value={campus}
-                          className="md:text-sm text-[12px]"
+                  <div className="flex justify-between md:flex-row flex-col gap-5">
+                    <div className="flex flex-col mt-4 md:w-1/3">
+                      <div className="relative ">
+                        <input
+                          {...register("birthDate")}
+                          type="date"
+                          id="birth_date"
+                          className={`${
+                            birthDateError
+                              ? "border-red-500 "
+                              : "border-gray-300 "
+                          } block pb-2 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 appearance-none   focus:outline-none focus:ring-0 focus:border-blue-600 peer`}
+                          placeholder=" "
+                        />
+                        <label
+                          htmlFor="birth_date"
+                          className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"
                         >
-                          {campus}
-                        </option>
-                      ))}
-                    </select>
-                    <label
-                      htmlFor="esu_campus"
-                      className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"
-                    >
-                      ESU Campus
-                    </label>
+                          Birth Date
+                        </label>
+                      </div>
+                      {birthDateError && (
+                        <span className="text-red-500">{birthDateError}</span>
+                      )}
+                    </div>
+
+                    <div className="flex flex-col flex-grow md:mt-4 ">
+                      <div className="relative ">
+                        <input
+                          {...register("contactNumber")}
+                          type="number"
+                          id="contact_number"
+                          className={`${
+                            contactError
+                              ? "border-red-500 "
+                              : "border-gray-300 "
+                          } block pb-2 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 appearance-none   focus:outline-none focus:ring-0 focus:border-blue-600 peer`}
+                          placeholder=" "
+                        />
+                        <label
+                          htmlFor="contact_number"
+                          className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"
+                        >
+                          Contact Number
+                        </label>
+                      </div>
+                      {contactError && (
+                        <span className="text-red-500">{contactError}</span>
+                      )}
+                    </div>
                   </div>
-                  <div className="relative mt-4">
-                    <input
-                      {...register("password")}
-                      type="password"
-                      id="password"
-                      className="block px-2.5 pb-2 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                      placeholder=" "
-                    />
-                    <label
-                      htmlFor="password"
-                      className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"
-                    >
-                      Password
-                    </label>
+                  <div className="flex flex-col">
+                    <div className="relative mt-4">
+                      <input
+                        {...register("designation")}
+                        type="text"
+                        id="designation"
+                        className={`${
+                          designationError
+                            ? "border-red-500 "
+                            : "border-gray-300 "
+                        } block pb-2 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 appearance-none   focus:outline-none focus:ring-0 focus:border-blue-600 peer`}
+                        placeholder=" "
+                      />
+                      <label
+                        htmlFor="designation"
+                        className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"
+                      >
+                        Designation
+                      </label>
+                    </div>
+                    {designationError && (
+                      <span className="text-red-500">{designationError}</span>
+                    )}
                   </div>
-                  <div className="relative mt-4">
-                    <input
-                      {...register("confirmPassword")}
-                      type="password"
-                      id="confirm_password"
-                      className="block px-2.5 pb-2 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                      placeholder=" "
-                    />
-                    <label
-                      htmlFor="confirm_password"
-                      className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"
-                    >
-                      Confirm Password
-                    </label>
+                  <div className="flex flex-col mt-4">
+                    <div className="relative ">
+                      <select
+                        {...register("esuCampus")}
+                        type="text"
+                        id="esu_campus"
+                        className={`${
+                          esuError ? "border-red-500 " : "border-gray-300 "
+                        } block pb-2 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 appearance-none   focus:outline-none focus:ring-0 focus:border-blue-600 peer`}
+                        placeholder=" "
+                      >
+                        <option value="">Select ESU Campus</option>
+                        {wmsuCampus.map((campus, index) => (
+                          <option
+                            key={index}
+                            value={campus}
+                            className="md:text-sm text-[12px]"
+                          >
+                            {campus}
+                          </option>
+                        ))}
+                      </select>
+                      <label
+                        htmlFor="esu_campus"
+                        className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"
+                      >
+                        ESU Campus
+                      </label>
+                    </div>
+                    {esuError && (
+                      <span className="text-red-500">{esuError}</span>
+                    )}
+                  </div>
+                  <div className="flex flex-col">
+                    <div className="relative mt-4">
+                      <input
+                        {...register("password")}
+                        type="password"
+                        id="password"
+                        className={`${
+                          passwordError ? "border-red-500 " : "border-gray-300 "
+                        } block pb-2 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 appearance-none   focus:outline-none focus:ring-0 focus:border-blue-600 peer`}
+                        placeholder=" "
+                      />
+                      <label
+                        htmlFor="password"
+                        className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"
+                      >
+                        Password
+                      </label>
+                    </div>
+                    {passwordError && (
+                      <span className="text-red-500">{passwordError}</span>
+                    )}
+                  </div>
+                  <div className="flex flex-col mt-4">
+                    <div className="relative">
+                      <input
+                        {...register("confirmPassword")}
+                        type="password"
+                        id="confirm_password"
+                        className={`${
+                          confirmPasswordError
+                            ? "border-red-500 "
+                            : "border-gray-300 "
+                        } block pb-2 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 appearance-none   focus:outline-none focus:ring-0 focus:border-blue-600 peer`}
+                        placeholder=" "
+                      />
+                      <label
+                        htmlFor="confirm_password"
+                        className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"
+                      >
+                        Confirm Password
+                      </label>
+                    </div>
+                    {confirmPasswordError && (
+                      <span className="text-red-500">
+                        {confirmPasswordError}
+                      </span>
+                    )}
                   </div>
                   <button
                     type="submit"
