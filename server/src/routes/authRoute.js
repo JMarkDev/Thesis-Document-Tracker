@@ -24,6 +24,7 @@ router.post(
   authController.handleLogin
 );
 router.post("/verify-otp", otpController.verifyOTP);
+router.post("/resend-otp", otpController.resendOTP);
 router.post("/logout", authController.handleLogout);
 
 module.exports = router;

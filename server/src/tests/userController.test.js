@@ -13,7 +13,7 @@ jest.mock("../utils/sendEmail", () => {
   };
 });
 
-describe("PUT /user/approved-faculty/:id", () => {
+describe("PUT /users/approved-faculty/:id", () => {
   // Clear mock calls before all test
   beforeAll(async () => {
     await userModel.update.mockClear();
@@ -29,7 +29,7 @@ describe("PUT /user/approved-faculty/:id", () => {
 
     userModel.update.mockResolvedValue(mockResponse);
     const response = await request(app)
-      .put(`/user/approved-faculty/${id}`)
+      .put(`/users/approved-faculty/${id}`)
       .expect(200);
 
     expect(response.body).toEqual({

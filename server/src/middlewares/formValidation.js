@@ -52,6 +52,7 @@ const registerValidationRules = () => {
     validateEmail(),
     validateRequiredField("birthDate"),
     validateRequiredField("contactNumber"),
+    validateRequiredField("designation"),
     validatePassword(),
     body("confirmPassword").custom((value, { req }) => {
       if (!value) {

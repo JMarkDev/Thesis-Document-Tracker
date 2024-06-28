@@ -10,7 +10,7 @@ const User = sequelize.define(
       autoIncrement: true,
     },
     image: {
-      type: DataTypes.STRING(250),
+      type: DataTypes.BLOB("long"),
       allowNull: true,
     },
     firstName: {

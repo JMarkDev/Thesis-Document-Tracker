@@ -25,7 +25,7 @@ const postOTP = async (email) => {
 };
 
 const verifyOTP = async (req, res) => {
-  const { email, otp, role } = req.body;
+  const { email, otp } = req.body;
 
   try {
     const userData = await userModel.findOne({ where: { email: email } });
@@ -104,6 +104,8 @@ const verifyOTP = async (req, res) => {
         : "Registration Successful.",
       role: userRole,
       userId,
+      accessToken,
+      refreshToken,
     });
   } catch (error) {
     console.error(error);
