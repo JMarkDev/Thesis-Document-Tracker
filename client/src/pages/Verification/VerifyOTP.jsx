@@ -40,14 +40,22 @@ const VerifyOTP = ({ email, closeOTP }) => {
       otp: otp.join(""),
     };
     try {
-      const response = await api.post("/auth/verify-otp", data);
+      const response = await api.post("/auth/verify-otp", data, {
+        withCredentials: true,
+      });
+
+      // Set the access token in the axios headers
+      api.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${response.data.accessToken}`;
+      console.log(response.data);
 
       if (response.data.status === "success") {
         toast.success(response.data.message);
 
         closeOTP();
 
-        navigate("/dashboard");
+        // navigate("/dashboard");
       }
     } catch (error) {
       setErrorMessage(error.response.data.message);

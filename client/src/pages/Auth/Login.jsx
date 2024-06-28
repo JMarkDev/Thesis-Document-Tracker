@@ -4,6 +4,7 @@ import api from "../../api/api";
 import LoginLoading from "../../components/loader/LoginLoading";
 import VerifyOTP from "../Verification/VerifyOTP";
 import { useToast } from "../../hooks/useToast";
+import { FiEyeOff, FiEye } from "react-icons/fi";
 
 const Login = ({ modal, closeModal, openRegister }) => {
   const toast = useToast();
@@ -14,6 +15,7 @@ const Login = ({ modal, closeModal, openRegister }) => {
   const [passwordError, setPasswordError] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [showOTP, setShowOTP] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async (e) => {
     setLoading(true);
@@ -58,6 +60,10 @@ const Login = ({ modal, closeModal, openRegister }) => {
 
   const closeOTP = () => {
     setShowOTP(false);
+  };
+
+  const handleShowPass = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
@@ -157,7 +163,7 @@ const Login = ({ modal, closeModal, openRegister }) => {
                       </svg>
                     </span>
                     <input
-                      type="text"
+                      type={showPassword ? "text" : "password"}
                       id="password"
                       className={`rounded-lg pl-12 bg-gray-50 border  ${
                         passwordError || errorMessage
@@ -167,6 +173,13 @@ const Login = ({ modal, closeModal, openRegister }) => {
                       placeholder="Enter your email"
                       onChange={(e) => setPassword(e.target.value)}
                     />
+                    <span
+                      onClick={handleShowPass}
+                      className="absolute right-0 text-lg m-3 text-gray-700"
+                    >
+                      {" "}
+                      {showPassword ? <FiEye /> : <FiEyeOff />}
+                    </span>
                   </div>
                   {passwordError && (
                     <span className="text-red-500 text-sm">

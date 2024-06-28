@@ -8,7 +8,11 @@ import VerifyOTP from "../Verification/VerifyOTP";
 import { useState } from "react";
 import { useToast } from "../../hooks/useToast";
 
+import { FiEyeOff, FiEye } from "react-icons/fi";
+
 const Register = ({ modal, closeModal, openLogin }) => {
+  const [showPass, setShowPass] = useState(false);
+
   const toast = useToast();
   const { register, handleSubmit, setValue } = useForm();
   const [showOTP, setShowOTP] = useState(false);
@@ -92,12 +96,16 @@ const Register = ({ modal, closeModal, openLogin }) => {
           }
         });
       }
-      console.log(error);
+      toast.error(error.response.data.message);
     }
   };
 
   const closeOTP = () => {
     setShowOTP(false);
+  };
+
+  const handleShowPass = () => {
+    setShowPass(!showPass);
   };
 
   return (
@@ -358,7 +366,8 @@ const Register = ({ modal, closeModal, openLogin }) => {
                     <div className="relative mt-4">
                       <input
                         {...register("password")}
-                        type="password"
+                        // type="text"
+                        type={showPass ? "text" : "password"}
                         id="password"
                         className={`${
                           passwordError ? "border-red-500 " : "border-gray-300 "
@@ -371,6 +380,12 @@ const Register = ({ modal, closeModal, openLogin }) => {
                       >
                         Password
                       </label>
+                      <span
+                        onClick={handleShowPass}
+                        className="absolute right-0 top-0 m-4 text-lg text-gray-700"
+                      >
+                        {showPass ? <FiEye /> : <FiEyeOff />}
+                      </span>
                     </div>
                     {passwordError && (
                       <span className="text-red-500">{passwordError}</span>
@@ -380,7 +395,7 @@ const Register = ({ modal, closeModal, openLogin }) => {
                     <div className="relative">
                       <input
                         {...register("confirmPassword")}
-                        type="password"
+                        type={showPass ? "text" : "password"}
                         id="confirm_password"
                         className={`${
                           confirmPasswordError
@@ -395,6 +410,12 @@ const Register = ({ modal, closeModal, openLogin }) => {
                       >
                         Confirm Password
                       </label>
+                      <span
+                        onClick={handleShowPass}
+                        className="absolute right-0 top-0 m-4 text-lg text-gray-700"
+                      >
+                        {showPass ? <FiEye /> : <FiEyeOff />}
+                      </span>
                     </div>
                     {confirmPasswordError && (
                       <span className="text-red-500">
@@ -403,8 +424,11 @@ const Register = ({ modal, closeModal, openLogin }) => {
                     )}
                   </div>
                   <button
+                    disabled={loading ? true : false}
                     type="submit"
-                    className="w-full mt-6 p-2 bg-main hover:bg-main_hover text-[#fff] md:text-lg text-sm rounded-lg"
+                    className={`${
+                      loading ? "cursor-not-allowed" : "cursor-pointer"
+                    } w-full  mt-6 p-2 bg-main hover:bg-main_hover text-[#fff] md:text-lg text-sm rounded-lg`}
                   >
                     Register
                   </button>
