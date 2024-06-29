@@ -49,8 +49,8 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center">
-          <ul className="flex gap-5 items-center text-white font-bold  lg:text-lg text-sm">
-            {!autorize ? (
+          <ul className="flex md:gap-5 gap-3 items-center text-white font-bold  lg:text-lg text-sm">
+            {autorize ? (
               <>
                 <li>
                   <div className="relative">
@@ -66,7 +66,7 @@ const Navbar = () => {
                     </div>
                   </div>
                   {showNotification && (
-                    <div className="absolute right-10">
+                    <div className="absolute right-5">
                       <Notification />
                     </div>
                   )}

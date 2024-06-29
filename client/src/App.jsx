@@ -15,6 +15,13 @@ import EsuRegistrar from "./pages/Admin/UserMagement/EsuRegistrar";
 import AdminStaff from "./pages/Admin/UserMagement/AdminStaff";
 import DocumentDetails from "./pages/Admin/Documents/DocumentDetails";
 import { ToastContainer } from "react-toastify";
+import ProtectedRoute from "./route/ProtectedRoute";
+
+import FacultyProfile from "./pages/Faculty/FacultyProfile";
+import Upload from "./pages/Faculty/UploadDocuments";
+import FacultyReports from "./pages/Faculty/FacultyReports";
+import UploadedDocuments from "./pages/Faculty/UploadedDocuments";
+import LayoutFaculty from "./components/layout/LayoutFaculty";
 
 function App() {
   const adminLinks = [
@@ -50,6 +57,25 @@ function App() {
       component: <DocumentDetails />,
     },
   ];
+
+  const facultyLinks = [
+    {
+      title: "Faculty Profile",
+      path: "/faculty-profile",
+      component: <FacultyProfile />,
+    },
+    { title: "Upload", path: "/faculty-upload", component: <Upload /> },
+    {
+      title: "Reports",
+      path: "/faculty-reports",
+      component: <FacultyReports />,
+    },
+    {
+      title: "Uploaded Documents",
+      path: "/uploaded-documents",
+      component: <UploadedDocuments />,
+    },
+  ];
   return (
     <>
       <ToastContainer />
@@ -61,7 +87,26 @@ function App() {
           <Route
             key={index}
             path={link.path}
-            element={<LayoutAdmin>{link.component}</LayoutAdmin>}
+            element={
+              <ProtectedRoute
+                element={<LayoutAdmin>{link.component}</LayoutAdmin>}
+                allowedRoles={["admin"]}
+              />
+            }
+          />
+        ))}
+
+        {facultyLinks.map((link, index) => (
+          <Route
+            key={index}
+            path={link.path}
+            element={<LayoutFaculty>{link.component}</LayoutFaculty>}
+            // element={
+            //   <ProtectedRoute
+            //     element={link.component}
+            //     allowedRoles={["faculty"]}
+            //   />
+            // }
           />
         ))}
 
