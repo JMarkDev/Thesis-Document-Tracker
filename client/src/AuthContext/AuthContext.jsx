@@ -14,9 +14,7 @@ export const AuthProvider = ({ children }) => {
     const fetchUser = async () => {
       try {
         const response = await api.get("/protected", { withCredentials: true });
-        console.log(response.data);
-
-        setUser(response.data.user);
+        setUser(response.data?.user);
       } catch (error) {
         console.log(error);
       } finally {
@@ -34,7 +32,6 @@ export const AuthProvider = ({ children }) => {
       </div>
     );
   }
-  console.log(user);
 
   return (
     <AuthContext.Provider value={{ user, setUser }}>

@@ -1,22 +1,25 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { MdQrCodeScanner } from "react-icons/md";
 import { IoDocuments } from "react-icons/io5";
 import { GoWorkflow } from "react-icons/go";
 import { HiBuildingOffice2 } from "react-icons/hi2";
-import { FaUsers } from "react-icons/fa";
-import { TbReportAnalytics } from "react-icons/tb";
+import { FaUsers, FaRegUser, FaFileUpload } from "react-icons/fa";
+import { TbReportAnalytics, TbReportSearch } from "react-icons/tb";
 import { RiPieChart2Fill } from "react-icons/ri";
 import { BiLogOut } from "react-icons/bi";
 import { FiChevronDown, FiChevronRight } from "react-icons/fi";
+import { GiFiles } from "react-icons/gi";
 import Logo from "../../assets/images/logo with word.png";
 import PropTypes from "prop-types";
 
 const Sidebar = ({ sidebar, handleBurger }) => {
   const location = useLocation();
   const [isUserManagementOpen, setIsUserManagementOpen] = useState(false);
+  const [sidebarLinks, setSidebarLinks] = useState([]);
+  const role = "faculty";
 
-  const sidebarLinks = [
+  const adminLinks = [
     { title: "Scan Now", path: "/scan-now", src: <MdQrCodeScanner /> },
     { title: "Dashboard", path: "/dashboard", src: <RiPieChart2Fill /> },
     { title: "Documents", path: "/documents", src: <IoDocuments /> },
@@ -40,6 +43,31 @@ const Sidebar = ({ sidebar, handleBurger }) => {
     { title: "Reports", path: "/reports", src: <TbReportAnalytics /> },
     { title: "Logout", path: "/home", src: <BiLogOut /> },
   ];
+
+  const facultyLinks = [
+    { title: "Profile", path: "/faculty-profile", src: <FaRegUser /> },
+    {
+      title: "Upload Documents",
+      path: "/faculty-upload",
+      src: <FaFileUpload />,
+    },
+    {
+      title: "All Documents",
+      path: "/faculty-all-documents",
+      src: <GiFiles />,
+    },
+    { title: "Reports", path: "/faculty-reports", src: <TbReportSearch /> },
+    { title: "Logout", path: "/home", src: <BiLogOut /> },
+  ];
+
+  useEffect(() => {
+    if (role === "admin") {
+      setSidebarLinks(adminLinks);
+    } else if (role === "faculty") {
+      setSidebarLinks(facultyLinks);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [role]);
 
   const toggleUserManagement = () => {
     setIsUserManagementOpen(!isUserManagementOpen);

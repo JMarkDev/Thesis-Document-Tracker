@@ -20,7 +20,7 @@ import ProtectedRoute from "./route/ProtectedRoute";
 import FacultyProfile from "./pages/Faculty/FacultyProfile";
 import Upload from "./pages/Faculty/UploadDocuments";
 import FacultyReports from "./pages/Faculty/FacultyReports";
-import UploadedDocuments from "./pages/Faculty/UploadedDocuments";
+import AllDocuments from "./pages/Faculty/AllDocuments";
 import LayoutFaculty from "./components/layout/LayoutFaculty";
 
 function App() {
@@ -72,10 +72,11 @@ function App() {
     },
     {
       title: "Uploaded Documents",
-      path: "/uploaded-documents",
-      component: <UploadedDocuments />,
+      path: "/faculty-all-documents",
+      component: <AllDocuments />,
     },
   ];
+
   return (
     <>
       <ToastContainer />

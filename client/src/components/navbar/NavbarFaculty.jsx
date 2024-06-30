@@ -1,7 +1,6 @@
 import { useLocation } from "react-router-dom";
 import userIcon from "../../assets/images/wmsu logo.png";
 import { IoMdNotificationsOutline } from "react-icons/io";
-import { TiPlus } from "react-icons/ti";
 import { FaBars } from "react-icons/fa6";
 import PropTypes from "prop-types";
 
@@ -31,15 +30,7 @@ const NavDashboard = ({ handleBurger }) => {
       </button>
       <div className="flex  justify-between items-center w-full">
         <h1 className="md:text-2xl text-lg font-bold text-main">{title}</h1>
-        <div className="flex  lg:text-[16px] text-sm gap-3">
-          <div className="flex items-center gap-2">
-            <button className="flex items-center">
-              {" "}
-              <TiPlus className="text-2xl" />
-              <span className="hidden lg:block">Deadline</span>
-            </button>
-          </div>
-
+        <div className="flex  lg:text-[16px] text-sm gap-5">
           <button className="flex items-center ">
             <IoMdNotificationsOutline className="text-2xl " />
             <span className="hidden lg:block">Notifications</span>
@@ -47,7 +38,6 @@ const NavDashboard = ({ handleBurger }) => {
           <div className="flex items-center gap-3">
             <div className="flex-col flex">
               <span className="font-bold">Josiel mark</span>
-              <span className="text-[12px]">Admin</span>
             </div>
 
             <img src={userIcon} alt="" className="h-10 w-10 " />

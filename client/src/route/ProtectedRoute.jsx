@@ -15,7 +15,6 @@ const ProtectedRoute = ({ element, allowedRoles }) => {
       </div>
     ); // Show loading state while fetching user
   }
-  console.log(user);
 
   if (!user) {
     // if user is not authenticated, redirect to home
