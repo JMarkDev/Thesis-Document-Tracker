@@ -17,10 +17,10 @@ import DocumentDetails from "./pages/Admin/Documents/DocumentDetails";
 import { ToastContainer } from "react-toastify";
 import ProtectedRoute from "./route/ProtectedRoute";
 
-import FacultyProfile from "./pages/Faculty/FacultyProfile";
-import Upload from "./pages/Faculty/UploadDocuments";
-import FacultyReports from "./pages/Faculty/FacultyReports";
-import AllDocuments from "./pages/Faculty/AllDocuments";
+import FacultyProfile from "./pages/Faculty/Profile/FacultyProfile";
+import Upload from "./pages/Faculty/UploadDocuments/UploadDocuments";
+import FacultyReports from "./pages/Faculty/Reports/FacultyReports";
+import AllDocuments from "./pages/Faculty/AllDocuments/AllDocuments";
 import LayoutFaculty from "./components/layout/LayoutFaculty";
 
 function App() {

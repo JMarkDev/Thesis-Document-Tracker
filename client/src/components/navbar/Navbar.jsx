@@ -12,7 +12,6 @@ const Navbar = () => {
   const { user } = useContext(AuthContext);
   const [modal, setModal] = useState(false);
   const [registerModal, setRegisterModal] = useState(false);
-  const [autorize, setAutorize] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
 
