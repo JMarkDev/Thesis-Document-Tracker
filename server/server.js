@@ -37,13 +37,14 @@ app.get("/uploads/:filename", (req, res) => {
 app.use("/auth", authRoute);
 
 // refresh token route
-app.use("/refresh", refreshToken, async (req, res) => {
+app.post("/refresh", refreshToken, async (req, res) => {
   return res.json({ message: "refresh" });
 });
 
 //protected route
 app.use("/protected", verifyToken, async (req, res) => {
   return res.json({
+    user: req.user,
     message: "You are authorized to access this protected resources.",
   });
 });

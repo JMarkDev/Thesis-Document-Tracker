@@ -77,12 +77,20 @@ const verifyOTP = async (req, res) => {
     // Register user and generate tokens
     const { id: userId, email: userEmail, role: userRole } = userData;
 
-    const accessToken = jwt.sign({ email }, process.env.ACCESS_TOKEN, {
-      expiresIn: "30m",
-    });
-    const refreshToken = jwt.sign({ email }, process.env.REFRESH_TOKEN, {
-      expiresIn: "30m",
-    });
+    const accessToken = jwt.sign(
+      { email, userRole },
+      process.env.ACCESS_TOKEN,
+      {
+        expiresIn: "30m",
+      }
+    );
+    const refreshToken = jwt.sign(
+      { email, userRole },
+      process.env.REFRESH_TOKEN,
+      {
+        expiresIn: "30m",
+      }
+    );
 
     // Set secure HTTP-only cookies
     res.cookie("accessToken", accessToken, {
