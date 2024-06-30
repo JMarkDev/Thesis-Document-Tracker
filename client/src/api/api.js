@@ -5,7 +5,7 @@ const api = axios.create({
 });
 
 let refresh = false;
-axios.interceptors.response.use(
+api.interceptors.response.use(
   (resp) => resp,
   async (error) => {
     if (error.response.status === 401 && !refresh) {

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import Logo from "../../assets/images/logo with word (1).png";
 import Login from "../../pages/Auth/Login";
 import Register from "../../pages/Auth/Register";
@@ -6,8 +6,10 @@ import { IoMdNotificationsOutline } from "react-icons/io";
 import Profile from "../../assets/images/wmsu logo.png";
 import Notification from "../Notification";
 import NavProfile from "../NavProfile";
+import { AuthContext } from "../../AuthContext/AuthContext";
 
 const Navbar = () => {
+  const { user } = useContext(AuthContext);
   const [modal, setModal] = useState(false);
   const [registerModal, setRegisterModal] = useState(false);
   const [autorize, setAutorize] = useState(false);
@@ -50,7 +52,7 @@ const Navbar = () => {
 
         <div className="flex items-center">
           <ul className="flex md:gap-5 gap-3 items-center text-white font-bold  lg:text-lg text-sm">
-            {autorize ? (
+            {user ? (
               <>
                 <li>
                   <div className="relative">

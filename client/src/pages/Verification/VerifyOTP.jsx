@@ -44,18 +44,18 @@ const VerifyOTP = ({ email, closeOTP }) => {
         withCredentials: true,
       });
 
-      // Set the access token in the axios headers
-      api.defaults.headers.common[
-        "Authorization"
-      ] = `Bearer ${response.data.accessToken}`;
-      console.log(response.data);
+      const accessToken = response.data.accessToken;
+      if (accessToken) {
+        // Set the access token in the axios headers
+        api.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
 
-      if (response.data.status === "success") {
-        toast.success(response.data.message);
+        if (response.data.status === "success") {
+          toast.success(response.data.message);
 
-        closeOTP();
+          closeOTP();
 
-        // navigate("/dashboard");
+          // navigate("/dashboard");
+        }
       }
     } catch (error) {
       setErrorMessage(error.response.data.message);
