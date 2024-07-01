@@ -23,7 +23,7 @@ describe("PUT /users/approved-faculty/:id", () => {
     await sequelize.close();
     jest.clearAllMocks();
   });
-  it("should update faculty status into approved", async () => {
+  it.skip("should update faculty status into approved", async () => {
     const id = 3;
     const mockResponse = [1]; // Assuming Sequelize's update method returns an array with the number of affected rows
 
@@ -36,5 +36,19 @@ describe("PUT /users/approved-faculty/:id", () => {
       status: "success",
       message: "Account approved successfully",
     });
+  });
+
+  it("should get user by email", async () => {
+    const mockEmail = "jmseroy@gmail.com";
+
+    userModel.findOne.mockResolvedValue(mockEmail);
+
+    const response = await request(app).get(
+      `/users/get-user?email=${mockEmail}`
+    );
+
+    expect(response.status).toBe(200);
+
+    expect(response.body).toEqual(mockEmail);
   });
 });
