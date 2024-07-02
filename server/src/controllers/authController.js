@@ -44,25 +44,36 @@ const handleRegister = async (req, res) => {
       await otpController.postOTP(email);
 
       // upload image
-      // let newFileName = null;
-      // if (req.file) {
-      //   let filetype = req.file.mimetype.split("/")[1];
-      //   newFileName = req.file.filename + "." + filetype;
-      //   fs.rename(
-      //     `./uploads/${req.file.filename}`,
-      //     `./uploads/${newFileName}`,
-      //     async (err) => {
-      //       if (err) throw err;
-      //       console.log("uploaded successfully");
-      //     }
-      //   );
-      // }
+      let newFileName = null;
+      if (req.file) {
+        let filetype = req.file.mimetype.split("/")[1];
+        newFileName = req.file.filename + "." + filetype;
+        fs.rename(
+          `./uploads/${req.file.filename}`,
+          `./uploads/${newFileName}`,
+          async (err) => {
+            if (err) throw err;
+            console.log("uploaded successfully");
+          }
+        );
+      }
+      // let filetype = req.file.mimetype.split("/")[1];
+      // let newFileName = req.file.filename + "." + filetype;
+      // fs.rename(
+      //   `./uploads/${req.file.filename}`,
+      //   `./uploads/${newFileName}`,
+      //   async (err) => {
+      //     if (err) throw err;
+      //     console.log("uploaded successfully");
+      //   }
+      // );
 
       const hashPassword = await bcrypt.hash(password, saltsRounds);
 
       await userModel.create({
-        // image: newFileName ? `/uploads/${newFileName}` : null,
-        image: image,
+        image: newFileName ? `/uploads/${newFileName}` : null,
+        // image: image,
+        // image: `/uploads/${newFileName}`,
         firstName: firstName,
         lastName: lastName,
         middleInitial: middleInitial,
@@ -91,6 +102,7 @@ const handleRegister = async (req, res) => {
 
 const handleLogin = async (req, res) => {
   const { email, password } = req.body;
+  console.log("login");
 
   try {
     const user = await userModel.findOne({

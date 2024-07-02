@@ -6,6 +6,7 @@ const verifyToken = (req, res, next) => {
     const token = req.cookies.accessToken;
     // const authHeader = req.headers["authorization"];
     // const token = authHeader && authHeader.split(" ")[1];
+    // console.log(token);
 
     if (!token) {
       return res.status(401).json({ error: "Unauthorized" });
