@@ -1,5 +1,6 @@
 import wmsuCampus from "../../utils/Campus";
 import Profile from "../../components/profile_image/Profile";
+import "../../components/profile_image/ProfileStyle.css";
 import PropTypes from "prop-types";
 import api from "../../api/api";
 import { useForm } from "react-hook-form";
@@ -48,9 +49,22 @@ const Register = ({ modal, closeModal, openLogin }) => {
     setConfirmpasswordError("");
 
     try {
-      const response = await api.post("/auth/register", data, {
-        headers: { "Content-Type": "application/json" },
-      });
+      const formData = new FormData();
+      formData.append("firstName", data.firstName);
+      formData.append("lastName", data.lastName);
+      formData.append("middleInitial", data.middleInitial);
+      formData.append("email", data.email);
+      formData.append("birthDate", data.birthDate);
+      formData.append("contactNumber", data.contactNumber);
+      formData.append("designation", data.designation);
+      formData.append("esuCampus", data.esuCampus);
+      formData.append("officeName", data.officeName);
+      formData.append("role", data.role);
+      formData.append("password", data.password);
+      formData.append("confirmPassword", data.confirmPassword);
+      formData.append("image", data.image); // Append the file
+
+      const response = await api.post("/auth/register", formData);
       if (response.data.status === "success") {
         toast.success(response.data.message);
         setShowOTP(true);
@@ -150,7 +164,11 @@ const Register = ({ modal, closeModal, openLogin }) => {
               </div>
 
               <div className="p-6  space-y-4 text-sm text-[#221f1f]">
-                <form onSubmit={handleSubmit(onSubmit)}>
+                <form
+                  onSubmit={handleSubmit(onSubmit)}
+                  method="POST"
+                  encType="multipart/form-data"
+                >
                   <div className="flex justify-center items-center">
                     <Profile setValue={setValue} />
                   </div>

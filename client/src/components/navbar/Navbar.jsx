@@ -1,19 +1,27 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import Logo from "../../assets/images/logo with word (1).png";
 import Login from "../../pages/Auth/Login";
 import Register from "../../pages/Auth/Register";
 import { IoMdNotificationsOutline } from "react-icons/io";
-import Profile from "../../assets/images/wmsu logo.png";
 import Notification from "../Notification";
 import NavProfile from "../NavProfile";
 import { AuthContext } from "../../AuthContext/AuthContext";
-
+import userIcon from "../../assets/images/user.png";
+import api from "../../api/api";
 const Navbar = () => {
-  const { user } = useContext(AuthContext);
+  const { userData } = useContext(AuthContext);
   const [modal, setModal] = useState(false);
   const [registerModal, setRegisterModal] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+  const [profilePic, setProfilePic] = useState(userIcon);
+  useEffect(() => {
+    if (userData && userData.image) {
+      setProfilePic(`${api.defaults.baseURL}${userData.image}`);
+    }
+  }, [userData]);
+
+  // console.log(profilePic);
 
   const openLogin = () => {
     setModal(true);
@@ -50,8 +58,8 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center">
-          <ul className="flex md:gap-5 gap-3 items-center text-white font-bold  lg:text-lg text-sm">
-            {user ? (
+          <ul className="flex gap-5  items-center text-white font-bold  lg:text-lg text-sm">
+            {userData ? (
               <>
                 <li>
                   <div className="relative">
@@ -61,7 +69,7 @@ const Navbar = () => {
                     <div
                       onClick={handleNotification}
                       onMouseEnter={handleNotification}
-                      className=" h-10 w-10 bg-white hover:bg-gray-300 cursor-pointer rounded-full text-gray-700 flex justify-center items-center"
+                      className=" h-10 w-10 text-white  cursor-pointer  flex justify-center items-center"
                     >
                       <IoMdNotificationsOutline className="text-3xl " />
                     </div>
@@ -72,14 +80,14 @@ const Navbar = () => {
                     </div>
                   )}
                 </li>
-                <li>Josiel Mark</li>
+                <li>{userData.firstName}</li>
                 <li>
                   <img
-                    src={Profile}
+                    src={profilePic}
                     onClick={handleProfile}
                     onMouseEnter={handleProfile}
                     alt=""
-                    className="h-10 w-10 cursor-pointer"
+                    className="h-10 w-10 rounded-full bg-white cursor-pointer"
                   />
                   {showProfile && (
                     <div className="absolute right-5">

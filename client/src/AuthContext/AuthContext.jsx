@@ -7,16 +7,23 @@ export const AuthContext = createContext();
 
 // eslint-disable-next-line react/prop-types
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  // const [user, setUser] = useState(null);
+  const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const response = await api.get("/protected", { withCredentials: true });
-        setUser(response.data?.user);
+        setUserData(response.data?.user);
+        const email = response.data?.user.email;
+        if (email) {
+          const userResponse = await api.get(`/users/get-user?email=${email}`);
+          setUserData(userResponse.data);
+        }
       } catch (error) {
-        console.log(error);
+        setLoading(false);
+        // console.log(error);
       } finally {
         setLoading(false);
       }
@@ -34,7 +41,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
+    <AuthContext.Provider value={{ userData, setUserData }}>
       {children}
     </AuthContext.Provider>
   );

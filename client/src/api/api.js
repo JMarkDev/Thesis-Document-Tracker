@@ -1,13 +1,14 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:3001/",
+  baseURL: "http://localhost:3001",
 });
 
 let refresh = false;
 api.interceptors.response.use(
   (resp) => resp,
   async (error) => {
+    // try {
     if (error.response.status === 401 && !refresh) {
       refresh = true;
       const response = await api.post(
@@ -23,8 +24,12 @@ api.interceptors.response.use(
         return axios.request(error.config);
       }
     }
+    // } catch (refreshError) {
+    //   console.error("Token refresh failed", refreshError);
+    // }
+
     refresh = false;
-    return error;
+    return Promise.reject(error);
   }
 );
 

@@ -10,11 +10,12 @@ const Profile = ({ setValue }) => {
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
+
     if (file) {
+      setValue("image", file);
       const reader = new FileReader();
       reader.onload = (e) => {
         setProfilePic(e.target.result);
-        setValue("image", e.target.result);
       };
       reader.readAsDataURL(file);
     }
@@ -45,6 +46,7 @@ const Profile = ({ setValue }) => {
             className="file-upload"
             type="file"
             accept="image/*"
+            name="image"
             onChange={handleFileChange}
             style={{ display: "none" }}
           />

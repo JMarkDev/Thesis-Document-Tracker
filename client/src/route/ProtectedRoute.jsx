@@ -5,7 +5,8 @@ import { AuthContext } from "../AuthContext/AuthContext";
 import LoginLoading from "../components/loader/LoginLoading";
 
 const ProtectedRoute = ({ element, allowedRoles }) => {
-  const { user } = useContext(AuthContext);
+  const { setUserData } = useContext(AuthContext);
+  console.log(setUserData);
   const { loading } = useContext(AuthContext);
 
   if (loading) {
@@ -16,13 +17,13 @@ const ProtectedRoute = ({ element, allowedRoles }) => {
     ); // Show loading state while fetching user
   }
 
-  if (!user) {
+  if (!setUserData) {
     // if user is not authenticated, redirect to home
     return <Navigate to="/home" replace />;
   }
 
   // if user is authenticated but not authorzed
-  if (allowedRoles && !allowedRoles.includes(user.userRole)) {
+  if (allowedRoles && !allowedRoles.includes(setUserData.role)) {
     return <Navigate to="/unauthorized" replace />;
   }
 
