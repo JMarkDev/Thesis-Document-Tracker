@@ -43,6 +43,10 @@ const VerifyOTP = ({ email, closeOTP }) => {
       const response = await api.post("/auth/verify-otp", data, {
         withCredentials: true,
       });
+      if (response.data.status === "success") {
+        closeOTP();
+        toast.success(response.data.message);
+      }
 
       const accessToken = response.data.accessToken;
       if (accessToken) {

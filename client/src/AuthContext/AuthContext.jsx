@@ -32,6 +32,22 @@ export const AuthProvider = ({ children }) => {
     fetchUser();
   }, []);
 
+  const logout = async () => {
+    try {
+      const response = await api.post(
+        "/auth/logout",
+        {},
+        { withCredentials: true }
+      );
+      if (response.data.status === "success") {
+        console.log("logout auth");
+        setUserData(null);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   if (loading) {
     return (
       <div>
@@ -41,7 +57,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ userData, setUserData }}>
+    <AuthContext.Provider value={{ userData, setUserData, logout }}>
       {children}
     </AuthContext.Provider>
   );

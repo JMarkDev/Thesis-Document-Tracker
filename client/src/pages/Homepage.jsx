@@ -73,7 +73,7 @@ const Homepage = () => {
         </div>
         <div>
           {openChat && (
-            <div className="z-30 bg-[#f2f2f2] h-[450px] transition-all shadow-2xl drop-shadow-xl w-[380px] fixed m-2 bottom-24 rounded-lg right-0">
+            <div className="z-30 bg-[#f2f2f2] h-[450px] transition-all shadow-2xl drop-shadow-xl w-[375px] fixed m-2 bottom-24 rounded-lg right-0">
               <div className="flex bg-main p-1 rounded-t-lg justify-between">
                 <div className="flex">
                   <img

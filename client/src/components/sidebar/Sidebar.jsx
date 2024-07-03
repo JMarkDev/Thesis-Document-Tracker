@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { MdQrCodeScanner } from "react-icons/md";
 import { IoDocuments } from "react-icons/io5";
@@ -12,12 +12,14 @@ import { FiChevronDown, FiChevronRight } from "react-icons/fi";
 import { GiFiles } from "react-icons/gi";
 import Logo from "../../assets/images/logo with word.png";
 import PropTypes from "prop-types";
+import { AuthContext } from "../../AuthContext/AuthContext";
 
 const Sidebar = ({ sidebar, handleBurger }) => {
+  const { userData } = useContext(AuthContext);
   const location = useLocation();
   const [isUserManagementOpen, setIsUserManagementOpen] = useState(false);
   const [sidebarLinks, setSidebarLinks] = useState([]);
-  const role = "faculty";
+  const role = userData?.role;
 
   const adminLinks = [
     { title: "Scan Now", path: "/scan-now", src: <MdQrCodeScanner /> },

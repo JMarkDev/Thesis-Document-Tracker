@@ -101,13 +101,13 @@ function App() {
           <Route
             key={index}
             path={link.path}
-            element={<LayoutFaculty>{link.component}</LayoutFaculty>}
-            // element={
-            //   <ProtectedRoute
-            //     element={link.component}
-            //     allowedRoles={["faculty"]}
-            //   />
-            // }
+            // element={<LayoutFaculty>{link.component}</LayoutFaculty>}
+            element={
+              <ProtectedRoute
+                element={<LayoutFaculty>{link.component}</LayoutFaculty>}
+                allowedRoles={["faculty"]}
+              />
+            }
           />
         ))}
 
