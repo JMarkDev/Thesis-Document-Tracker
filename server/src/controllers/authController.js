@@ -57,23 +57,11 @@ const handleRegister = async (req, res) => {
           }
         );
       }
-      // let filetype = req.file.mimetype.split("/")[1];
-      // let newFileName = req.file.filename + "." + filetype;
-      // fs.rename(
-      //   `./uploads/${req.file.filename}`,
-      //   `./uploads/${newFileName}`,
-      //   async (err) => {
-      //     if (err) throw err;
-      //     console.log("uploaded successfully");
-      //   }
-      // );
 
       const hashPassword = await bcrypt.hash(password, saltsRounds);
 
       await userModel.create({
         image: newFileName ? `/uploads/${newFileName}` : null,
-        // image: image,
-        // image: `/uploads/${newFileName}`,
         firstName: firstName,
         lastName: lastName,
         middleInitial: middleInitial,
@@ -102,7 +90,6 @@ const handleRegister = async (req, res) => {
 
 const handleLogin = async (req, res) => {
   const { email, password } = req.body;
-  console.log("login");
 
   try {
     const user = await userModel.findOne({
@@ -146,7 +133,7 @@ const handleLogin = async (req, res) => {
 const handleLogout = (req, res) => {
   res.clearCookie("accessToken");
   res.clearCookie("refreshToken");
-  res.status(200).json({ message: "Logout successful" });
+  res.status(200).json({ status: "success", message: "Logout successful" });
 };
 
 module.exports = {

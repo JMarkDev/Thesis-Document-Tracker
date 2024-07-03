@@ -29,6 +29,8 @@ const verifyOTP = async (req, res) => {
 
   try {
     const userData = await userModel.findOne({ where: { email: email } });
+    const { role: userRole, status } = userData;
+
     const matchedOTPRecord = await otpModel.findOne({
       where: { email: email },
     });
@@ -70,37 +72,40 @@ const verifyOTP = async (req, res) => {
       await sendNofication({
         email: email,
         subject: "WMSU-ESU Document Tracker Registration Successful",
-        message:
-          "Thank you for registering. Your account has been successfully created.",
+        message: `${
+          userRole === "faculty"
+            ? "Thank you for registering. Your account has been successfully created. Please wait for the registrar to approve your account."
+            : "Thank you for registering. Your account has been successfully created."
+        }`,
       });
+    } else {
+      //  generate tokens
+
+      const accessToken = jwt.sign(
+        { email, userRole },
+        process.env.ACCESS_TOKEN,
+        {
+          expiresIn: "30m",
+        }
+      );
+      const refreshToken = jwt.sign(
+        { email, userRole },
+        process.env.REFRESH_TOKEN,
+        {
+          expiresIn: "30m",
+        }
+      );
+
+      // Set secure HTTP-only cookies
+      res.cookie("accessToken", accessToken, {
+        httpOnly: true,
+        maxAge: 30 * 60 * 1000,
+      }); // 30 minutes
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        maxAge: 30 * 60 * 1000,
+      }); // 30 minutes
     }
-    // Register user and generate tokens
-    const { id: userId, email: userEmail, role: userRole } = userData;
-
-    const accessToken = jwt.sign(
-      { email, userRole },
-      process.env.ACCESS_TOKEN,
-      {
-        expiresIn: "30m",
-      }
-    );
-    const refreshToken = jwt.sign(
-      { email, userRole },
-      process.env.REFRESH_TOKEN,
-      {
-        expiresIn: "30m",
-      }
-    );
-
-    // Set secure HTTP-only cookies
-    res.cookie("accessToken", accessToken, {
-      httpOnly: true,
-      maxAge: 30 * 60 * 1000,
-    }); // 30 minutes
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      maxAge: 30 * 60 * 1000,
-    }); // 30 minutes
 
     // Delete the OTP after successful verification
     await otpModel.destroy({ where: { email: email } });
@@ -110,10 +115,6 @@ const verifyOTP = async (req, res) => {
       message: registeredUser
         ? "Login Successful."
         : "Registration Successful.",
-      role: userRole,
-      userId,
-      accessToken,
-      refreshToken,
     });
   } catch (error) {
     console.error(error);
