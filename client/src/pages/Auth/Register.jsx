@@ -35,6 +35,7 @@ const Register = ({ modal, closeModal, openLogin }) => {
   const onSubmit = async (data) => {
     setEmail(data.email);
     data.role = "faculty";
+    data.officeName = null;
     setLoading(true);
 
     setFirstnameError("");
@@ -125,7 +126,12 @@ const Register = ({ modal, closeModal, openLogin }) => {
   return (
     <>
       {showOTP ? (
-        <VerifyOTP showOTP={showOTP} closeOTP={closeOTP} email={email} />
+        <VerifyOTP
+          showOTP={showOTP}
+          closeOTP={closeOTP}
+          closeModal={closeModal}
+          email={email}
+        />
       ) : (
         <div
           id="default-modal"

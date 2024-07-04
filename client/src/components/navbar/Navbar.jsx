@@ -21,8 +21,6 @@ const Navbar = () => {
     }
   }, [userData]);
 
-  // console.log(profilePic);
-
   const openLogin = () => {
     setModal(true);
     setRegisterModal(false);
@@ -58,7 +56,7 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center">
-          <ul className="flex gap-5  items-center text-white font-bold  lg:text-lg text-sm">
+          <ul className="flex gap-5  items-center text-white   lg:text-lg text-sm">
             {userData ? (
               <>
                 <li>
@@ -80,7 +78,7 @@ const Navbar = () => {
                     </div>
                   )}
                 </li>
-                <li>{userData.firstName}</li>
+                <li className="font-bold">{userData.firstName}</li>
                 <li>
                   <img
                     src={profilePic}
@@ -90,7 +88,7 @@ const Navbar = () => {
                     className="h-10 w-10 rounded-full bg-white cursor-pointer"
                   />
                   {showProfile && (
-                    <div className="absolute right-5">
+                    <div className="absolute right-5 text-sm">
                       <NavProfile />
                     </div>
                   )}

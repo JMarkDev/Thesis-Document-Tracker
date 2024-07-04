@@ -7,7 +7,6 @@ export const AuthContext = createContext();
 
 // eslint-disable-next-line react/prop-types
 export const AuthProvider = ({ children }) => {
-  // const [user, setUser] = useState(null);
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -40,7 +39,6 @@ export const AuthProvider = ({ children }) => {
         { withCredentials: true }
       );
       if (response.data.status === "success") {
-        console.log("logout auth");
         setUserData(null);
       }
     } catch (error) {

@@ -1,15 +1,17 @@
 import PropTypes from "prop-types";
 import "./otp.css";
 import sentImage from "../../assets/images/send-email.jpg";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/api";
 import LoginLoading from "../../components/loader/LoginLoading";
 import { useToast } from "../../hooks/useToast";
 import "react-toastify/dist/ReactToastify.css";
+import { AuthContext } from "../../AuthContext/AuthContext";
 
-const VerifyOTP = ({ email, closeOTP }) => {
+const VerifyOTP = ({ email, closeOTP, closeModal }) => {
   const toast = useToast();
+  const { setUserData } = useContext(AuthContext);
   const navigate = useNavigate();
   const [countDown, setCountDown] = useState(0);
   const [otp, setOtp] = useState(new Array(4).fill(""));
@@ -43,27 +45,51 @@ const VerifyOTP = ({ email, closeOTP }) => {
       const response = await api.post("/auth/verify-otp", data, {
         withCredentials: true,
       });
+
       if (response.data.status === "success") {
-        closeOTP();
+        const accessToken = response.data?.accessToken;
         toast.success(response.data.message);
-      }
+        closeOTP();
+        closeModal(false);
+        if (accessToken) {
+          // Set the access token in the axios headers
+          api.defaults.headers.common[
+            "Authorization"
+          ] = `Bearer ${accessToken}`;
 
-      const accessToken = response.data.accessToken;
-      if (accessToken) {
-        // Set the access token in the axios headers
-        api.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+          // set userdata in authcontext
+          const userResponse = await api.get(`/users/get-user?email=${email}`);
+          setUserData(userResponse.data);
 
-        if (response.data.status === "success") {
-          toast.success(response.data.message);
+          const role = response.data.role;
 
-          closeOTP();
-
-          // navigate("/dashboard");
+          let path = "/";
+          switch (role) {
+            case "faculty":
+              path = "/faculty-profile";
+              break;
+            case "campus-admin":
+              path = "/campus-admin-dashboard";
+              break;
+            case "registrar":
+              path = "/dashboard-registrar";
+              break;
+            case "admin":
+              path = "/dashboard";
+              break;
+            case "offices":
+              path = "/offices-dashboard";
+              break;
+            default:
+              break;
+          }
+          navigate(path);
         }
       }
     } catch (error) {
       setErrorMessage(error.response.data.message);
       console.log(error.response);
+    } finally {
       setLoading(false);
     }
   };
@@ -76,6 +102,7 @@ const VerifyOTP = ({ email, closeOTP }) => {
         toast.success(response.data.message);
         setCountDown(60);
         setLoading(false);
+        setOtp(new Array(4).fill(""));
       }
     } catch (error) {
       setLoading(false);
@@ -159,6 +186,7 @@ const VerifyOTP = ({ email, closeOTP }) => {
 VerifyOTP.propTypes = {
   email: PropTypes.string.isRequired,
   closeOTP: PropTypes.func.isRequired,
+  closeModal: PropTypes.func.isRequired,
 };
 
 export default VerifyOTP;

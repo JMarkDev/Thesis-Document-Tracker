@@ -4,8 +4,24 @@ import { IoMdNotificationsOutline } from "react-icons/io";
 import { TiPlus } from "react-icons/ti";
 import { FaBars } from "react-icons/fa6";
 import PropTypes from "prop-types";
+import NavProfile from "../NavProfile";
+import Notification from "../Notification";
+import { useContext, useState, useEffect } from "react";
+import { AuthContext } from "../../AuthContext/AuthContext";
+import api from "../../api/api";
 
 const NavDashboard = ({ handleBurger }) => {
+  const { userData } = useContext(AuthContext);
+  const [showProfile, setShowProfile] = useState(false);
+  const [showNotification, setShowNotification] = useState(false);
+  const [profilePic, setProfilePic] = useState(userIcon);
+
+  useEffect(() => {
+    if (userData && userData.image) {
+      setProfilePic(`${api.defaults.baseURL}${userData.image}`);
+    }
+  }, [userData]);
+
   const pageTitles = {
     "/dashboard": "Dashboard",
     "/scan-now": "Scan Now",
@@ -17,6 +33,15 @@ const NavDashboard = ({ handleBurger }) => {
     "/transmittal": "Transmittal",
   };
 
+  const handleNotification = () => {
+    setShowNotification(!showNotification);
+    setShowProfile(false);
+  };
+
+  const handleProfile = () => {
+    setShowProfile(!showProfile);
+    setShowNotification(false);
+  };
   const location = useLocation();
   const title = pageTitles[location.pathname];
   return (
@@ -31,7 +56,7 @@ const NavDashboard = ({ handleBurger }) => {
       </button>
       <div className="flex  justify-between items-center w-full">
         <h1 className="md:text-2xl text-lg font-bold text-main">{title}</h1>
-        <div className="flex  lg:text-[16px] text-sm gap-3">
+        <div className="flex  lg:text-[16px] text-sm gap-5">
           <div className="flex items-center gap-2">
             <button className="flex items-center">
               {" "}
@@ -40,17 +65,43 @@ const NavDashboard = ({ handleBurger }) => {
             </button>
           </div>
 
-          <button className="flex items-center ">
-            <IoMdNotificationsOutline className="text-2xl " />
-            <span className="hidden lg:block">Notifications</span>
-          </button>
+          <div className="relative flex items-center">
+            <span className="text-sm absolute right-[-12px] top-[-4px] text-white bg-red-600 rounded-full px-1">
+              10
+            </span>
+            <button
+              onClick={handleNotification}
+              onMouseEnter={handleNotification}
+              className="flex items-center "
+            >
+              <IoMdNotificationsOutline className="text-2xl " />
+              <span className="hidden lg:block">Notifications</span>
+            </button>
+          </div>
+          {showNotification && (
+            <div className="absolute top-12 right-5">
+              <Notification />
+            </div>
+          )}
+
           <div className="flex items-center gap-3">
             <div className="flex-col flex">
               <span className="font-bold">Josiel mark</span>
               <span className="text-[12px]">Admin</span>
             </div>
 
-            <img src={userIcon} alt="" className="h-10 w-10 " />
+            <img
+              src={profilePic}
+              onClick={handleProfile}
+              onMouseEnter={handleProfile}
+              alt=""
+              className="h-10 w-10 rounded-full"
+            />
+            {showProfile && (
+              <div className="absolute top-12 right-5 text-sm">
+                <NavProfile />
+              </div>
+            )}
           </div>
         </div>
       </div>

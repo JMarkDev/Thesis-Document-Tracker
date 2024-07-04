@@ -1,7 +1,7 @@
 const Notification = () => {
   return (
     <div className="relative z-50 w-[320px] h-[400px]  bg-white rounded-lg ">
-      <h1 className="text-gray-800 p-4">Notifications</h1>
+      <h1 className="text-gray-800 p-2 font-bold md:text-lg">Notifications</h1>
       <div className="h-full overflow-y-auto">
         <ul>
           <li className="border-b border-gray-300 bg-gray-100 hover:bg-gray-200 cursor-pointer p-4 text-sm">

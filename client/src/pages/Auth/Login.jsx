@@ -41,7 +41,6 @@ const Login = ({ modal, closeModal, openRegister }) => {
         setLoading(false);
         setShowOTP(true);
       }
-      console.log(response.data);
     } catch (error) {
       setLoading(false);
       if (error.response.data.errors) {
@@ -69,7 +68,12 @@ const Login = ({ modal, closeModal, openRegister }) => {
   return (
     <>
       {showOTP ? (
-        <VerifyOTP showOTP={showOTP} closeOTP={closeOTP} email={email} />
+        <VerifyOTP
+          showOTP={showOTP}
+          closeOTP={closeOTP}
+          closeModal={closeModal}
+          email={email}
+        />
       ) : (
         <div
           id="default-modal"
