@@ -11,7 +11,7 @@ import Offices from "./pages/Admin/Offices/Offices";
 import Reports from "./pages/Admin/Reports/Reports";
 import Faculty from "./pages/Admin/UserMagement/Faculty";
 import CampusAdmin from "./pages/Admin/UserMagement/CampusAdmin";
-import EsuRegistrar from "./pages/Admin/UserMagement/EsuRegistrar";
+import EsuRegistrar from "./pages/Admin/UserMagement/ESU Registrar/EsuRegistrar";
 import AdminStaff from "./pages/Admin/UserMagement/AdminStaff";
 import DocumentDetails from "./pages/Admin/Documents/DocumentDetails";
 import { ToastContainer } from "react-toastify";

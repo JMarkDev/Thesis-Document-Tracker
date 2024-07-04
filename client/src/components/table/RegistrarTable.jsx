@@ -5,38 +5,39 @@ import { Link } from "react-router-dom";
 
 const documentData = [
   {
-    officeID: "00-OFFICE",
-    officeName: "ESU Registrar",
+    officeID: "00-REGISTRAR",
+    officeName: "ESU DIPLAHAN CAMPUS REGISTRAR",
+    email: "diplahan-registrar@gmail.com",
     date: "2024-06-06",
   },
   {
-    officeID: "01-OFFICE",
-    officeName: "OIC Dean of ESU Office",
+    officeID: "01-REGISTRAR",
+    officeName: "ESU PAGADIAN CAMPUS REGISTRAR",
     date: "2024-06-20",
   },
   {
-    officeID: "02-OFFICE",
-    officeName: "Vice President For Academic Affairs Office",
+    officeID: "02-REGISTRAR",
+    officeName: "ESU MOLAVE CAMPUS REGISTRAR",
     date: "2024-06-20",
   },
   {
-    officeID: "03-OFFICE",
-    officeName: "Human Resource Office)",
+    officeID: "03-REGISTRAR",
+    officeName: "ESU MALANGAS CAMPUS REGISTRAR",
     date: "2024-06-20",
   },
   {
-    officeID: "04-OFFICE",
-    officeName: "Accounting Office)",
+    officeID: "04-REGISTRAR",
+    officeName: "ESU ALICIA CAMPUS REGISTRAR",
     date: "2024-06-20",
   },
   {
-    officeID: "05-OFFICE",
-    officeName: "Records Office)",
+    officeID: "05-REGISTRAR",
+    officeName: "ESU IPIL CAMPUS REGISTRAR",
     date: "2024-06-20",
   },
 ];
 
-const Office = () => {
+const RegistrarTable = () => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -51,12 +52,12 @@ const Office = () => {
             <tr>
               <th scope="col" className="px-6 py-3 whitespace-nowrap">
                 <div className="flex items-center  whitespace-nowrap">
-                  OFFICE ID
+                  REGISTRAR ID
                 </div>
               </th>
               <th scope="col" className="px-6 py-3">
                 <div className="flex items-center  whitespace-nowrap">
-                  OFFICE NAME
+                  ESU CAMPUS
                 </div>
               </th>
 
@@ -109,4 +110,4 @@ const Office = () => {
   );
 };
 
-export default Office;
+export default RegistrarTable;
