@@ -26,7 +26,7 @@ const NavDashboard = ({ handleBurger }) => {
     "/dashboard": "Dashboard",
     "/scan-now": "Scan Now",
     "/documents": "Documents",
-    "/document-workflow": "Document Workflow",
+    "/document-workflow": "Workflow",
     "/offices": "Offices",
     "/user-management": "User Management",
     "/reports": "Reports",
@@ -66,7 +66,7 @@ const NavDashboard = ({ handleBurger }) => {
           </div>
 
           <div className="relative flex items-center">
-            <span className="text-sm absolute right-[-12px] top-[-4px] text-white bg-red-600 rounded-full px-1">
+            <span className="text-sm absolute right-[-12px] top-[-4px]  text-white bg-red-600 rounded-full px-1">
               10
             </span>
             <button

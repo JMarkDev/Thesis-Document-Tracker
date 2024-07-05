@@ -1,6 +1,17 @@
+import { useState } from "react";
 import OfficeTable from "../../../components/table/OfficeTable";
 import { IoSearch } from "react-icons/io5";
+import AddOffice from "./AddOffice";
 const Office = () => {
+  const [showModal, setShowModal] = useState(false);
+  const openModal = () => {
+    setShowModal(!showModal);
+  };
+
+  const closeModal = (modal) => {
+    setShowModal(modal);
+  };
+
   return (
     <div>
       <div className="flex text-sm md:text-[16px] justify-between lg:flex-row flex-col-reverse gap-5">
@@ -12,9 +23,13 @@ const Office = () => {
           />
           <IoSearch className="text-2xl absolute right-2 text-gray-600" />
         </div>
-        <button className="w-fit p-2 px-6 rounded-lg bg-main hover:bg-main_hover text-white font-semi">
+        <button
+          onClick={openModal}
+          className="w-fit p-2 px-6  rounded-lg bg-main hover:bg-main_hover text-white font-semi"
+        >
           Add Office
         </button>
+        {showModal && <AddOffice modal={openModal} closeModal={closeModal} />}
       </div>
       <div className="mt-8">
         <OfficeTable />

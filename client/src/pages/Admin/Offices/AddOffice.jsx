@@ -1,16 +1,21 @@
-import wmsuCampus from "../../utils/Campus";
-import Profile from "../../components/profile_image/Profile";
+// import Back from "../../../components/buttons/Back";
+// const AddOffice = () => {
+//   return <div>AddOffice</div>;
+// };
+
+// export default AddOffice;
+import Profile from "../../../components/profile_image/Profile";
 import PropTypes from "prop-types";
-import api from "../../api/api";
+import api from "../../../api/api";
 import { useForm } from "react-hook-form";
-import LoginLoading from "../../components/loader/LoginLoading";
-import VerifyOTP from "../Verification/VerifyOTP";
+import LoginLoading from "../../../components/loader/LoginLoading";
+import VerifyOTP from "../../../pages/Verification/VerifyOTP";
 import { useState } from "react";
-import { useToast } from "../../hooks/useToast";
+import { useToast } from "../../../hooks/useToast";
 
 import { FiEyeOff, FiEye } from "react-icons/fi";
 
-const Register = ({ modal, closeModal, openLogin }) => {
+const AddOffice = ({ modal, closeModal }) => {
   const [showPass, setShowPass] = useState(false);
 
   const toast = useToast();
@@ -27,13 +32,12 @@ const Register = ({ modal, closeModal, openLogin }) => {
   const [birthDateError, setBirthDateError] = useState("");
   const [contactError, setContactError] = useState("");
   const [designationError, setDesignationError] = useState("");
-  const [esuError, setEsuError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmpasswordError] = useState("");
 
   const onSubmit = async (data) => {
     setEmail(data.email);
-    data.role = "faculty";
+    data.role = "office";
     data.officeName = null;
     setLoading(true);
 
@@ -44,7 +48,6 @@ const Register = ({ modal, closeModal, openLogin }) => {
     setBirthDateError("");
     setContactError("");
     setDesignationError("");
-    setEsuError("");
     setPasswordError("");
     setConfirmpasswordError("");
 
@@ -72,9 +75,7 @@ const Register = ({ modal, closeModal, openLogin }) => {
       }
     } catch (error) {
       setLoading(false);
-      if (data.esuCampus === "") {
-        setEsuError("ESU Campus is required");
-      }
+
       if (error.response.data.errors) {
         error.response.data.errors.forEach((error) => {
           switch (error.path) {
@@ -143,7 +144,7 @@ const Register = ({ modal, closeModal, openLogin }) => {
             <div className="relative text-gray-800 bg-white rounded-xl shadow-lg">
               <div className="flex items-center justify-center">
                 <h1 className="md:text-2xl font-bold text-lg p-4">
-                  Sign up your account
+                  Add new office
                 </h1>
                 <button
                   type="button"
@@ -178,6 +179,33 @@ const Register = ({ modal, closeModal, openLogin }) => {
                     <Profile setValue={setValue} />
                   </div>
 
+                  <div className="flex flex-col">
+                    <div className="relative mt-4">
+                      <input
+                        {...register("officeName")}
+                        type="text"
+                        id="officeName"
+                        className={`${
+                          designationError
+                            ? "border-red-500 "
+                            : "border-gray-300 "
+                        } block pb-2 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 appearance-none   focus:outline-none focus:ring-0 focus:border-blue-600 peer`}
+                        placeholder=" "
+                      />
+                      <label
+                        htmlFor="officeName"
+                        className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"
+                      >
+                        Office Name
+                      </label>
+                    </div>
+                    {designationError && (
+                      <span className="text-red-500">{designationError}</span>
+                    )}
+                  </div>
+                  <h1 className="mt-4 text-lg font-bold text-gray-700">
+                    User Account
+                  </h1>
                   <div className="flex justify-between md:flex-row flex-col gap-4 mt-4">
                     <div className="flex flex-col">
                       <div className="relative">
@@ -352,39 +380,7 @@ const Register = ({ modal, closeModal, openLogin }) => {
                       <span className="text-red-500">{designationError}</span>
                     )}
                   </div>
-                  <div className="flex flex-col mt-4">
-                    <div className="relative ">
-                      <select
-                        {...register("esuCampus")}
-                        type="text"
-                        id="esu_campus"
-                        className={`${
-                          esuError ? "border-red-500 " : "border-gray-300 "
-                        } block pb-2 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 appearance-none   focus:outline-none focus:ring-0 focus:border-blue-600 peer`}
-                        placeholder=" "
-                      >
-                        <option value="">Select ESU Campus</option>
-                        {wmsuCampus.map((campus, index) => (
-                          <option
-                            key={index}
-                            value={campus}
-                            className="md:text-sm text-[12px]"
-                          >
-                            {campus}
-                          </option>
-                        ))}
-                      </select>
-                      <label
-                        htmlFor="esu_campus"
-                        className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"
-                      >
-                        ESU Campus
-                      </label>
-                    </div>
-                    {esuError && (
-                      <span className="text-red-500">{esuError}</span>
-                    )}
-                  </div>
+
                   <div className="flex flex-col">
                     <div className="relative mt-4">
                       <input
@@ -453,17 +449,8 @@ const Register = ({ modal, closeModal, openLogin }) => {
                       loading ? "cursor-not-allowed" : "cursor-pointer"
                     } w-full  mt-6 p-2 bg-main hover:bg-main_hover text-[#fff] md:text-lg text-sm rounded-lg`}
                   >
-                    Register
+                    Add Office
                   </button>
-                  <p className="mt-4 text-sm">
-                    Already have an account?{" "}
-                    <span
-                      onClick={openLogin}
-                      className="text-blue-700 font-semibold cursor-pointer"
-                    >
-                      Login
-                    </span>
-                  </p>
                 </form>
               </div>
             </div>
@@ -477,10 +464,9 @@ const Register = ({ modal, closeModal, openLogin }) => {
   );
 };
 
-Register.propTypes = {
+AddOffice.propTypes = {
   modal: PropTypes.bool,
   closeModal: PropTypes.func,
-  openLogin: PropTypes.func,
 };
 
-export default Register;
+export default AddOffice;

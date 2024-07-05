@@ -49,8 +49,6 @@ const VerifyOTP = ({ email, closeOTP, closeModal }) => {
       if (response.data.status === "success") {
         const accessToken = response.data?.accessToken;
         toast.success(response.data.message);
-        closeOTP();
-        closeModal(false);
         if (accessToken) {
           // Set the access token in the axios headers
           api.defaults.headers.common[
@@ -85,6 +83,8 @@ const VerifyOTP = ({ email, closeOTP, closeModal }) => {
           }
           navigate(path);
         }
+        closeOTP();
+        closeModal(false);
       }
     } catch (error) {
       setErrorMessage(error.response.data.message);
