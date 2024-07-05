@@ -59,6 +59,9 @@ const verifyOTP = async (req, res) => {
       },
     });
 
+    // initialize access token
+    let accessToken = null;
+
     if (!registeredUser) {
       // Update user status if not already registered
       await userModel.update(
@@ -81,18 +84,14 @@ const verifyOTP = async (req, res) => {
     } else {
       //  generate tokens
 
-      const accessToken = jwt.sign(
-        { email, userRole },
-        process.env.ACCESS_TOKEN,
-        {
-          expiresIn: "30m",
-        }
-      );
+      accessToken = jwt.sign({ email, userRole }, process.env.ACCESS_TOKEN, {
+        expiresIn: "30m",
+      });
       const refreshToken = jwt.sign(
         { email, userRole },
         process.env.REFRESH_TOKEN,
         {
-          expiresIn: "30m",
+          expiresIn: "45m",
         }
       );
 
@@ -103,7 +102,7 @@ const verifyOTP = async (req, res) => {
       }); // 30 minutes
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
-        maxAge: 30 * 60 * 1000,
+        maxAge: 45 * 60 * 1000,
       }); // 30 minutes
     }
 
@@ -115,6 +114,8 @@ const verifyOTP = async (req, res) => {
       message: registeredUser
         ? "Login Successful."
         : "Registration Successful.",
+      role: userRole,
+      accessToken: accessToken,
     });
   } catch (error) {
     console.error(error);

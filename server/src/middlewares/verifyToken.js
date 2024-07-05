@@ -4,10 +4,6 @@ require("dotenv").config();
 const verifyToken = (req, res, next) => {
   try {
     const token = req.cookies.accessToken;
-    // const authHeader = req.headers["authorization"];
-    // const token = authHeader && authHeader.split(" ")[1];
-    // console.log(token);
-
     if (!token) {
       return res.status(401).json({ error: "Unauthorized" });
     }
@@ -21,7 +17,7 @@ const verifyToken = (req, res, next) => {
       // console.log(decoded);
       next();
     });
-    return res.json(token);
+    // return res.json(token);
   } catch (error) {
     return res.status(401).json({
       message: "Unauthorized",

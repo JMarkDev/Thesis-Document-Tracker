@@ -7,21 +7,21 @@ const refreshToken = (req, res, next) => {
     if (!refreshToken) {
       return res.status(401).json({ error: "Unauthorized" });
     }
+    console.log("refresh");
 
     jwt.verify(refreshToken, process.env.REFRESH_TOKEN, (err, decoded) => {
       if (err) {
         return res.status(401).json({ error: "Unauthorized" });
       }
 
-      //   console.log(decoded.email);
       const accessToken = jwt.sign(
         { email: decoded.email },
-        "access_token_secret",
+        process.env.ACCESS_TOKEN,
         {
           expiresIn: "30m",
         }
       );
-
+      console.log("refresh", accessToken);
       // Set a secure HTTP-only cookie
       res.cookie("accessToken", accessToken, {
         httpOnly: true,
@@ -29,8 +29,8 @@ const refreshToken = (req, res, next) => {
       });
 
       req.user = decoded;
-      next();
-      return res.status(200).json(accessToken);
+      // next();
+      return res.status(200).json({ accessToken });
     });
   } catch (error) {
     return res.status(401).json({
