@@ -7,5 +7,6 @@ const userController = require("../controllers/userController");
 router.get("/get-user", userController.getUserByEmail);
 router.get("/get-all-user", userController.getAllUser);
 router.put("/approved-faculty/:id", userController.approveFaculty);
+router.get("/get-user-by-role", userController.getUserByRole);
 
 module.exports = router;

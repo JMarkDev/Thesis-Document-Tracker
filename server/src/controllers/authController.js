@@ -30,6 +30,7 @@ const handleRegister = async (req, res) => {
         [Sequelize.Op.or]: [{ status: "verified" }, { status: "approved" }],
       },
     });
+
     if (verifyUser) {
       return res.status(400).json({ message: "User already exists" });
     } else {
@@ -39,6 +40,10 @@ const handleRegister = async (req, res) => {
           status: "pending",
         },
       });
+
+      // if (verifyUser && verifyUser.officeName === officeName) {
+      //   return res.status(400).json({ message: "Office name already exists" });
+      // }
 
       // send OTP to email
       await otpController.postOTP(email);

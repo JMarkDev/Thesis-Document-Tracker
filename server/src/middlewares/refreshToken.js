@@ -7,7 +7,6 @@ const refreshToken = (req, res, next) => {
     if (!refreshToken) {
       return res.status(401).json({ error: "Unauthorized" });
     }
-    console.log("refresh");
 
     jwt.verify(refreshToken, process.env.REFRESH_TOKEN, (err, decoded) => {
       if (err) {
@@ -21,7 +20,7 @@ const refreshToken = (req, res, next) => {
           expiresIn: "30m",
         }
       );
-      console.log("refresh", accessToken);
+      console.log(accessToken, "refresh");
       // Set a secure HTTP-only cookie
       res.cookie("accessToken", accessToken, {
         httpOnly: true,
