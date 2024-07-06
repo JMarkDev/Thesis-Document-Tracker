@@ -3,7 +3,7 @@ import "./otp.css";
 import sentImage from "../../assets/images/send-email.jpg";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../../api/api";
+import api from "../../api/axios";
 import LoginLoading from "../../components/loader/LoginLoading";
 import { useToast } from "../../hooks/useToast";
 import "react-toastify/dist/ReactToastify.css";

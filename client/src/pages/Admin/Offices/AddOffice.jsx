@@ -6,7 +6,7 @@
 // export default AddOffice;
 import Profile from "../../../components/profile_image/Profile";
 import PropTypes from "prop-types";
-import api from "../../../api/api";
+import api from "../../../api/axios";
 import { useForm } from "react-hook-form";
 import LoginLoading from "../../../components/loader/LoginLoading";
 import VerifyOTP from "../../../pages/Verification/VerifyOTP";
@@ -25,6 +25,7 @@ const AddOffice = ({ modal, closeModal }) => {
   const [loading, setLoading] = useState(false);
 
   // Error state for backend validation messages
+  const [officeNameError, setOfficeNameError] = useState("");
   const [firstnameError, setFirstnameError] = useState("");
   const [lastnameError, setLastnameError] = useState("");
   const [middleInitialError, setMiddleInitialError] = useState("");
@@ -38,9 +39,10 @@ const AddOffice = ({ modal, closeModal }) => {
   const onSubmit = async (data) => {
     setEmail(data.email);
     data.role = "office";
-    data.officeName = null;
+    data.esuCampus = null;
     setLoading(true);
 
+    setOfficeNameError("");
     setFirstnameError("");
     setLastnameError("");
     setMiddleInitialError("");
@@ -75,7 +77,9 @@ const AddOffice = ({ modal, closeModal }) => {
       }
     } catch (error) {
       setLoading(false);
-
+      if (data.officeName === "") {
+        setOfficeNameError("Office Name is required");
+      }
       if (error.response.data.errors) {
         error.response.data.errors.forEach((error) => {
           switch (error.path) {
@@ -186,7 +190,7 @@ const AddOffice = ({ modal, closeModal }) => {
                         type="text"
                         id="officeName"
                         className={`${
-                          designationError
+                          officeNameError
                             ? "border-red-500 "
                             : "border-gray-300 "
                         } block pb-2 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 appearance-none   focus:outline-none focus:ring-0 focus:border-blue-600 peer`}
@@ -199,8 +203,8 @@ const AddOffice = ({ modal, closeModal }) => {
                         Office Name
                       </label>
                     </div>
-                    {designationError && (
-                      <span className="text-red-500">{designationError}</span>
+                    {officeNameError && (
+                      <span className="text-red-500">{officeNameError}</span>
                     )}
                   </div>
                   <h1 className="mt-4 text-lg font-bold text-gray-700">
@@ -465,7 +469,7 @@ const AddOffice = ({ modal, closeModal }) => {
 };
 
 AddOffice.propTypes = {
-  modal: PropTypes.bool,
+  modal: PropTypes.func,
   closeModal: PropTypes.func,
 };
 

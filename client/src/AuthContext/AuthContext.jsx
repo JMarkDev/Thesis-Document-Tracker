@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect } from "react";
-import api from "../api/api";
+import api from "../api/axios";
 import PropTypes from "prop-types";
 import LoginLoading from "../components/loader/LoginLoading";
 

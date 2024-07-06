@@ -1,7 +1,7 @@
 import wmsuCampus from "../../utils/Campus";
 import Profile from "../../components/profile_image/Profile";
 import PropTypes from "prop-types";
-import api from "../../api/api";
+import api from "../../api/axios";
 import { useForm } from "react-hook-form";
 import LoginLoading from "../../components/loader/LoginLoading";
 import VerifyOTP from "../Verification/VerifyOTP";

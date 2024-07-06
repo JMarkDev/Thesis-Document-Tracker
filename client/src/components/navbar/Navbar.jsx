@@ -7,7 +7,7 @@ import Notification from "../Notification";
 import NavProfile from "../NavProfile";
 import { AuthContext } from "../../AuthContext/AuthContext";
 import userIcon from "../../assets/images/user.png";
-import api from "../../api/api";
+import api from "../../api/axios";
 const Navbar = () => {
   const { userData } = useContext(AuthContext);
   const [modal, setModal] = useState(false);
