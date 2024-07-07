@@ -27,7 +27,7 @@ const getAllUser = async (req, res) => {
   try {
     const verifiedUser = await userModel.findAll({
       where: {
-        status: "verified",
+        [Sequelize.Op.or]: [{ status: "verified" }, { status: "approved" }],
       },
     });
     return res.status(200).json(verifiedUser);
