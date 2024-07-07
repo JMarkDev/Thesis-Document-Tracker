@@ -13,11 +13,20 @@ export const fetchOffice = createAsyncThunk("users/fetchOffice", async () => {
   return response.data;
 });
 
+export const fetchRegistrar = createAsyncThunk(
+  "users/fetchRegistrar",
+  async () => {
+    const response = await axios.get("/users/get-user-by-role?role=registrar");
+    return response.data;
+  }
+);
+
 const usersSlice = createSlice({
   name: "users",
   initialState: {
     users: [],
     officeUsers: [],
+    registrarUsers: [],
     status: "idle",
     officeStatus: "idle",
     error: null,
@@ -48,6 +57,18 @@ const usersSlice = createSlice({
       .addCase(fetchOffice.rejected, (state, action) => {
         state.officeStatus = "failed";
         state.error = action.error.message;
+      })
+      // fetch registrar cases
+      .addCase(fetchRegistrar.pending, (state) => {
+        state.registarStatus = "loading";
+      })
+      .addCase(fetchRegistrar.fulfilled, (state, action) => {
+        state.registarStatus = "succeeded";
+        state.registrarUsers = action.payload;
+      })
+      .addCase(fetchRegistrar.rejected, (state, action) => {
+        state.registarStatus = "failed";
+        state.error = action.error.message;
       });
   },
 });
@@ -56,7 +77,11 @@ const usersSlice = createSlice({
 export const getAllUsers = (state) => state.users.users;
 export const getUserStatus = (state) => state.users.status;
 export const getUserError = (state) => state.users.error;
+
 export const getOfficeUsers = (state) => state.users.officeUsers;
 export const getOfficeStatus = (state) => state.users.officeStatus;
+
+export const getRegistrarUsers = (state) => state.users.registrarUsers;
+export const getRegistrarStatus = (state) => state.users.registarStatus;
 
 export default usersSlice.reducer;

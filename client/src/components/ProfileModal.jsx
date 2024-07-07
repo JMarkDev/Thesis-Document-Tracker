@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
-import profileImg from "../assets/images/user-profile.png";
+import api from "../api/axios";
 
-const ProfileModal = ({ modal, closeModal }) => {
+const ProfileModal = ({ modal, closeModal, data }) => {
   return (
     <>
       <div
@@ -11,7 +11,7 @@ const ProfileModal = ({ modal, closeModal }) => {
         className="fixed inset-0 z-[40] px-5 flex items-center justify-center w-full h-full bg-gray-800 bg-opacity-40 font-normal"
       >
         {" "}
-        <div className="relative w-full max-w-lg  max-h-full">
+        <div className="relative">
           <div className="relative text-gray-800 bg-white rounded-xl shadow-lg ">
             <div className="flex items-center justify-center rounded-t">
               <button
@@ -37,7 +37,11 @@ const ProfileModal = ({ modal, closeModal }) => {
               </button>
             </div>
             <div>
-              <img src={profileImg} alt="" />
+              <img
+                src={`${api.defaults.baseURL}${data}`}
+                alt=""
+                className="h-52 w-52"
+              />
             </div>
           </div>
         </div>
@@ -49,6 +53,7 @@ const ProfileModal = ({ modal, closeModal }) => {
 ProfileModal.propTypes = {
   modal: PropTypes.bool,
   closeModal: PropTypes.func,
+  data: PropTypes.string,
 };
 
 export default ProfileModal;
