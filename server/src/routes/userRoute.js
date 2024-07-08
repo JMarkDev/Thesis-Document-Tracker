@@ -6,7 +6,12 @@ const userController = require("../controllers/userController");
 //http://localhost:3001/users/get-user?email=jmseroy@gmail.com
 router.get("/get-user", userController.getUserByEmail);
 router.get("/get-all-user", userController.getAllUser);
-router.put("/approved-faculty/:id", userController.approveFaculty);
+router.put(
+  "/approved-faculty/id/:id/email/:email",
+  userController.approveFaculty
+);
 router.get("/get-user-by-role", userController.getUserByRole);
+router.delete("/delete/id/:id", userController.deleteUser);
+router.get("/search/:name/:role", userController.searchUser);
 
 module.exports = router;

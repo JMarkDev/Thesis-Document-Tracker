@@ -1,6 +1,7 @@
-const { Sequelize } = require("sequelize");
+const { Sequelize, where, Op } = require("sequelize");
 const userModel = require("../models/userModel");
 const { createdAt } = require("../utils/formattedTime");
+const { sendNofication } = require("../utils/emailNotifications");
 
 const getUserByEmail = async (req, res) => {
   const { email } = req.query;
@@ -37,7 +38,7 @@ const getAllUser = async (req, res) => {
 };
 
 const approveFaculty = async (req, res) => {
-  const { id } = req.params;
+  const { id, email } = req.params;
 
   try {
     await userModel.update(
@@ -52,11 +53,19 @@ const approveFaculty = async (req, res) => {
       }
     );
 
+    await sendNofication({
+      email: email,
+      subject: "WMSU-ESU Document Tracker Account",
+      message:
+        "Your account has been approved successfully. You can now log in and start uploading your documents",
+    });
+
     return res.status(200).json({
       status: "success",
       message: "Account approved successfully",
     });
   } catch (error) {
+    console.error(error);
     return res.status(500).json({ Error: "Approved faculty error in server" });
   }
 };
@@ -82,9 +91,53 @@ const getUserByRole = async (req, res) => {
   }
 };
 
+const deleteUser = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const user = await userModel.findByPk(id);
+
+    if (!user) {
+      return res.status(404).json({ Error: "User not found" });
+    } else {
+      await user.destroy();
+      return res.status(200).json({
+        status: "success",
+        mesage: "Deleted successfully!",
+      });
+    }
+  } catch (error) {
+    return res.status(500).json({ Error: "Delete user error in server" });
+  }
+};
+
+const searchUser = async (req, res) => {
+  const { name, role } = req.params;
+
+  try {
+    const searchCriteria = {
+      where: {
+        [Sequelize.Op.or]: [{ status: "verified" }, { status: "approved" }],
+        role: role,
+        [Op.or]: [
+          { firstName: { [Op.like]: `${name}%` } },
+          { lastName: { [Op.like]: `${name}%` } },
+        ],
+      },
+    };
+    const users = await userModel.findAll(searchCriteria);
+    return res.status(200).json(users);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ Error: "Search user error in server" });
+  }
+};
+
 module.exports = {
   getUserByEmail,
   getAllUser,
   approveFaculty,
   getUserByRole,
+  deleteUser,
+  searchUser,
 };
