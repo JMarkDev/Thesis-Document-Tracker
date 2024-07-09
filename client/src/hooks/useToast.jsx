@@ -21,6 +21,13 @@ export const ToastProvider = ({ children }) => {
   );
 };
 
+export const toastUtils = () => {
+  return {
+    success: (message) => toast.success(message),
+    error: (message) => toast.error(message),
+  };
+};
+
 ToastProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };

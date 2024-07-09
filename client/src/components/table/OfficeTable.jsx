@@ -4,20 +4,25 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchOffice,
-  getOfficeUsers,
   getOfficeStatus,
   getUserError,
+  deleteUser,
 } from "../../services/usersSlice";
 import api from "../../api/axios";
 import ProfileModal from "../profileModal";
+import DeleteModal from "../DeleteModal";
+import { toastUtils } from "../../hooks/useToast";
+import userIcon from "../../assets/images/user.png";
+import PropTypes from "prop-types";
 
-const Office = () => {
+const Office = ({ officeUsers }) => {
   const dispatch = useDispatch();
-  const officeUsers = useSelector(getOfficeUsers);
   const officeStatus = useSelector(getOfficeStatus);
   const error = useSelector(getUserError);
   const [showModal, setShowModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [selecedOffice, setSelectedOffice] = useState(null);
 
   useEffect(() => {
     if (officeStatus === "idle") {
@@ -43,6 +48,20 @@ const Office = () => {
     setSelectedImage(null);
   };
 
+  const openDeleteModal = (id) => {
+    setSelectedOffice(id);
+    setDeleteModal(true);
+  };
+
+  const closeDeleteModal = () => {
+    setDeleteModal(false);
+    setSelectedOffice(null);
+  };
+
+  const handleDelete = () => {
+    dispatch(deleteUser({ id: selecedOffice, toast: toastUtils() }));
+    closeDeleteModal();
+  };
   return (
     <>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -113,7 +132,9 @@ const Office = () => {
                     <div className="flex items-center justify-center">
                       <img
                         onClick={() => openModal(image)}
-                        src={`${api.defaults.baseURL}${image}`}
+                        src={`${
+                          image ? `${api.defaults.baseURL}${image}` : userIcon
+                        }`}
                         alt=""
                         className="h-14 w-14 rounded-full cursor-pointer"
                       />
@@ -139,13 +160,25 @@ const Office = () => {
                       <FaEye className="h-5 w-5" />
                     </Link>
 
-                    <button className="px-4 py-2 text-lg bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
+                    <button className="px-4 py-2 text-lg bg-blue-500 hover:bg-blue-700 text-white rounded-lg">
                       <FaRegEdit className="h-5 w-5" />
                     </button>
 
-                    <button className="px-4 py-2 text-lg bg-red-600 hover:bg-red-700 text-white rounded-lg">
+                    <button
+                      onClick={() => openDeleteModal(id)}
+                      className="px-4 py-2 text-lg bg-red-500 hover:bg-red-700 text-white rounded-lg"
+                    >
                       <FaTrashAlt className="h-5 w-5" />
                     </button>
+                    {deleteModal && (
+                      <DeleteModal
+                        title={officeName}
+                        deleteModal={deleteModal}
+                        closeDeleteModal={closeDeleteModal}
+                        handleDelete={handleDelete}
+                      />
+                    )}
+                    {}
                   </td>
                 </tr>
               )
@@ -155,6 +188,10 @@ const Office = () => {
       </div>
     </>
   );
+};
+
+Office.propTypes = {
+  officeUsers: PropTypes.array.isRequired,
 };
 
 export default Office;

@@ -21,6 +21,26 @@ export const fetchRegistrar = createAsyncThunk(
   }
 );
 
+export const deleteUser = createAsyncThunk(
+  "/users/deleteUser",
+  async ({ id, toast }) => {
+    const response = await axios.delete(`/users/delete/id/${id}`);
+    if (response.data.status === "success") {
+      toast.success(response.data.message);
+      return id;
+    }
+    throw new Error("Failed to delete user");
+  }
+);
+
+export const searchOfficeRole = createAsyncThunk(
+  "users/searchOfficeRole",
+  async (name) => {
+    const response = await axios.get(`/users/search/${name}/office`);
+    return response.data;
+  }
+);
+
 const usersSlice = createSlice({
   name: "users",
   initialState: {
@@ -29,7 +49,9 @@ const usersSlice = createSlice({
     registrarUsers: [],
     status: "idle",
     officeStatus: "idle",
+    registarStatus: "idle",
     error: null,
+    searchStatus: "idle",
   },
   reducers: {},
   extraReducers(builders) {
@@ -69,6 +91,23 @@ const usersSlice = createSlice({
       .addCase(fetchRegistrar.rejected, (state, action) => {
         state.registarStatus = "failed";
         state.error = action.error.message;
+      })
+      .addCase(deleteUser.fulfilled, (state, action) => {
+        state.officeUsers = state.officeUsers.filter(
+          (user) => user.id !== action.payload
+        );
+      })
+      .addCase(deleteUser.rejected, (state, action) => {
+        state.error = action.error.message;
+      })
+      // search office
+      .addCase(searchOfficeRole.fulfilled, (state, action) => {
+        state.searchStatus = "succeeded";
+        state.officeUsers = action.payload;
+      })
+      .addCase(searchOfficeRole.rejected, (state, action) => {
+        state.searchStatus = "failed";
+        state.error = action.error.message;
       });
   },
 });
@@ -83,5 +122,7 @@ export const getOfficeStatus = (state) => state.users.officeStatus;
 
 export const getRegistrarUsers = (state) => state.users.registrarUsers;
 export const getRegistrarStatus = (state) => state.users.registarStatus;
+
+export const getSearchStatus = (state) => state.user.searchStatus;
 
 export default usersSlice.reducer;

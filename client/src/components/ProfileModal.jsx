@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import api from "../api/axios";
+import userIcon from "../assets/images/user.png";
 
 const ProfileModal = ({ modal, closeModal, data }) => {
   return (
@@ -8,6 +9,7 @@ const ProfileModal = ({ modal, closeModal, data }) => {
         id="default-modal"
         tabIndex="-1"
         aria-hidden={!modal}
+        onClick={() => closeModal(false)}
         className="fixed inset-0 z-[40] px-5 flex items-center justify-center w-full h-full bg-gray-800 bg-opacity-40 font-normal"
       >
         {" "}
@@ -38,7 +40,7 @@ const ProfileModal = ({ modal, closeModal, data }) => {
             </div>
             <div>
               <img
-                src={`${api.defaults.baseURL}${data}`}
+                src={`${data ? `${api.defaults.baseURL}${data}` : userIcon}`}
                 alt=""
                 className="h-52 w-52"
               />
