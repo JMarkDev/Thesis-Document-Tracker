@@ -41,6 +41,14 @@ export const searchOfficeRole = createAsyncThunk(
   }
 );
 
+export const searchRegistrarRole = createAsyncThunk(
+  "users/searchRegistrarRole",
+  async (name) => {
+    const response = await axios.get(`/users/search/${name}/registrar`);
+    return response.data;
+  }
+);
+
 const usersSlice = createSlice({
   name: "users",
   initialState: {
@@ -109,6 +117,14 @@ const usersSlice = createSlice({
         state.officeUsers = action.payload;
       })
       .addCase(searchOfficeRole.rejected, (state, action) => {
+        state.searchStatus = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(searchRegistrarRole.fulfilled, (state, action) => {
+        state.searchStatus = "succeeded";
+        state.registrarUsers = action.payload;
+      })
+      .addCase(searchRegistrarRole.rejected, (state, action) => {
         state.searchStatus = "failed";
         state.error = action.error.message;
       });
