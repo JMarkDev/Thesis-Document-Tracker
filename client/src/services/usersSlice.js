@@ -96,6 +96,9 @@ const usersSlice = createSlice({
         state.officeUsers = state.officeUsers.filter(
           (user) => user.id !== action.payload
         );
+        state.registrarUsers = state.registrarUsers.filter(
+          (user) => user.id !== action.payload
+        );
       })
       .addCase(deleteUser.rejected, (state, action) => {
         state.error = action.error.message;
