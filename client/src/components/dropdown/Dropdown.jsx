@@ -9,11 +9,12 @@ import { ChevronDownIcon } from "@heroicons/react/16/solid";
 import { useState } from "react";
 import PropTypes from "prop-types";
 
-export default function Dropdown({ data, option }) {
+export default function Dropdown({ data, option, handleFilter }) {
   const [selectOption, setSelectOption] = useState(option);
 
   const handleOption = (selected) => {
     setSelectOption(selected);
+    handleFilter(selected);
   };
 
   return (
@@ -36,6 +37,14 @@ export default function Dropdown({ data, option }) {
             anchor="bottom end"
             className="min-w-40 text-gray-700 origin-top-right bg-gray-700  rounded-xl  p-1 text-sm/6"
           >
+            <MenuItem>
+              <button
+                onClick={() => handleOption("WMSU-ESU-CAMPUS")}
+                className="group flex w-full hover:bg-gray-300 items-center justify-start gap-2 rounded-lg py-1.5 px-3 "
+              >
+                WMSU-ESU-CAMPUS
+              </button>
+            </MenuItem>
             {data.map((options) => (
               <MenuItem key={options}>
                 <button
@@ -56,4 +65,5 @@ export default function Dropdown({ data, option }) {
 Dropdown.propTypes = {
   data: PropTypes.array,
   option: PropTypes.any,
+  handleFilter: PropTypes.func.isRequired,
 };

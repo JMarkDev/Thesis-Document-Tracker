@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchOffice,
-  getOfficeStatus,
+  getRoleStatus,
   getUserError,
   deleteUser,
 } from "../../services/usersSlice";
@@ -17,7 +17,7 @@ import PropTypes from "prop-types";
 
 const Office = ({ officeUsers }) => {
   const dispatch = useDispatch();
-  const officeStatus = useSelector(getOfficeStatus);
+  const officeStatus = useSelector(getRoleStatus("office"));
   const error = useSelector(getUserError);
   const [showModal, setShowModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);

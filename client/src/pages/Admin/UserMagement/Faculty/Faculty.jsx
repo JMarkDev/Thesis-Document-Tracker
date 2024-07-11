@@ -5,17 +5,20 @@ import Dropdown from "../../../../components/dropdown/Dropdown";
 import wmsuCampus from "../../../../utils/Campus";
 import {
   fetchFaculty,
-  getFacultyStatus,
-  getFacultyUsers,
+  // getFacultyStatus,
+  getRoleStatus,
+  getRoleUsers,
   searchFacultyRole,
+  filterFacultyByCampus,
 } from "../../../../services/usersSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 const Faculty = () => {
   const dispatch = useDispatch();
-  const facultyUser = useSelector(getFacultyUsers);
-  const registrarStatus = useSelector(getFacultyStatus);
+  const facultyUser = useSelector(getRoleUsers("faculty"));
+  const registrarStatus = useSelector(getRoleStatus("faculty"));
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedESU, setSelectedESU] = useState(null);
 
   useEffect(() => {
     if (registrarStatus === "idle") {
@@ -26,10 +29,16 @@ const Faculty = () => {
   useEffect(() => {
     if (searchTerm) {
       dispatch(searchFacultyRole(searchTerm));
+    } else if (selectedESU && selectedESU !== "WMSU-ESU-CAMPUS") {
+      dispatch(filterFacultyByCampus(selectedESU));
     } else {
       dispatch(fetchFaculty());
     }
-  }, [searchTerm, dispatch]);
+  }, [searchTerm, selectedESU, dispatch]);
+
+  const handleFilter = (esu) => {
+    setSelectedESU(esu);
+  };
 
   return (
     <div>
@@ -47,7 +56,11 @@ const Faculty = () => {
         <div>
           <div className="flex justify-end items-center gap-3">
             <span className="text-gray-700">Filter faculty by:</span>
-            <Dropdown data={wmsuCampus} option={"WMSU-ESU-CAMPUS"} />
+            <Dropdown
+              data={wmsuCampus}
+              option={"WMSU-ESU-CAMPUS"}
+              handleFilter={handleFilter}
+            />
           </div>
         </div>
       </div>

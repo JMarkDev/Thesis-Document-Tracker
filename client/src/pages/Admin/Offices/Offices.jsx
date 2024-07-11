@@ -3,16 +3,26 @@ import OfficeTable from "../../../components/table/OfficeTable";
 import { IoSearch } from "react-icons/io5";
 import AddOffice from "./AddOffice";
 import {
-  getOfficeUsers,
   searchOfficeRole,
   fetchOffice,
+  getRoleUsers,
+  getRoleStatus,
 } from "../../../services/usersSlice";
 import { useSelector, useDispatch } from "react-redux";
 const Office = () => {
   const dispatch = useDispatch();
-  const officeUsers = useSelector(getOfficeUsers);
+  const officeUsers = useSelector(getRoleUsers("office"));
+
+  const officeStatus = useSelector(getRoleStatus("office"));
   const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+
+  useEffect(() => {
+    if (officeStatus === "idle") {
+      dispatch(fetchOffice());
+    }
+  }, [officeStatus, dispatch]);
+
   const openModal = () => {
     setShowModal(!showModal);
   };

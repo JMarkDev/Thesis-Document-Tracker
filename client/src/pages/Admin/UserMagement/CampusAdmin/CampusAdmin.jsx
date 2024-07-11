@@ -4,16 +4,17 @@ import { IoSearch } from "react-icons/io5";
 import AddCampusAdmin from "./AddCampusAdmin";
 import {
   fetchCampusAdmin,
-  getCampusAdminStatus,
-  getCampusAdminUsers,
+  getRoleUsers,
+  getRoleStatus,
+  // getCampusAdminUsers,
   searchCampusAdminRole,
 } from "../../../../services/usersSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 const CampusAdmin = () => {
   const dispatch = useDispatch();
-  const campusAdminUsers = useSelector(getCampusAdminUsers);
-  const campusAdminStatus = useSelector(getCampusAdminStatus);
+  const campusAdminUsers = useSelector(getRoleUsers("campus_admin"));
+  const campusAdminStatus = useSelector(getRoleStatus("campus_admin"));
   const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 

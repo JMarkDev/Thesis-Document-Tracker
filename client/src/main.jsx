@@ -12,12 +12,16 @@ import {
   fetchUsers,
   fetchOffice,
   fetchRegistrar,
+  fetchFaculty,
+  fetchCampusAdmin,
 } from "./services/usersSlice.js";
 
 //This ensures that the data is already available in the Redux store when the application starts, which can improve the user experience by preventing loading delays.
 store.dispatch(fetchUsers());
 store.dispatch(fetchOffice());
 store.dispatch(fetchRegistrar());
+store.dispatch(fetchCampusAdmin());
+store.dispatch(fetchFaculty());
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   // <React.StrictMode>

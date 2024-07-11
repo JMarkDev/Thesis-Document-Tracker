@@ -4,16 +4,16 @@ import { IoSearch } from "react-icons/io5";
 import AddEsuRegistrar from "./AddEsuRegistrar";
 import {
   fetchRegistrar,
-  getRegistrarStatus,
-  getRegistrarUsers,
+  getRoleStatus,
+  getRoleUsers,
   searchRegistrarRole,
 } from "../../../../services/usersSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 const EsuRegistrar = () => {
   const dispatch = useDispatch();
-  const registrarUser = useSelector(getRegistrarUsers);
-  const registrarStatus = useSelector(getRegistrarStatus);
+  const registrarUser = useSelector(getRoleUsers("registrar"));
+  const registrarStatus = useSelector(getRoleStatus("registrar"));
   const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
