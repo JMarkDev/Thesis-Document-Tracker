@@ -103,7 +103,7 @@ const deleteUser = async (req, res) => {
       await user.destroy();
       return res.status(200).json({
         status: "success",
-        mesage: "Deleted successfully!",
+        message: "Deleted successfully!",
       });
     }
   } catch (error) {
@@ -133,6 +133,27 @@ const searchUser = async (req, res) => {
   }
 };
 
+const filterFacultyByCampus = async (req, res) => {
+  const { esuCampus } = req.params;
+  console.log("filter");
+
+  try {
+    const users = await userModel.findAll({
+      where: {
+        role: "faculty",
+        esuCampus: esuCampus,
+        [Sequelize.Op.or]: [{ status: "verified" }, { status: "approved" }],
+      },
+    });
+    return res.status(200).json(users);
+  } catch (error) {
+    console.error(error);
+    return res
+      .status(500)
+      .json({ Error: "Filter faculty by esu campus error in server" });
+  }
+};
+
 module.exports = {
   getUserByEmail,
   getAllUser,
@@ -140,4 +161,5 @@ module.exports = {
   getUserByRole,
   deleteUser,
   searchUser,
+  filterFacultyByCampus,
 };

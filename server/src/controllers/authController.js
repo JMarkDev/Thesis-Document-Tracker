@@ -22,18 +22,59 @@ const handleRegister = async (req, res) => {
     role,
     password,
   } = req.body;
-
   try {
+    const officeExist = await userModel.findOne({
+      where: {
+        officeName: officeName,
+        role: "office",
+        status: "verified",
+      },
+    });
+
+    if (officeExist) {
+      return res.status(400).json({ message: "Office name already exists" });
+    }
+
+    let esuCampusExist;
+    if (role === "registrar") {
+      esuCampusExist = await userModel.findOne({
+        where: {
+          esuCampus: esuCampus,
+          role: "registrar",
+          status: "verified",
+        },
+      });
+    }
+
+    if (esuCampusExist) {
+      return res
+        .status(400)
+        .json({ message: "ESU Campus registrar already exist" });
+    }
+
+    let campusAdminExist;
+    if (role === "campus_admin") {
+      campusAdminExist = await userModel.findOne({
+        where: {
+          esuCampus: esuCampus,
+          role: "campus_admin",
+          status: "verified",
+        },
+      });
+    }
+
+    if (campusAdminExist) {
+      return res.status(400).json({
+        message: "ESU Campus Admin already exist",
+      });
+    }
+
     const verifyUser = await userModel.findOne({
       where: {
         email,
         [Sequelize.Op.or]: [{ status: "verified" }, { status: "approved" }],
       },
     });
-
-    if (verifyUser && verifyUser.officeName === officeName) {
-      return res.status(400).json({ message: "Office name already exists" });
-    }
 
     if (verifyUser) {
       return res.status(400).json({ message: "User already exists" });
@@ -67,16 +108,16 @@ const handleRegister = async (req, res) => {
 
       await userModel.create({
         image: newFileName ? `/uploads/${newFileName}` : null,
-        firstName: firstName,
-        lastName: lastName,
-        middleInitial: middleInitial,
-        email: email,
-        birthDate: birthDate,
-        contactNumber: contactNumber,
-        designation: designation,
-        esuCampus: esuCampus,
-        officeName: officeName,
-        role: role,
+        firstName,
+        lastName,
+        middleInitial,
+        email,
+        birthDate,
+        contactNumber,
+        designation,
+        esuCampus,
+        officeName,
+        role,
         password: hashPassword,
         status: "pending",
         createdAt: createdAt,

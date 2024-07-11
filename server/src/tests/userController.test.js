@@ -51,4 +51,18 @@ describe("PUT /users/approved-faculty/:id", () => {
 
     expect(response.body).toEqual(mockEmail);
   });
+
+  it("should search user", async () => {
+    const mockName = "josiel mark";
+
+    userModel.findAll.mockResolvedValue(mockName);
+
+    const response = await request(app).get(
+      `/users/search/${mockName}/faculty`
+    );
+    expect(response.status).toBe(200);
+
+    // console.log(response.body);
+    expect(response.body).toEqual(mockName);
+  });
 });

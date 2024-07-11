@@ -1,9 +1,9 @@
 const roleList = {
-  Faculty: 0,
-  Registrar: 1,
-  Campus_Admin: 2,
-  Admin: 3,
-  Offices: 4,
+  faculty: 0,
+  registrar: 1,
+  campus_admin: 2,
+  admin: 3,
+  offices: 4,
 };
 
 module.exports = roleList;

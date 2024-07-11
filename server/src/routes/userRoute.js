@@ -13,5 +13,6 @@ router.put(
 router.get("/get-user-by-role", userController.getUserByRole);
 router.delete("/delete/id/:id", userController.deleteUser);
 router.get("/search/:name/:role", userController.searchUser);
+router.get("/filter-faculty/:esuCampus", userController.filterFacultyByCampus);
 
 module.exports = router;
