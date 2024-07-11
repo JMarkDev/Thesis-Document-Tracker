@@ -14,6 +14,7 @@ const fetchRoleUsers = (role) => {
   });
 };
 
+export const fetchAdmin = fetchRoleUsers("admin");
 export const fetchOffice = fetchRoleUsers("office");
 export const fetchRegistrar = fetchRoleUsers("registrar");
 export const fetchCampusAdmin = fetchRoleUsers("campus_admin");
@@ -38,6 +39,7 @@ const searchRoleUsers = (role) => {
   });
 };
 
+export const searchAdminRole = searchRoleUsers("admin");
 export const searchOfficeRole = searchRoleUsers("office");
 export const searchRegistrarRole = searchRoleUsers("registrar");
 export const searchCampusAdminRole = searchRoleUsers("campus_admin");
@@ -57,6 +59,7 @@ const usersSlice = createSlice({
   initialState: {
     users: [],
     roleUsers: {
+      admin: [],
       office: [],
       registrar: [],
       campus_admin: [],
@@ -89,6 +92,18 @@ const usersSlice = createSlice({
       })
       .addCase(fetchUsers.rejected, (state, action) => {
         state.status.users = "failed";
+        state.error = action.error.message;
+      })
+      // fetch admin cases
+      .addCase(fetchAdmin.pending, (state) => {
+        state.status.admin = "loading";
+      })
+      .addCase(fetchAdmin.fulfilled, (state, action) => {
+        state.status.admin = "succeeded";
+        state.roleUsers.admin = action.payload;
+      })
+      .addCase(fetchAdmin.rejected, (state, action) => {
+        state.status.admin = "failed";
         state.error = action.error.message;
       })
       // fetch office cases
@@ -141,13 +156,25 @@ const usersSlice = createSlice({
       })
       // delete user
       .addCase(deleteUser.fulfilled, (state, action) => {
-        ["office", "registrar", "campus_admin", "faculty"].forEach((role) => {
-          state.roleUsers[role] = state.roleUsers[role].filter(
-            (user) => user.id !== action.payload
-          );
-        });
+        ["admin", "office", "registrar", "campus_admin", "faculty"].forEach(
+          (role) => {
+            state.roleUsers[role] = state.roleUsers[role].filter(
+              (user) => user.id !== action.payload
+            );
+          }
+        );
       })
       .addCase(deleteUser.rejected, (state, action) => {
+        state.error = action.error.message;
+      })
+
+      // search admin
+      .addCase(searchAdminRole.fulfilled, (state, action) => {
+        state.status.search = "succeeded";
+        state.roleUsers.admin = action.payload;
+      })
+      .addCase(searchAdminRole.rejected, (state, action) => {
+        state.status.search = "failed";
         state.error = action.error.message;
       })
       // search office

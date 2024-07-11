@@ -10,6 +10,7 @@ import { Provider } from "react-redux";
 
 import {
   fetchUsers,
+  fetchAdmin,
   fetchOffice,
   fetchRegistrar,
   fetchFaculty,
@@ -18,6 +19,7 @@ import {
 
 //This ensures that the data is already available in the Redux store when the application starts, which can improve the user experience by preventing loading delays.
 store.dispatch(fetchUsers());
+store.dispatch(fetchAdmin());
 store.dispatch(fetchOffice());
 store.dispatch(fetchRegistrar());
 store.dispatch(fetchCampusAdmin());
