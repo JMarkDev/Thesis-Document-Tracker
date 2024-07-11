@@ -1,42 +1,21 @@
-import { useEffect, useState } from "react";
-import { FaEye, FaRegEdit, FaTrashAlt } from "react-icons/fa";
+import { useState } from "react";
+import { FaEye, FaTrashAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchOffice,
-  getOfficeStatus,
-  getUserError,
-  deleteUser,
-} from "../../services/usersSlice";
-import api from "../../api/axios";
-import ProfileModal from "../profileModal";
-import DeleteModal from "../DeleteModal";
-import { toastUtils } from "../../hooks/useToast";
-import userIcon from "../../assets/images/user.png";
 import PropTypes from "prop-types";
+import ProfileModal from "../profileModal";
+import api from "../../api/axios";
+import userIcon from "../../assets/images/user.png";
+import DeleteModal from "../DeleteModal";
+import { useDispatch } from "react-redux";
+import { deleteUser } from "../../services/usersSlice";
+import { toastUtils } from "../../hooks/useToast";
 
-const Office = ({ officeUsers }) => {
+const FacultyTable = ({ fetchFaculty }) => {
   const dispatch = useDispatch();
-  const officeStatus = useSelector(getOfficeStatus);
-  const error = useSelector(getUserError);
-  const [showModal, setShowModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [deleteModal, setDeleteModal] = useState(false);
-  const [selecedOffice, setSelectedOffice] = useState(null);
-
-  useEffect(() => {
-    if (officeStatus === "idle") {
-      dispatch(fetchOffice());
-    }
-  }, [officeStatus, dispatch]);
-
-  if (officeStatus === "loading") {
-    return <div>Loading...</div>;
-  }
-
-  if (officeStatus === "failed") {
-    return <div>Error: {error}</div>;
-  }
+  const [showModal, setShowModal] = useState(false);
+  const [selectedEsuCampus, setSelectedEsuCampus] = useState(null);
 
   const openModal = (image) => {
     setSelectedImage(image);
@@ -49,17 +28,17 @@ const Office = ({ officeUsers }) => {
   };
 
   const openDeleteModal = (id) => {
-    setSelectedOffice(id);
+    setSelectedEsuCampus(id);
     setDeleteModal(true);
   };
 
   const closeDeleteModal = () => {
     setDeleteModal(false);
-    setSelectedOffice(null);
+    setSelectedEsuCampus(null);
   };
 
   const handleDelete = () => {
-    dispatch(deleteUser({ id: selecedOffice, toast: toastUtils() }));
+    dispatch(deleteUser({ id: selectedEsuCampus, toast: toastUtils() }));
     closeDeleteModal();
   };
   return (
@@ -85,12 +64,17 @@ const Office = ({ officeUsers }) => {
               </th>
               <th scope="col" className="px-6 py-3">
                 <div className="flex items-center  whitespace-nowrap">
-                  OFFICE NAME
+                  ESU CAMPUS
                 </div>
               </th>
               <th scope="col" className="px-6 py-3">
                 <div className="flex items-center  whitespace-nowrap">
                   EMAIL
+                </div>
+              </th>
+              <th scope="col" className="px-6 py-3">
+                <div className="flex items-center  whitespace-nowrap">
+                  STATUS
                 </div>
               </th>
 
@@ -102,7 +86,7 @@ const Office = ({ officeUsers }) => {
             </tr>
           </thead>
           <tbody>
-            {officeUsers?.map(
+            {fetchFaculty?.map(
               (
                 {
                   id,
@@ -110,8 +94,9 @@ const Office = ({ officeUsers }) => {
                   lastName,
                   middleInitial,
                   image,
-                  officeName,
+                  esuCampus,
                   email,
+                  status,
                 },
                 index
               ) => (
@@ -149,8 +134,17 @@ const Office = ({ officeUsers }) => {
                   </th>
 
                   <td className="px-6 py-4 whitespace-nowrap">{`${firstName} ${middleInitial}. ${lastName}`}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{officeName}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{esuCampus}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{email}</td>
+                  <td className="px-6 py-4 whitespace-nowrap ">
+                    <span
+                      className={`${
+                        status === "verified" ? "bg-[#ecda39]" : "bg-green-400"
+                      }  text-gray-700 p-1 px-2 rounded-lg`}
+                    >
+                      {`${status === "verified" ? "pending" : status}`}
+                    </span>
+                  </td>
 
                   <td className="px-6 py-4 flex gap-3 justify-center items-center">
                     <Link
@@ -159,10 +153,6 @@ const Office = ({ officeUsers }) => {
                     >
                       <FaEye className="h-5 w-5" />
                     </Link>
-
-                    <button className="px-4 py-2 text-lg bg-blue-500 hover:bg-blue-700 text-white rounded-lg">
-                      <FaRegEdit className="h-5 w-5" />
-                    </button>
 
                     <button
                       onClick={() => openDeleteModal(id)}
@@ -190,8 +180,8 @@ const Office = ({ officeUsers }) => {
   );
 };
 
-Office.propTypes = {
-  officeUsers: PropTypes.array.isRequired,
+FacultyTable.propTypes = {
+  fetchFaculty: PropTypes.array.isRequired,
 };
 
-export default Office;
+export default FacultyTable;

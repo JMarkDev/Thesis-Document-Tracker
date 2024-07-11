@@ -151,7 +151,7 @@ const RegistrarTable = ({ registrarUser }) => {
                     </button>
                     {deleteModal && (
                       <DeleteModal
-                        title={esuCampus}
+                        title={`${firstName} ${middleInitial}. ${lastName}`}
                         deleteModal={deleteModal}
                         closeDeleteModal={closeDeleteModal}
                         handleDelete={handleDelete}

@@ -9,10 +9,10 @@ import Documents from "./pages/Admin/Documents/Documents";
 import DocumentWorkflow from "./pages/Admin/DocumentWorkflows/DocumentWorkflow";
 import Offices from "./pages/Admin/Offices/Offices";
 import Reports from "./pages/Admin/Reports/Reports";
-import Faculty from "./pages/Admin/UserMagement/Faculty";
-import CampusAdmin from "./pages/Admin/UserMagement/CampusAdmin";
+import Faculty from "./pages/Admin/UserMagement/Faculty/Faculty";
+import CampusAdmin from "./pages/Admin/UserMagement/CampusAdmin/CampusAdmin";
 import EsuRegistrar from "./pages/Admin/UserMagement/ESU Registrar/EsuRegistrar";
-import AdminStaff from "./pages/Admin/UserMagement/AdminStaff";
+import AdminStaff from "./pages/Admin/UserMagement/AdminStaff/AdminStaff";
 import DocumentDetails from "./pages/Admin/Documents/DocumentDetails";
 import { ToastContainer } from "react-toastify";
 import ProtectedRoute from "./route/ProtectedRoute";
@@ -50,6 +50,11 @@ function App() {
       title: "Admin Staff",
       path: "/users/admin-staff",
       component: <AdminStaff />,
+    },
+    {
+      title: "Faculty",
+      path: "/users/faculty",
+      component: <Faculty />,
     },
     {
       title: "Document Details",
