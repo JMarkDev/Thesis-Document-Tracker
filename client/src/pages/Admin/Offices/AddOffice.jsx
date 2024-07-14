@@ -1,9 +1,3 @@
-// import Back from "../../../components/buttons/Back";
-// const AddOffice = () => {
-//   return <div>AddOffice</div>;
-// };
-
-// export default AddOffice;
 import Profile from "../../../components/profile_image/Profile";
 import PropTypes from "prop-types";
 import api from "../../../api/axios";
@@ -12,12 +6,13 @@ import LoginLoading from "../../../components/loader/LoginLoading";
 import VerifyOTP from "../../../pages/Verification/VerifyOTP";
 import { useState } from "react";
 import { useToast } from "../../../hooks/useToast";
-
 import { FiEyeOff, FiEye } from "react-icons/fi";
+import { fetchOffice } from "../../../services/usersSlice";
+import { useDispatch } from "react-redux";
 
 const AddOffice = ({ modal, closeModal }) => {
+  const dispatch = useDispatch();
   const [showPass, setShowPass] = useState(false);
-
   const toast = useToast();
   const { register, handleSubmit, setValue } = useForm();
   const [showOTP, setShowOTP] = useState(false);
@@ -35,6 +30,10 @@ const AddOffice = ({ modal, closeModal }) => {
   const [designationError, setDesignationError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmpasswordError] = useState("");
+
+  const onVerificationSuccess = () => {
+    dispatch(fetchOffice());
+  };
 
   const onSubmit = async (data) => {
     setEmail(data.email);
@@ -135,6 +134,7 @@ const AddOffice = ({ modal, closeModal }) => {
           closeOTP={closeOTP}
           closeModal={closeModal}
           email={email}
+          onVerificationSuccess={onVerificationSuccess}
         />
       ) : (
         <div

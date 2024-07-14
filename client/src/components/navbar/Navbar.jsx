@@ -73,7 +73,10 @@ const Navbar = () => {
                     </div>
                   </div>
                   {showNotification && (
-                    <div className="absolute right-5">
+                    <div
+                      onMouseLeave={handleNotification}
+                      className="absolute right-5"
+                    >
                       <Notification />
                     </div>
                   )}
@@ -85,10 +88,13 @@ const Navbar = () => {
                     onClick={handleProfile}
                     onMouseEnter={handleProfile}
                     alt=""
-                    className="h-10 w-10 rounded-full bg-white cursor-pointer"
+                    className="h-10 w-10 rounded-full bg-gray-100 cursor-pointer"
                   />
                   {showProfile && (
-                    <div className="absolute right-5 text-sm">
+                    <div
+                      onMouseLeave={handleProfile}
+                      className="absolute right-5 text-sm"
+                    >
                       <NavProfile />
                     </div>
                   )}

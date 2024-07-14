@@ -7,12 +7,13 @@ import VerifyOTP from "../../../../pages/Verification/VerifyOTP";
 import { useState } from "react";
 import { useToast } from "../../../../hooks/useToast";
 import wmsuCampus from "../../../../utils/Campus";
-
 import { FiEyeOff, FiEye } from "react-icons/fi";
+import { fetchRegistrar } from "../../../../services/usersSlice";
+import { useDispatch } from "react-redux";
 
 const AddEsuRegistrar = ({ modal, closeModal }) => {
+  const dispatch = useDispatch();
   const [showPass, setShowPass] = useState(false);
-
   const toast = useToast();
   const { register, handleSubmit, setValue } = useForm();
   const [showOTP, setShowOTP] = useState(false);
@@ -30,6 +31,10 @@ const AddEsuRegistrar = ({ modal, closeModal }) => {
   const [designationError, setDesignationError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmpasswordError] = useState("");
+
+  const onVerificationSuccess = () => {
+    dispatch(fetchRegistrar());
+  };
 
   const onSubmit = async (data) => {
     setEmail(data.email);
@@ -130,6 +135,7 @@ const AddEsuRegistrar = ({ modal, closeModal }) => {
           closeOTP={closeOTP}
           closeModal={closeModal}
           email={email}
+          onVerificationSuccess={onVerificationSuccess}
         />
       ) : (
         <div

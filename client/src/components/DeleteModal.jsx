@@ -1,10 +1,13 @@
 import PropTypes from "prop-types";
+import { useLocation } from "react-router-dom";
 const DeleteModal = ({
   deleteModal,
   closeDeleteModal,
   title,
   handleDelete,
 }) => {
+  const location = useLocation();
+
   return (
     <div>
       <div
@@ -12,10 +15,12 @@ const DeleteModal = ({
         tabIndex="-1"
         className={`${
           deleteModal ? "flex" : "hidden"
-        }  fixed inset-0 z-40 justify-center items-center  bg-gray-800 bg-opacity-30 `}
+        }  fixed inset-0 z-40 justify-center items-center  bg-gray-800  ${
+          location.pathname === "/offices" ? "bg-opacity-20" : "bg-opacity-30"
+        }`}
       >
         <div className="relative p-4 w-full max-w-lg max-h-full">
-          <div className="relative bg-white rounded-lg shadow dark:bg-gray-700">
+          <div className="relative bg-white rounded-lg shadow ">
             <button
               onClick={closeDeleteModal}
               type="button"

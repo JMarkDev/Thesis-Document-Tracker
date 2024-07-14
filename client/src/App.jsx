@@ -69,7 +69,11 @@ function App() {
       path: "/faculty-profile",
       component: <FacultyProfile />,
     },
-    { title: "Upload", path: "/faculty-upload", component: <Upload /> },
+    {
+      title: "Upload",
+      path: "/faculty-upload-documents",
+      component: <Upload />,
+    },
     {
       title: "Reports",
       path: "/faculty-reports",

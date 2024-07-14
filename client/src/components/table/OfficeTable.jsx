@@ -83,6 +83,11 @@ const Office = ({ officeUsers }) => {
                   FULL NAME
                 </div>
               </th>
+              <th scope="col" className="px-6 py-3 whitespace-nowrap">
+                <div className="flex items-center  whitespace-nowrap">
+                  DESIGNATION
+                </div>
+              </th>
               <th scope="col" className="px-6 py-3">
                 <div className="flex items-center  whitespace-nowrap">
                   OFFICE NAME
@@ -109,6 +114,7 @@ const Office = ({ officeUsers }) => {
                   firstName,
                   lastName,
                   middleInitial,
+                  designation,
                   image,
                   officeName,
                   email,
@@ -149,6 +155,7 @@ const Office = ({ officeUsers }) => {
                   </th>
 
                   <td className="px-6 py-4 whitespace-nowrap">{`${firstName} ${middleInitial}. ${lastName}`}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{designation}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{officeName}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{email}</td>
 

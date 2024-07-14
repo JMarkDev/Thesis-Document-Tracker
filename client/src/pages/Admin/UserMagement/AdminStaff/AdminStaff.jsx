@@ -1,8 +1,3 @@
-// const AdminStaff = () => {
-//   return <div>AdminStaff</div>;
-// };
-
-// export default AdminStaff;
 import { useEffect, useState } from "react";
 import AdminTable from "../../../../components/table/AdminTable";
 import { IoSearch } from "react-icons/io5";
@@ -11,7 +6,6 @@ import {
   fetchAdmin,
   getRoleUsers,
   getRoleStatus,
-  // getCampusAdminUsers,
   searchAdminRole,
 } from "../../../../services/usersSlice";
 import { useDispatch, useSelector } from "react-redux";

@@ -2,6 +2,14 @@ import axios from "../api/axios";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 // Thunks
+// export const registerUser = createAsyncThunk(
+//   "users/register",
+//   async (formData) => {
+//     const response = await axios.post("/auth/register", formData);
+//     return response.data;
+//   }
+// );
+
 export const fetchUsers = createAsyncThunk("users/fetchUsers", async () => {
   const response = await axios.get("/users/get-all-user");
   return response.data;

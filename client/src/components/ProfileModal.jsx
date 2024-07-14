@@ -10,7 +10,7 @@ const ProfileModal = ({ modal, closeModal, data }) => {
         tabIndex="-1"
         aria-hidden={!modal}
         onClick={() => closeModal(false)}
-        className="fixed inset-0 z-[40] px-5 flex items-center justify-center w-full h-full bg-gray-800 bg-opacity-40 font-normal"
+        className="fixed inset-0 z-[40] px-5 flex items-center justify-center w-full h-full bg-gray-800 bg-opacity-20 font-normal"
       >
         {" "}
         <div className="relative">

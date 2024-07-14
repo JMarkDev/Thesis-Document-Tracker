@@ -5,6 +5,7 @@ import AddOffice from "./AddOffice";
 import {
   searchOfficeRole,
   fetchOffice,
+  fetchAdmin,
   getRoleUsers,
   getRoleStatus,
 } from "../../../services/usersSlice";
@@ -12,8 +13,9 @@ import { useSelector, useDispatch } from "react-redux";
 const Office = () => {
   const dispatch = useDispatch();
   const officeUsers = useSelector(getRoleUsers("office"));
-
   const officeStatus = useSelector(getRoleStatus("office"));
+  const adminUser = useSelector(getRoleUsers("admin"));
+  const adminStatus = useSelector(getRoleStatus("admin"));
   const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -21,7 +23,11 @@ const Office = () => {
     if (officeStatus === "idle") {
       dispatch(fetchOffice());
     }
-  }, [officeStatus, dispatch]);
+
+    if (adminStatus === "idle") {
+      dispatch(fetchAdmin());
+    }
+  }, [officeStatus, adminStatus, dispatch]);
 
   const openModal = () => {
     setShowModal(!showModal);
@@ -38,6 +44,8 @@ const Office = () => {
       dispatch(fetchOffice());
     }
   }, [searchTerm, dispatch]);
+
+  const adminAndOfficeUser = [adminUser[0], ...officeUsers];
 
   return (
     <div>
@@ -61,7 +69,7 @@ const Office = () => {
         {showModal && <AddOffice modal={openModal} closeModal={closeModal} />}
       </div>
       <div className="mt-8">
-        <OfficeTable officeUsers={officeUsers} />
+        <OfficeTable officeUsers={adminAndOfficeUser} />
       </div>
     </div>
   );

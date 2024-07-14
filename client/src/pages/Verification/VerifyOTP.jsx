@@ -9,7 +9,7 @@ import { useToast } from "../../hooks/useToast";
 import "react-toastify/dist/ReactToastify.css";
 import { AuthContext } from "../../AuthContext/AuthContext";
 
-const VerifyOTP = ({ email, closeOTP, closeModal }) => {
+const VerifyOTP = ({ email, closeOTP, closeModal, onVerificationSuccess }) => {
   const toast = useToast();
   const { setUserData } = useContext(AuthContext);
   const navigate = useNavigate();
@@ -47,6 +47,11 @@ const VerifyOTP = ({ email, closeOTP, closeModal }) => {
       });
 
       if (response.data.status === "success") {
+        // fetch the latest added data
+        if (onVerificationSuccess) {
+          onVerificationSuccess();
+        }
+
         const accessToken = response.data?.accessToken;
         toast.success(response.data.message);
         if (accessToken) {
@@ -187,6 +192,7 @@ VerifyOTP.propTypes = {
   email: PropTypes.string.isRequired,
   closeOTP: PropTypes.func.isRequired,
   closeModal: PropTypes.func.isRequired,
+  onVerificationSuccess: PropTypes.func,
 };
 
 export default VerifyOTP;

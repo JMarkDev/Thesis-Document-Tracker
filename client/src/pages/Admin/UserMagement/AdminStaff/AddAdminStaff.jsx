@@ -6,10 +6,12 @@ import LoginLoading from "../../../../components/loader/LoginLoading";
 import VerifyOTP from "../../../../pages/Verification/VerifyOTP";
 import { useState } from "react";
 import { useToast } from "../../../../hooks/useToast";
-
 import { FiEyeOff, FiEye } from "react-icons/fi";
+import { fetchAdmin } from "../../../../services/usersSlice";
+import { useDispatch } from "react-redux";
 
 const AddAdminStaff = ({ modal, closeModal }) => {
+  const dispatch = useDispatch();
   const [showPass, setShowPass] = useState(false);
 
   const toast = useToast();
@@ -28,6 +30,10 @@ const AddAdminStaff = ({ modal, closeModal }) => {
   const [designationError, setDesignationError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmpasswordError] = useState("");
+
+  const onVerificationSuccess = () => {
+    dispatch(fetchAdmin());
+  };
 
   const onSubmit = async (data) => {
     setEmail(data.email);
@@ -126,6 +132,7 @@ const AddAdminStaff = ({ modal, closeModal }) => {
           closeOTP={closeOTP}
           closeModal={closeModal}
           email={email}
+          onVerificationSuccess={onVerificationSuccess}
         />
       ) : (
         <div

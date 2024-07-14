@@ -56,7 +56,7 @@ const NavDashboard = ({ handleBurger }) => {
       </button>
       <div className="flex  justify-between items-center w-full">
         <h1 className="md:text-2xl text-lg font-bold text-main">{title}</h1>
-        <div className="flex  lg:text-[16px] text-sm gap-5">
+        <div className="flex  lg:text-[16px] text-sm gap-7">
           <div className="flex items-center gap-2">
             <button className="flex items-center">
               {" "}
@@ -75,11 +75,14 @@ const NavDashboard = ({ handleBurger }) => {
               className="flex items-center "
             >
               <IoMdNotificationsOutline className="text-2xl " />
-              <span className="hidden lg:block">Notifications</span>
+              {/* <span className="hidden lg:block">Notifications</span> */}
             </button>
           </div>
           {showNotification && (
-            <div className="absolute top-12 right-5">
+            <div
+              onMouseLeave={handleNotification}
+              className="absolute top-12 right-5"
+            >
               <Notification />
             </div>
           )}
@@ -95,10 +98,13 @@ const NavDashboard = ({ handleBurger }) => {
               onClick={handleProfile}
               onMouseEnter={handleProfile}
               alt=""
-              className="h-10 w-10 rounded-full"
+              className="h-10 w-10 rounded-full cursor-pointer bg-gray-100"
             />
             {showProfile && (
-              <div className="absolute top-12 right-5 text-sm">
+              <div
+                onMouseLeave={handleProfile}
+                className="absolute top-12 right-5 text-sm"
+              >
                 <NavProfile />
               </div>
             )}

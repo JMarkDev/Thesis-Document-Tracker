@@ -20,6 +20,7 @@ const Sidebar = ({ sidebar, handleBurger }) => {
   const [isUserManagementOpen, setIsUserManagementOpen] = useState(false);
   const [sidebarLinks, setSidebarLinks] = useState([]);
   const role = userData?.role;
+  // const role = "faculty";
 
   const adminLinks = [
     { title: "Scan Now", path: "/scan-now", src: <MdQrCodeScanner /> },
@@ -50,7 +51,7 @@ const Sidebar = ({ sidebar, handleBurger }) => {
     { title: "Profile", path: "/faculty-profile", src: <FaRegUser /> },
     {
       title: "Upload Documents",
-      path: "/faculty-upload",
+      path: "/faculty-upload-documents",
       src: <FaFileUpload />,
     },
     {
@@ -85,7 +86,7 @@ const Sidebar = ({ sidebar, handleBurger }) => {
       )}
       <aside
         id="logo-sidebar"
-        className={`fixed top-0 left-0 z-40 w-64 h-screen bg-[#D4A4AC] transition-transform transform ${
+        className={`fixed top-0 left-0 z-40 w-64 h-screen bg-[#D4A4AC] rounded-br-lg transition-transform transform ${
           sidebar ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0 md:relative md:transform-none`}
         aria-label="Sidebar"
