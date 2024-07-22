@@ -7,6 +7,7 @@ import { ToastProvider } from "./hooks/useToast.jsx";
 import { AuthProvider } from "./AuthContext/AuthContext.jsx";
 import { store } from "./app/store.js";
 import { Provider } from "react-redux";
+import Cookie from "js-cookie";
 
 import {
   fetchUsers,
@@ -17,13 +18,16 @@ import {
   fetchCampusAdmin,
 } from "./services/usersSlice.js";
 
+const token = Cookie.get("accessToken");
 //This ensures that the data is already available in the Redux store when the application starts, which can improve the user experience by preventing loading delays.
-store.dispatch(fetchUsers());
-store.dispatch(fetchAdmin());
-store.dispatch(fetchOffice());
-store.dispatch(fetchRegistrar());
-store.dispatch(fetchCampusAdmin());
-store.dispatch(fetchFaculty());
+if (token) {
+  store.dispatch(fetchUsers());
+  store.dispatch(fetchAdmin());
+  store.dispatch(fetchOffice());
+  store.dispatch(fetchRegistrar());
+  store.dispatch(fetchCampusAdmin());
+  store.dispatch(fetchFaculty());
+}
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   // <React.StrictMode>

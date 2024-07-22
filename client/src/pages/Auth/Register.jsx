@@ -1,4 +1,4 @@
-import wmsuCampus from "../../utils/Campus";
+import wmsuCampus from "../../constants/Campus";
 import Profile from "../../components/profile_image/Profile";
 import PropTypes from "prop-types";
 import api from "../../api/axios";

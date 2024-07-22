@@ -1,7 +1,7 @@
 import Table from "../../../components/table/DocumentTable";
 import { IoSearch } from "react-icons/io5";
 import Dropdown from "../../../components/dropdown/Dropdown";
-import wmsuCampus from "../../../utils/Campus";
+import wmsuCampus from "../../../constants/Campus";
 
 const Documents = () => {
   const documentType = ["IDP", "IOR", "DTR"];

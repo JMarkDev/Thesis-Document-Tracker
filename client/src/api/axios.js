@@ -1,42 +1,101 @@
 import axios from "axios";
+import Cookie from "js-cookie";
 
+// Create an instance of axios
 const api = axios.create({
   baseURL: "http://localhost:3001",
+  withCredentials: true,
 });
 
-let refresh = false;
+// Request interceptor to include the token
+api.interceptors.request.use(
+  (config) => {
+    const token = Cookie.get("accessToken");
+    if (token) {
+      config.headers["Authorization"] = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+// Response interceptor to handle token refresh
 api.interceptors.response.use(
-  (resp) => {
-    return resp;
+  (response) => {
+    return response;
   },
   async (error) => {
-    try {
-      if (error.response.status === 401 && !refresh) {
-        refresh = true;
-        const response = await api.post(
-          "/refresh",
-          {},
-          { withCredentials: true }
-        );
+    const originalRequest = error.config;
+    if (error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      try {
+        // const refreshToken = localStorage.getItem("refreshToken");
+        const response = await axios.post("/refresh", {});
+        const newAccessToken = response.data.accessToken;
+        console.log(response.data);
 
-        if (response.status === 200) {
-          api.defaults.headers.common[
-            "Authorization"
-          ] = `Bearer ${response.data.accessToken}`;
+        // Store the new access token
+        // localStorage.setItem("accessToken", newAccessToken);
 
-          return axios.request(error.config);
-        }
+        // Set the new access token in the axios instance
+        api.defaults.headers.common[
+          "Authorization"
+        ] = `Bearer ${newAccessToken}`;
+        originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
+
+        return api(originalRequest);
+      } catch (err) {
+        console.log(err);
+        // Handle token refresh errors (e.g., redirect to login)
       }
-    } catch (refreshError) {
-      // console.error("Token refresh failed", refreshError);
     }
-
-    refresh = false;
     return Promise.reject(error);
   }
 );
 
 export default api;
+
+// import axios from "axios";
+
+// const api = axios.create({
+//   baseURL: "http://localhost:3001",
+// });
+
+// let refresh = false;
+// api.interceptors.response.use(
+//   (resp) => {
+//     return resp;
+//   },
+//   async (error) => {
+//     try {
+//       if (error.response.status === 401 && !refresh) {
+//         refresh = true;
+//         const response = await api.post(
+//           "/refresh",
+//           {},
+//           { withCredentials: true }
+//         );
+
+//         if (response.status === 200) {
+//           api.defaults.headers.common[
+//             "Authorization"
+//           ] = `Bearer ${response.data.accessToken}`;
+
+//           return axios.request(error.config);
+//         }
+//       }
+//     } catch (refreshError) {
+//       // console.error("Token refresh failed", refreshError);
+//     }
+
+//     refresh = false;
+//     return Promise.reject(error);
+//   }
+// );
+
+// export default api;
 // import axios from "axios";
 
 // const api = axios.create({

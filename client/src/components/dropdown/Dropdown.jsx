@@ -65,5 +65,5 @@ export default function Dropdown({ data, option, handleFilter }) {
 Dropdown.propTypes = {
   data: PropTypes.array,
   option: PropTypes.any,
-  handleFilter: PropTypes.func.isRequired,
+  handleFilter: PropTypes.func,
 };

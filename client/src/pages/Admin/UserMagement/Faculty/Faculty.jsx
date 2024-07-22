@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import FacultyTable from "../../../../components/table/FacultyTable";
 import { IoSearch } from "react-icons/io5";
 import Dropdown from "../../../../components/dropdown/Dropdown";
-import wmsuCampus from "../../../../utils/Campus";
+import wmsuCampus from "../../../../constants/Campus";
 import {
   fetchFaculty,
   // getFacultyStatus,

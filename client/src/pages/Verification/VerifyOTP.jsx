@@ -60,6 +60,9 @@ const VerifyOTP = ({ email, closeOTP, closeModal, onVerificationSuccess }) => {
             "Authorization"
           ] = `Bearer ${accessToken}`;
 
+          // Store the access token in local storage
+          // localStorage.setItem("accessToken", accessToken);
+
           // set userdata in authcontext
           const userResponse = await api.get(`/users/get-user?email=${email}`);
           setUserData(userResponse.data);
@@ -107,6 +110,7 @@ const VerifyOTP = ({ email, closeOTP, closeModal, onVerificationSuccess }) => {
         toast.success(response.data.message);
         setCountDown(60);
         setLoading(false);
+        setErrorMessage("");
         setOtp(new Array(4).fill(""));
       }
     } catch (error) {

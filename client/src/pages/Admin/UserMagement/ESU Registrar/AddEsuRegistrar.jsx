@@ -6,7 +6,7 @@ import LoginLoading from "../../../../components/loader/LoginLoading";
 import VerifyOTP from "../../../../pages/Verification/VerifyOTP";
 import { useState } from "react";
 import { useToast } from "../../../../hooks/useToast";
-import wmsuCampus from "../../../../utils/Campus";
+import wmsuCampus from "../../../../constants/Campus";
 import { FiEyeOff, FiEye } from "react-icons/fi";
 import { fetchRegistrar } from "../../../../services/usersSlice";
 import { useDispatch } from "react-redux";
