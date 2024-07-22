@@ -7,6 +7,7 @@ const { createdAt } = require("../utils/formattedTime");
 const { sendNofication } = require("../utils/emailNotifications");
 const { Sequelize } = require("sequelize");
 require("dotenv").config();
+const { setTokens } = require("../helpers/tokenHelpers");
 
 const postOTP = async (email) => {
   try {
@@ -83,27 +84,29 @@ const verifyOTP = async (req, res) => {
       });
     } else {
       //  generate tokens
+      const tokens = setTokens(res, { email, userRole });
+      accessToken = tokens.accessToken;
 
-      accessToken = jwt.sign({ email, userRole }, process.env.ACCESS_TOKEN, {
-        expiresIn: "30m",
-      });
-      const refreshToken = jwt.sign(
-        { email, userRole },
-        process.env.REFRESH_TOKEN,
-        {
-          expiresIn: "45m",
-        }
-      );
+      //   accessToken = jwt.sign({ email, userRole }, process.env.ACCESS_TOKEN, {
+      //     expiresIn: "30m",
+      //   });
+      //   const refreshToken = jwt.sign(
+      //     { email, userRole },
+      //     process.env.REFRESH_TOKEN,
+      //     {
+      //       expiresIn: "60m",
+      //     }
+      //   );
 
-      // Set secure HTTP-only cookies
-      res.cookie("accessToken", accessToken, {
-        httpOnly: true,
-        maxAge: 30 * 60 * 1000,
-      }); // 30 minutes
-      res.cookie("refreshToken", refreshToken, {
-        httpOnly: true,
-        maxAge: 45 * 60 * 1000,
-      }); // 30 minutes
+      //   // Set secure HTTP-only cookies
+      //   res.cookie("accessToken", accessToken, {
+      //     httpOnly: true,
+      //     maxAge: 30 * 60 * 1000,
+      //   }); // 30 minutes
+      //   res.cookie("refreshToken", refreshToken, {
+      //     httpOnly: true,
+      //     maxAge: 60 * 60 * 1000,
+      //   }); // 30 minutes
     }
 
     // Delete the OTP after successful verification

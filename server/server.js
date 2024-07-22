@@ -23,7 +23,10 @@ const corsOptions = {
 // Middleware setup
 app.use(cors(corsOptions));
 app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// built in middleware the handle urlencoded data
+// in other words form data;
+// 'content-type: application/x-www-form-urlencoded'
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use(express.static("public"));
@@ -49,8 +52,12 @@ app.use("/protected", verifyToken, async (req, res) => {
   });
 });
 
+// check verify user middleware
+app.use(verifyToken);
+
 app.use("/users", userRoute);
 
+app.get("/");
 // Server setup
 const server = http.createServer(app);
 
