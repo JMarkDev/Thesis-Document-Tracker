@@ -6,6 +6,8 @@ const { createdAt } = require("../utils/formattedTime");
 const { Sequelize } = require("sequelize");
 require("dotenv").config();
 const fs = require("fs");
+const rolesList = require("../constants/rolesList");
+const statusList = require("../constants/statusList");
 
 const handleRegister = async (req, res) => {
   const {
@@ -18,30 +20,17 @@ const handleRegister = async (req, res) => {
     contactNumber,
     designation,
     esuCampus,
-    officeName,
     role,
     password,
   } = req.body;
   try {
-    const officeExist = await userModel.findOne({
-      where: {
-        officeName: officeName,
-        role: "office",
-        status: "verified",
-      },
-    });
-
-    if (officeExist) {
-      return res.status(400).json({ message: "Office name already exists" });
-    }
-
     let esuCampusExist;
-    if (role === "registrar") {
+    if (role === rolesList.registrar) {
       esuCampusExist = await userModel.findOne({
         where: {
           esuCampus: esuCampus,
-          role: "registrar",
-          status: "verified",
+          role: rolesList.registrar,
+          status: statusList.verified,
         },
       });
     }
@@ -53,12 +42,12 @@ const handleRegister = async (req, res) => {
     }
 
     let campusAdminExist;
-    if (role === "campus_admin") {
+    if (role === rolesList.campus_admin) {
       campusAdminExist = await userModel.findOne({
         where: {
           esuCampus: esuCampus,
-          role: "campus_admin",
-          status: "verified",
+          role: rolesList.campus_admin,
+          status: statusList.verified,
         },
       });
     }
@@ -72,7 +61,10 @@ const handleRegister = async (req, res) => {
     const verifyUser = await userModel.findOne({
       where: {
         email,
-        [Sequelize.Op.or]: [{ status: "verified" }, { status: "approved" }],
+        [Sequelize.Op.or]: [
+          { status: statusList.verified },
+          { status: statusList.approved },
+        ],
       },
     });
 
@@ -82,7 +74,7 @@ const handleRegister = async (req, res) => {
       await userModel.destroy({
         where: {
           email: email,
-          status: "pending",
+          status: statusList.pending,
         },
       });
 
@@ -116,10 +108,9 @@ const handleRegister = async (req, res) => {
         contactNumber,
         designation,
         esuCampus,
-        officeName,
         role,
         password: hashPassword,
-        status: "pending",
+        status: statusList.pending,
         createdAt: createdAt,
       });
 
@@ -141,7 +132,10 @@ const handleLogin = async (req, res) => {
     const user = await userModel.findOne({
       where: {
         email: email,
-        [Sequelize.Op.or]: [{ status: "verified" }, { status: "approved" }],
+        [Sequelize.Op.or]: [
+          { status: statusList.verified },
+          { status: statusList.approved },
+        ],
       },
     });
 
@@ -150,7 +144,10 @@ const handleLogin = async (req, res) => {
     }
 
     //Check if the user is a faculty and their account is approved
-    if (user.role === "faculty" && user.status === "verified") {
+    if (
+      user.role === rolesList.faculty &&
+      user.status === statusList.verified
+    ) {
       return res.status(400).json({
         message: "Please wait for the registrar to approve your account.",
       });

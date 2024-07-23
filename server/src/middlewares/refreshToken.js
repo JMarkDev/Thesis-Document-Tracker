@@ -36,7 +36,7 @@ const refreshToken = (req, res, next) => {
       req.user = decoded;
       // console.log(accessToken);
       // next();
-      return res.status(200).json({ accessToken });
+      return res.status(200).json({ accessToken: accessToken });
     });
   } catch (error) {
     console.log(error);

@@ -10,6 +10,7 @@ const verifyToken = require("./src/middlewares/verifyToken");
 const refreshToken = require("./src/middlewares/refreshToken");
 const authRoute = require("./src/routes/authRoute");
 const userRoute = require("./src/routes/userRoute");
+const officeRoute = require("./src/routes/officeRoute");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -56,6 +57,7 @@ app.use("/protected", verifyToken, async (req, res) => {
 app.use(verifyToken);
 
 app.use("/users", userRoute);
+app.use("/office", officeRoute);
 
 app.get("/");
 // Server setup
@@ -84,7 +86,7 @@ server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
   database.authenticate();
   database
-    .sync({ force: false })
+    .sync({ force: true })
     .then(() => {
       console.log("Database connected successfully");
     })

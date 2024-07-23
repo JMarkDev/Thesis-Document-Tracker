@@ -9,16 +9,20 @@ const User = sequelize.define(
       primaryKey: true,
       autoIncrement: true,
     },
+    officeId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
     image: {
       type: DataTypes.STRING(250),
       allowNull: true,
     },
     firstName: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.STRING(55),
       allowNull: false,
     },
     lastName: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.STRING(55),
       allowNull: false,
     },
     middleInitial: {
@@ -26,11 +30,11 @@ const User = sequelize.define(
       allowNull: true,
     },
     email: {
-      type: DataTypes.STRING(100),
+      type: DataTypes.STRING(55),
       allowNull: false,
     },
     birthDate: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       allowNull: false,
     },
     contactNumber: {
@@ -42,23 +46,23 @@ const User = sequelize.define(
       allowNull: true,
     },
     esuCampus: {
-      type: DataTypes.STRING(250),
+      type: DataTypes.STRING(55),
       allowNull: true,
     },
-    officeName: {
-      type: DataTypes.STRING(250),
-      allowNull: true,
-    },
+    // officeName: {
+    //   type: DataTypes.STRING(55),
+    //   allowNull: true,
+    // },
     role: {
-      type: DataTypes.STRING(50),
+      type: DataTypes.TINYINT(1),
       allowNull: false,
     },
     password: {
-      type: DataTypes.STRING(250),
+      type: DataTypes.STRING(50),
       allowNull: false,
     },
     status: {
-      type: DataTypes.STRING,
+      type: DataTypes.TINYINT(1),
       allowNull: false,
     },
     createdAt: {
