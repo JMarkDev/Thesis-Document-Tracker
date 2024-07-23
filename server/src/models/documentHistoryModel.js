@@ -23,7 +23,7 @@ const DocumentHistory = sequelize.define(
     },
     forwarded_to: {
       type: DataTypes.STRING(100),
-      allowNull: false,
+      allowNull: true,
     },
     createdAt: {
       type: DataTypes.DATE,
