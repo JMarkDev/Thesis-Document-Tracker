@@ -1,13 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FaEye, FaRegEdit, FaTrashAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchOffice,
-  getRoleStatus,
-  getUserError,
-  deleteUser,
-} from "../../services/usersSlice";
+import { useDispatch } from "react-redux";
+import { deleteUser } from "../../services/usersSlice";
 import api from "../../api/axios";
 import ProfileModal from "../profileModal";
 import DeleteModal from "../DeleteModal";
@@ -17,26 +12,10 @@ import PropTypes from "prop-types";
 
 const Office = ({ officeUsers }) => {
   const dispatch = useDispatch();
-  const officeStatus = useSelector(getRoleStatus("office"));
-  const error = useSelector(getUserError);
   const [showModal, setShowModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [deleteModal, setDeleteModal] = useState(false);
   const [selecedOffice, setSelectedOffice] = useState(null);
-
-  useEffect(() => {
-    if (officeStatus === "idle") {
-      dispatch(fetchOffice());
-    }
-  }, [officeStatus, dispatch]);
-
-  if (officeStatus === "loading") {
-    return <div>Loading...</div>;
-  }
-
-  if (officeStatus === "failed") {
-    return <div>Error: {error}</div>;
-  }
 
   const openModal = (image) => {
     setSelectedImage(image);
@@ -62,6 +41,7 @@ const Office = ({ officeUsers }) => {
     dispatch(deleteUser({ id: selecedOffice, toast: toastUtils() }));
     closeDeleteModal();
   };
+
   return (
     <>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
