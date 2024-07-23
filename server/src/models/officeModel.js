@@ -10,6 +10,10 @@ const Office = sequelize.define(
       primaryKey: true,
       autoIncrement: true,
     },
+    officeId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
     officeName: {
       type: DataTypes.STRING(55),
       allowNull: false,

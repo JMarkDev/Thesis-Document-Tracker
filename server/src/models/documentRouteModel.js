@@ -1,14 +1,17 @@
 const sequelize = require("../configs/database");
 const { DataTypes } = require("sequelize");
-const { createdAt } = require("../utils/formattedTime");
 
 const Route = sequelize.define(
-  "Route",
+  "routes",
   {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
       primaryKey: true,
+    },
+    document_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
     },
     route: {
       type: DataTypes.JSON,

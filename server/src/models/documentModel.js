@@ -2,16 +2,12 @@ const sequelize = require("../configs/database");
 const { DataTypes } = require("sequelize");
 
 const Document = sequelize.define(
-  "Document",
+  "documents",
   {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       autoIncrement: true,
-    },
-    routeId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
     },
     tracking_number: {
       type: DataTypes.STRING(55),
@@ -35,10 +31,6 @@ const Document = sequelize.define(
     },
     uploaded_by: {
       type: DataTypes.STRING(100),
-      allowNull: false,
-    },
-    uploaded_date: {
-      type: DataTypes.DATE,
       allowNull: false,
     },
     status: {

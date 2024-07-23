@@ -9,10 +9,6 @@ const User = sequelize.define(
       primaryKey: true,
       autoIncrement: true,
     },
-    officeId: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
     image: {
       type: DataTypes.STRING(250),
       allowNull: true,
