@@ -1,5 +1,6 @@
 const sequelize = require("../configs/database");
 const { DataTypes } = require("sequelize");
+const DocumentHistory = require("../models/documentHistoryModel");
 
 const Document = sequelize.define(
   "documents",
@@ -51,5 +52,12 @@ const Document = sequelize.define(
     timestamps: false,
   }
 );
+
+Document.hasMany(DocumentHistory, {
+  foreignKey: "document_id",
+  onDelete: "CASCADE",
+});
+
+DocumentHistory.belongsTo(Document, { foreignKey: "document_id" });
 
 module.exports = Document;

@@ -1,8 +1,9 @@
 const sequelize = require("../configs/database");
 const { DataTypes } = require("sequelize");
+const documentModel = require("../models/documentModel");
 
 const DocumentHistory = sequelize.define(
-  "histories",
+  "document_history",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -13,17 +14,9 @@ const DocumentHistory = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    uploaded_by: {
-      type: DataTypes.STRING(100),
-      allowNull: true,
-    },
-    received_by: {
-      type: DataTypes.STRING(100),
-      allowNull: true,
-    },
-    forwarded_to: {
-      type: DataTypes.STRING(100),
-      allowNull: true,
+    content: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
     },
     createdAt: {
       type: DataTypes.DATE,
@@ -37,7 +30,13 @@ const DocumentHistory = sequelize.define(
   },
   {
     timestamps: false,
+    tableName: "document_history",
   }
 );
+
+// documentModel.hasMany(DocumentHistory, {
+//   foreignKey: "document_id",
+//   onDelete: "CASCADE",
+// });
 
 module.exports = DocumentHistory;

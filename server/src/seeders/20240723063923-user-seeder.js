@@ -14,7 +14,6 @@ module.exports = {
 
     return queryInterface.bulkInsert("users", [
       {
-        officeId: 1,
         firstName: "Byron",
         lastName: "Go Silk",
         middleInitial: "B",
@@ -30,7 +29,6 @@ module.exports = {
         updatedAt: createdAt,
       },
       {
-        officeId: 2,
         firstName: "Vice ",
         lastName: "President",
         middleInitial: "B",
@@ -46,7 +44,6 @@ module.exports = {
         updatedAt: createdAt,
       },
       {
-        officeId: 3,
         firstName: "Human",
         lastName: "Resouces",
         middleInitial: "B",
@@ -62,7 +59,6 @@ module.exports = {
         updatedAt: createdAt,
       },
       {
-        officeId: 4,
         firstName: "Accounting",
         lastName: "Office",
         middleInitial: "B",
@@ -78,7 +74,6 @@ module.exports = {
         updatedAt: createdAt,
       },
       {
-        officeId: 5,
         firstName: "Records",
         lastName: "Office",
         middleInitial: "B",
@@ -94,7 +89,6 @@ module.exports = {
         updatedAt: createdAt,
       },
       {
-        officeId: null,
         firstName: "Alicia",
         lastName: "Campus Admin",
         middleInitial: "A",
@@ -110,7 +104,6 @@ module.exports = {
         updatedAt: createdAt,
       },
       {
-        officeId: null,
         firstName: "Alicia",
         lastName: "Registrar",
         middleInitial: "A",
@@ -126,7 +119,6 @@ module.exports = {
         updatedAt: createdAt,
       },
       {
-        officeId: null,
         firstName: "Aurora",
         lastName: "Campus Admin",
         middleInitial: "A",
@@ -142,7 +134,6 @@ module.exports = {
         updatedAt: createdAt,
       },
       {
-        officeId: null,
         firstName: "Aurora",
         lastName: "Registrar",
         middleInitial: "A",
@@ -158,7 +149,6 @@ module.exports = {
         updatedAt: createdAt,
       },
       {
-        officeId: null,
         firstName: "Diplahan",
         lastName: "Campus Admin",
         middleInitial: "A",
@@ -174,7 +164,6 @@ module.exports = {
         updatedAt: createdAt,
       },
       {
-        officeId: null,
         firstName: "Diplahan",
         lastName: "Registrar",
         middleInitial: "A",
@@ -190,7 +179,6 @@ module.exports = {
         updatedAt: createdAt,
       },
       {
-        officeId: null,
         firstName: "Malangas",
         lastName: "Campus Admin",
         middleInitial: "A",
@@ -206,7 +194,6 @@ module.exports = {
         updatedAt: createdAt,
       },
       {
-        officeId: null,
         firstName: "Malangas",
         lastName: "Registrar",
         middleInitial: "A",
@@ -222,7 +209,6 @@ module.exports = {
         updatedAt: createdAt,
       },
       {
-        officeId: null,
         firstName: "Pagadian",
         lastName: "Campus Admin",
         middleInitial: "A",
@@ -238,7 +224,6 @@ module.exports = {
         updatedAt: createdAt,
       },
       {
-        officeId: null,
         firstName: "Pagadian",
         lastName: "Registrar",
         middleInitial: "A",
@@ -254,7 +239,6 @@ module.exports = {
         updatedAt: createdAt,
       },
       {
-        officeId: null,
         firstName: "Siay",
         lastName: "Campus Admin",
         middleInitial: "A",
@@ -270,7 +254,6 @@ module.exports = {
         updatedAt: createdAt,
       },
       {
-        officeId: null,
         firstName: "Siay",
         lastName: "Registrar",
         middleInitial: "A",
@@ -286,7 +269,6 @@ module.exports = {
         updatedAt: createdAt,
       },
       {
-        officeId: null,
         firstName: "Tungawan",
         lastName: "Campus Admin",
         middleInitial: "A",
@@ -302,7 +284,6 @@ module.exports = {
         updatedAt: createdAt,
       },
       {
-        officeId: null,
         firstName: "Tungawan",
         lastName: "Registrar",
         middleInitial: "A",
@@ -318,7 +299,6 @@ module.exports = {
         updatedAt: createdAt,
       },
       {
-        officeId: null,
         firstName: "Josiel Mark",
         lastName: "Seroy",
         middleInitial: "M",
@@ -334,7 +314,6 @@ module.exports = {
         updatedAt: createdAt,
       },
       {
-        officeId: null,
         firstName: "Sample",
         lastName: "Faculty",
         middleInitial: "B",
@@ -350,7 +329,6 @@ module.exports = {
         updatedAt: createdAt,
       },
       {
-        officeId: null,
         firstName: "Malangas",
         lastName: "Faculty",
         middleInitial: "C",
@@ -366,7 +344,6 @@ module.exports = {
         updatedAt: createdAt,
       },
       {
-        officeId: null,
         firstName: "Sample",
         lastName: "Faculty",
         middleInitial: "D",
@@ -382,7 +359,6 @@ module.exports = {
         updatedAt: createdAt,
       },
       {
-        officeId: null,
         firstName: "Sample",
         lastName: "Faculty",
         middleInitial: "E",

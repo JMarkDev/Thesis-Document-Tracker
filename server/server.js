@@ -86,7 +86,7 @@ server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
   database.authenticate();
   database
-    .sync({ force: true })
+    .sync({ force: false })
     .then(() => {
       console.log("Database connected successfully");
     })

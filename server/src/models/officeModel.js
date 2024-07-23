@@ -12,7 +12,7 @@ const Office = sequelize.define(
     },
     officeId: {
       type: DataTypes.INTEGER,
-      allowNull: true,
+      allowNull: false,
     },
     officeName: {
       type: DataTypes.STRING(55),

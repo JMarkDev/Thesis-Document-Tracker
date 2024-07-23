@@ -9,7 +9,7 @@ const Route = sequelize.define(
       autoIncrement: true,
       primaryKey: true,
     },
-    document_id: {
+    document_type: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
