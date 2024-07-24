@@ -1,5 +1,6 @@
 import axios from "../api/axios";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import rolesList from "../constants/rolesList";
 
 // Thunks
 // export const registerUser = createAsyncThunk(
@@ -22,11 +23,11 @@ const fetchRoleUsers = (role) => {
   });
 };
 
-export const fetchAdmin = fetchRoleUsers("admin");
-export const fetchOffice = fetchRoleUsers("office");
-export const fetchRegistrar = fetchRoleUsers("registrar");
-export const fetchCampusAdmin = fetchRoleUsers("campus_admin");
-export const fetchFaculty = fetchRoleUsers("faculty");
+export const fetchAdmin = fetchRoleUsers(rolesList.admin);
+export const fetchOffice = fetchRoleUsers(rolesList.office);
+export const fetchRegistrar = fetchRoleUsers(rolesList.registrar);
+export const fetchCampusAdmin = fetchRoleUsers(rolesList.campus_admin);
+export const fetchFaculty = fetchRoleUsers(rolesList.faculty);
 
 export const deleteUser = createAsyncThunk(
   "/users/deleteUser",
@@ -47,11 +48,11 @@ const searchRoleUsers = (role) => {
   });
 };
 
-export const searchAdminRole = searchRoleUsers("admin");
-export const searchOfficeRole = searchRoleUsers("office");
-export const searchRegistrarRole = searchRoleUsers("registrar");
-export const searchCampusAdminRole = searchRoleUsers("campus_admin");
-export const searchFacultyRole = searchRoleUsers("faculty");
+export const searchAdminRole = searchRoleUsers(rolesList.admin);
+export const searchOfficeRole = searchRoleUsers(rolesList.office);
+export const searchRegistrarRole = searchRoleUsers(rolesList.registrar);
+export const searchCampusAdminRole = searchRoleUsers(rolesList.campus_admin);
+export const searchFacultyRole = searchRoleUsers(rolesList.faculty);
 
 export const filterFacultyByCampus = createAsyncThunk(
   "users/filter-faculty",

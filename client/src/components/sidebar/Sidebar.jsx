@@ -13,6 +13,7 @@ import { GiFiles } from "react-icons/gi";
 import Logo from "../../assets/images/logo with word.png";
 import PropTypes from "prop-types";
 import { AuthContext } from "../../AuthContext/AuthContext";
+import rolesList from "../../constants/rolesList";
 
 const Sidebar = ({ sidebar, handleBurger }) => {
   const { userData } = useContext(AuthContext);
@@ -64,9 +65,9 @@ const Sidebar = ({ sidebar, handleBurger }) => {
   ];
 
   useEffect(() => {
-    if (role === "admin") {
+    if (role === rolesList.admin) {
       setSidebarLinks(adminLinks);
-    } else if (role === "faculty") {
+    } else if (role === rolesList.faculty) {
       setSidebarLinks(facultyLinks);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -1,8 +1,14 @@
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import rolesList from "./constants/rolesList";
+
+import ProtectedRoute from "./route/ProtectedRoute";
 import PageNotFound from "./pages/PageNotFound";
+
 import Homepage from "./pages/Homepage";
 import ScanNow from "./pages/Admin/ScanNow/ScanNow";
+
 import LayoutAdmin from "./components/layout/LayoutAdmin";
 import Dashboard from "./pages/Admin/Dashboard/Dashboard";
 import Documents from "./pages/Admin/Documents/Documents";
@@ -14,14 +20,12 @@ import CampusAdmin from "./pages/Admin/UserMagement/CampusAdmin/CampusAdmin";
 import EsuRegistrar from "./pages/Admin/UserMagement/ESU Registrar/EsuRegistrar";
 import AdminStaff from "./pages/Admin/UserMagement/AdminStaff/AdminStaff";
 import DocumentDetails from "./pages/Admin/Documents/DocumentDetails";
-import { ToastContainer } from "react-toastify";
-import ProtectedRoute from "./route/ProtectedRoute";
 
+import LayoutFaculty from "./components/layout/LayoutFaculty";
 import FacultyProfile from "./pages/Faculty/Profile/FacultyProfile";
 import Upload from "./pages/Faculty/UploadDocuments/UploadDocuments";
 import FacultyReports from "./pages/Faculty/Reports/FacultyReports";
 import AllDocuments from "./pages/Faculty/AllDocuments/AllDocuments";
-import LayoutFaculty from "./components/layout/LayoutFaculty";
 
 function App() {
   const adminLinks = [
@@ -100,7 +104,7 @@ function App() {
             element={
               <ProtectedRoute
                 element={<LayoutAdmin>{link.component}</LayoutAdmin>}
-                allowedRoles={["admin"]}
+                allowedRoles={[rolesList.admin]}
               />
             }
           />
@@ -114,7 +118,7 @@ function App() {
             element={
               <ProtectedRoute
                 element={<LayoutFaculty>{link.component}</LayoutFaculty>}
-                allowedRoles={["faculty"]}
+                allowedRoles={[rolesList.faculty]}
               />
             }
           />

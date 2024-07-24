@@ -8,6 +8,7 @@ import LoginLoading from "../../components/loader/LoginLoading";
 import { useToast } from "../../hooks/useToast";
 import "react-toastify/dist/ReactToastify.css";
 import { AuthContext } from "../../AuthContext/AuthContext";
+import rolesList from "../../constants/rolesList";
 
 const VerifyOTP = ({ email, closeOTP, closeModal, onVerificationSuccess }) => {
   const toast = useToast();
@@ -71,19 +72,19 @@ const VerifyOTP = ({ email, closeOTP, closeModal, onVerificationSuccess }) => {
 
           let path = "/";
           switch (role) {
-            case "faculty":
+            case rolesList.faculty:
               path = "/faculty-profile";
               break;
-            case "campus-admin":
+            case rolesList.campus_admin:
               path = "/campus-admin-dashboard";
               break;
-            case "registrar":
+            case rolesList.registrar:
               path = "/dashboard-registrar";
               break;
-            case "admin":
+            case rolesList.admin:
               path = "/dashboard";
               break;
-            case "offices":
+            case rolesList.office:
               path = "/offices-dashboard";
               break;
             default:
