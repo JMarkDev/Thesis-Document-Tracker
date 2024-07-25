@@ -4,9 +4,11 @@ const otpController = require("../controllers/otpController");
 const bcrypt = require("bcryptjs");
 const saltsRounds = 10;
 const { createdAt } = require("../utils/formattedTime");
-const { Sequelize } = require("sequelize");
+const { Sequelize, Op } = require("sequelize");
 require("dotenv").config();
 const fs = require("fs");
+const statusList = require("../constants/statusList");
+const rolesList = require("../constants/rolesList");
 
 const addOffice = async (req, res) => {
   const {
@@ -22,12 +24,14 @@ const addOffice = async (req, res) => {
     role,
     password,
   } = req.body;
+
   try {
-    const officeExist = await userModel.findOne({
+    if (!officeName) {
+      return res.status(400).json({ message: "Office name is required" });
+    }
+    const officeExist = await officeModel.findOne({
       where: {
         officeName: officeName,
-        role: "office",
-        status: "verified",
       },
     });
 
@@ -38,7 +42,7 @@ const addOffice = async (req, res) => {
     const verifyUser = await userModel.findOne({
       where: {
         email,
-        status: "verified",
+        status: statusList.verified,
       },
     });
 
@@ -48,7 +52,7 @@ const addOffice = async (req, res) => {
       await userModel.destroy({
         where: {
           email: email,
-          status: "pending",
+          status: statusList.pending,
         },
       });
 
@@ -72,6 +76,12 @@ const addOffice = async (req, res) => {
 
       const hashPassword = await bcrypt.hash(password, saltsRounds);
 
+      // Create office entry in officeModel
+      const office = await officeModel.create({
+        officeName: officeName,
+        createdAt: createdAt,
+      });
+
       await userModel.create({
         image: newFileName ? `/uploads/${newFileName}` : null,
         firstName,
@@ -81,17 +91,12 @@ const addOffice = async (req, res) => {
         birthDate,
         contactNumber,
         designation,
-        officeName,
+        esuCampus: null,
         role,
         password: hashPassword,
-        status: "pending",
+        status: statusList.pending,
         createdAt: createdAt,
-      });
-
-      // Create office entry in officeModel
-      await officeModel.create({
-        officeName: officeName,
-        createdAt: createdAt,
+        officeId: office.id, // Associate the new office with the user
       });
 
       return res.status(201).json({
@@ -101,7 +106,7 @@ const addOffice = async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ Error: "Register error in server" });
+    return res.status(500).json({ Error: "Add office error in server" });
   }
 };
 
@@ -109,9 +114,20 @@ const getAllOffice = async (req, res) => {
   try {
     const users = await userModel.findAll({
       where: {
-        status: "verified",
+        status: statusList.verified,
+        [Sequelize.Op.or]: [
+          { role: rolesList.admin },
+          { role: rolesList.office },
+        ],
+        // role: rolesList.office,
       },
-      include: officeModel,
+
+      include: [
+        {
+          model: officeModel,
+          required: true, // Ensures only users with associated office data are include
+        },
+      ],
     });
     return res.status(200).json(users);
   } catch (error) {
@@ -119,7 +135,36 @@ const getAllOffice = async (req, res) => {
   }
 };
 
+const searchOffice = async (req, res) => {
+  const { name } = req.params;
+
+  try {
+    const users = await userModel.findAll({
+      where: {
+        status: statusList.verified,
+        [Op.or]: [{ role: rolesList.admin }, { role: rolesList.office }],
+        [Op.or]: [
+          { firstName: { [Op.like]: `${name}%` } },
+          { lastName: { [Op.like]: `${name}%` } },
+          { "$office.officeName$": { [Op.like]: `${name}%` } }, // Added to search in the associated officeName
+        ],
+      },
+      include: [
+        {
+          model: officeModel,
+          required: true,
+        },
+      ],
+    });
+    return res.status(200).json(users);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   addOffice,
   getAllOffice,
+  searchOffice,
 };

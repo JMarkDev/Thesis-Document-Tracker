@@ -11,6 +11,9 @@ const refreshToken = require("./src/middlewares/refreshToken");
 const authRoute = require("./src/routes/authRoute");
 const userRoute = require("./src/routes/userRoute");
 const officeRoute = require("./src/routes/officeRoute");
+const notificationRoute = require("./src/routes/notificationRoute");
+const documentRoute = require("./src/routes/documentRoute");
+const documentWorkflowRoute = require("./src/routes/documentWorkflow");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -58,6 +61,9 @@ app.use(verifyToken);
 
 app.use("/users", userRoute);
 app.use("/office", officeRoute);
+app.use("/document", documentRoute);
+app.use("/workflow", documentWorkflowRoute);
+app.use("/notification", notificationRoute);
 
 app.get("/");
 // Server setup

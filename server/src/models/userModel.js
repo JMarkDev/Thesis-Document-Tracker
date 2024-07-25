@@ -1,5 +1,6 @@
 const sequelize = require("../configs/database");
 const { DataTypes } = require("sequelize");
+const Office = require("./officeModel");
 
 const User = sequelize.define(
   "users",
@@ -45,10 +46,6 @@ const User = sequelize.define(
       type: DataTypes.STRING(55),
       allowNull: true,
     },
-    // officeName: {
-    //   type: DataTypes.STRING(55),
-    //   allowNull: true,
-    // },
     role: {
       type: DataTypes.TINYINT(1),
       allowNull: false,
@@ -70,10 +67,23 @@ const User = sequelize.define(
       type: DataTypes.DATE,
       allowNull: true,
     },
+    officeId: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: Office,
+        key: "id",
+      },
+      onDelete: "CASCADE",
+    },
   },
   {
     timestamps: false,
   }
 );
+
+// Define the relationship (assuming a one-to-one association)
+Office.hasOne(User, { foreignKey: "officeId", onDelete: "CASCADE" });
+User.belongsTo(Office, { foreignKey: "officeId", onDelete: "CASCADE" });
 
 module.exports = User;

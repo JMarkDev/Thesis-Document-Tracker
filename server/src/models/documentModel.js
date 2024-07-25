@@ -1,3 +1,75 @@
+// const sequelize = require("../configs/database");
+// const { DataTypes } = require("sequelize");
+// const DocumentHistory = require("../models/documentHistoryModel");
+
+// const Document = sequelize.define(
+//   "documents",
+//   {
+//     id: {
+//       type: DataTypes.INTEGER,
+//       allowNull: false,
+//       autoIncrement: true,
+//     },
+//     tracking_number: {
+//       type: DataTypes.STRING(55),
+//       allowNull: false,
+//     },
+//     document_name: {
+//       type: DataTypes.STRING(55),
+//       allowNull: false,
+//     },
+//     document_type: {
+//       type: DataTypes.STRING(55),
+//       allowNull: false,
+//     },
+//     file_type: {
+//       type: DataTypes.STRING(55),
+//       allowNull: false,
+//     },
+//     files: {
+//       type: DataTypes.JSON,
+//       allowNull: true,
+//     },
+//     uploaded_by: {
+//       type: DataTypes.STRING(100),
+//       allowNull: false,
+//     },
+//     status: {
+//       type: DataTypes.TINYINT(1),
+//       allowNull: false,
+//     },
+//     createdAt: {
+//       type: DataTypes.DATE,
+//       allowNull: false,
+//       defaultValue: DataTypes.NOW,
+//     },
+//     updatedAt: {
+//       type: DataTypes.DATE,
+//       allowNull: true,
+//     },
+//     document_id: {
+//       type: DataTypes.INTEGER,
+//       allowNull: true,
+//       references: {
+//         model: DocumentHistory,
+//         key: "id",
+//       },
+//       onDelete: "CASCADE",
+//     },
+//   },
+//   {
+//     timestamps: false,
+//   }
+// );
+
+// Document.hasMany(DocumentHistory, {
+//   foreignKey: "document_id",
+//   onDelete: "CASCADE",
+// });
+
+// DocumentHistory.belongsTo(Document, { foreignKey: "document_id" });
+
+// module.exports = Document;
 const sequelize = require("../configs/database");
 const { DataTypes } = require("sequelize");
 const DocumentHistory = require("../models/documentHistoryModel");
@@ -9,6 +81,7 @@ const Document = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
       autoIncrement: true,
+      primaryKey: true,
     },
     tracking_number: {
       type: DataTypes.STRING(55),
@@ -37,6 +110,15 @@ const Document = sequelize.define(
     status: {
       type: DataTypes.TINYINT(1),
       allowNull: false,
+    },
+    route: {
+      type: DataTypes.JSON, // Store the route as a JSON array
+      allowNull: false,
+    },
+    current_position: {
+      type: DataTypes.INTEGER, // Track the current position in the route
+      allowNull: false,
+      defaultValue: 0,
     },
     createdAt: {
       type: DataTypes.DATE,

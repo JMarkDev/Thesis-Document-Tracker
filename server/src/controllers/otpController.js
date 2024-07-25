@@ -8,6 +8,8 @@ const { sendNofication } = require("../utils/emailNotifications");
 const { Sequelize } = require("sequelize");
 require("dotenv").config();
 const { setTokens } = require("../helpers/tokenHelpers");
+const rolesList = require("../constants/rolesList");
+const statusList = require("../constants/statusList");
 
 const postOTP = async (email) => {
   try {
@@ -56,7 +58,10 @@ const verifyOTP = async (req, res) => {
     const registeredUser = await userModel.findOne({
       where: {
         email: email,
-        [Sequelize.Op.or]: [{ status: "verified" }, { status: "approved" }],
+        [Sequelize.Op.or]: [
+          { status: statusList.verified },
+          { status: statusList.approved },
+        ],
       },
     });
 
@@ -67,7 +72,7 @@ const verifyOTP = async (req, res) => {
       // Update user status if not already registered
       await userModel.update(
         {
-          status: "verified",
+          status: statusList.verified,
           updatedAt: createdAt,
         },
         { where: { email: email } }
@@ -77,7 +82,7 @@ const verifyOTP = async (req, res) => {
         email: email,
         subject: "WMSU-ESU Document Tracker Registration Successful",
         message: `${
-          userRole === "faculty"
+          userRole === rolesList.faculty
             ? "Thank you for registering. Your account has been successfully created. Please wait for the registrar to approve your account."
             : "Thank you for registering. Your account has been successfully created."
         }`,

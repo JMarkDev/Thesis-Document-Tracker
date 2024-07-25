@@ -1,6 +1,5 @@
 const sequelize = require("../configs/database");
 const { DataTypes } = require("sequelize");
-const userModel = require("../models/userModel");
 
 const Office = sequelize.define(
   "offices",
@@ -10,12 +9,8 @@ const Office = sequelize.define(
       primaryKey: true,
       autoIncrement: true,
     },
-    officeId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
     officeName: {
-      type: DataTypes.STRING(55),
+      type: DataTypes.STRING(100),
       allowNull: false,
     },
     createdAt: {
@@ -32,7 +27,5 @@ const Office = sequelize.define(
     timestamps: false,
   }
 );
-
-userModel.hasOne(Office, { foreignKey: "officeId", onDelete: "CASCADE" });
 
 module.exports = Office;

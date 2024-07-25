@@ -10,7 +10,7 @@ const Route = sequelize.define(
       primaryKey: true,
     },
     document_type: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.STRING(100),
       allowNull: false,
     },
     route: {

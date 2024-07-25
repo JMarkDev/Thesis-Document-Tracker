@@ -27,6 +27,7 @@ module.exports = {
         status: statusList.verified,
         createdAt: createdAt,
         updatedAt: createdAt,
+        officeId: 1,
       },
       {
         firstName: "Vice ",
@@ -42,6 +43,7 @@ module.exports = {
         status: statusList.verified,
         createdAt: createdAt,
         updatedAt: createdAt,
+        officeId: 2,
       },
       {
         firstName: "Human",
@@ -57,6 +59,7 @@ module.exports = {
         status: statusList.verified,
         createdAt: createdAt,
         updatedAt: createdAt,
+        officeId: 3,
       },
       {
         firstName: "Accounting",
@@ -72,6 +75,7 @@ module.exports = {
         status: statusList.verified,
         createdAt: createdAt,
         updatedAt: createdAt,
+        officeId: 4,
       },
       {
         firstName: "Records",
@@ -87,6 +91,7 @@ module.exports = {
         status: statusList.verified,
         createdAt: createdAt,
         updatedAt: createdAt,
+        officeId: 5,
       },
       {
         firstName: "Alicia",

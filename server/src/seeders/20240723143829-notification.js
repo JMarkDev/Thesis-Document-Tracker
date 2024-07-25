@@ -1,26 +1,56 @@
 "use strict";
+
 const { createdAt } = require("../utils/formattedTime");
 
-/** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    /**
-     * Add seed commands here.
-     *
-     * Example:
-     * await queryInterface.bulkInsert('People', [{
-     *   name: 'John Doe',
-     *   isBetaMember: false
-     * }], {});
-     */
+    return queryInterface.bulkInsert("notifications", [
+      {
+        user_id: 1, // Ensure this corresponds to a valid user ID in your users table
+        content: "Document forwarded to: OIC Dean of ESU Office",
+        is_read: 0,
+        createdAt: createdAt,
+        updatedAt: createdAt,
+      },
+      {
+        user_id: 1,
+        content: "Document forwarded to: Vice President Office",
+        is_read: 0,
+        createdAt: createdAt,
+        updatedAt: createdAt,
+      },
+      {
+        user_id: 2,
+        content: "Document forwarded to: Human Resource Office",
+        is_read: 0,
+        createdAt: createdAt,
+        updatedAt: createdAt,
+      },
+      {
+        user_id: 3,
+        content: "Document forwarded to: Accounting Office",
+        is_read: 0,
+        createdAt: createdAt,
+        updatedAt: createdAt,
+      },
+      {
+        user_id: 4,
+        content: "Document forwarded to: Records Office",
+        is_read: 0,
+        createdAt: createdAt,
+        updatedAt: createdAt,
+      },
+      {
+        user_id: 4,
+        content: "Document Received by: Records Office",
+        is_read: 0,
+        createdAt: createdAt,
+        updatedAt: createdAt,
+      },
+    ]);
   },
 
   async down(queryInterface, Sequelize) {
-    /**
-     * Add commands to revert seed here.
-     *
-     * Example:
-     * await queryInterface.bulkDelete('People', null, {});
-     */
+    return queryInterface.bulkDelete("notifications", null, {});
   },
 };
