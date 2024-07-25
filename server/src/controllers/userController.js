@@ -1,7 +1,9 @@
-const { Sequelize, where, Op } = require("sequelize");
+const { Sequelize, Op } = require("sequelize");
 const userModel = require("../models/userModel");
+const officeModel = require("../models/officeModel");
 const { createdAt } = require("../utils/formattedTime");
 const { sendNofication } = require("../utils/emailNotifications");
+const statusList = require("../constants/statusList");
 
 const getUserByEmail = async (req, res) => {
   const { email } = req.query;
@@ -28,7 +30,10 @@ const getAllUser = async (req, res) => {
   try {
     const verifiedUser = await userModel.findAll({
       where: {
-        [Sequelize.Op.or]: [{ status: "verified" }, { status: "approved" }],
+        [Sequelize.Op.or]: [
+          { status: statusList.verified },
+          { status: statusList.approved },
+        ],
       },
     });
     return res.status(200).json(verifiedUser);
@@ -43,7 +48,7 @@ const approveFaculty = async (req, res) => {
   try {
     await userModel.update(
       {
-        status: "approved",
+        status: statusList.approved,
         updatedAt: createdAt,
       },
       {
@@ -77,7 +82,10 @@ const getUserByRole = async (req, res) => {
     const user = await userModel.findAll({
       where: {
         role: role,
-        [Sequelize.Op.or]: [{ status: "verified" }, { status: "approved" }],
+        [Sequelize.Op.or]: [
+          { status: statusList.verified },
+          { status: statusList.approved },
+        ],
       },
     });
     if (!user) {
@@ -100,7 +108,14 @@ const deleteUser = async (req, res) => {
     if (!user) {
       return res.status(404).json({ Error: "User not found" });
     } else {
+      const officeId = user.officeId;
       await user.destroy();
+
+      // Delete the associated office if the user is an office
+      if (officeId) {
+        const office = await officeModel.findByPk(officeId);
+        await office.destroy();
+      }
       return res.status(200).json({
         status: "success",
         message: "Deleted successfully!",
@@ -117,7 +132,10 @@ const searchUser = async (req, res) => {
   try {
     const searchCriteria = {
       where: {
-        [Sequelize.Op.or]: [{ status: "verified" }, { status: "approved" }],
+        [Sequelize.Op.or]: [
+          { status: statusList.verified },
+          { status: statusList.approved },
+        ],
         role: role,
         [Op.or]: [
           { firstName: { [Op.like]: `${name}%` } },
