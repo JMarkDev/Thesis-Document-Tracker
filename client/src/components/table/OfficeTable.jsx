@@ -96,7 +96,7 @@ const Office = ({ officeUsers }) => {
                   middleInitial,
                   designation,
                   image,
-                  officeName,
+                  office: { officeName },
                   email,
                 },
                 index

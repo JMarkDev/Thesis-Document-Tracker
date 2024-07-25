@@ -9,6 +9,7 @@ import { useToast } from "../../../hooks/useToast";
 import { FiEyeOff, FiEye } from "react-icons/fi";
 import { fetchOffice } from "../../../services/usersSlice";
 import { useDispatch } from "react-redux";
+import rolesList from "../../../constants/rolesList";
 
 const AddOffice = ({ modal, closeModal }) => {
   const dispatch = useDispatch();
@@ -37,8 +38,7 @@ const AddOffice = ({ modal, closeModal }) => {
 
   const onSubmit = async (data) => {
     setEmail(data.email);
-    data.role = "office";
-    data.esuCampus = null;
+    data.role = rolesList.office;
     setLoading(true);
 
     setOfficeNameError("");
@@ -61,20 +61,20 @@ const AddOffice = ({ modal, closeModal }) => {
       formData.append("birthDate", data.birthDate);
       formData.append("contactNumber", data.contactNumber);
       formData.append("designation", data.designation);
-      formData.append("esuCampus", data.esuCampus);
       formData.append("officeName", data.officeName);
       formData.append("role", data.role);
       formData.append("password", data.password);
       formData.append("confirmPassword", data.confirmPassword);
       formData.append("image", data.image); // Append the file
 
-      const response = await api.post("/auth/register", formData);
+      const response = await api.post("/office/add", formData);
       if (response.data.status === "success") {
         toast.success(response.data.message);
         setShowOTP(true);
         setLoading(false);
       }
     } catch (error) {
+      console.log(error);
       setLoading(false);
       if (data.officeName === "") {
         setOfficeNameError("Office Name is required");

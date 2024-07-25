@@ -23,8 +23,15 @@ const fetchRoleUsers = (role) => {
   });
 };
 
+export const fetchOfficeUsers = () => {
+  return createAsyncThunk("office/all", async () => {
+    const response = await axios.get("/office/all");
+    return response.data;
+  });
+};
+
 export const fetchAdmin = fetchRoleUsers(rolesList.admin);
-export const fetchOffice = fetchRoleUsers(rolesList.office);
+export const fetchOffice = fetchOfficeUsers(rolesList.office);
 export const fetchRegistrar = fetchRoleUsers(rolesList.registrar);
 export const fetchCampusAdmin = fetchRoleUsers(rolesList.campus_admin);
 export const fetchFaculty = fetchRoleUsers(rolesList.faculty);
@@ -48,8 +55,15 @@ const searchRoleUsers = (role) => {
   });
 };
 
+const searchOfficeUsers = () => {
+  return createAsyncThunk(`office/search/:name`, async (name) => {
+    const response = await axios.get(`/office/search/${name}`);
+    return response.data;
+  });
+};
+
 export const searchAdminRole = searchRoleUsers(rolesList.admin);
-export const searchOfficeRole = searchRoleUsers(rolesList.office);
+export const searchOfficeRole = searchOfficeUsers();
 export const searchRegistrarRole = searchRoleUsers(rolesList.registrar);
 export const searchCampusAdminRole = searchRoleUsers(rolesList.campus_admin);
 export const searchFacultyRole = searchRoleUsers(rolesList.faculty);

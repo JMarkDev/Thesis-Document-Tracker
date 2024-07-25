@@ -14,7 +14,6 @@ const Office = () => {
   const dispatch = useDispatch();
   const officeUsers = useSelector(getRoleUsers("office"));
   const officeStatus = useSelector(getRoleStatus("office"));
-  const adminUser = useSelector(getRoleUsers("admin"));
   const adminStatus = useSelector(getRoleStatus("admin"));
   const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -45,8 +44,6 @@ const Office = () => {
     }
   }, [searchTerm, dispatch]);
 
-  const adminAndOfficeUser = [adminUser[0], ...officeUsers];
-
   return (
     <div>
       <div className="flex text-sm md:text-[16px] justify-between lg:flex-row flex-col-reverse gap-5">
@@ -69,7 +66,7 @@ const Office = () => {
         {showModal && <AddOffice modal={openModal} closeModal={closeModal} />}
       </div>
       <div className="mt-8">
-        <OfficeTable officeUsers={adminAndOfficeUser} />
+        <OfficeTable officeUsers={officeUsers} />
       </div>
     </div>
   );

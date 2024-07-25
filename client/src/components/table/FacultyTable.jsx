@@ -9,6 +9,7 @@ import DeleteModal from "../DeleteModal";
 import { useDispatch } from "react-redux";
 import { deleteUser } from "../../services/usersSlice";
 import { toastUtils } from "../../hooks/useToast";
+import { getStatus } from "../../utils/getStatus";
 
 const FacultyTable = ({ fetchFaculty }) => {
   const dispatch = useDispatch();
@@ -41,6 +42,7 @@ const FacultyTable = ({ fetchFaculty }) => {
     dispatch(deleteUser({ id: selectedEsuCampus, toast: toastUtils() }));
     closeDeleteModal();
   };
+
   return (
     <>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -149,7 +151,7 @@ const FacultyTable = ({ fetchFaculty }) => {
                         status === "verified" ? "bg-[#ecda39]" : "bg-green-400"
                       }  text-gray-700 p-1 px-2 rounded-lg`}
                     >
-                      {`${status === "verified" ? "pending" : status}`}
+                      {getStatus(status)}
                     </span>
                   </td>
 
