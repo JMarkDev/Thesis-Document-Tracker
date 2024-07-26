@@ -3,6 +3,7 @@ const router = express.Router();
 const documentController = require("../controllers/documentController");
 
 router.get("/all", documentController.getAllDocuments);
+router.get("/get-by-id/:id", documentController.getDocumentById);
 router.get("/search/:name", documentController.searchDocuments);
 router.get(
   "/filter-by-esu/:esuCampus",

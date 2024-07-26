@@ -18,6 +18,27 @@ const getAllDocuments = async (req, res) => {
   }
 };
 
+const getDocumentById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const document = await documentModel.findOne({
+      where: {
+        id: id,
+      },
+      include: [
+        {
+          model: documentHistoryModel,
+          required: true,
+        },
+      ],
+    });
+    return res.status(200).json(document);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 const searchDocuments = async (req, res) => {
   const { name } = req.params;
 
@@ -108,4 +129,5 @@ module.exports = {
   filterDocumentsByEsu,
   filterDocumentsByType,
   filterDocumentsByStatus,
+  getDocumentById,
 };
