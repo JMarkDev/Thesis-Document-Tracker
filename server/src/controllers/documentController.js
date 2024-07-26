@@ -11,7 +11,7 @@ const getAllDocuments = async (req, res) => {
         },
       ],
     });
-    return res.status(200).json({ documents });
+    return res.status(200).json(documents);
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }

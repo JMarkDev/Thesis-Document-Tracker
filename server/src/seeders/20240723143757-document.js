@@ -14,8 +14,8 @@ module.exports = {
           document_type: "IDP",
           file_type: "Hardcopy",
           files: null,
-
           uploaded_by: "Josiel Mark M. Seroy",
+          esuCampus: "WMSU-ESU Diplahan",
           status: documentStatus.received,
           route: JSON.stringify([
             "Faculty",
@@ -37,8 +37,8 @@ module.exports = {
           document_type: "IDP",
           file_type: "Hardcopy",
           files: null,
-
           uploaded_by: "Josiel Mark M. Seroy",
+          esuCampus: "WMSU-ESU Pagadian",
           status: documentStatus.received,
           route: JSON.stringify([
             "Faculty",
@@ -60,8 +60,8 @@ module.exports = {
           document_type: "IDP",
           file_type: "Hardcopy",
           files: null,
-
           uploaded_by: "Josiel Mark M. Seroy",
+          esuCampus: "WMSU-ESU Malangas",
           status: documentStatus.received,
           route: JSON.stringify([
             "Faculty",
@@ -83,8 +83,8 @@ module.exports = {
           document_type: "IDP",
           file_type: "Hardcopy",
           files: null,
-
           uploaded_by: "Josiel Mark M. Seroy",
+          esuCampus: "WMSU-ESU Alicia",
           status: documentStatus.received,
           route: JSON.stringify([
             "Faculty",

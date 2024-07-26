@@ -36,6 +36,10 @@ const Document = sequelize.define(
       type: DataTypes.STRING(100),
       allowNull: false,
     },
+    esuCampus: {
+      type: DataTypes.STRING(55),
+      allowNull: true,
+    },
     status: {
       type: DataTypes.TINYINT(1),
       allowNull: false,
