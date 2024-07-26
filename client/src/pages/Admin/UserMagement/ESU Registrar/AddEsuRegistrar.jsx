@@ -10,6 +10,7 @@ import wmsuCampus from "../../../../constants/Campus";
 import { FiEyeOff, FiEye } from "react-icons/fi";
 import { fetchRegistrar } from "../../../../services/usersSlice";
 import { useDispatch } from "react-redux";
+import rolesList from "../../../../constants/rolesList";
 
 const AddEsuRegistrar = ({ modal, closeModal }) => {
   const dispatch = useDispatch();
@@ -38,8 +39,7 @@ const AddEsuRegistrar = ({ modal, closeModal }) => {
 
   const onSubmit = async (data) => {
     setEmail(data.email);
-    data.role = "registrar";
-    data.officeName = null;
+    data.role = rolesList.registrar;
     setLoading(true);
 
     setEsuError("");
@@ -63,7 +63,6 @@ const AddEsuRegistrar = ({ modal, closeModal }) => {
       formData.append("contactNumber", data.contactNumber);
       formData.append("designation", data.designation);
       formData.append("esuCampus", data.esuCampus);
-      formData.append("officeName", data.officeName);
       formData.append("role", data.role);
       formData.append("password", data.password);
       formData.append("confirmPassword", data.confirmPassword);

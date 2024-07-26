@@ -17,6 +17,7 @@ import {
   fetchFaculty,
   fetchCampusAdmin,
 } from "./services/usersSlice.js";
+import { fetchAllDocuments } from "./services/documentSlice.js";
 
 const token = Cookie.get("accessToken");
 //This ensures that the data is already available in the Redux store when the application starts, which can improve the user experience by preventing loading delays.
@@ -27,6 +28,9 @@ if (token) {
   store.dispatch(fetchRegistrar());
   store.dispatch(fetchCampusAdmin());
   store.dispatch(fetchFaculty());
+
+  // document data
+  store.dispatch(fetchAllDocuments());
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(

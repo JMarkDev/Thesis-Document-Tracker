@@ -1,11 +1,27 @@
+import { useSelector, useDispatch } from "react-redux";
 import Table from "../../../components/table/DocumentTable";
 import { IoSearch } from "react-icons/io5";
 import Dropdown from "../../../components/dropdown/Dropdown";
 import wmsuCampus from "../../../constants/Campus";
+import {
+  fetchAllDocuments,
+  getAllDocuments,
+  getStatus,
+} from "../../../services/documentSlice";
+import { useEffect } from "react";
 
 const Documents = () => {
+  const dispatch = useDispatch();
+  const allDocuments = useSelector(getAllDocuments);
+  const status = useSelector(getStatus);
   const documentType = ["IDP", "IOR", "DTR"];
   const documentStatus = ["incoming", "received", "delayed"];
+
+  useEffect(() => {
+    if (status === "idle") {
+      dispatch(fetchAllDocuments());
+    }
+  }, [status, dispatch]);
 
   return (
     <div className="">
@@ -39,7 +55,7 @@ const Documents = () => {
           </div>
         </div>
       </div>
-      <Table />
+      <Table documents={allDocuments} />
     </div>
   );
 };

@@ -1,57 +1,9 @@
-import { useEffect, useState } from "react";
 import { FaEye, FaFileDownload } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
 
-const documentData = [
-  {
-    documentId: "IDP-2024",
-    trackingNumber: "293412319023",
-    documentName: "IDP Pagadian Campus",
-    documentType: "IDP",
-    fileType: "HARDCOPY",
-    uploadedBy: "Josiel Mark Cute",
-    status: "incoming",
-    date: "2024-06-20",
-  },
-  {
-    documentId: "IDP-2024",
-    trackingNumber: "293412319023",
-    documentName: "IDP Pagadian Campus",
-    documentType: "IDP",
-    fileType: "HARDCOPY",
-    uploadedBy: "Josiel Mark Cute",
-    status: "incoming",
-    date: "2024-06-20",
-  },
-  {
-    documentId: "IDP-2024",
-    trackingNumber: "293412319023",
-    documentName: "IDP Pagadian Campus",
-    documentType: "IDP",
-    fileType: "PDF",
-    uploadedBy: "Josiel Mark Cute",
-    status: "delayed",
-    date: "2024-06-20",
-  },
-  {
-    documentId: "IDP-2024",
-    trackingNumber: "293412319023",
-    documentName: "IDP Pagadian Campus",
-    documentType: "IDP",
-    fileType: "CSV",
-    uploadedBy: "Josiel Mark Cute",
-    status: "received",
-    date: "2024-06-20",
-  },
-];
-
-const Table = () => {
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    setData(documentData);
-  }, []);
-
+const Table = ({ documents }) => {
+  console.log(documents);
   return (
     <>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -178,17 +130,17 @@ const Table = () => {
             </tr>
           </thead>
           <tbody>
-            {data.map(
+            {documents?.map(
               (
                 {
-                  documentId,
+                  id,
                   // trackingNumber,
-                  documentName,
-                  documentType,
-                  fileType,
-                  uploadedBy,
+                  document_name,
+                  document_type,
+                  file_type,
+                  uploaded_by,
                   status,
-                  date,
+                  createdAt,
                 },
                 index
               ) => (
@@ -200,24 +152,24 @@ const Table = () => {
                     scope="row"
                     className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                   >
-                    {documentId}
+                    {id}
                   </th>
                   {/* <td className="px-6 py-4 whitespace-nowrap">
                     {trackingNumber}
                   </td> */}
                   <td className="px-6 py-4 whitespace-nowrap">
-                    {documentName}
+                    {document_name}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    {documentType}
+                    {document_type}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">{fileType}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{uploadedBy}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{file_type}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{uploaded_by}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{status}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{date}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{createdAt}</td>
                   <td className="px-6 py-4 flex gap-3">
                     <Link
-                      to={`/documents/${documentId}`}
+                      to={`/documents/${id}`}
                       className="px-4 py-2 text-lg bg-[#fca326] hover:bg-[#f58e40] text-white rounded-lg"
                     >
                       <FaEye className="h-5 w-5" />
@@ -234,6 +186,10 @@ const Table = () => {
       </div>
     </>
   );
+};
+
+Table.propTypes = {
+  documents: PropTypes.array.isRequired,
 };
 
 export default Table;

@@ -7,8 +7,8 @@ import LoginLoading from "../../components/loader/LoginLoading";
 import VerifyOTP from "../Verification/VerifyOTP";
 import { useState } from "react";
 import { useToast } from "../../hooks/useToast";
-
 import { FiEyeOff, FiEye } from "react-icons/fi";
+import rolesList from "../../constants/rolesList";
 
 const Register = ({ modal, closeModal, openLogin }) => {
   const [showPass, setShowPass] = useState(false);
@@ -33,8 +33,7 @@ const Register = ({ modal, closeModal, openLogin }) => {
 
   const onSubmit = async (data) => {
     setEmail(data.email);
-    data.role = "faculty";
-    data.officeName = null;
+    data.role = rolesList.faculty;
     setLoading(true);
 
     setFirstnameError("");
@@ -58,7 +57,6 @@ const Register = ({ modal, closeModal, openLogin }) => {
       formData.append("contactNumber", data.contactNumber);
       formData.append("designation", data.designation);
       formData.append("esuCampus", data.esuCampus);
-      formData.append("officeName", data.officeName);
       formData.append("role", data.role);
       formData.append("password", data.password);
       formData.append("confirmPassword", data.confirmPassword);

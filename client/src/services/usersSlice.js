@@ -89,16 +89,17 @@ const usersSlice = createSlice({
       faculty: [],
     },
 
-    status: {
-      users: "idle",
-      admin: "idle",
-      office: "idle",
-      registar: "idle",
-      campus_admin: "idle",
-      faculty: "idle",
-      search: "idle",
-      filter: "idle",
-    },
+    status: "idle",
+    // {
+    //   users: "idle",
+    //   admin: "idle",
+    //   office: "idle",
+    //   registar: "idle",
+    //   campus_admin: "idle",
+    //   faculty: "idle",
+    //   search: "idle",
+    //   filter: "idle",
+    // },
   },
   error: null,
   reducers: {},
@@ -110,71 +111,71 @@ const usersSlice = createSlice({
         state.payload = "loading";
       })
       .addCase(fetchUsers.fulfilled, (state, action) => {
-        state.status.users = "succeeded";
+        state.status = "succeeded";
         state.users = action.payload;
       })
       .addCase(fetchUsers.rejected, (state, action) => {
-        state.status.users = "failed";
+        state.status = "failed";
         state.error = action.error.message;
       })
       // fetch admin cases
       .addCase(fetchAdmin.pending, (state) => {
-        state.status.admin = "loading";
+        state.status = "loading";
       })
       .addCase(fetchAdmin.fulfilled, (state, action) => {
-        state.status.admin = "succeeded";
+        state.status = "succeeded";
         state.roleUsers.admin = action.payload;
       })
       .addCase(fetchAdmin.rejected, (state, action) => {
-        state.status.admin = "failed";
+        state.status = "failed";
         state.error = action.error.message;
       })
       // fetch office cases
       .addCase(fetchOffice.pending, (state) => {
-        state.status.office = "loading";
+        state.status = "loading";
       })
       .addCase(fetchOffice.fulfilled, (state, action) => {
-        state.status.office = "succeeded";
+        state.status = "succeeded";
         state.roleUsers.office = action.payload;
       })
       .addCase(fetchOffice.rejected, (state, action) => {
-        state.status.office = "failed";
+        state.status = "failed";
         state.error = action.error.message;
       })
       // fetch registrar cases
       .addCase(fetchRegistrar.pending, (state) => {
-        state.status.registar = "loading";
+        state.status = "loading";
       })
       .addCase(fetchRegistrar.fulfilled, (state, action) => {
-        state.status.registar = "succeeded";
+        state.status = "succeeded";
         state.roleUsers.registrar = action.payload;
       })
       .addCase(fetchRegistrar.rejected, (state, action) => {
-        state.status.registar = "failed";
+        state.status = "failed";
         state.error = action.error.message;
       })
       // fetch campus admin cases
       .addCase(fetchCampusAdmin.pending, (state) => {
-        state.status.campus_admin = "loading";
+        state.status = "loading";
       })
       .addCase(fetchCampusAdmin.fulfilled, (state, action) => {
-        state.status.campus_admin = "succeeded";
+        state.status = "succeeded";
         state.roleUsers.campus_admin = action.payload;
       })
       .addCase(fetchCampusAdmin.rejected, (state, action) => {
-        state.status.campus_admin = "failed";
+        state.status = "failed";
         state.error = action.error.message;
       })
       // fetch approved faculty
       .addCase(fetchFaculty.pending, (state) => {
-        state.status.faculty = "loading";
+        state.status = "loading";
       })
       .addCase(fetchFaculty.fulfilled, (state, action) => {
-        state.status.faculty = "succeeded";
+        state.status = "succeeded";
         state.roleUsers.faculty = action.payload;
       })
       .addCase(fetchFaculty.rejected, (state, action) => {
-        state.status.faculty = "failed";
+        state.status = "failed";
         state.error = action.error.message;
       })
       // delete user
@@ -193,54 +194,54 @@ const usersSlice = createSlice({
 
       // search admin
       .addCase(searchAdminRole.fulfilled, (state, action) => {
-        state.status.search = "succeeded";
+        state.status = "succeeded";
         state.roleUsers.admin = action.payload;
       })
       .addCase(searchAdminRole.rejected, (state, action) => {
-        state.status.search = "failed";
+        state.status = "failed";
         state.error = action.error.message;
       })
       // search office
       .addCase(searchOfficeRole.fulfilled, (state, action) => {
-        state.status.search = "succeeded";
+        state.status = "succeeded";
         state.roleUsers.office = action.payload;
       })
       .addCase(searchOfficeRole.rejected, (state, action) => {
-        state.status.search = "failed";
+        state.status = "failed";
         state.error = action.error.message;
       })
       // search registrar
       .addCase(searchRegistrarRole.fulfilled, (state, action) => {
-        state.status.search = "succeeded";
+        state.status = "succeeded";
         state.roleUsers.registrar = action.payload;
       })
       .addCase(searchRegistrarRole.rejected, (state, action) => {
-        state.status.search = "failed";
+        state.status = "failed";
         state.error = action.error.message;
       })
       // search campus admin
       .addCase(searchCampusAdminRole.fulfilled, (state, action) => {
-        state.status.search = "succeeded";
+        state.status = "succeeded";
         state.roleUsers.campus_admin = action.payload;
       })
       .addCase(searchCampusAdminRole.rejected, (state, action) => {
-        state.status.search = "failed";
+        state.status = "failed";
         state.error = action.error.message;
       })
       .addCase(searchFacultyRole.fulfilled, (state, action) => {
-        state.status.search = "succeeded";
+        state.status = "succeeded";
         state.roleUsers.faculty = action.payload;
       })
       .addCase(searchFacultyRole.rejected, (state, action) => {
-        state.status.search = "failed";
+        state.status = "failed";
         state.error = action.error.message;
       })
       .addCase(filterFacultyByCampus.fulfilled, (state, action) => {
-        state.status.filter = "succeeded";
+        state.status = "succeeded";
         state.roleUsers.faculty = action.payload;
       })
       .addCase(filterFacultyByCampus.rejected, (state, action) => {
-        state.status.filter = "failed";
+        state.status = "failed";
         state.error = action.error.message;
       });
   },
@@ -248,7 +249,7 @@ const usersSlice = createSlice({
 
 // Selectors
 export const getAllUsers = (state) => state.users.users;
-export const getUserStatus = (state) => state.users.status.users;
+export const getUserStatus = (state) => state.users.status;
 export const getUserError = (state) => state.users.error;
 
 export const getRoleUsers = (role) => (state) => state.users.roleUsers[role];
