@@ -103,3 +103,4 @@ server.listen(PORT, () => {
 // }
 
 module.exports = app;
+// add seeders and use id that already exit in database when it have foreignkey

@@ -71,7 +71,7 @@ const User = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: true,
       references: {
-        model: Office,
+        model: "offices",
         key: "id",
       },
       onDelete: "CASCADE",

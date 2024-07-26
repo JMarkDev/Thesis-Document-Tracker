@@ -8,7 +8,6 @@ module.exports = {
       "document_history",
       [
         {
-          id: 1,
           document_id: 1,
           content: "Document uploaded by: Josiel Mark M. Seroy",
           recipient: "Josiel Mark M. Seroy",
@@ -16,42 +15,125 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          id: 2,
           document_id: 1,
-          content: "Document received by: Faculty",
-          recipient: "Faculty",
+          content: "Document received by: WMSU-ESU Pagadian Campus",
+          recipient: "Pagadian Registrar",
           createdAt: createdAt,
           updatedAt: createdAt,
         },
         {
-          id: 3,
           document_id: 1,
-          content: "Document forwarded to: Registrar",
-          recipient: "Registrar",
+          content: "Document forwarded to: OIC Dean of ESU Office",
+          recipient: null,
           createdAt: createdAt,
           updatedAt: createdAt,
         },
         {
-          id: 4,
           document_id: 1,
-          content: "Document received by: Registrar",
-          recipient: "Registrar",
+          content: "Document received by: OCI Dean of ESU Office",
+          recipient: "Byron Go Silk",
           createdAt: createdAt,
           updatedAt: createdAt,
         },
         {
-          id: 5,
           document_id: 1,
-          content: "Document forwarded to: OIC Dean of External Studies Unit",
-          recipient: "OIC Dean of External Studies Unit",
+          content:
+            " Document forwarded to: Vice President for Academic Affairs Office",
+          recipient: null,
           createdAt: createdAt,
           updatedAt: createdAt,
         },
         {
-          id: 6,
           document_id: 1,
-          content: "Document received by: OIC Dean of External Studies Unit",
-          recipient: "OIC Dean of External Studies Unit",
+          content:
+            "Document received by: Vice President for Academic Affairs Office",
+          recipient: "Vice president user",
+          createdAt: createdAt,
+          updatedAt: createdAt,
+        },
+        {
+          document_id: 2,
+          content: "Document uploaded by: Josiel Mark M. Seroy",
+          recipient: "Josiel Mark M. Seroy",
+          createdAt: createdAt,
+          updatedAt: createdAt,
+        },
+        {
+          document_id: 2,
+          content: "Document received by: WMSU-ESU Pagadian Campus",
+          recipient: "Pagadian Registrar",
+          createdAt: createdAt,
+          updatedAt: createdAt,
+        },
+        {
+          document_id: 2,
+          content: "Document forwarded to: OIC Dean of ESU Office",
+          recipient: null,
+          createdAt: createdAt,
+          updatedAt: createdAt,
+        },
+        {
+          document_id: 2,
+          content: "Document received by: OCI Dean of ESU Office",
+          recipient: "Byron Go Silk",
+          createdAt: createdAt,
+          updatedAt: createdAt,
+        },
+        {
+          document_id: 2,
+          content:
+            " Document forwarded to: Vice President for Academic Affairs Office",
+          recipient: null,
+          createdAt: createdAt,
+          updatedAt: createdAt,
+        },
+        {
+          document_id: 2,
+          content:
+            "Document received by: Vice President for Academic Affairs Office",
+          recipient: "Vice president user",
+          createdAt: createdAt,
+          updatedAt: createdAt,
+        },
+        {
+          document_id: 3,
+          content: "Document uploaded by: Josiel Mark M. Seroy",
+          recipient: "Josiel Mark M. Seroy",
+          createdAt: createdAt,
+          updatedAt: createdAt,
+        },
+        {
+          document_id: 3,
+          content: "Document received by: WMSU-ESU Pagadian Campus",
+          recipient: "Pagadian Registrar",
+          createdAt: createdAt,
+          updatedAt: createdAt,
+        },
+        {
+          document_id: 3,
+          content: "Document forwarded to: OIC Dean of ESU Office",
+          recipient: null,
+          createdAt: createdAt,
+          updatedAt: createdAt,
+        },
+        {
+          document_id: 4,
+          content: "Document uploaded by: Josiel Mark M. Seroy",
+          recipient: "Josiel Mark M. Seroy",
+          createdAt: createdAt,
+          updatedAt: createdAt,
+        },
+        {
+          document_id: 4,
+          content: "Document received by: WMSU-ESU Pagadian Campus",
+          recipient: "Pagadian Registrar",
+          createdAt: createdAt,
+          updatedAt: createdAt,
+        },
+        {
+          document_id: 4,
+          content: "Document forwarded to: OIC Dean of ESU Office",
+          recipient: null,
           createdAt: createdAt,
           updatedAt: createdAt,
         },
@@ -60,6 +142,10 @@ module.exports = {
       {}
     );
   },
+
+  // async up(queryInterface, Sequelize) {
+  //   await queryInterface.bulkDelete("document_history", null, {});
+  // },
 
   async down(queryInterface, Sequelize) {
     await queryInterface.bulkDelete("document_history", null, {});

@@ -9,12 +9,12 @@ module.exports = {
       "documents",
       [
         {
-          id: 1,
           tracking_number: "1223D456123",
           document_name: "IOR Pagadian Campus",
           document_type: "IDP",
           file_type: "Hardcopy",
           files: null,
+
           uploaded_by: "Josiel Mark M. Seroy",
           status: documentStatus.received,
           route: JSON.stringify([
@@ -29,6 +29,76 @@ module.exports = {
           current_position: 0,
           createdAt: createdAt,
           updatedAt: createdAt,
+          user_id: 1,
+        },
+        {
+          tracking_number: "1223D456123",
+          document_name: "IOR Pagadian Campus",
+          document_type: "IDP",
+          file_type: "Hardcopy",
+          files: null,
+
+          uploaded_by: "Josiel Mark M. Seroy",
+          status: documentStatus.received,
+          route: JSON.stringify([
+            "Faculty",
+            "Registrar",
+            "OIC Dean of External Studies Unit",
+            "Vice President for Academic Affairs Office",
+            "Human Resources Office",
+            "Accounting Office",
+            "Records Office",
+          ]),
+          current_position: 0,
+          createdAt: createdAt,
+          updatedAt: createdAt,
+          user_id: 1,
+        },
+        {
+          tracking_number: "1223D456123",
+          document_name: "IOR Pagadian Campus",
+          document_type: "IDP",
+          file_type: "Hardcopy",
+          files: null,
+
+          uploaded_by: "Josiel Mark M. Seroy",
+          status: documentStatus.received,
+          route: JSON.stringify([
+            "Faculty",
+            "Registrar",
+            "OIC Dean of External Studies Unit",
+            "Vice President for Academic Affairs Office",
+            "Human Resources Office",
+            "Accounting Office",
+            "Records Office",
+          ]),
+          current_position: 0,
+          createdAt: createdAt,
+          updatedAt: createdAt,
+          user_id: 2,
+        },
+        {
+          tracking_number: "1223D456123",
+          document_name: "IOR Pagadian Campus",
+          document_type: "IDP",
+          file_type: "Hardcopy",
+          files: null,
+
+          uploaded_by: "Josiel Mark M. Seroy",
+          status: documentStatus.received,
+          route: JSON.stringify([
+            "Faculty",
+            "Registrar",
+            "OIC Dean of External Studies Unit",
+            "Vice President for Academic Affairs Office",
+            "Human Resources Office",
+            "Accounting Office",
+            "Records Office",
+          ]),
+          current_position: 0,
+          createdAt: createdAt,
+          updatedAt: createdAt,
+          user_id: 2,
         },
         // Add more documents if needed
       ],
@@ -36,7 +106,12 @@ module.exports = {
     );
   },
 
+  // async up(queryInterface, Sequelize) {
+  //   await queryInterface.bulkDelete("documents", null, {});
+  // },
+
   async down(queryInterface, Sequelize) {
     await queryInterface.bulkDelete("documents", null, {});
+    // await queryInterface.bulkDelete("document_histories", null, {});
   },
 };
