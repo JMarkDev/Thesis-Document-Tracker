@@ -4,7 +4,7 @@ const officeModel = require("../models/officeModel");
 const { createdAt } = require("../utils/formattedTime");
 const { sendNofication } = require("../utils/emailNotifications");
 const statusList = require("../constants/statusList");
-
+const rolesList = require("../constants/rolesList");
 const getUserByEmail = async (req, res) => {
   const { email } = req.query;
   try {
@@ -23,6 +23,30 @@ const getUserByEmail = async (req, res) => {
     return res.status(200).json(user);
   } catch (error) {
     return res.status(500).json({ Error: "Get user by email error in server" });
+  }
+};
+
+const getUserById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const user = await userModel.findOne({
+      where: {
+        id: id,
+        [Sequelize.Op.or]: [
+          { status: statusList.verified },
+          { status: statusList.approved },
+        ],
+      },
+      include: [
+        {
+          model: officeModel,
+          required: false,
+        },
+      ],
+    });
+    return res.status(200).json(user);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
   }
 };
 
@@ -87,6 +111,12 @@ const getUserByRole = async (req, res) => {
           { status: statusList.approved },
         ],
       },
+      include: [
+        {
+          model: officeModel,
+          required: false,
+        },
+      ],
     });
     if (!user) {
       return res.status(400).json({
@@ -153,14 +183,15 @@ const searchUser = async (req, res) => {
 
 const filterFacultyByCampus = async (req, res) => {
   const { esuCampus } = req.params;
-  console.log("filter");
-
   try {
     const users = await userModel.findAll({
       where: {
-        role: "faculty",
+        role: rolesList.faculty,
         esuCampus: esuCampus,
-        [Sequelize.Op.or]: [{ status: "verified" }, { status: "approved" }],
+        [Sequelize.Op.or]: [
+          { status: statusList.verified },
+          { status: statusList.approved },
+        ],
       },
     });
     return res.status(200).json(users);
@@ -174,6 +205,7 @@ const filterFacultyByCampus = async (req, res) => {
 
 module.exports = {
   getUserByEmail,
+  getUserById,
   getAllUser,
   approveFaculty,
   getUserByRole,
