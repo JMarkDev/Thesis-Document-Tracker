@@ -73,6 +73,7 @@
 const sequelize = require("../configs/database");
 const { DataTypes } = require("sequelize");
 const DocumentHistory = require("../models/documentHistoryModel");
+const User = require("../models/userModel");
 
 const Document = sequelize.define(
   "documents",
@@ -129,6 +130,15 @@ const Document = sequelize.define(
       type: DataTypes.DATE,
       allowNull: true,
     },
+    user_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: User,
+        key: "id",
+      },
+      onDelete: "CASCADE",
+    },
   },
   {
     timestamps: false,
@@ -139,7 +149,16 @@ Document.hasMany(DocumentHistory, {
   foreignKey: "document_id",
   onDelete: "CASCADE",
 });
+DocumentHistory.belongsTo(Document, {
+  foreignKey: "document_id",
+  onDelete: "CASCADE",
+});
 
-DocumentHistory.belongsTo(Document, { foreignKey: "document_id" });
+// Define the relationship with user
+User.hasMany(Document, {
+  foreignKey: "user_id",
+  onDelete: "CASCADE",
+});
+Document.belongsTo(User, { foreignKey: "user_id", onDelete: "CASCADE" });
 
 module.exports = Document;
