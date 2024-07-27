@@ -4,7 +4,6 @@ import PropTypes from "prop-types";
 import { getDocumentStatus } from "../../utils/documentStatus";
 
 const Table = ({ documents }) => {
-  console.log(documents);
   return (
     <>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">

@@ -6,6 +6,14 @@ export const fetchAllDocuments = createAsyncThunk("document/all", async () => {
   return response.data;
 });
 
+export const searchDocument = createAsyncThunk(
+  "document/search",
+  async (searchTerm) => {
+    const response = await axios.get(`/document/search/${searchTerm}`);
+    return response.data;
+  }
+);
+
 export const filterDocumentsByESU = createAsyncThunk(
   "document/filter",
   async (esu) => {
@@ -34,6 +42,17 @@ const documentsSlice = createSlice({
         state.allDocuments = action.payload;
       })
       .addCase(fetchAllDocuments.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(searchDocument.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(searchDocument.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.allDocuments = action.payload;
+      })
+      .addCase(searchDocument.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       })

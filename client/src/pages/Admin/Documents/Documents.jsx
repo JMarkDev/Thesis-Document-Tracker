@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Table from "../../../components/table/DocumentTable";
 import { IoSearch } from "react-icons/io5";
@@ -7,6 +8,7 @@ import {
   fetchAllDocuments,
   getAllDocuments,
   getStatus,
+  searchDocument,
   filterDocumentsByESU,
 } from "../../../services/documentSlice";
 import { useEffect } from "react";
@@ -17,6 +19,7 @@ const Documents = () => {
   const status = useSelector(getStatus);
   const documentType = ["IDP", "IOR", "DTR"];
   const documentStatus = ["incoming", "received", "delayed"];
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     if (status === "idle") {
@@ -32,6 +35,14 @@ const Documents = () => {
     }
   };
 
+  useEffect(() => {
+    if (searchTerm) {
+      dispatch(searchDocument(searchTerm));
+    } else {
+      dispatch(fetchAllDocuments());
+    }
+  }, [searchTerm, dispatch]);
+
   return (
     <div className="">
       <div className="flex  flex-col gap-5 justify-between mb-8">
@@ -41,6 +52,8 @@ const Documents = () => {
           </button>
           <div className=" flex max-w-[450px] w-full  items-center relative">
             <input
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
               type="text"
               placeholder="Search..."
               className="border border-[#d67c80] focus:border-blue  rounded-xl w-full bg-gray-100"
