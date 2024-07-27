@@ -1,6 +1,20 @@
 import DocumentWorkflowTable from "../../../components/table/DocumentWorkflow";
 import { IoSearch } from "react-icons/io5";
+import {
+  getAllWorkflow,
+  fetchAllWorkflow,
+} from "../../../services/documentWolkflowSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
 const DocumentWorkflow = () => {
+  const dispatch = useDispatch();
+  const workflow = useSelector(getAllWorkflow);
+
+  useEffect(() => {
+    if (workflow === "idle") {
+      dispatch(fetchAllWorkflow());
+    }
+  }, [workflow, dispatch]);
   return (
     <div>
       <div className="flex text-sm md:text-[16px] justify-between lg:flex-row flex-col-reverse gap-5">

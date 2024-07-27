@@ -18,6 +18,7 @@ import {
   fetchCampusAdmin,
 } from "./services/usersSlice.js";
 import { fetchAllDocuments } from "./services/documentSlice.js";
+import { fetchAllWorkflow } from "./services/documentWolkflowSlice.js";
 
 const token = Cookie.get("accessToken");
 //This ensures that the data is already available in the Redux store when the application starts, which can improve the user experience by preventing loading delays.
@@ -31,6 +32,9 @@ if (token) {
 
   // document data
   store.dispatch(fetchAllDocuments());
+
+  // workflow data
+  store.dispatch(fetchAllWorkflow());
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(

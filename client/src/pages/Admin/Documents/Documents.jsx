@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Table from "../../../components/table/DocumentTable";
 import { IoSearch } from "react-icons/io5";
@@ -11,7 +11,6 @@ import {
   searchDocument,
   filterDocumentsByESU,
 } from "../../../services/documentSlice";
-import { useEffect } from "react";
 
 const Documents = () => {
   const dispatch = useDispatch();
