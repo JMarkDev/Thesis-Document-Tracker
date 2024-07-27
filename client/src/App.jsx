@@ -27,6 +27,8 @@ import Upload from "./pages/Faculty/UploadDocuments/UploadDocuments";
 import FacultyReports from "./pages/Faculty/Reports/FacultyReports";
 import AllDocuments from "./pages/Faculty/AllDocuments/AllDocuments";
 
+import UserProfile from "./pages/Shared/UserProfile";
+
 function App() {
   const adminLinks = [
     { title: "Dashboard", path: "/dashboard", component: <Dashboard /> },
@@ -64,6 +66,11 @@ function App() {
       title: "Document Details",
       path: "/documents/:id",
       component: <DocumentDetails />,
+    },
+    {
+      title: "User Profile",
+      path: "/user-profile/:id",
+      component: <UserProfile />,
     },
   ];
 

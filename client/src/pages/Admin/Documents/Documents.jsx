@@ -7,6 +7,7 @@ import {
   fetchAllDocuments,
   getAllDocuments,
   getStatus,
+  filterDocumentsByESU,
 } from "../../../services/documentSlice";
 import { useEffect } from "react";
 
@@ -22,6 +23,14 @@ const Documents = () => {
       dispatch(fetchAllDocuments());
     }
   }, [status, dispatch]);
+
+  const handleFilterByESU = (esu) => {
+    if (esu === "WMSU-ESU-CAMPUS") {
+      dispatch(fetchAllDocuments());
+    } else {
+      dispatch(filterDocumentsByESU(esu));
+    }
+  };
 
   return (
     <div className="">
@@ -44,7 +53,11 @@ const Documents = () => {
           <span className="text-gray-700">Filter documents by:</span>
           <div className="flex items-center gap-3">
             <div>
-              <Dropdown data={wmsuCampus} option={"WMSU-ESU"} />
+              <Dropdown
+                handleFilter={handleFilterByESU}
+                data={wmsuCampus}
+                option={"WMSU-ESU"}
+              />
             </div>
             <div>
               <Dropdown data={documentType} option={"Document type"} />

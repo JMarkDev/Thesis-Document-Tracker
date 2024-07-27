@@ -133,7 +133,7 @@ const RegistrarTable = ({ registrarUser }) => {
 
                   <td className="px-6 py-4 flex gap-3 justify-center items-center">
                     <Link
-                      to={`/documents/${id}`}
+                      to={`/user-profile/${id}`}
                       className="px-4 py-2 text-lg bg-[#c9872a] hover:bg-[#c27c47] text-white rounded-lg"
                     >
                       <FaEye className="h-5 w-5" />

@@ -10,6 +10,7 @@ import { useDispatch } from "react-redux";
 import { deleteUser } from "../../services/usersSlice";
 import { toastUtils } from "../../hooks/useToast";
 import { getStatus } from "../../utils/getStatus";
+import statusList from "../../constants/statusList";
 
 const FacultyTable = ({ fetchFaculty }) => {
   const dispatch = useDispatch();
@@ -148,8 +149,10 @@ const FacultyTable = ({ fetchFaculty }) => {
                   <td className="px-6 py-4 whitespace-nowrap ">
                     <span
                       className={`${
-                        status === "verified" ? "bg-[#ecda39]" : "bg-green-400"
-                      }  text-gray-700 p-1 px-2 rounded-lg`}
+                        status === statusList.verified
+                          ? "bg-[#f3e887]"
+                          : "bg-green-400"
+                      }  text-gray-700 p-2 px-4 rounded-lg`}
                     >
                       {getStatus(status)}
                     </span>
@@ -157,7 +160,7 @@ const FacultyTable = ({ fetchFaculty }) => {
 
                   <td className="px-6 py-4 flex gap-3 justify-center items-center">
                     <Link
-                      to={`/documents/${id}`}
+                      to={`/user-profile/${id}`}
                       className="px-4 py-2 text-lg bg-[#c9872a] hover:bg-[#c27c47] text-white rounded-lg"
                     >
                       <FaEye className="h-5 w-5" />

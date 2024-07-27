@@ -1,6 +1,7 @@
 import { FaEye, FaFileDownload } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
+import { getDocumentStatus } from "../../utils/documentStatus";
 
 const Table = ({ documents }) => {
   console.log(documents);
@@ -165,7 +166,9 @@ const Table = ({ documents }) => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">{file_type}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{uploaded_by}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{status}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {getDocumentStatus(status)}
+                  </td>
                   <td className="px-6 py-4 whitespace-nowrap">{createdAt}</td>
                   <td className="px-6 py-4 flex gap-3">
                     <Link
