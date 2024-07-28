@@ -9,6 +9,7 @@ import { useEffect } from "react";
 const DocumentWorkflow = () => {
   const dispatch = useDispatch();
   const workflow = useSelector(getAllWorkflow);
+  console.log(workflow);
 
   useEffect(() => {
     if (workflow === "idle") {
@@ -31,7 +32,7 @@ const DocumentWorkflow = () => {
         </button>
       </div>
       <div className="mt-8">
-        <DocumentWorkflowTable />
+        <DocumentWorkflowTable data={workflow} />
       </div>
     </div>
   );

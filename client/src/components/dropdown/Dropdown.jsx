@@ -39,10 +39,10 @@ export default function Dropdown({ data, option, handleFilter }) {
           >
             <MenuItem>
               <button
-                onClick={() => handleOption("WMSU-ESU-CAMPUS")}
+                onClick={() => handleOption(option)}
                 className="group flex w-full hover:bg-gray-300 items-center justify-start gap-2 rounded-lg py-1.5 px-3 "
               >
-                WMSU-ESU-CAMPUS
+                {option}
               </button>
             </MenuItem>
             {data.map((options) => (

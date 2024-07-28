@@ -10,6 +10,7 @@ import {
   getStatus,
   searchDocument,
   filterDocumentsByESU,
+  filterDocumentByType,
 } from "../../../services/documentSlice";
 
 const Documents = () => {
@@ -27,7 +28,7 @@ const Documents = () => {
   }, [status, dispatch]);
 
   const handleFilterByESU = (esu) => {
-    if (esu === "WMSU-ESU-CAMPUS") {
+    if (esu === "WMSU-ESU Campus") {
       dispatch(fetchAllDocuments());
     } else {
       dispatch(filterDocumentsByESU(esu));
@@ -41,6 +42,14 @@ const Documents = () => {
       dispatch(fetchAllDocuments());
     }
   }, [searchTerm, dispatch]);
+
+  const handleFilterByType = (type) => {
+    if (type === "Document Type") {
+      dispatch(fetchAllDocuments);
+    } else {
+      dispatch(filterDocumentByType(type));
+    }
+  };
 
   return (
     <div className="">
@@ -68,14 +77,18 @@ const Documents = () => {
               <Dropdown
                 handleFilter={handleFilterByESU}
                 data={wmsuCampus}
-                option={"WMSU-ESU"}
+                option={"WMSU-ESU Campus"}
               />
             </div>
             <div>
-              <Dropdown data={documentType} option={"Document type"} />
+              <Dropdown
+                handleFilter={handleFilterByType}
+                data={documentType}
+                option={"Document Type"}
+              />
             </div>
             <div>
-              <Dropdown data={documentStatus} option={"Document status"} />
+              <Dropdown data={documentStatus} option={"Document Status"} />
             </div>
           </div>
         </div>

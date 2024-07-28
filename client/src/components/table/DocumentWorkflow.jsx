@@ -1,33 +1,9 @@
-import { useEffect, useState } from "react";
 import { FaEye, FaRegEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
 
-const documentData = [
-  {
-    routeID: "IDP-2024",
-    documentType: "IOR (Internal Office Reports)",
-    date: "2024-06-20",
-  },
-  {
-    routeID: "IDP-2024",
-    documentType: "IDP (Individual Development Plans)",
-    date: "2024-06-20",
-  },
-  {
-    routeID: "IDP-2024",
-    documentType: "DTR (Daily Time Record)",
-    date: "2024-06-20",
-  },
-];
-
-const DocumentWorkflow = () => {
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    setData(documentData);
-  }, []);
-
+const DocumentWorkflow = ({ data }) => {
   return (
     <>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -56,7 +32,7 @@ const DocumentWorkflow = () => {
             </tr>
           </thead>
           <tbody>
-            {data.map(({ routeID, documentType, date }, index) => (
+            {data.map(({ id, document_type, createdAt }, index) => (
               <tr
                 key={index}
                 className="bg-white dark:bg-gray-800 hover:bg-gray-100"
@@ -65,14 +41,17 @@ const DocumentWorkflow = () => {
                   scope="row"
                   className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                 >
-                  {routeID}
+                  {id}
                 </th>
 
-                <td className="px-6 py-4 whitespace-nowrap">{documentType}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{date}</td>
+                <td className="px-6 py-4 whitespace-nowrap">{document_type}</td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {" "}
+                  {new Date(createdAt).toLocaleString()}
+                </td>
                 <td className="px-6 py-4 flex gap-3 justify-center items-center">
                   <Link
-                    to={`/documents/${routeID}`}
+                    to={`/documents/${id}`}
                     className="px-4 py-2 text-lg bg-[#fca326] hover:bg-[#f58e40] text-white rounded-lg"
                   >
                     <FaEye className="h-5 w-5" />
@@ -92,6 +71,10 @@ const DocumentWorkflow = () => {
       </div>
     </>
   );
+};
+
+DocumentWorkflow.propTypes = {
+  data: PropTypes.array.isRequired,
 };
 
 export default DocumentWorkflow;

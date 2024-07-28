@@ -1,9 +1,24 @@
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
-import Back from "../../../components/buttons/Back";
-import Stepper from "../../../components/Stepper";
-import StepperMobile from "../../../components/StepperMobile";
+import Back from "../../components/buttons/Back";
+import Stepper from "../../components/Stepper";
+import StepperMobile from "../../components/StepperMobile";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getDocumentById,
+  fetchDocumentById,
+} from "../../services/documentSlice";
+import { getDocumentStatus } from "../../utils/documentStatus";
+
 const DocumentDetails = () => {
+  const { id } = useParams();
+  const dispatch = useDispatch();
+  const document = useSelector(getDocumentById);
+  const [sorttedHistories, setSortedHistories] = useState([]);
+  useEffect(() => {
+    dispatch(fetchDocumentById(id));
+  }, [id, dispatch]);
   const [data, setData] = useState([]);
 
   const documentHistory = [
@@ -39,6 +54,15 @@ const DocumentDetails = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    if (document && document.document_histories) {
+      const sortedData = [...document.document_histories].sort(
+        (a, b) => b.id - a.id
+      );
+      setSortedHistories(sortedData);
+    }
+  }, [document]);
+
   return (
     <div className="bg-white ">
       <div className="flex items-center gap-5">
@@ -62,34 +86,40 @@ const DocumentDetails = () => {
 
         <div className="bg-gray-200 mt-10 md:p-4 rounded-lg flex flex-col lg:flex-row gap-5 justify-between text-gray-700">
           <div className="flex flex-col gap-4 lg:w-1/2 w-full p-4 bg-white text-sm md:text-[16px]  shadow-lg rounded-md">
-            <div className="flex items-center gap-5 border-b pb-2">
-              <h1 className="font-bold text-gray-800">Tracking Number:</h1>
-              <p className="text-gray-700">293412319023</p>
-            </div>
-            <div className="flex items-center gap-5 border-b pb-2">
-              <h1 className="font-bold text-gray-800">Document Name:</h1>
-              <p className="text-gray-700">IDP Pagadian Campus</p>
-            </div>
-            <div className="flex items-center gap-5 border-b pb-2">
-              <h1 className="font-bold  text-gray-800">Document Type:</h1>
-              <p className="text-gray-700">IDP</p>
-            </div>
-            <div className="flex items-center gap-5 border-b pb-2">
-              <h1 className="font-bold  text-gray-800">File Type:</h1>
-              <p className="text-gray-700">Hardcopy</p>
-            </div>
-            <div className="flex items-center gap-5 border-b pb-2">
-              <h1 className="font-bold  text-gray-800">Uploaded By:</h1>
-              <p className="text-gray-700">Josiel Mark Cute</p>
-            </div>
-            <div className="flex items-center gap-5 border-b pb-2">
-              <h1 className="font-bold  text-gray-800">Date:</h1>
-              <p className="text-gray-700">2024-06-20</p>
-            </div>
-            <div className="flex items-center gap-5">
-              <h1 className="font-bold  text-gray-800">Status:</h1>
-              <p className="text-gray-700">Received</p>
-            </div>
+            {document && (
+              <>
+                <div className="flex items-center gap-5 border-b pb-2">
+                  <h1 className="font-bold text-gray-800">Tracking Number:</h1>
+                  <p className="text-gray-700">{document.tracking_number}</p>
+                </div>
+                <div className="flex items-center gap-5 border-b pb-2">
+                  <h1 className="font-bold text-gray-800">Document Name:</h1>
+                  <p className="text-gray-700">{document.document_name}</p>
+                </div>
+                <div className="flex items-center gap-5 border-b pb-2">
+                  <h1 className="font-bold  text-gray-800">Document Type:</h1>
+                  <p className="text-gray-700">{document.document_type}</p>
+                </div>
+                <div className="flex items-center gap-5 border-b pb-2">
+                  <h1 className="font-bold  text-gray-800">File Type:</h1>
+                  <p className="text-gray-700">{document.file_type}</p>
+                </div>
+                <div className="flex items-center gap-5 border-b pb-2">
+                  <h1 className="font-bold  text-gray-800">Uploaded By:</h1>
+                  <p className="text-gray-700">{document.uploaded_by}</p>
+                </div>
+                <div className="flex items-center gap-5 border-b pb-2">
+                  <h1 className="font-bold  text-gray-800">Date:</h1>
+                  <p className="text-gray-700">{document.createdAt}</p>
+                </div>
+                <div className="flex items-center gap-5">
+                  <h1 className="font-bold  text-gray-800">Status:</h1>
+                  <p className="text-gray-700">
+                    {getDocumentStatus(document.status)}
+                  </p>
+                </div>
+              </>
+            )}
           </div>
 
           <div className="lg:w-1/2 w-full p-4 text-gray-600 bg-white text-sm md:text-[16px] shadow-lg rounded-md">
@@ -97,7 +127,16 @@ const DocumentDetails = () => {
               Tracking History
             </h1>
             <ul className="space-y-4 leading-6">
-              <li className="border-b pb-2">
+              {sorttedHistories.map(({ id, content, recipient, createdAt }) => (
+                <li key={id} className="border-b pb-2">
+                  <p className="font-semibold text-gray-800">{content}</p>
+                  {recipient && <span>Recipient: {recipient}</span>}
+                  <p className="text-gray-600">
+                    Date: {new Date(createdAt).toLocaleString()}
+                  </p>
+                </li>
+              ))}
+              {/* <li className="border-b pb-2">
                 <p className="font-semibold text-gray-800">
                   Document received by: Vice President for Academic Affairs
                   Office
@@ -137,7 +176,7 @@ const DocumentDetails = () => {
                   Document uploaded by: Josiel Mark Cute
                 </p>
                 <p className="text-gray-600">Date: June 01, 2024, 12:12 AM</p>
-              </li>
+              </li> */}
             </ul>
           </div>
         </div>

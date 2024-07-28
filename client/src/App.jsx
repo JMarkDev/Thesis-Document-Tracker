@@ -19,7 +19,6 @@ import Faculty from "./pages/Admin/UserMagement/Faculty/Faculty";
 import CampusAdmin from "./pages/Admin/UserMagement/CampusAdmin/CampusAdmin";
 import EsuRegistrar from "./pages/Admin/UserMagement/ESU Registrar/EsuRegistrar";
 import AdminStaff from "./pages/Admin/UserMagement/AdminStaff/AdminStaff";
-import DocumentDetails from "./pages/Admin/Documents/DocumentDetails";
 
 import LayoutFaculty from "./components/layout/LayoutFaculty";
 import FacultyProfile from "./pages/Faculty/Profile/FacultyProfile";
@@ -28,6 +27,7 @@ import FacultyReports from "./pages/Faculty/Reports/FacultyReports";
 import AllDocuments from "./pages/Faculty/AllDocuments/AllDocuments";
 
 import UserProfile from "./pages/Shared/UserProfile";
+import DocumentDetails from "./pages/Shared/DocumentDetails";
 
 function App() {
   const adminLinks = [

@@ -168,7 +168,10 @@ const Table = ({ documents }) => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     {getDocumentStatus(status)}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">{createdAt}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {" "}
+                    {new Date(createdAt).toLocaleString()}
+                  </td>
                   <td className="px-6 py-4 flex gap-3">
                     <Link
                       to={`/documents/${id}`}
