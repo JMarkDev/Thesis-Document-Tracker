@@ -14,6 +14,7 @@ const Document = sequelize.define(
     },
     tracking_number: {
       type: DataTypes.STRING(55),
+      unique: true,
       allowNull: false,
     },
     document_name: {

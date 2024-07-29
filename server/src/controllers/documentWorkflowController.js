@@ -1,4 +1,5 @@
 const documentRouteModel = require("../models/documentRouteModel");
+const { Op } = require("sequelize");
 
 const getAllDocumentRoutes = async (req, res) => {
   try {
@@ -9,6 +10,23 @@ const getAllDocumentRoutes = async (req, res) => {
   }
 };
 
+const searchWorkflow = async (req, res) => {
+  const { name } = req.params;
+
+  try {
+    const workflow = await documentRouteModel.findAll({
+      where: {
+        document_type: { [Op.like]: `${name}%` },
+      },
+    });
+
+    return res.status(200).json(workflow);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getAllDocumentRoutes,
+  searchWorkflow,
 };

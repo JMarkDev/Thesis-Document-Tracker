@@ -1,4 +1,4 @@
-const { Op } = require("sequelize");
+const { Sequelize, Op } = require("sequelize");
 const documentModel = require("../models/documentModel");
 const documentHistoryModel = require("../models/documentHistoryModel");
 
@@ -45,7 +45,11 @@ const searchDocuments = async (req, res) => {
   try {
     const documents = await documentModel.findAll({
       where: {
-        document_name: { [Op.like]: `${name}%` },
+        [Sequelize.Op.or]: [
+          { document_name: { [Op.like]: `${name}%` } },
+          { uploaded_by: { [Op.like]: `${name}%` } },
+        ],
+        // document_name: { [Op.like]: `${name}%` },
       },
       include: [
         {
