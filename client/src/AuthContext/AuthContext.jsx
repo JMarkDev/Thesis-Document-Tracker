@@ -40,7 +40,6 @@ export const AuthProvider = ({ children }) => {
       );
       if (response.data.status === "success") {
         setUserData(null);
-        localStorage.removeItem("accessToken");
       }
     } catch (error) {
       console.log(error);

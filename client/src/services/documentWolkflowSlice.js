@@ -6,6 +6,11 @@ export const fetchAllWorkflow = createAsyncThunk("workflow/all", async () => {
   return response.data;
 });
 
+export const searchWorkflow = createAsyncThunk("/workflow", async (name) => {
+  const response = await axios.get(`/workflow/search/${name}`);
+  return response.data;
+});
+
 const workflowSlice = createSlice({
   name: "workflow",
   initialState: {
@@ -24,6 +29,17 @@ const workflowSlice = createSlice({
         state.allWorkflow = action.payload;
       })
       .addCase(fetchAllWorkflow.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(searchWorkflow.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(searchWorkflow.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.allWorkflow = action.payload;
+      })
+      .addCase(searchWorkflow.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });
