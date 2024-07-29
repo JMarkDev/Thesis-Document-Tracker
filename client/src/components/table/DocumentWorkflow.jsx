@@ -51,7 +51,7 @@ const DocumentWorkflow = ({ data }) => {
                 </td>
                 <td className="px-6 py-4 flex gap-3 justify-center items-center">
                   <Link
-                    to={`/documents/${id}`}
+                    to={`/document-workflow/${id}`}
                     className="px-4 py-2 text-lg bg-[#fca326] hover:bg-[#f58e40] text-white rounded-lg"
                   >
                     <FaEye className="h-5 w-5" />

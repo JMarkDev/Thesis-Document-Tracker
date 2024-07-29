@@ -4,6 +4,7 @@ import Table from "../../../components/table/DocumentTable";
 import { IoSearch } from "react-icons/io5";
 import Dropdown from "../../../components/dropdown/Dropdown";
 import wmsuCampus from "../../../constants/Campus";
+import Status from "../../../components/dropdown/Status";
 import {
   fetchAllDocuments,
   getAllDocuments,
@@ -11,6 +12,7 @@ import {
   searchDocument,
   filterDocumentsByESU,
   filterDocumentByType,
+  filterDocumentByStatus,
 } from "../../../services/documentSlice";
 
 const Documents = () => {
@@ -18,7 +20,7 @@ const Documents = () => {
   const allDocuments = useSelector(getAllDocuments);
   const status = useSelector(getStatus);
   const documentType = ["IDP", "IOR", "DTR"];
-  const documentStatus = ["incoming", "received", "delayed"];
+
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
@@ -48,6 +50,14 @@ const Documents = () => {
       dispatch(fetchAllDocuments);
     } else {
       dispatch(filterDocumentByType(type));
+    }
+  };
+
+  const handleFIlterByStatus = (status) => {
+    if (status === "Document Status") {
+      dispatch(fetchAllDocuments());
+    } else {
+      dispatch(filterDocumentByStatus(status));
     }
   };
 
@@ -87,8 +97,9 @@ const Documents = () => {
                 option={"Document Type"}
               />
             </div>
+
             <div>
-              <Dropdown data={documentStatus} option={"Document Status"} />
+              <Status handleFilter={handleFIlterByStatus} />
             </div>
           </div>
         </div>

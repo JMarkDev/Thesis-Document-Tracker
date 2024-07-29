@@ -13,6 +13,7 @@ import LayoutAdmin from "./components/layout/LayoutAdmin";
 import Dashboard from "./pages/Admin/Dashboard/Dashboard";
 import Documents from "./pages/Admin/Documents/Documents";
 import DocumentWorkflow from "./pages/Admin/DocumentWorkflows/DocumentWorkflow";
+import WorkflowDetails from "./pages/Admin/DocumentWorkflows/WorkflowDetails";
 import Offices from "./pages/Admin/Offices/Offices";
 import Reports from "./pages/Admin/Reports/Reports";
 import Faculty from "./pages/Admin/UserMagement/Faculty/Faculty";
@@ -38,6 +39,11 @@ function App() {
       title: "Document Workflow",
       path: "/document-workflow",
       component: <DocumentWorkflow />,
+    },
+    {
+      title: "Document Workflow Details",
+      path: "/document-workflow/:id",
+      component: <WorkflowDetails />,
     },
     { title: "Offices", path: "/offices", component: <Offices /> },
     { title: "Reports", path: "/reports", component: <Reports /> },

@@ -36,6 +36,14 @@ export const filterDocumentByType = createAsyncThunk(
   }
 );
 
+export const filterDocumentByStatus = createAsyncThunk(
+  "document/filter-by-status",
+  async (status) => {
+    const response = await axios.get(`/document/filter-by-status/${status}`);
+    return response.data;
+  }
+);
+
 const documentsSlice = createSlice({
   name: "documents",
   initialState: {
@@ -88,6 +96,17 @@ const documentsSlice = createSlice({
         state.allDocuments = action.payload;
       })
       .addCase(filterDocumentByType.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(filterDocumentByStatus.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(filterDocumentByStatus.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.allDocuments = action.payload;
+      })
+      .addCase(filterDocumentByStatus.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       })
