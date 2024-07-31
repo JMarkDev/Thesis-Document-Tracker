@@ -20,7 +20,6 @@ const Office = () => {
 
   useEffect(() => {
     if (officeStatus === "idle") {
-      console.log("cute seroy");
       dispatch(fetchOffice());
     }
 

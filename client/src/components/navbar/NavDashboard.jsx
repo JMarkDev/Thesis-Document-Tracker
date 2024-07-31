@@ -1,4 +1,6 @@
 import { useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { getUserData } from "../../services/authSlice";
 import userIcon from "../../assets/images/wmsu logo.png";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { TiPlus } from "react-icons/ti";
@@ -6,12 +8,13 @@ import { FaBars } from "react-icons/fa6";
 import PropTypes from "prop-types";
 import NavProfile from "../NavProfile";
 import Notification from "../Notification";
-import { useContext, useState, useEffect } from "react";
-import { AuthContext } from "../../AuthContext/AuthContext";
+import { useState, useEffect } from "react";
+// import { AuthContext } from "../../AuthContext/AuthContext";
 import api from "../../api/axios";
 
 const NavDashboard = ({ handleBurger }) => {
-  const { userData } = useContext(AuthContext);
+  const userData = useSelector(getUserData);
+  // const { userData } = useContext(AuthContext);
   const [showProfile, setShowProfile] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const [profilePic, setProfilePic] = useState(userIcon);

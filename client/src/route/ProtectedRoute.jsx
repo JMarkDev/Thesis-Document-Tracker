@@ -1,13 +1,19 @@
-import { useContext } from "react";
 import { Navigate } from "react-router-dom";
 import PropTypes from "prop-types";
-import { AuthContext } from "../AuthContext/AuthContext";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUser, getUserData, getLoading } from "../services/authSlice";
 import LoginLoading from "../components/loader/LoginLoading";
+import { useEffect } from "react";
 
 const ProtectedRoute = ({ element, allowedRoles }) => {
-  const { userData } = useContext(AuthContext);
+  const dispatch = useDispatch();
 
-  const { loading } = useContext(AuthContext);
+  useEffect(() => {
+    dispatch(fetchUser());
+  }, [dispatch]);
+
+  const userData = useSelector(getUserData);
+  const loading = useSelector(getLoading);
 
   if (loading) {
     return (

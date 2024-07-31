@@ -1,18 +1,20 @@
 import PropTypes from "prop-types";
+import { useDispatch } from "react-redux";
+import { fetchUser } from "../../services/authSlice";
 import "./otp.css";
 import sentImage from "../../assets/images/send-email.jpg";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/axios";
 import LoginLoading from "../../components/loader/LoginLoading";
 import { useToast } from "../../hooks/useToast";
 import "react-toastify/dist/ReactToastify.css";
-import { AuthContext } from "../../AuthContext/AuthContext";
 import rolesList from "../../constants/rolesList";
 
 const VerifyOTP = ({ email, closeOTP, closeModal, onVerificationSuccess }) => {
   const toast = useToast();
-  const { setUserData } = useContext(AuthContext);
+  const dispatch = useDispatch();
+  // const { setUserData } = useContext(AuthContext);
   const navigate = useNavigate();
   const [countDown, setCountDown] = useState(0);
   const [otp, setOtp] = useState(new Array(4).fill(""));
@@ -48,6 +50,7 @@ const VerifyOTP = ({ email, closeOTP, closeModal, onVerificationSuccess }) => {
       });
 
       if (response.data.status === "success") {
+        dispatch(fetchUser());
         // fetch the latest added data
         if (onVerificationSuccess) {
           onVerificationSuccess();
@@ -60,13 +63,6 @@ const VerifyOTP = ({ email, closeOTP, closeModal, onVerificationSuccess }) => {
           api.defaults.headers.common[
             "Authorization"
           ] = `Bearer ${accessToken}`;
-
-          // Store the access token in local storage
-          // localStorage.setItem("accessToken", accessToken);
-
-          // set userdata in authcontext
-          const userResponse = await api.get(`/users/get-user?email=${email}`);
-          setUserData(userResponse.data);
 
           const role = response.data.role;
 

@@ -1,20 +1,30 @@
-import { useState, useContext, useEffect } from "react";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUser, getUserData, getLoading } from "../../services/authSlice";
 import Logo from "../../assets/images/logo with word (1).png";
 import Login from "../../pages/Auth/Login";
 import Register from "../../pages/Auth/Register";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import Notification from "../Notification";
 import NavProfile from "../NavProfile";
-import { AuthContext } from "../../AuthContext/AuthContext";
 import userIcon from "../../assets/images/user.png";
 import api from "../../api/axios";
+
 const Navbar = () => {
-  const { userData } = useContext(AuthContext);
+  const dispatch = useDispatch();
+  const userData = useSelector(getUserData);
+  const loading = useSelector(getLoading);
+
   const [modal, setModal] = useState(false);
   const [registerModal, setRegisterModal] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [profilePic, setProfilePic] = useState(userIcon);
+
+  useEffect(() => {
+    dispatch(fetchUser());
+  }, [dispatch]);
+
   useEffect(() => {
     if (userData && userData.image) {
       setProfilePic(`${api.defaults.baseURL}${userData.image}`);
@@ -25,6 +35,7 @@ const Navbar = () => {
     setModal(true);
     setRegisterModal(false);
   };
+
   const closeModal = (modal) => {
     setModal(modal);
   };
@@ -56,8 +67,10 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center">
-          <ul className="flex gap-5  items-center text-white   lg:text-lg text-sm">
-            {userData ? (
+          <ul className="flex gap-5 items-center text-white lg:text-lg text-sm">
+            {loading ? (
+              <li>Loading...</li>
+            ) : userData ? (
               <>
                 <li>
                   <div className="relative">
@@ -67,7 +80,7 @@ const Navbar = () => {
                     <div
                       onClick={handleNotification}
                       onMouseEnter={handleNotification}
-                      className=" h-10 w-10 text-white  cursor-pointer  flex justify-center items-center"
+                      className="h-10 w-10 text-white cursor-pointer flex justify-center items-center"
                     >
                       <IoMdNotificationsOutline className="text-3xl " />
                     </div>
@@ -120,7 +133,7 @@ const Navbar = () => {
                 <li>
                   <button
                     onClick={openRegister}
-                    className="px-4 h-10  bg-yellow rounded-lg hover:bg-yellow_hover"
+                    className="px-4 h-10 bg-yellow rounded-lg hover:bg-yellow_hover"
                   >
                     Register
                   </button>

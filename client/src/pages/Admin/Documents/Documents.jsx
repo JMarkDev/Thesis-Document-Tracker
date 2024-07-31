@@ -14,18 +14,25 @@ import {
   filterDocumentByType,
   filterDocumentByStatus,
 } from "../../../services/documentSlice";
+import {
+  getAllWorkflow,
+  fetchAllWorkflow,
+} from "../../../services/documentWolkflowSlice";
 
 const Documents = () => {
   const dispatch = useDispatch();
   const allDocuments = useSelector(getAllDocuments);
+  const workflow = useSelector(getAllWorkflow);
   const status = useSelector(getStatus);
   const documentType = ["IDP", "IOR", "DTR"];
+  console.log(workflow);
 
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchAllDocuments());
+      dispatch(fetchAllWorkflow());
     }
   }, [status, dispatch]);
 

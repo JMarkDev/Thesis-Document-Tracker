@@ -46,7 +46,7 @@ const Cards = () => {
           <h1 className="font-bold py-1 w-full text-center text-sm lg:text-lg   whitespace-nowrap text-main rounded-md">
             {card.title}
           </h1>
-          <h1 className="mt-2 font-bold md:text-4xl text-xl text-[#333131]">
+          <h1 className=" font-bold md:text-4xl text-xl text-[#333131]">
             {card.value}
           </h1>
         </div>

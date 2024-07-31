@@ -1,4 +1,6 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { getUserData } from "../../services/authSlice";
 import { Link, useLocation } from "react-router-dom";
 import { MdQrCodeScanner } from "react-icons/md";
 import { IoDocuments } from "react-icons/io5";
@@ -12,11 +14,12 @@ import { FiChevronDown, FiChevronRight } from "react-icons/fi";
 import { GiFiles } from "react-icons/gi";
 import Logo from "../../assets/images/logo with word.png";
 import PropTypes from "prop-types";
-import { AuthContext } from "../../AuthContext/AuthContext";
+// import { AuthContext } from "../../AuthContext/AuthContext";
 import rolesList from "../../constants/rolesList";
 
 const Sidebar = ({ sidebar, handleBurger }) => {
-  const { userData } = useContext(AuthContext);
+  const userData = useSelector(getUserData);
+  // const { userData } = useContext(AuthContext);
   const location = useLocation();
   const [isUserManagementOpen, setIsUserManagementOpen] = useState(false);
   const [sidebarLinks, setSidebarLinks] = useState([]);

@@ -1,9 +1,13 @@
 import { LuLogOut, LuUser2 } from "react-icons/lu";
-import { useContext } from "react";
-import { AuthContext } from "../AuthContext/AuthContext";
+import { useDispatch } from "react-redux";
+import { logoutUser } from "../services/authSlice";
 
 const NavProfile = () => {
-  const { logout } = useContext(AuthContext);
+  const dispatch = useDispatch();
+
+  const logout = () => {
+    dispatch(logoutUser());
+  };
 
   return (
     <div className="  h-26 rounded-lg py-4 relative bg-white shadow-lg text-gray-700 z-50">
