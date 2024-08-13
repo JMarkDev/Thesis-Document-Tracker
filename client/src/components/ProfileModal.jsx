@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import api from "../api/axios";
-import userIcon from "../assets/images/user.png";
+import userIcon from "../assets/images/user (1).png";
 
 const ProfileModal = ({ modal, closeModal, data }) => {
   return (

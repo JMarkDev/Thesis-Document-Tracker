@@ -20,7 +20,6 @@ import {
 } from "./services/usersSlice.js";
 import { fetchAllDocuments } from "./services/documentSlice.js";
 import { fetchAllWorkflow } from "./services/documentWolkflowSlice.js";
-store.dispatch(fetchUser());
 
 const token = Cookie.get("accessToken");
 //This ensures that the data is already available in the Redux store when the application starts, which can improve the user experience by preventing loading delays.

@@ -16,10 +16,18 @@ const DocumentDetails = () => {
   const dispatch = useDispatch();
   const document = useSelector(getDocumentById);
   const [sorttedHistories, setSortedHistories] = useState([]);
+  const [data, setData] = useState([]);
+  const [documentData, setDocumentData] = useState([]);
+
   useEffect(() => {
     dispatch(fetchDocumentById(id));
   }, [id, dispatch]);
-  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    if (document) {
+      setDocumentData(document);
+    }
+  }, [document]);
 
   const documentHistory = [
     { office: "ESU Pagadian Faculty", date: "01 Aug 2024, 01:00pm" },
@@ -55,13 +63,13 @@ const DocumentDetails = () => {
   }, []);
 
   useEffect(() => {
-    if (document && document.document_histories) {
-      const sortedData = [...document.document_histories].sort(
+    if (documentData && documentData.document_histories) {
+      const sortedData = [...documentData.document_histories].sort(
         (a, b) => b.id - a.id
       );
       setSortedHistories(sortedData);
     }
-  }, [document]);
+  }, [documentData]);
 
   return (
     <div className="bg-white ">
@@ -86,40 +94,36 @@ const DocumentDetails = () => {
 
         <div className="bg-gray-200 mt-10 md:p-4 rounded-lg flex flex-col lg:flex-row gap-5 justify-between text-gray-700">
           <div className="flex flex-col gap-4 lg:w-1/2 w-full p-4 bg-white text-sm md:text-[16px]  shadow-lg rounded-md">
-            {document && (
-              <>
-                <div className="flex items-center gap-5 border-b pb-2">
-                  <h1 className="font-bold text-gray-800">Tracking Number:</h1>
-                  <p className="text-gray-700">{document.tracking_number}</p>
-                </div>
-                <div className="flex items-center gap-5 border-b pb-2">
-                  <h1 className="font-bold text-gray-800">Document Name:</h1>
-                  <p className="text-gray-700">{document.document_name}</p>
-                </div>
-                <div className="flex items-center gap-5 border-b pb-2">
-                  <h1 className="font-bold  text-gray-800">Document Type:</h1>
-                  <p className="text-gray-700">{document.document_type}</p>
-                </div>
-                <div className="flex items-center gap-5 border-b pb-2">
-                  <h1 className="font-bold  text-gray-800">File Type:</h1>
-                  <p className="text-gray-700">{document.file_type}</p>
-                </div>
-                <div className="flex items-center gap-5 border-b pb-2">
-                  <h1 className="font-bold  text-gray-800">Uploaded By:</h1>
-                  <p className="text-gray-700">{document.uploaded_by}</p>
-                </div>
-                <div className="flex items-center gap-5 border-b pb-2">
-                  <h1 className="font-bold  text-gray-800">Date:</h1>
-                  <p className="text-gray-700">{document.createdAt}</p>
-                </div>
-                <div className="flex items-center gap-5">
-                  <h1 className="font-bold  text-gray-800">Status:</h1>
-                  <p className="text-gray-700">
-                    {getDocumentStatus(document.status)}
-                  </p>
-                </div>
-              </>
-            )}
+            <div className="flex items-center gap-5 border-b pb-2">
+              <h1 className="font-bold text-gray-800">Tracking Number:</h1>
+              <p className="text-gray-700">{documentData.tracking_number}</p>
+            </div>
+            <div className="flex items-center gap-5 border-b pb-2">
+              <h1 className="font-bold text-gray-800">Document Name:</h1>
+              <p className="text-gray-700">{documentData.document_name}</p>
+            </div>
+            <div className="flex items-center gap-5 border-b pb-2">
+              <h1 className="font-bold  text-gray-800">Document Type:</h1>
+              <p className="text-gray-700">{documentData.document_type}</p>
+            </div>
+            <div className="flex items-center gap-5 border-b pb-2">
+              <h1 className="font-bold  text-gray-800">File Type:</h1>
+              <p className="text-gray-700">{documentData.file_type}</p>
+            </div>
+            <div className="flex items-center gap-5 border-b pb-2">
+              <h1 className="font-bold  text-gray-800">Uploaded By:</h1>
+              <p className="text-gray-700">{documentData.uploaded_by}</p>
+            </div>
+            <div className="flex items-center gap-5 border-b pb-2">
+              <h1 className="font-bold  text-gray-800">Date:</h1>
+              <p className="text-gray-700">{documentData.createdAt}</p>
+            </div>
+            <div className="flex items-center gap-5">
+              <h1 className="font-bold  text-gray-800">Status:</h1>
+              <p className="text-gray-700">
+                {getDocumentStatus(documentData.status)}
+              </p>
+            </div>
           </div>
 
           <div className="lg:w-1/2 w-full p-4 text-gray-600 bg-white text-sm md:text-[16px] shadow-lg rounded-md">

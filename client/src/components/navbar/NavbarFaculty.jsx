@@ -1,7 +1,7 @@
 import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { getUserData } from "../../services/authSlice";
-import userIcon from "../../assets/images/user-profile.png";
+import userIcon from "../../assets/images/user (1).png";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { FaBars } from "react-icons/fa6";
 import PropTypes from "prop-types";

@@ -7,7 +7,7 @@ import Register from "../../pages/Auth/Register";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import Notification from "../Notification";
 import NavProfile from "../NavProfile";
-import userIcon from "../../assets/images/user.png";
+import userIcon from "../../assets/images/user (1).png";
 import api from "../../api/axios";
 
 const Navbar = () => {

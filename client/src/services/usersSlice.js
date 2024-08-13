@@ -20,6 +20,7 @@ export const fetchUserById = createAsyncThunk(
   "users/fetchUserById",
   async (id) => {
     const response = await axios.get(`/users/get-user-by-id/${id}`);
+    console.log(id, "id");
     return response.data;
   }
 );

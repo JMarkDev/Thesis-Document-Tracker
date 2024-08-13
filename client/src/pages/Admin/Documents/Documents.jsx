@@ -25,7 +25,7 @@ const Documents = () => {
   const workflow = useSelector(getAllWorkflow);
   const status = useSelector(getStatus);
   const documentType = ["IDP", "IOR", "DTR"];
-  console.log(workflow);
+  console.log(allDocuments);
 
   const [searchTerm, setSearchTerm] = useState("");
 

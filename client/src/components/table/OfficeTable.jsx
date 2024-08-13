@@ -7,7 +7,7 @@ import api from "../../api/axios";
 import ProfileModal from "../profileModal";
 import DeleteModal from "../DeleteModal";
 import { toastUtils } from "../../hooks/useToast";
-import userIcon from "../../assets/images/user.png";
+import userIcon from "../../assets/images/user (1).png";
 import PropTypes from "prop-types";
 
 const Office = ({ officeUsers }) => {

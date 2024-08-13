@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import ProfileModal from "../profileModal";
 import api from "../../api/axios";
-import userIcon from "../../assets/images/user.png";
+import userIcon from "../../assets/images/user (1).png";
 import DeleteModal from "../DeleteModal";
 import { useDispatch } from "react-redux";
 import { deleteUser } from "../../services/usersSlice";
