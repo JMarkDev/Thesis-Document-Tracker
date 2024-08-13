@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { logoutUser } from "../../services/authSlice";
+import { useDispatch, useSelector } from "react-redux";
 import { getUserData } from "../../services/authSlice";
 import { Link, useLocation } from "react-router-dom";
 import { MdQrCodeScanner } from "react-icons/md";
@@ -18,6 +19,7 @@ import PropTypes from "prop-types";
 import rolesList from "../../constants/rolesList";
 
 const Sidebar = ({ sidebar, handleBurger }) => {
+  const dispatch = useDispatch();
   const userData = useSelector(getUserData);
   // const { userData } = useContext(AuthContext);
   const location = useLocation();
@@ -48,7 +50,7 @@ const Sidebar = ({ sidebar, handleBurger }) => {
       ],
     },
     { title: "Reports", path: "/reports", src: <TbReportAnalytics /> },
-    { title: "Logout", path: "/home", src: <BiLogOut /> },
+    // { title: "Logout", path: "/home", src: <BiLogOut /> },
   ];
 
   const facultyLinks = [
@@ -64,7 +66,7 @@ const Sidebar = ({ sidebar, handleBurger }) => {
       src: <GiFiles />,
     },
     { title: "Reports", path: "/faculty-reports", src: <TbReportSearch /> },
-    { title: "Logout", path: "/home", src: <BiLogOut /> },
+    // { title: "Logout", path: "/home", src: <BiLogOut /> },
   ];
 
   useEffect(() => {
@@ -78,6 +80,10 @@ const Sidebar = ({ sidebar, handleBurger }) => {
 
   const toggleUserManagement = () => {
     setIsUserManagementOpen(!isUserManagementOpen);
+  };
+
+  const handleLogout = () => {
+    dispatch(logoutUser());
   };
 
   return (
@@ -103,11 +109,11 @@ const Sidebar = ({ sidebar, handleBurger }) => {
             {sidebarLinks.map((menu, index) => (
               <li
                 key={index}
-                className={`${
-                  !isUserManagementOpen
-                    ? "last:absolute last:bottom-10 last:w-[230px] "
-                    : ""
-                }`}
+                // className={`${
+                //   !isUserManagementOpen
+                //     ? "last:absolute last:bottom-10 last:w-[230px] "
+                //     : ""
+                // }`}
               >
                 {menu.sublinks ? (
                   <div>
@@ -147,6 +153,7 @@ const Sidebar = ({ sidebar, handleBurger }) => {
                   </div>
                 ) : (
                   <Link
+                    // onClick={handleLogout}
                     to={menu.path}
                     className={`${
                       location.pathname === menu.path && "bg-main text-white"
@@ -158,6 +165,19 @@ const Sidebar = ({ sidebar, handleBurger }) => {
                 )}
               </li>
             ))}
+            <li>
+              <button
+                onClick={handleLogout}
+                className={
+                  "w-[230px] fixed bottom-10 flex items-center p-2 text-gray-900 rounded-lg hover:text-white hover:bg-main dark:hover:bg-gray-700 group"
+                }
+              >
+                <span className="text-2xl">
+                  <BiLogOut />
+                </span>
+                <span className="ms-3">Logout</span>
+              </button>
+            </li>
           </ul>
         </div>
       </aside>
