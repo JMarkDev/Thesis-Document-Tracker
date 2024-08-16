@@ -127,6 +127,75 @@ const filterDocumentsByStatus = async (req, res) => {
   }
 };
 
+// quick sort algorithm
+const quickSortDocuments = (documents, field) => {
+  if (documents.length <= 1) {
+    return documents;
+  }
+
+  const pivotIndex = Math.floor(documents.length / 2);
+  const pivot = documents[pivotIndex];
+
+  const left = [];
+  const right = [];
+
+  for (let i = 0; i < documents.length; i++) {
+    if (i === pivotIndex) {
+      continue; // Skip the pivot element
+    }
+
+    if (documents[i] && documents[i][field]) {
+      if (documents[i][field] < pivot[field]) {
+        left.push(documents[i]);
+      } else {
+        right.push(documents[i]);
+      }
+    } else {
+      console.error(`Document at index ${i} does not have field ${field}`);
+    }
+  }
+  return [
+    ...quickSortDocuments(left, field),
+    pivot,
+    ...quickSortDocuments(right, field),
+  ];
+};
+
+const sortDocuments = async (req, res) => {
+  try {
+    const { sortBy } = req.query;
+    const validFields = [
+      "id",
+      "createdAt",
+      "document_name",
+      "file_type",
+      "uploaded_by",
+      "status",
+      "document_type",
+      "esuCampus",
+    ];
+
+    if (!validFields.includes(sortBy)) {
+      return res.status(400).json({ message: "Invalid field to sort by" });
+    }
+
+    const documents = await documentModel.findAll({
+      include: [
+        {
+          model: documentHistoryModel,
+          required: true,
+        },
+      ],
+    });
+
+    const sortedDocuments = quickSortDocuments(documents, sortBy);
+    return res.status(200).json(sortedDocuments);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getAllDocuments,
   searchDocuments,
@@ -134,4 +203,5 @@ module.exports = {
   filterDocumentsByType,
   filterDocumentsByStatus,
   getDocumentById,
+  sortDocuments,
 };

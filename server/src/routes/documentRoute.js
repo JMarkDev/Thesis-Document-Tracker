@@ -11,8 +11,12 @@ router.get(
 );
 router.get("/filter-by-type/:type", documentController.filterDocumentsByType);
 router.get(
-  "/filter/by-status/:status",
+  "/filter-by-status/:status",
   documentController.filterDocumentsByStatus
 );
+
+// SORTING USING QUICK SORT ALGORITHM
+//http://localhost:3001/document/sort?sortBy=createdAt
+router.get("/sort", documentController.sortDocuments);
 
 module.exports = router;
