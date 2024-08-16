@@ -5,6 +5,7 @@ import { IoSearch } from "react-icons/io5";
 import Dropdown from "../../../components/dropdown/Dropdown";
 import wmsuCampus from "../../../constants/Campus";
 import Status from "../../../components/dropdown/Status";
+import Paganation from "../../../components/Paganation";
 import {
   fetchAllDocuments,
   getAllDocuments,
@@ -120,6 +121,9 @@ const Documents = () => {
         </div>
       </div>
       <Table documents={allDocuments} handleSort={handleSort} />
+      <div className="flex justify-end mt-10">
+        <Paganation />
+      </div>
     </div>
   );
 };
