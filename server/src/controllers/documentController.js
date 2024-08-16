@@ -64,34 +64,19 @@ const searchDocuments = async (req, res) => {
   }
 };
 
-const filterDocumentsByEsu = async (req, res) => {
-  const { esuCampus } = req.params;
+const filterDocuments = async (req, res) => {
+  const { filterField, filterValue } = req.params;
 
-  try {
-    const documents = await documentModel.findAll({
-      where: {
-        esuCampus: esuCampus,
-      },
-      include: [
-        {
-          model: documentHistoryModel,
-          required: true,
-        },
-      ],
-    });
-    return res.status(200).json(documents);
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
+  const validFields = ["esuCampus", "document_type", "status"];
+
+  if (!validFields.includes(filterField)) {
+    return res.status(400).json({ message: "Invalid filter field" });
   }
-};
-
-const filterDocumentsByType = async (req, res) => {
-  const { type } = req.params;
 
   try {
     const documents = await documentModel.findAll({
       where: {
-        document_type: type,
+        [filterField]: filterValue,
       },
       include: [
         {
@@ -102,27 +87,7 @@ const filterDocumentsByType = async (req, res) => {
     });
     return res.status(200).json(documents);
   } catch (error) {
-    return res.status(500).json({ message: error.message });
-  }
-};
-
-const filterDocumentsByStatus = async (req, res) => {
-  const { status } = req.params;
-
-  try {
-    const documents = await documentModel.findAll({
-      where: {
-        status: status,
-      },
-      include: [
-        {
-          model: documentHistoryModel,
-          required: true,
-        },
-      ],
-    });
-    return res.status(200).json(documents);
-  } catch (error) {
+    console.log(error);
     return res.status(500).json({ message: error.message });
   }
 };
@@ -199,9 +164,7 @@ const sortDocuments = async (req, res) => {
 module.exports = {
   getAllDocuments,
   searchDocuments,
-  filterDocumentsByEsu,
-  filterDocumentsByType,
-  filterDocumentsByStatus,
+  filterDocuments,
   getDocumentById,
   sortDocuments,
 };
