@@ -93,7 +93,8 @@ const filterDocuments = async (req, res) => {
 };
 
 // quick sort algorithm
-const quickSortDocuments = (documents, field) => {
+// asc = ascending
+const quickSortDocuments = (documents, field, order = "asc") => {
   if (documents.length <= 1) {
     return documents;
   }
@@ -105,12 +106,14 @@ const quickSortDocuments = (documents, field) => {
   const right = [];
 
   for (let i = 0; i < documents.length; i++) {
-    if (i === pivotIndex) {
-      continue; // Skip the pivot element
-    }
+    if (i === pivotIndex) continue; // Skip the pivot element
 
     if (documents[i] && documents[i][field]) {
-      if (documents[i][field] < pivot[field]) {
+      // Use comparison based on the desired order
+      if (
+        (order === "asc" && documents[i][field] < pivot[field]) ||
+        (order === "desc" && documents[i][field] > pivot[field])
+      ) {
         left.push(documents[i]);
       } else {
         right.push(documents[i]);
@@ -120,15 +123,15 @@ const quickSortDocuments = (documents, field) => {
     }
   }
   return [
-    ...quickSortDocuments(left, field),
+    ...quickSortDocuments(left, field, order),
     pivot,
-    ...quickSortDocuments(right, field),
+    ...quickSortDocuments(right, field, order),
   ];
 };
 
 const sortDocuments = async (req, res) => {
   try {
-    const { sortBy } = req.query;
+    const { sortBy, order = "asc" } = req.query;
     const validFields = [
       "id",
       "createdAt",
@@ -153,7 +156,7 @@ const sortDocuments = async (req, res) => {
       ],
     });
 
-    const sortedDocuments = quickSortDocuments(documents, sortBy);
+    const sortedDocuments = quickSortDocuments(documents, sortBy, order);
     return res.status(200).json(sortedDocuments);
   } catch (error) {
     console.error(error);
