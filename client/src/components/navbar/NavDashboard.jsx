@@ -59,7 +59,7 @@ const NavDashboard = ({ handleBurger }) => {
       </button>
       <div className="flex  justify-between items-center w-full">
         <h1 className="md:text-2xl text-lg font-bold text-main">{title}</h1>
-        <div className="flex  lg:text-[16px] text-sm gap-7">
+        <div className="flex lg:text-[16px] text-sm gap-4">
           <div className="flex items-center gap-2">
             <button className="flex items-center">
               {" "}
@@ -68,8 +68,8 @@ const NavDashboard = ({ handleBurger }) => {
             </button>
           </div>
 
-          <div className="relative flex items-center">
-            <span className="text-sm absolute right-[-12px] top-[-4px]  text-white bg-red-600 rounded-full px-1">
+          <div className="relative  flex items-center">
+            <span className="text-sm absolute right-[-12px] top-0 text-white bg-red-600 rounded-full px-1">
               10
             </span>
             <button

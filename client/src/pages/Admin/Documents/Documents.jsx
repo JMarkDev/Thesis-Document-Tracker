@@ -13,6 +13,7 @@ import {
   filterDocumentsByESU,
   filterDocumentByType,
   filterDocumentByStatus,
+  sortDocuments,
 } from "../../../services/documentSlice";
 import {
   getAllWorkflow,
@@ -25,6 +26,7 @@ const Documents = () => {
   const workflow = useSelector(getAllWorkflow);
   const status = useSelector(getStatus);
   const documentType = ["IDP", "IOR", "DTR"];
+  const [sortOrder, setSortOrder] = useState("asc");
   console.log(allDocuments);
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -37,7 +39,7 @@ const Documents = () => {
   }, [status, dispatch]);
 
   const handleFilterByESU = (esu) => {
-    if (esu === "WMSU-ESU Campus") {
+    if (esu === "ESU Campus") {
       dispatch(fetchAllDocuments());
     } else {
       dispatch(filterDocumentsByESU(esu));
@@ -53,7 +55,7 @@ const Documents = () => {
   }, [searchTerm, dispatch]);
 
   const handleFilterByType = (type) => {
-    if (type === "Document Type") {
+    if (type === "Type") {
       dispatch(fetchAllDocuments);
     } else {
       dispatch(filterDocumentByType(type));
@@ -61,11 +63,17 @@ const Documents = () => {
   };
 
   const handleFIlterByStatus = (status) => {
-    if (status === "Document Status") {
+    if (status === "Status") {
       dispatch(fetchAllDocuments());
     } else {
       dispatch(filterDocumentByStatus(status));
     }
+  };
+
+  const handleSort = (sortBy) => {
+    const newOrder = sortOrder === "asc" ? "desc" : "asc";
+    setSortOrder(newOrder);
+    dispatch(sortDocuments({ sortBy, order: newOrder }));
   };
 
   return (
@@ -94,14 +102,14 @@ const Documents = () => {
               <Dropdown
                 handleFilter={handleFilterByESU}
                 data={wmsuCampus}
-                option={"WMSU-ESU Campus"}
+                option={"ESU Campus"}
               />
             </div>
             <div>
               <Dropdown
                 handleFilter={handleFilterByType}
                 data={documentType}
-                option={"Document Type"}
+                option={"Type"}
               />
             </div>
 
@@ -111,7 +119,7 @@ const Documents = () => {
           </div>
         </div>
       </div>
-      <Table documents={allDocuments} />
+      <Table documents={allDocuments} handleSort={handleSort} />
     </div>
   );
 };

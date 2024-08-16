@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { getDocumentStatus } from "../../utils/documentStatus";
 
-const Table = ({ documents }) => {
+const Table = ({ documents, handleSort }) => {
   return (
     <>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -13,7 +13,7 @@ const Table = ({ documents }) => {
               <th scope="col" className="px-6 py-3 whitespace-nowrap">
                 <div className="flex items-center  whitespace-nowrap">
                   DOCUMENT ID
-                  <a href="#">
+                  <a href="#" onClick={() => handleSort("id")}>
                     <svg
                       className="w-3 h-3 ms-1.5"
                       aria-hidden="true"
@@ -29,7 +29,7 @@ const Table = ({ documents }) => {
               <th scope="col" className="px-6 py-3">
                 <div className="flex items-center  whitespace-nowrap">
                   DOCUMENT NAME
-                  <a href="#">
+                  <a href="#" onClick={() => handleSort("document_name")}>
                     <svg
                       className="w-3 h-3 ms-1.5"
                       aria-hidden="true"
@@ -45,7 +45,7 @@ const Table = ({ documents }) => {
               <th scope="col" className="px-6 py-3">
                 <div className="flex items-center  whitespace-nowrap">
                   DOCUMENT TYPE
-                  <a href="#">
+                  <a href="#" onClick={() => handleSort("document_type")}>
                     <svg
                       className="w-3 h-3 ms-1.5"
                       aria-hidden="true"
@@ -61,7 +61,7 @@ const Table = ({ documents }) => {
               <th scope="col" className="px-6 py-3">
                 <div className="flex items-center  whitespace-nowrap">
                   FILE TYPE
-                  <a href="#">
+                  <a href="#" onClick={() => handleSort("file_type")}>
                     <svg
                       className="w-3 h-3 ms-1.5"
                       aria-hidden="true"
@@ -77,7 +77,7 @@ const Table = ({ documents }) => {
               <th scope="col" className="px-6 py-3">
                 <div className="flex items-center  whitespace-nowrap">
                   UPLOADED BY
-                  <a href="#">
+                  <a href="#" onClick={() => handleSort("uploaded_by")}>
                     <svg
                       className="w-3 h-3 ms-1.5"
                       aria-hidden="true"
@@ -93,7 +93,7 @@ const Table = ({ documents }) => {
               <th scope="col" className="px-6 py-3">
                 <div className="flex items-center  whitespace-nowrap">
                   STATUS
-                  <a href="#">
+                  <a href="#" onClick={() => handleSort("status")}>
                     <svg
                       className="w-3 h-3 ms-1.5"
                       aria-hidden="true"
@@ -109,7 +109,7 @@ const Table = ({ documents }) => {
               <th scope="col" className="px-6 py-3">
                 <div className="flex items-center  whitespace-nowrap">
                   DATE
-                  <a href="#">
+                  <a href="#" onClick={() => handleSort("createdAt")}>
                     <svg
                       className="w-3 h-3 ms-1.5"
                       aria-hidden="true"
@@ -195,6 +195,7 @@ const Table = ({ documents }) => {
 
 Table.propTypes = {
   documents: PropTypes.array.isRequired,
+  handleSort: PropTypes.func.isRequired,
 };
 
 export default Table;

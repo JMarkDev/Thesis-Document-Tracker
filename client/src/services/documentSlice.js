@@ -8,7 +8,6 @@ export const fetchAllDocuments = createAsyncThunk("document/all", async () => {
 
 export const fetchDocumentById = createAsyncThunk("document/id", async (id) => {
   const response = await axios.get(`/document/id/${id}`);
-  console.log(response.data);
   return response.data;
 });
 
@@ -23,7 +22,10 @@ export const searchDocument = createAsyncThunk(
 export const filterDocumentsByESU = createAsyncThunk(
   "document/filter-by-esu",
   async (esu) => {
-    const response = await axios.get(`/document/filter-by-esu/${esu}`);
+    const response = await axios.get(
+      `/document/filter/field/esuCampus/value/${esu}`
+    );
+    // const response = await axios.get(`/document/filter-by-esu/${esu}`);
     return response.data;
   }
 );
@@ -31,7 +33,9 @@ export const filterDocumentsByESU = createAsyncThunk(
 export const filterDocumentByType = createAsyncThunk(
   "document/filter-by-type",
   async (type) => {
-    const response = await axios.get(`/document/filter-by-type/${type}`);
+    const response = await axios.get(
+      `/document/filter/field/document_type/value/${type}`
+    );
     return response.data;
   }
 );
@@ -39,7 +43,19 @@ export const filterDocumentByType = createAsyncThunk(
 export const filterDocumentByStatus = createAsyncThunk(
   "document/filter-by-status",
   async (status) => {
-    const response = await axios.get(`/document/filter-by-status/${status}`);
+    const response = await axios.get(
+      `/document/filter/field/status/value/${status}`
+    );
+    return response.data;
+  }
+);
+
+export const sortDocuments = createAsyncThunk(
+  "document/sort",
+  async ({ sortBy, order }) => {
+    const response = await axios.get(
+      `/document/sort?sortBy=${sortBy}&order=${order}`
+    );
     return response.data;
   }
 );
@@ -77,6 +93,7 @@ const documentsSlice = createSlice({
         state.status = "failed";
         state.error = action.error.message;
       })
+      // filter documents
       .addCase(filterDocumentsByESU.pending, (state) => {
         state.status = "loading";
       })
@@ -118,6 +135,19 @@ const documentsSlice = createSlice({
         state.documentId = action.payload;
       })
       .addCase(fetchDocumentById.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+
+      // sort documents
+      .addCase(sortDocuments.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(sortDocuments.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.allDocuments = action.payload;
+      })
+      .addCase(sortDocuments.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });

@@ -169,7 +169,7 @@ const Sidebar = ({ sidebar, handleBurger }) => {
               <button
                 onClick={handleLogout}
                 className={
-                  "w-[230px] fixed bottom-10 flex items-center p-2 text-gray-900 rounded-lg hover:text-white hover:bg-main dark:hover:bg-gray-700 group"
+                  "w-[230px] mt-20 flex items-center p-2 text-gray-900 rounded-lg hover:text-white hover:bg-main dark:hover:bg-gray-700 group"
                 }
               >
                 <span className="text-2xl">

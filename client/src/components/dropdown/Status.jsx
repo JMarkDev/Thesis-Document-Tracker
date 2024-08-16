@@ -11,7 +11,7 @@ import PropTypes from "prop-types";
 import documentStatusList from "../../constants/documentStatusList";
 
 export default function Status({ handleFilter }) {
-  const [selectOption, setSelectOption] = useState("Document Status");
+  const [selectOption, setSelectOption] = useState("Status");
 
   return (
     <div className="text-right ">
@@ -36,8 +36,8 @@ export default function Status({ handleFilter }) {
             <MenuItem>
               <button
                 onClick={() => {
-                  setSelectOption("Document Status");
-                  handleFilter("Document Status");
+                  setSelectOption("Status");
+                  handleFilter("Status");
                 }}
                 className="group flex w-full hover:bg-gray-300 items-center justify-start gap-2 rounded-lg py-1.5 px-3 "
               >
