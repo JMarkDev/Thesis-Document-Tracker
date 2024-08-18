@@ -1,6 +1,7 @@
 const sequelize = require("../configs/database");
 const { DataTypes } = require("sequelize");
 const DocumentHistory = require("../models/documentHistoryModel");
+const DocumentRecipient = require("../models/documentRecipientModel");
 const User = require("../models/userModel");
 
 const Document = sequelize.define(
@@ -45,15 +46,15 @@ const Document = sequelize.define(
       type: DataTypes.TINYINT(1),
       allowNull: false,
     },
-    route: {
-      type: DataTypes.JSON, // Store the route as a JSON array
-      allowNull: false,
-    },
-    current_position: {
-      type: DataTypes.INTEGER, // Track the current position in the route
-      allowNull: false,
-      defaultValue: 0,
-    },
+    // route: {
+    //   type: DataTypes.JSON, // Store the route as a JSON array
+    //   allowNull: false,
+    // },
+    // current_position: {
+    //   type: DataTypes.INTEGER, // Track the current position in the route
+    //   allowNull: false,
+    //   defaultValue: 0,
+    // },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
@@ -82,7 +83,17 @@ Document.hasMany(DocumentHistory, {
   foreignKey: "document_id",
   onDelete: "CASCADE",
 });
+Document.hasMany(DocumentRecipient, {
+  foreignKey: "document_id",
+  onDelete: "CASCADE",
+});
+
 DocumentHistory.belongsTo(Document, {
+  foreignKey: "document_id",
+  onDelete: "CASCADE",
+});
+
+DocumentRecipient.belongsTo(Document, {
   foreignKey: "document_id",
   onDelete: "CASCADE",
 });

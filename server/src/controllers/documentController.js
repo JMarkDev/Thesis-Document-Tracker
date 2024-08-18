@@ -1,6 +1,25 @@
 const { Sequelize, Op } = require("sequelize");
 const documentModel = require("../models/documentModel");
 const documentHistoryModel = require("../models/documentHistoryModel");
+const documentRecipientModel = require("../models/documentRecipientModel");
+
+// const uploadDocuments = async (req, res) => {
+//   const {
+//     tracking_number,
+//     document_name,
+//     document_type,
+//     file_type,
+//     files,
+//     uploaded_by,
+//     esuCampus,
+//     user_id,
+//   } = req.body;
+//   try {
+//     const newDocuments = await
+//   } catch (error) {
+//     return res.status(500).json({ message: error.message });
+//   }
+// };
 
 const getAllDocuments = async (req, res) => {
   try {
@@ -8,6 +27,10 @@ const getAllDocuments = async (req, res) => {
       include: [
         {
           model: documentHistoryModel,
+          required: true,
+        },
+        {
+          model: documentRecipientModel,
           required: true,
         },
       ],
@@ -29,6 +52,10 @@ const getDocumentById = async (req, res) => {
       include: [
         {
           model: documentHistoryModel,
+          required: true,
+        },
+        {
+          model: documentRecipientModel,
           required: true,
         },
       ],
@@ -56,6 +83,10 @@ const searchDocuments = async (req, res) => {
           model: documentHistoryModel,
           required: true,
         },
+        {
+          model: documentRecipientModel,
+          required: true,
+        },
       ],
     });
     return res.status(200).json(documents);
@@ -81,6 +112,10 @@ const filterDocuments = async (req, res) => {
       include: [
         {
           model: documentHistoryModel,
+          required: true,
+        },
+        {
+          model: documentRecipientModel,
           required: true,
         },
       ],
@@ -151,6 +186,10 @@ const sortDocuments = async (req, res) => {
       include: [
         {
           model: documentHistoryModel,
+          required: true,
+        },
+        {
+          model: documentRecipientModel,
           required: true,
         },
       ],

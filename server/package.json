@@ -34,6 +34,7 @@
     "parser": "^0.1.4",
     "path": "^0.12.7",
     "sequelize": "^6.37.3",
+    "server": "file:",
     "socket.io": "^4.7.5",
     "uuid": "^9.0.1"
   }

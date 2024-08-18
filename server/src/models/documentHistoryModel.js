@@ -1,5 +1,5 @@
 const sequelize = require("../configs/database");
-const { DataTypes } = require("sequelize");
+const { DataTypes, Sequelize } = require("sequelize");
 const Document = require("../models/documentModel");
 
 const DocumentHistory = sequelize.define(
@@ -20,11 +20,20 @@ const DocumentHistory = sequelize.define(
       },
       onDelete: "CASCADE",
     },
-    content: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
+    // content: {
+    //   type: DataTypes.STRING(255),
+    //   allowNull: false,
+    // },
+    action: {
+      type: DataTypes.STRING(20),
+      // type: Sequelize.ENUM("Uploaded", "Received", "Forwared"),
+      allowNull: true,
     },
-    recipient: {
+    recipient_office: {
+      type: Sequelize.STRING(100),
+      allowNull: true,
+    },
+    recipient_user: {
       type: DataTypes.STRING(100),
       allowNull: true,
     },
