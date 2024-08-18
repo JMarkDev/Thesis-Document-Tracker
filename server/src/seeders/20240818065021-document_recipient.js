@@ -5,39 +5,20 @@ const documentStatus = require("../constants/documentStatus");
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    /**
-     * Add seed commands here.
-     *
-     * Example:
-    {
-        officeName: "OIC DEAN OF EXTERNAL STUDIES UNIT OFFICE",
-        createdAt: createdAt,
-        updatedAt: createdAt,
-      },
-      {
-        officeName: "VICE PRESIDENT FOR ACADEMIC AFFAIRS OFFICE",
-        createdAt: createdAt,
-        updatedAt: createdAt,
-      },
-      {
-        officeName: "HUMAN RESOURCE OFFICE",
-        createdAt: createdAt,
-        updatedAt: createdAt,
-      },
-      {
-        officeName: "ACCOUNTING OFFICE",
-        createdAt: createdAt,
-        updatedAt: createdAt,
-      },
-      {
-        officeName: "RECORDS OFFICE",
-    */
     await queryInterface.bulkInsert(
       "document_recipient",
       [
         {
           document_id: 11,
-          office_name: "WMSU-ESU Pagadian Campus",
+          office_name: "WMSU-ESU Pagadian Faculty",
+          status: documentStatus.incoming,
+          received_at: null,
+          createdAt: createdAt,
+          updatedAt: createdAt,
+        },
+        {
+          document_id: 11,
+          office_name: "WMSU-ESU Pagadian Registrar",
           status: documentStatus.incoming,
           received_at: null,
           createdAt: createdAt,
@@ -85,7 +66,15 @@ module.exports = {
         },
         {
           document_id: 12,
-          office_name: "WMSU-ESU Pagadian Campus",
+          office_name: "WMSU-ESU Pagadian Faculty",
+          status: documentStatus.incoming,
+          received_at: null,
+          createdAt: createdAt,
+          updatedAt: createdAt,
+        },
+        {
+          document_id: 12,
+          office_name: "WMSU-ESU Pagadian Registrar",
           status: documentStatus.incoming,
           received_at: null,
           createdAt: createdAt,
@@ -133,7 +122,15 @@ module.exports = {
         },
         {
           document_id: 13,
-          office_name: "WMSU-ESU Pagadian Campus",
+          office_name: "WMSU-ESU Pagadian Faculty",
+          status: documentStatus.incoming,
+          received_at: null,
+          createdAt: createdAt,
+          updatedAt: createdAt,
+        },
+        {
+          document_id: 13,
+          office_name: "WMSU-ESU Pagadian Registrar",
           status: documentStatus.incoming,
           received_at: null,
           createdAt: createdAt,
@@ -181,7 +178,7 @@ module.exports = {
         },
         {
           document_id: 14,
-          office_name: "WMSU-ESU Pagadian Campus",
+          office_name: "WMSU-ESU Pagadian Faculty",
           status: documentStatus.incoming,
           received_at: null,
           createdAt: createdAt,
@@ -189,47 +186,7 @@ module.exports = {
         },
         {
           document_id: 14,
-          office_name: "OIC DEAN OF EXTERNAL STUDIES UNIT OFFICE",
-          status: documentStatus.incoming,
-          received_at: null,
-          createdAt: createdAt,
-          updatedAt: createdAt,
-        },
-        {
-          document_id: 14,
-          office_name: "VICE PRESIDENT FOR ACADEMIC AFFAIRS OFFICE",
-          status: documentStatus.incoming,
-          received_at: null,
-          createdAt: createdAt,
-          updatedAt: createdAt,
-        },
-        {
-          document_id: 14,
-          office_name: "HUMAN RESOURCE OFFICE",
-          status: documentStatus.incoming,
-          received_at: null,
-          createdAt: createdAt,
-          updatedAt: createdAt,
-        },
-        {
-          document_id: 14,
-          office_name: "ACCOUNTING OFFICE",
-          status: documentStatus.incoming,
-          received_at: null,
-          createdAt: createdAt,
-          updatedAt: createdAt,
-        },
-        {
-          document_id: 14,
-          office_name: "RECORDS OFFICE",
-          status: documentStatus.incoming,
-          received_at: null,
-          createdAt: createdAt,
-          updatedAt: createdAt,
-        },
-        {
-          document_id: 14,
-          office_name: "WMSU-ESU Pagadian Campus",
+          office_name: "WMSU-ESU Pagadian Registrar",
           status: documentStatus.incoming,
           received_at: null,
           createdAt: createdAt,
@@ -277,7 +234,15 @@ module.exports = {
         },
         {
           document_id: 15,
-          office_name: "WMSU-ESU Pagadian Campus",
+          office_name: "WMSU-ESU Pagadian Faculty",
+          status: documentStatus.incoming,
+          received_at: null,
+          createdAt: createdAt,
+          updatedAt: createdAt,
+        },
+        {
+          document_id: 15,
+          office_name: "WMSU-ESU Pagadian Registrar",
           status: documentStatus.incoming,
           received_at: null,
           createdAt: createdAt,
@@ -325,7 +290,15 @@ module.exports = {
         },
         {
           document_id: 16,
-          office_name: "WMSU-ESU Pagadian Campus",
+          office_name: "WMSU-ESU Pagadian Faculty",
+          status: documentStatus.incoming,
+          received_at: null,
+          createdAt: createdAt,
+          updatedAt: createdAt,
+        },
+        {
+          document_id: 16,
+          office_name: "WMSU-ESU Pagadian Registrar",
           status: documentStatus.incoming,
           received_at: null,
           createdAt: createdAt,
@@ -373,7 +346,15 @@ module.exports = {
         },
         {
           document_id: 17,
-          office_name: "WMSU-ESU Pagadian Campus",
+          office_name: "WMSU-ESU Pagadian Faculty",
+          status: documentStatus.incoming,
+          received_at: null,
+          createdAt: createdAt,
+          updatedAt: createdAt,
+        },
+        {
+          document_id: 17,
+          office_name: "WMSU-ESU Pagadian Registrar",
           status: documentStatus.incoming,
           received_at: null,
           createdAt: createdAt,
@@ -421,7 +402,15 @@ module.exports = {
         },
         {
           document_id: 18,
-          office_name: "WMSU-ESU Pagadian Campus",
+          office_name: "WMSU-ESU Pagadian Faculty",
+          status: documentStatus.incoming,
+          received_at: null,
+          createdAt: createdAt,
+          updatedAt: createdAt,
+        },
+        {
+          document_id: 18,
+          office_name: "WMSU-ESU Pagadian Registrar",
           status: documentStatus.incoming,
           received_at: null,
           createdAt: createdAt,
@@ -469,7 +458,15 @@ module.exports = {
         },
         {
           document_id: 19,
-          office_name: "WMSU-ESU Pagadian Campus",
+          office_name: "WMSU-ESU Pagadian Faculty",
+          status: documentStatus.incoming,
+          received_at: null,
+          createdAt: createdAt,
+          updatedAt: createdAt,
+        },
+        {
+          document_id: 19,
+          office_name: "WMSU-ESU Pagadian Registrar",
           status: documentStatus.incoming,
           received_at: null,
           createdAt: createdAt,
@@ -517,7 +514,15 @@ module.exports = {
         },
         {
           document_id: 20,
-          office_name: "WMSU-ESU Pagadian Campus",
+          office_name: "WMSU-ESU Pagadian Faculty",
+          status: documentStatus.incoming,
+          received_at: null,
+          createdAt: createdAt,
+          updatedAt: createdAt,
+        },
+        {
+          document_id: 20,
+          office_name: "WMSU-ESU Pagadian Registrar",
           status: documentStatus.incoming,
           received_at: null,
           createdAt: createdAt,

@@ -10,7 +10,7 @@ module.exports = {
         {
           document_id: 11,
           action: "uploaded",
-          recipient_office: null,
+          recipient_office: "WMSU-ESU Pagadian Faculty",
           recipient_user: "Josiel Mark Cute",
           createdAt: createdAt,
           updatedAt: createdAt,
@@ -18,7 +18,7 @@ module.exports = {
         {
           document_id: 11,
           action: "received",
-          recipient_office: "WMSU-ESU Pagadian",
+          recipient_office: "WMSU-ESU Pagadian Registrar",
           recipient_user: "Pagadian Registrar",
           createdAt: createdAt,
           updatedAt: createdAt,
@@ -106,7 +106,7 @@ module.exports = {
         {
           document_id: 12,
           action: "uploaded",
-          recipient_office: null,
+          recipient_office: "WMSU-ESU Pagadian Faculty",
           recipient_user: "Josiel Mark Cute",
           createdAt: createdAt,
           updatedAt: createdAt,
@@ -114,7 +114,7 @@ module.exports = {
         {
           document_id: 12,
           action: "received",
-          recipient_office: "WMSU-ESU Pagadian",
+          recipient_office: "WMSU-ESU Pagadian Registrar",
           recipient_user: "Pagadian Registrar",
           createdAt: createdAt,
           updatedAt: createdAt,
@@ -138,7 +138,7 @@ module.exports = {
         {
           document_id: 13,
           action: "uploaded",
-          recipient_office: null,
+          recipient_office: "WMSU-ESU Pagadian Faculty",
           recipient_user: "Josiel Mark Cute",
           createdAt: createdAt,
           updatedAt: createdAt,
@@ -146,7 +146,7 @@ module.exports = {
         {
           document_id: 13,
           action: "received",
-          recipient_office: "WMSU-ESU Pagadian",
+          recipient_office: "WMSU-ESU Pagadian Registrar",
           recipient_user: "Pagadian Registrar",
           createdAt: createdAt,
           updatedAt: createdAt,
@@ -170,7 +170,7 @@ module.exports = {
         {
           document_id: 14,
           action: "uploaded",
-          recipient_office: null,
+          recipient_office: "WMSU-ESU Pagadian Faculty",
           recipient_user: "Josiel Mark Cute",
           createdAt: createdAt,
           updatedAt: createdAt,
@@ -178,7 +178,7 @@ module.exports = {
         {
           document_id: 14,
           action: "received",
-          recipient_office: "WMSU-ESU Pagadian",
+          recipient_office: "WMSU-ESU Pagadian Registrar",
           recipient_user: "Pagadian Registrar",
           createdAt: createdAt,
           updatedAt: createdAt,
@@ -202,7 +202,7 @@ module.exports = {
         {
           document_id: 15,
           action: "uploaded",
-          recipient_office: null,
+          recipient_office: "WMSU-ESU Pagadian Faculty",
           recipient_user: "Josiel Mark Cute",
           createdAt: createdAt,
           updatedAt: createdAt,
@@ -210,7 +210,7 @@ module.exports = {
         {
           document_id: 15,
           action: "received",
-          recipient_office: "WMSU-ESU Pagadian",
+          recipient_office: "WMSU-ESU Pagadian Registrar",
           recipient_user: "Pagadian Registrar",
           createdAt: createdAt,
           updatedAt: createdAt,
@@ -234,7 +234,7 @@ module.exports = {
         {
           document_id: 16,
           action: "uploaded",
-          recipient_office: null,
+          recipient_office: "WMSU-ESU Pagadian Faculty",
           recipient_user: "Josiel Mark Cute",
           createdAt: createdAt,
           updatedAt: createdAt,
@@ -242,7 +242,7 @@ module.exports = {
         {
           document_id: 16,
           action: "received",
-          recipient_office: "WMSU-ESU Pagadian",
+          recipient_office: "WMSU-ESU Pagadian Registrar",
           recipient_user: "Pagadian Registrar",
           createdAt: createdAt,
           updatedAt: createdAt,
@@ -266,7 +266,7 @@ module.exports = {
         {
           document_id: 17,
           action: "uploaded",
-          recipient_office: null,
+          recipient_office: "WMSU-ESU Pagadian Faculty",
           recipient_user: "Josiel Mark Cute",
           createdAt: createdAt,
           updatedAt: createdAt,
@@ -274,7 +274,7 @@ module.exports = {
         {
           document_id: 17,
           action: "received",
-          recipient_office: "WMSU-ESU Pagadian",
+          recipient_office: "WMSU-ESU Pagadian Registrar",
           recipient_user: "Pagadian Registrar",
           createdAt: createdAt,
           updatedAt: createdAt,
@@ -298,7 +298,7 @@ module.exports = {
         {
           document_id: 18,
           action: "uploaded",
-          recipient_office: null,
+          recipient_office: "WMSU-ESU Pagadian Faculty",
           recipient_user: "Josiel Mark Cute",
           createdAt: createdAt,
           updatedAt: createdAt,
@@ -306,7 +306,7 @@ module.exports = {
         {
           document_id: 18,
           action: "received",
-          recipient_office: "WMSU-ESU Pagadian",
+          recipient_office: "WMSU-ESU Pagadian Registrar",
           recipient_user: "Pagadian Registrar",
           createdAt: createdAt,
           updatedAt: createdAt,
@@ -330,7 +330,7 @@ module.exports = {
         {
           document_id: 19,
           action: "uploaded",
-          recipient_office: null,
+          recipient_office: "WMSU-ESU Pagadian Faculty",
           recipient_user: "Josiel Mark Cute",
           createdAt: createdAt,
           updatedAt: createdAt,
@@ -338,7 +338,7 @@ module.exports = {
         {
           document_id: 19,
           action: "received",
-          recipient_office: "WMSU-ESU Pagadian",
+          recipient_office: "WMSU-ESU Pagadian Registrar",
           recipient_user: "Pagadian Registrar",
           createdAt: createdAt,
           updatedAt: createdAt,
@@ -362,7 +362,7 @@ module.exports = {
         {
           document_id: 20,
           action: "uploaded",
-          recipient_office: null,
+          recipient_office: "WMSU-ESU Pagadian Faculty",
           recipient_user: "Josiel Mark Cute",
           createdAt: createdAt,
           updatedAt: createdAt,
@@ -370,7 +370,7 @@ module.exports = {
         {
           document_id: 20,
           action: "received",
-          recipient_office: "WMSU-ESU Pagadian",
+          recipient_office: "WMSU-ESU Pagadian Registrar",
           recipient_user: "Pagadian Registrar",
           createdAt: createdAt,
           updatedAt: createdAt,
