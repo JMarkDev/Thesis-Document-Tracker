@@ -18,6 +18,7 @@ const DocumentDetails = () => {
   const [sorttedHistories, setSortedHistories] = useState([]);
   const [data, setData] = useState([]);
   const [documentData, setDocumentData] = useState([]);
+  console.log(document);
 
   useEffect(() => {
     dispatch(fetchDocumentById(id));
@@ -26,41 +27,42 @@ const DocumentDetails = () => {
   useEffect(() => {
     if (document) {
       setDocumentData(document);
+      setData(document.document_recipients);
     }
   }, [document]);
 
-  const documentHistory = [
-    { office: "ESU Pagadian Faculty", date: "01 Aug 2024, 01:00pm" },
-    {
-      office: "ESU Pagadian Registrar",
-      date: "01 Aug 2024, 01:00pm",
-    },
-    {
-      office: "OCI Dean Of ESU Office",
-      date: "01 Aug 2024, 01:00pm",
-    },
-    {
-      office: "Vice President for Academic Affairs Office",
-      date: "01 Aug 2024, 01:00pm",
-    },
-    {
-      office: "Human Resources Office",
-      date: "01 Aug 2024, 01:00pm",
-    },
-    {
-      office: "Accounting Office",
-      date: "01 Aug 2024, 01:00pm",
-    },
-    {
-      office: "Records Office",
-      date: "01 Aug 2024, 01:00pm",
-    },
-  ];
+  // const documentHistory = [
+  //   { office: "ESU Pagadian Faculty", date: "01 Aug 2024, 01:00pm" },
+  //   {
+  //     office: "ESU Pagadian Registrar",
+  //     date: "01 Aug 2024, 01:00pm",
+  //   },
+  //   {
+  //     office: "OCI Dean Of ESU Office",
+  //     date: "01 Aug 2024, 01:00pm",
+  //   },
+  //   {
+  //     office: "Vice President for Academic Affairs Office",
+  //     date: "01 Aug 2024, 01:00pm",
+  //   },
+  //   {
+  //     office: "Human Resources Office",
+  //     date: "01 Aug 2024, 01:00pm",
+  //   },
+  //   {
+  //     office: "Accounting Office",
+  //     date: "01 Aug 2024, 01:00pm",
+  //   },
+  //   {
+  //     office: "Records Office",
+  //     date: "01 Aug 2024, 01:00pm",
+  //   },
+  // ];
 
-  useEffect(() => {
-    setData(documentHistory);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // useEffect(() => {
+  //   setData(documentHistory);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   useEffect(() => {
     if (documentData && documentData.document_histories) {
@@ -93,8 +95,8 @@ const DocumentDetails = () => {
         </div>
 
         <div className="bg-gray-200 mt-10 md:p-4 rounded-lg flex flex-col lg:flex-row gap-5 justify-between text-gray-700">
-          <div className="flex flex-col gap-4 lg:w-1/2 w-full p-4 bg-white text-sm md:text-[16px]  shadow-lg rounded-md">
-            <div className="flex items-center gap-5 border-b pb-2">
+          <div className="sticky flex flex-col gap-4 h-fit lg:w-1/2  p-4 bg-red-500 text-sm md:text-[16px]  shadow-lg rounded-md">
+            <div className=" flex items-center gap-5 border-b pb-2 fix">
               <h1 className="font-bold text-gray-800">Tracking Number:</h1>
               <p className="text-gray-700">{documentData.tracking_number}</p>
             </div>
@@ -116,7 +118,9 @@ const DocumentDetails = () => {
             </div>
             <div className="flex items-center gap-5 border-b pb-2">
               <h1 className="font-bold  text-gray-800">Date:</h1>
-              <p className="text-gray-700">{documentData.createdAt}</p>
+              <p className="text-gray-700">
+                {new Date(documentData.createdAt).toLocaleString()}
+              </p>
             </div>
             <div className="flex items-center gap-5">
               <h1 className="font-bold  text-gray-800">Status:</h1>
@@ -131,15 +135,27 @@ const DocumentDetails = () => {
               Tracking History
             </h1>
             <ul className="space-y-4 leading-6">
-              {sorttedHistories.map(({ id, content, recipient, createdAt }) => (
-                <li key={id} className="border-b pb-2">
-                  <p className="font-semibold text-gray-800">{content}</p>
-                  {recipient && <span>Recipient: {recipient}</span>}
-                  <p className="text-gray-600">
-                    Date: {new Date(createdAt).toLocaleString()}
-                  </p>
-                </li>
-              ))}
+              {sorttedHistories.map(
+                ({
+                  id,
+                  action,
+                  recipient_office,
+                  recipient_user,
+                  createdAt,
+                }) => (
+                  <li key={id} className="border-b pb-2">
+                    <p className="font-semibold text-gray-800">
+                      {action !== "forwarded" ? recipient_office : null}
+                    </p>
+                    <span>
+                      Document {action} by: {recipient_user}
+                    </span>
+                    <p className="text-gray-600">
+                      Date: {new Date(createdAt).toLocaleString()}
+                    </p>
+                  </li>
+                )
+              )}
               {/* <li className="border-b pb-2">
                 <p className="font-semibold text-gray-800">
                   Document received by: Vice President for Academic Affairs
