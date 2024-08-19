@@ -2,11 +2,13 @@ import { FaEye, FaFileDownload } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import { getDocumentStatus } from "../../utils/documentStatus";
-
+import { documentBackground } from "../../utils/documentBackgroundColor";
+import { useFormat } from "../../hooks/useFormatDate";
 const Table = ({ documents, handleSort }) => {
+  const { dateFormat } = useFormat();
   return (
     <>
-      <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+      <div className="relative overflow-x-auto  shadow-md sm:rounded-lg">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-300 dark:bg-gray-700 dark:text-gray-400">
             <tr>
@@ -166,15 +168,22 @@ const Table = ({ documents, handleSort }) => {
                   <td className="px-6 py-4 whitespace-nowrap">{file_type}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{uploaded_by}</td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    {getDocumentStatus(status)}
+                    <p
+                      className={`${documentBackground(
+                        status
+                      )} p-2 w-20 text-center rounded-lg`}
+                    >
+                      {" "}
+                      {getDocumentStatus(status)}
+                    </p>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     {" "}
-                    {new Date(createdAt).toLocaleString()}
+                    {dateFormat(createdAt)}
                   </td>
                   <td className="px-6 py-4 flex gap-3">
                     <Link
-                      to={`/documents/${id}`}
+                      to={`/document/details/${id}`}
                       className="px-4 py-2 text-lg bg-[#fca326] hover:bg-[#f58e40] text-white rounded-lg"
                     >
                       <FaEye className="h-5 w-5" />

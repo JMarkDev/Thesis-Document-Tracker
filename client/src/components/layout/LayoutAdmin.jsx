@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 import Sidebar from "../../components/sidebar/Sidebar";
 import NavDashboard from "../navbar/NavDashboard";
 import PropTypes from "prop-types";
 
 const LayoutAdmin = ({ children }) => {
+  const location = useLocation();
   const [sidebar, setSidebar] = useState(false);
   const handleBurger = () => {
     setSidebar(!sidebar);
@@ -17,7 +19,15 @@ const LayoutAdmin = ({ children }) => {
         <NavDashboard handleBurger={handleBurger} sidebar={sidebar} />
       </div>
       {/* <div className="flex-grow bg-white w-full p-4 mt-20 mx-2 overflow-hidden"> */}
-      <div className="flex-grow bg-white w-full p-4 mt-20 mx-2">{children}</div>
+      <div
+        className={`flex-grow bg-white w-full p-4 mt-20 mx-2 ${
+          location.pathname.includes("/document/details")
+            ? ""
+            : "overflow-hidden"
+        }`}
+      >
+        {children}
+      </div>
     </div>
   );
 };

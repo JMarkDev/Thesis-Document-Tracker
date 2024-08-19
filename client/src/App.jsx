@@ -70,7 +70,7 @@ function App() {
     },
     {
       title: "Document Details",
-      path: "/documents/:id",
+      path: "/document/details/:id",
       component: <DocumentDetails />,
     },
     {

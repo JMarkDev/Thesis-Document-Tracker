@@ -11,6 +11,7 @@ import {
 } from "../../services/documentSlice";
 import { getDocumentStatus } from "../../utils/documentStatus";
 import { useFormat } from "../../hooks/useFormatDate";
+import { documentBackground } from "../../utils/documentBackgroundColor";
 
 const DocumentDetails = () => {
   const { id } = useParams();
@@ -92,7 +93,11 @@ const DocumentDetails = () => {
             </div>
             <div className="flex items-center gap-5">
               <h1 className="font-bold  text-gray-800">Status:</h1>
-              <p className="text-gray-700">
+              <p
+                className={`${documentBackground(
+                  documentData.status
+                )} text-gray-700  p-2 rounded-lg`}
+              >
                 {getDocumentStatus(documentData.status)}
               </p>
             </div>
