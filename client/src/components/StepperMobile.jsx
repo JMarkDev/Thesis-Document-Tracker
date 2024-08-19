@@ -1,12 +1,14 @@
 import PropTypes from "prop-types";
+import { useFormat } from "../hooks/useFormatDate";
 const StepperMobile = ({ data }) => {
+  const { dateFormat } = useFormat();
   return (
     <div className="flex items-center  justify-center">
       <ol className="relative  right-[-60px] text-gray-600 border-l-4 border-yellow ">
         {data?.map(({ office_name, received_at }, index) => (
           <li key={index} className="last:mb-0 mb-10 ms-6">
             <p className="absolute left-[-120px] text-end max-w-24 text-sm">
-              {received_at ? new Date(received_at).toLocaleString() : null}
+              {dateFormat(received_at)}
             </p>
             {index === data.length - 1 ? (
               <span

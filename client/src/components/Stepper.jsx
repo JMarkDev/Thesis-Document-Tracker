@@ -1,6 +1,8 @@
 import PropTypes from "prop-types";
+import { useFormat } from "../hooks/useFormatDate";
 
 const Stepper = ({ data }) => {
+  const { dateFormat } = useFormat();
   //first:bg-border-0 first:after:border-white last:bg-red-400
 
   return (
@@ -24,7 +26,7 @@ const Stepper = ({ data }) => {
                 <p className="font-bold text-[12px] max-w-40">{office_name}</p>
                 <p className="text-sm md:text-[14px]">
                   {/* {history.office === "Faculty" ? "Uploaded: " : "Received: "} */}
-                  {received_at ? new Date(received_at).toLocaleString() : null}
+                  {dateFormat(received_at)}
                 </p>
               </div>
 

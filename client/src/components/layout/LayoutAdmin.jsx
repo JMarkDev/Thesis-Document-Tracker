@@ -16,9 +16,8 @@ const LayoutAdmin = ({ children }) => {
       <div className="flex flex-col flex-grow">
         <NavDashboard handleBurger={handleBurger} sidebar={sidebar} />
       </div>
-      <div className="flex-grow bg-white w-full p-4 mt-20 mx-2 overflow-hidden">
-        {children}
-      </div>
+      {/* <div className="flex-grow bg-white w-full p-4 mt-20 mx-2 overflow-hidden"> */}
+      <div className="flex-grow bg-white w-full p-4 mt-20 mx-2">{children}</div>
     </div>
   );
 };

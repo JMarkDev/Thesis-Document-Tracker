@@ -6,7 +6,6 @@ const wmsuCampus = [
   "WMSU-ESU Ipil",
   "WMSU-ESU Mabuhay",
   "WMSU-ESU Malangas",
-  "WMSU-ESU Molave",
   "WMSU-ESU Naga",
   "WMSU-ESU Olutanga",
   "WMSU-ESU Pagadian",
