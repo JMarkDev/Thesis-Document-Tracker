@@ -5,6 +5,7 @@ import LoginLoading from "../../components/loader/LoginLoading";
 import VerifyOTP from "../Verification/VerifyOTP";
 import { useToast } from "../../hooks/useToast";
 import { FiEyeOff, FiEye } from "react-icons/fi";
+import ForgotPassword from "./ForgotPassword";
 
 const Login = ({ modal, closeModal, openRegister }) => {
   const toast = useToast();
@@ -16,6 +17,7 @@ const Login = ({ modal, closeModal, openRegister }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [showOTP, setShowOTP] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [forgotPassword, setForgotPassword] = useState(false);
 
   const handleLogin = async (e) => {
     setLoading(true);
@@ -65,6 +67,10 @@ const Login = ({ modal, closeModal, openRegister }) => {
     setShowPassword(!showPassword);
   };
 
+  const handleForgotPassword = () => {
+    setForgotPassword(!forgotPassword);
+  };
+
   return (
     <>
       {showOTP ? (
@@ -74,6 +80,8 @@ const Login = ({ modal, closeModal, openRegister }) => {
           closeModal={closeModal}
           email={email}
         />
+      ) : forgotPassword ? (
+        <ForgotPassword closeModal={handleForgotPassword} />
       ) : (
         <div
           id="default-modal"
@@ -195,9 +203,13 @@ const Login = ({ modal, closeModal, openRegister }) => {
                   )}
 
                   <div className="flex justify-end">
-                    <span className="text-end mt-2  text-blue-600 hover:text-blue-800 cursor-pointer">
+                    <button
+                      type="button"
+                      onClick={handleForgotPassword}
+                      className="text-end mt-2  text-blue-600 hover:text-blue-800 cursor-pointer"
+                    >
                       Forgot password?
-                    </span>
+                    </button>
                   </div>
                   <button
                     type="submit"
@@ -223,9 +235,8 @@ const Login = ({ modal, closeModal, openRegister }) => {
           </div>
         </div>
       )}
-      {/* {modal && (
-        
-      )} */}
+
+      {/* {forgotPassword && <ForgotPassword />} */}
     </>
   );
 };

@@ -4,6 +4,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 export const fetchUser = createAsyncThunk("/auth/fetchUser", async () => {
   const response = await axios.get("/protected", { withCredentials: true });
   const email = response.data.user.email;
+  console.log(response.data);
   if (email) {
     const userResponse = await axios.get(`/users/get-user?email=${email}`);
     return userResponse.data;
@@ -13,7 +14,8 @@ export const fetchUser = createAsyncThunk("/auth/fetchUser", async () => {
 });
 
 export const logoutUser = createAsyncThunk("/auth/logoutUser", async () => {
-  await axios.post("/auth/logout", { withCredentials: true });
+  const response = await axios.post("/auth/logout", { withCredentials: true });
+  console.log(response.data);
   return null;
 });
 
@@ -26,6 +28,9 @@ const authSlice = createSlice({
   reducers: {},
   extraReducers: (builders) => {
     builders
+      .addCase(logoutUser.fulfilled, (state) => {
+        state.userData = null;
+      })
       .addCase(fetchUser.pending, (state) => {
         state.loading = true;
       })
@@ -35,9 +40,6 @@ const authSlice = createSlice({
       })
       .addCase(fetchUser.rejected, (state) => {
         state.loading = false;
-      })
-      .addCase(logoutUser.fulfilled, (state) => {
-        state.userData = null;
       });
   },
 });

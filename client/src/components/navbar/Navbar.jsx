@@ -20,6 +20,7 @@ const Navbar = () => {
   const [showNotification, setShowNotification] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [profilePic, setProfilePic] = useState(userIcon);
+  console.log(userData);
 
   useEffect(() => {
     dispatch(fetchUser());
