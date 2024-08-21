@@ -20,7 +20,6 @@ const Navbar = () => {
   const [showNotification, setShowNotification] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [profilePic, setProfilePic] = useState(userIcon);
-  console.log(userData);
 
   useEffect(() => {
     dispatch(fetchUser());
@@ -31,6 +30,11 @@ const Navbar = () => {
       setProfilePic(`${api.defaults.baseURL}${userData.image}`);
     }
   }, [userData]);
+  // useEffect(() => {
+  //   if (!userData) {
+  //     setProfilePic(userIcon);
+  //   }
+  // }, [userData]);
 
   const openLogin = () => {
     setModal(true);

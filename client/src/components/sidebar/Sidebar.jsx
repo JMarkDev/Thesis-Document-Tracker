@@ -85,7 +85,6 @@ const Sidebar = ({ sidebar, handleBurger }) => {
   const handleLogout = () => {
     dispatch(logoutUser());
   };
-
   return (
     <>
       {sidebar && (

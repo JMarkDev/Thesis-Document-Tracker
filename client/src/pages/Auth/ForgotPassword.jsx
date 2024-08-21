@@ -2,11 +2,11 @@ import PropTypes from "prop-types";
 import { useState } from "react";
 import api from "../../api/axios";
 import LoginLoading from "../../components/loader/LoginLoading";
-import VerifyOTP from "../Verification/VerifyOTP";
 import { useToast } from "../../hooks/useToast";
 import { IoMdArrowRoundBack } from "react-icons/io";
+import ForgotPasswordOTP from "../Verification/ForgotPasswordOTP";
 
-const ForgotPassword = ({ modal, closeModal }) => {
+const ForgotPassword = ({ closeModal }) => {
   const toast = useToast();
   const [email, setEmail] = useState("");
   const [isLoading, setLoading] = useState(false);
@@ -24,9 +24,10 @@ const ForgotPassword = ({ modal, closeModal }) => {
         email: email,
       };
 
-      const response = await api.post("/auth/login", data, {
+      const response = await api.post("/auth/forgot-password", data, {
         headers: { "Content-Type": "application/json" },
       });
+      console.log(response.data);
 
       if (response.data.status === "success") {
         setTimeout(() => {
@@ -57,7 +58,7 @@ const ForgotPassword = ({ modal, closeModal }) => {
   return (
     <>
       {showOTP ? (
-        <VerifyOTP
+        <ForgotPasswordOTP
           showOTP={showOTP}
           closeOTP={closeOTP}
           closeModal={closeModal}
@@ -67,14 +68,14 @@ const ForgotPassword = ({ modal, closeModal }) => {
         <div
           id="default-modal"
           tabIndex="-1"
-          aria-hidden={!modal}
+          // aria-hidden={!modal}
           className="fixed inset-0 z-[40] px-5 flex items-center justify-center w-full h-full bg-gray-800 bg-opacity-40 font-normal"
         >
           {" "}
           {isLoading && <LoginLoading />}
           <div className="relative w-full max-w-lg  max-h-full">
             <div className="relative text-gray-800 bg-white rounded-xl shadow-lg ">
-              <div className="p-6 space-y-4 text-sm text-[#221f1f]">
+              <div className="p-6 py-8 space-y-4 text-sm text-[#221f1f]">
                 <div className="flex gap-5 rounded-t">
                   <button
                     onClick={() => closeModal(false)}
@@ -100,7 +101,7 @@ const ForgotPassword = ({ modal, closeModal }) => {
                     <span className="absolute h-full inline-flex   items-center px-3 text-sm text-gray-900 ">
                       <svg
                         className="w-4 h-4 text-gray-500 dark:text-gray-400"
-                        aria-hidden="true"
+                        // aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="currentColor"
                         viewBox="0 0 20 20"

@@ -1,10 +1,15 @@
 import axios from "../api/axios";
+import Cookies from "js-cookie";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 export const fetchUser = createAsyncThunk("/auth/fetchUser", async () => {
+  const token = Cookies.get("accessToken");
+  if (!token) {
+    return null;
+  }
   const response = await axios.get("/protected", { withCredentials: true });
   const email = response.data.user.email;
-  console.log(response.data);
+
   if (email) {
     const userResponse = await axios.get(`/users/get-user?email=${email}`);
     return userResponse.data;
@@ -15,8 +20,11 @@ export const fetchUser = createAsyncThunk("/auth/fetchUser", async () => {
 
 export const logoutUser = createAsyncThunk("/auth/logoutUser", async () => {
   const response = await axios.post("/auth/logout", { withCredentials: true });
-  console.log(response.data);
-  return null;
+  if (response.data.status === "success") {
+    Cookies.remove("accessToken");
+    return null;
+  }
+  // return null;
 });
 
 const authSlice = createSlice({
