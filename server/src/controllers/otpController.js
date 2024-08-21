@@ -4,7 +4,7 @@ const userModel = require("../models/userModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { createdAt } = require("../utils/formattedTime");
-const { sendNofication } = require("../utils/emailNotifications");
+const { sendNotification } = require("../utils/emailNotifications");
 const { Sequelize } = require("sequelize");
 require("dotenv").config();
 const { setTokens } = require("../helpers/tokenHelpers");
@@ -78,7 +78,7 @@ const verifyOTP = async (req, res) => {
         { where: { email: email } }
       );
 
-      await sendNofication({
+      await sendNotification({
         email: email,
         subject: "WMSU-ESU Document Tracker Registration Successful",
         message: `${

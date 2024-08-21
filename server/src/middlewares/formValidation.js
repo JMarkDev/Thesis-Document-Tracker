@@ -27,6 +27,29 @@ const validatePassword = () => {
   });
 };
 
+const validateForgotPassword = () => {
+  return [
+    body("password").custom((value) => {
+      if (!value) {
+        throw new Error("Password is required");
+      }
+      if (value.length < 8) {
+        throw new Error("Password must be at least 8 characters long");
+      }
+      return true;
+    }),
+    body("confirmPassword").custom((value, { req }) => {
+      if (!value) {
+        throw new Error("Confirm password is required");
+      }
+      if (value !== req.body.password) {
+        throw new Error("Passwords do not match");
+      }
+      return true;
+    }),
+  ];
+};
+
 const validateRequiredField = (fieldName) => {
   const fieldNameWithSpaces = fieldName
     .replace(/([A-Z])/g, " $1") // Add a space before each uppercase letter
@@ -81,4 +104,6 @@ module.exports = {
   loginValidationRules,
   registerValidationRules,
   validateForm,
+  validateEmail,
+  validateForgotPassword,
 };

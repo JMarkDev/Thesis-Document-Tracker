@@ -1,6 +1,6 @@
 const { sendEmail } = require("./sendEmail");
 
-const sendNofication = async ({ email, subject, message }) => {
+const sendNotification = async ({ email, subject, message }) => {
   try {
     if (!email && subject && message) {
       throw Error("Email, subject and message are required");
@@ -19,4 +19,4 @@ const sendNofication = async ({ email, subject, message }) => {
   }
 };
 
-module.exports = { sendNofication };
+module.exports = { sendNotification };

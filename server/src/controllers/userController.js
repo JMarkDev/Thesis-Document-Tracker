@@ -2,7 +2,7 @@ const { Sequelize, Op } = require("sequelize");
 const userModel = require("../models/userModel");
 const officeModel = require("../models/officeModel");
 const { createdAt } = require("../utils/formattedTime");
-const { sendNofication } = require("../utils/emailNotifications");
+const { sendNotification } = require("../utils/emailNotifications");
 const statusList = require("../constants/statusList");
 const rolesList = require("../constants/rolesList");
 const getUserByEmail = async (req, res) => {
@@ -82,7 +82,7 @@ const approveFaculty = async (req, res) => {
       }
     );
 
-    await sendNofication({
+    await sendNotification({
       email: email,
       subject: "WMSU-ESU Document Tracker Account",
       message:
