@@ -4,5 +4,6 @@ const documentWorkflowController = require("../controllers/documentWorkflowContr
 
 router.get("/all", documentWorkflowController.getAllDocumentRoutes);
 router.get("/search/:name", documentWorkflowController.searchWorkflow);
+router.delete("/delete/id/:id", documentWorkflowController.deleteWorkflow);
 
 module.exports = router;

@@ -26,7 +26,26 @@ const searchWorkflow = async (req, res) => {
   }
 };
 
+const deleteWorkflow = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const workflow = await documentRouteModel.destroy({
+      where: {
+        id: id,
+      },
+    });
+
+    return res
+      .status(200)
+      .json({ workflow, status: "success", message: "Deleted successfully" });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getAllDocumentRoutes,
   searchWorkflow,
+  deleteWorkflow,
 };
