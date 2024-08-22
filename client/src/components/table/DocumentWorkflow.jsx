@@ -1,9 +1,31 @@
 import { FaEye, FaRegEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import PropTypes from "prop-types";
+import { deleteWorkflow } from "../../services/documentWolkflowSlice";
+import { toastUtils } from "../../hooks/useToast";
+import DeleteModal from "../DeleteModal";
+import { useState } from "react";
 
 const DocumentWorkflow = ({ data }) => {
+  const [showModal, setModal] = useState(false);
+  const [selectedWorkflow, setSeletedWorkflow] = useState(null);
+
+  const closeDeleteModal = () => {
+    setModal(false);
+    setSeletedWorkflow(null);
+  };
+
+  const openModal = (id) => {
+    setSeletedWorkflow(id);
+    setModal(!showModal);
+  };
+
+  const dispatch = useDispatch();
+  const handleDelete = () => {
+    dispatch(deleteWorkflow({ id: selectedWorkflow, toast: toastUtils() }));
+  };
   return (
     <>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -60,8 +82,19 @@ const DocumentWorkflow = ({ data }) => {
                   <button className="px-4 py-2 text-lg bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
                     <FaRegEdit className="h-5 w-5" />
                   </button>
-                  <button className="px-4 py-2 text-lg bg-red-600 hover:bg-red-700 text-white rounded-lg">
+                  <button
+                    onClick={() => openModal(id)}
+                    className="px-4 py-2 text-lg bg-red-600 hover:bg-red-700 text-white rounded-lg"
+                  >
                     <MdDelete className="h-5 w-5" />
+                    {showModal && (
+                      <DeleteModal
+                        title={document_type}
+                        deleteModal={showModal}
+                        closeDeleteModal={closeDeleteModal}
+                        handleDelete={handleDelete}
+                      />
+                    )}
                   </button>
                 </td>
               </tr>

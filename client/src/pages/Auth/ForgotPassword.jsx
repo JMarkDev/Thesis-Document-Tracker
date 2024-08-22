@@ -27,7 +27,6 @@ const ForgotPassword = ({ closeModal }) => {
       const response = await api.post("/auth/forgot-password", data, {
         headers: { "Content-Type": "application/json" },
       });
-      console.log(response.data);
 
       if (response.data.status === "success") {
         setTimeout(() => {
@@ -54,7 +53,6 @@ const ForgotPassword = ({ closeModal }) => {
   const closeOTP = () => {
     setShowOTP(false);
   };
-
   return (
     <>
       {showOTP ? (
@@ -123,6 +121,9 @@ const ForgotPassword = ({ closeModal }) => {
                   </div>
                   {emailError && (
                     <span className="text-red-500 text-sm">{emailError}</span>
+                  )}
+                  {errorMessage && (
+                    <span className="text-red-500 text-sm">{errorMessage}</span>
                   )}
 
                   <button

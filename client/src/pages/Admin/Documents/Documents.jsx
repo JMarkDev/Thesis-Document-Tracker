@@ -28,10 +28,9 @@ const Documents = () => {
   const status = useSelector(getStatus);
   const documentType = ["IDP", "IOR", "DTR"];
   const [sortOrder, setSortOrder] = useState("asc");
-  console.log(allDocuments);
 
   const [searchTerm, setSearchTerm] = useState("");
-
+  console.log(workflow);
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchAllDocuments());

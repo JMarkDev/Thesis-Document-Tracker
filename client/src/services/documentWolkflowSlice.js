@@ -11,6 +11,17 @@ export const searchWorkflow = createAsyncThunk("/workflow", async (name) => {
   return response.data;
 });
 
+export const deleteWorkflow = createAsyncThunk(
+  "workflow/delete",
+  async ({ id, toast }) => {
+    const response = await axios.delete(`/workflow/delete/id/${id}`);
+    if (response.data.status === "success") {
+      toast.success(response.data.message);
+      return id;
+    }
+    throw new Error("Failed to delete workflow");
+  }
+);
 const workflowSlice = createSlice({
   name: "workflow",
   initialState: {
@@ -40,6 +51,19 @@ const workflowSlice = createSlice({
         state.allWorkflow = action.payload;
       })
       .addCase(searchWorkflow.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(deleteWorkflow.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(deleteWorkflow.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.allWorkflow = state.allWorkflow.filter(
+          (workflow) => workflow.id !== action.payload
+        );
+      })
+      .addCase(deleteWorkflow.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });

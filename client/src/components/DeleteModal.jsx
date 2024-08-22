@@ -16,7 +16,13 @@ const DeleteModal = ({
         className={`${
           deleteModal ? "flex" : "hidden"
         }  fixed inset-0 z-40 justify-center items-center  bg-gray-800  ${
-          location.pathname === "/offices" ? "bg-opacity-20" : "bg-opacity-30"
+          location.pathname === "/offices" ||
+          location.pathname === "/users/esu-registrar" ||
+          location.pathname === "/users/faculty" ||
+          location.pathname === "/users/campus-admin" ||
+          location.pathname === "/document-workflow"
+            ? "bg-opacity-20"
+            : "bg-opacity-40"
         }`}
       >
         <div className="relative p-4 w-full max-w-lg max-h-full">
