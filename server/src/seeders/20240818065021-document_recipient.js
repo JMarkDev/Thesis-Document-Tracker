@@ -9,7 +9,8 @@ module.exports = {
       "document_recipient",
       [
         {
-          document_id: 11,
+          document_id: 1,
+          user_id: 20,
           office_name: "WMSU-ESU Pagadian Faculty",
           status: documentStatus.incoming,
           received_at: null,
@@ -17,7 +18,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 11,
+          document_id: 1,
+          user_id: 15,
           office_name: "WMSU-ESU Pagadian Registrar",
           status: documentStatus.incoming,
           received_at: null,
@@ -25,7 +27,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 11,
+          document_id: 1,
+          user_id: 1,
           office_name: "OIC DEAN OF EXTERNAL STUDIES UNIT OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -33,7 +36,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 11,
+          document_id: 1,
+          user_id: 2,
           office_name: "VICE PRESIDENT FOR ACADEMIC AFFAIRS OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -41,7 +45,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 11,
+          document_id: 1,
+          user_id: 3,
           office_name: "HUMAN RESOURCE OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -49,7 +54,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 11,
+          document_id: 1,
+          user_id: 4,
           office_name: "ACCOUNTING OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -57,7 +63,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 11,
+          document_id: 1,
+          user_id: 5,
           office_name: "RECORDS OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -65,7 +72,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 12,
+          document_id: 2,
+          user_id: 20,
           office_name: "WMSU-ESU Pagadian Faculty",
           status: documentStatus.incoming,
           received_at: null,
@@ -73,7 +81,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 12,
+          document_id: 2,
+          user_id: 15,
           office_name: "WMSU-ESU Pagadian Registrar",
           status: documentStatus.incoming,
           received_at: null,
@@ -81,7 +90,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 12,
+          document_id: 2,
+          user_id: 1,
           office_name: "OIC DEAN OF EXTERNAL STUDIES UNIT OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -89,7 +99,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 12,
+          document_id: 2,
+          user_id: 2,
           office_name: "VICE PRESIDENT FOR ACADEMIC AFFAIRS OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -97,7 +108,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 12,
+          document_id: 2,
+          user_id: 3,
           office_name: "HUMAN RESOURCE OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -105,7 +117,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 12,
+          document_id: 2,
+          user_id: 4,
           office_name: "ACCOUNTING OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -113,7 +126,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 12,
+          document_id: 2,
+          user_id: 5,
           office_name: "RECORDS OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -121,7 +135,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 13,
+          document_id: 3,
+          user_id: 20,
           office_name: "WMSU-ESU Pagadian Faculty",
           status: documentStatus.incoming,
           received_at: null,
@@ -129,7 +144,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 13,
+          document_id: 3,
+          user_id: 15,
           office_name: "WMSU-ESU Pagadian Registrar",
           status: documentStatus.incoming,
           received_at: null,
@@ -137,7 +153,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 13,
+          document_id: 3,
+          user_id: 1,
           office_name: "OIC DEAN OF EXTERNAL STUDIES UNIT OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -145,7 +162,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 13,
+          document_id: 3,
+          user_id: 2,
           office_name: "VICE PRESIDENT FOR ACADEMIC AFFAIRS OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -153,7 +171,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 13,
+          document_id: 3,
+          user_id: 3,
           office_name: "HUMAN RESOURCE OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -161,7 +180,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 13,
+          document_id: 3,
+          user_id: 4,
           office_name: "ACCOUNTING OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -169,7 +189,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 13,
+          document_id: 3,
+          user_id: 5,
           office_name: "RECORDS OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -177,7 +198,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 14,
+          document_id: 4,
+          user_id: 20,
           office_name: "WMSU-ESU Pagadian Faculty",
           status: documentStatus.incoming,
           received_at: null,
@@ -185,7 +207,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 14,
+          document_id: 4,
+          user_id: 15,
           office_name: "WMSU-ESU Pagadian Registrar",
           status: documentStatus.incoming,
           received_at: null,
@@ -193,7 +216,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 14,
+          document_id: 4,
+          user_id: 1,
           office_name: "OIC DEAN OF EXTERNAL STUDIES UNIT OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -201,7 +225,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 14,
+          document_id: 4,
+          user_id: 2,
           office_name: "VICE PRESIDENT FOR ACADEMIC AFFAIRS OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -209,7 +234,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 14,
+          document_id: 4,
+          user_id: 3,
           office_name: "HUMAN RESOURCE OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -217,7 +243,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 14,
+          document_id: 4,
+          user_id: 4,
           office_name: "ACCOUNTING OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -225,7 +252,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 14,
+          document_id: 4,
+          user_id: 5,
           office_name: "RECORDS OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -233,7 +261,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 15,
+          document_id: 5,
+          user_id: 20,
           office_name: "WMSU-ESU Pagadian Faculty",
           status: documentStatus.incoming,
           received_at: null,
@@ -241,7 +270,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 15,
+          document_id: 5,
+          user_id: 15,
           office_name: "WMSU-ESU Pagadian Registrar",
           status: documentStatus.incoming,
           received_at: null,
@@ -249,7 +279,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 15,
+          document_id: 5,
+          user_id: 1,
           office_name: "OIC DEAN OF EXTERNAL STUDIES UNIT OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -257,7 +288,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 15,
+          document_id: 5,
+          user_id: 2,
           office_name: "VICE PRESIDENT FOR ACADEMIC AFFAIRS OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -265,7 +297,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 15,
+          document_id: 5,
+          user_id: 3,
           office_name: "HUMAN RESOURCE OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -273,7 +306,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 15,
+          document_id: 5,
+          user_id: 4,
           office_name: "ACCOUNTING OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -281,7 +315,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 15,
+          document_id: 5,
+          user_id: 5,
           office_name: "RECORDS OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -289,7 +324,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 16,
+          document_id: 6,
+          user_id: 20,
           office_name: "WMSU-ESU Pagadian Faculty",
           status: documentStatus.incoming,
           received_at: null,
@@ -297,7 +333,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 16,
+          document_id: 6,
+          user_id: 15,
           office_name: "WMSU-ESU Pagadian Registrar",
           status: documentStatus.incoming,
           received_at: null,
@@ -305,7 +342,9 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 16,
+          document_id: 6,
+          user_id: 1,
+          user_id: 1,
           office_name: "OIC DEAN OF EXTERNAL STUDIES UNIT OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -313,7 +352,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 16,
+          document_id: 6,
+          user_id: 2,
           office_name: "VICE PRESIDENT FOR ACADEMIC AFFAIRS OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -321,7 +361,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 16,
+          document_id: 6,
+          user_id: 3,
           office_name: "HUMAN RESOURCE OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -329,7 +370,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 16,
+          document_id: 6,
+          user_id: 3,
           office_name: "ACCOUNTING OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -337,7 +379,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 16,
+          document_id: 6,
+          user_id: 5,
           office_name: "RECORDS OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -345,7 +388,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 17,
+          document_id: 7,
+          user_id: 20,
           office_name: "WMSU-ESU Pagadian Faculty",
           status: documentStatus.incoming,
           received_at: null,
@@ -353,7 +397,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 17,
+          document_id: 7,
+          user_id: 15,
           office_name: "WMSU-ESU Pagadian Registrar",
           status: documentStatus.incoming,
           received_at: null,
@@ -361,7 +406,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 17,
+          document_id: 7,
+          user_id: 1,
           office_name: "OIC DEAN OF EXTERNAL STUDIES UNIT OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -369,7 +415,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 17,
+          document_id: 7,
+          user_id: 2,
           office_name: "VICE PRESIDENT FOR ACADEMIC AFFAIRS OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -377,7 +424,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 17,
+          document_id: 7,
+          user_id: 3,
           office_name: "HUMAN RESOURCE OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -385,7 +433,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 17,
+          document_id: 7,
+          user_id: 4,
           office_name: "ACCOUNTING OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -393,7 +442,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 17,
+          document_id: 7,
+          user_id: 5,
           office_name: "RECORDS OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -401,7 +451,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 18,
+          document_id: 8,
+          user_id: 20,
           office_name: "WMSU-ESU Pagadian Faculty",
           status: documentStatus.incoming,
           received_at: null,
@@ -409,7 +460,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 18,
+          document_id: 8,
+          user_id: 15,
           office_name: "WMSU-ESU Pagadian Registrar",
           status: documentStatus.incoming,
           received_at: null,
@@ -417,7 +469,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 18,
+          document_id: 8,
+          user_id: 1,
           office_name: "OIC DEAN OF EXTERNAL STUDIES UNIT OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -425,7 +478,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 18,
+          document_id: 8,
+          user_id: 2,
           office_name: "VICE PRESIDENT FOR ACADEMIC AFFAIRS OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -433,7 +487,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 18,
+          document_id: 8,
+          user_id: 3,
           office_name: "HUMAN RESOURCE OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -441,7 +496,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 18,
+          document_id: 8,
+          user_id: 4,
           office_name: "ACCOUNTING OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -449,7 +505,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 18,
+          document_id: 8,
+          user_id: 5,
           office_name: "RECORDS OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -457,7 +514,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 19,
+          document_id: 9,
+          user_id: 20,
           office_name: "WMSU-ESU Pagadian Faculty",
           status: documentStatus.incoming,
           received_at: null,
@@ -465,7 +523,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 19,
+          document_id: 9,
+          user_id: 15,
           office_name: "WMSU-ESU Pagadian Registrar",
           status: documentStatus.incoming,
           received_at: null,
@@ -473,7 +532,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 19,
+          document_id: 9,
+          user_id: 1,
           office_name: "OIC DEAN OF EXTERNAL STUDIES UNIT OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -481,7 +541,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 19,
+          document_id: 9,
+          user_id: 2,
           office_name: "VICE PRESIDENT FOR ACADEMIC AFFAIRS OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -489,7 +550,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 19,
+          document_id: 9,
+          user_id: 3,
           office_name: "HUMAN RESOURCE OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -497,7 +559,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 19,
+          document_id: 9,
+          user_id: 4,
           office_name: "ACCOUNTING OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -505,7 +568,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 19,
+          document_id: 9,
+          user_id: 5,
           office_name: "RECORDS OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -513,7 +577,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 20,
+          document_id: 10,
+          user_id: 20,
           office_name: "WMSU-ESU Pagadian Faculty",
           status: documentStatus.incoming,
           received_at: null,
@@ -521,7 +586,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 20,
+          document_id: 10,
+          user_id: 15,
           office_name: "WMSU-ESU Pagadian Registrar",
           status: documentStatus.incoming,
           received_at: null,
@@ -529,7 +595,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 20,
+          document_id: 10,
+          user_id: 1,
           office_name: "OIC DEAN OF EXTERNAL STUDIES UNIT OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -537,7 +604,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 20,
+          document_id: 10,
+          user_id: 2,
           office_name: "VICE PRESIDENT FOR ACADEMIC AFFAIRS OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -545,7 +613,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 20,
+          document_id: 10,
+          user_id: 3,
           office_name: "HUMAN RESOURCE OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -553,7 +622,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 20,
+          document_id: 10,
+          user_id: 4,
           office_name: "ACCOUNTING OFFICE",
           status: documentStatus.incoming,
           received_at: null,
@@ -561,7 +631,8 @@ module.exports = {
           updatedAt: createdAt,
         },
         {
-          document_id: 20,
+          document_id: 10,
+          user_id: 5,
           office_name: "RECORDS OFFICE",
           status: documentStatus.incoming,
           received_at: null,

@@ -14,6 +14,7 @@ module.exports = {
 
     return queryInterface.bulkInsert("users", [
       {
+        id: 1,
         firstName: "Byron",
         lastName: "Go Silk",
         middleInitial: "B",
@@ -30,6 +31,7 @@ module.exports = {
         officeId: 1,
       },
       {
+        id: 2,
         firstName: "Vice ",
         lastName: "President",
         middleInitial: "B",
@@ -46,6 +48,7 @@ module.exports = {
         officeId: 2,
       },
       {
+        id: 3,
         firstName: "Human",
         lastName: "Resouces",
         middleInitial: "B",
@@ -62,6 +65,7 @@ module.exports = {
         officeId: 3,
       },
       {
+        id: 4,
         firstName: "Accounting",
         lastName: "Office",
         middleInitial: "B",
@@ -78,6 +82,7 @@ module.exports = {
         officeId: 4,
       },
       {
+        id: 5,
         firstName: "Records",
         lastName: "Office",
         middleInitial: "B",
@@ -94,6 +99,7 @@ module.exports = {
         officeId: 5,
       },
       {
+        id: 6,
         firstName: "Alicia",
         lastName: "Campus Admin",
         middleInitial: "A",
@@ -109,6 +115,7 @@ module.exports = {
         updatedAt: createdAt,
       },
       {
+        id: 7,
         firstName: "Alicia",
         lastName: "Registrar",
         middleInitial: "A",
@@ -124,6 +131,7 @@ module.exports = {
         updatedAt: createdAt,
       },
       {
+        id: 8,
         firstName: "Aurora",
         lastName: "Campus Admin",
         middleInitial: "A",
@@ -139,6 +147,7 @@ module.exports = {
         updatedAt: createdAt,
       },
       {
+        id: 9,
         firstName: "Aurora",
         lastName: "Registrar",
         middleInitial: "A",
@@ -154,6 +163,7 @@ module.exports = {
         updatedAt: createdAt,
       },
       {
+        id: 10,
         firstName: "Diplahan",
         lastName: "Campus Admin",
         middleInitial: "A",
@@ -169,6 +179,7 @@ module.exports = {
         updatedAt: createdAt,
       },
       {
+        id: 11,
         firstName: "Diplahan",
         lastName: "Registrar",
         middleInitial: "A",
@@ -184,6 +195,7 @@ module.exports = {
         updatedAt: createdAt,
       },
       {
+        id: 12,
         firstName: "Malangas",
         lastName: "Campus Admin",
         middleInitial: "A",
@@ -199,6 +211,7 @@ module.exports = {
         updatedAt: createdAt,
       },
       {
+        id: 13,
         firstName: "Malangas",
         lastName: "Registrar",
         middleInitial: "A",
@@ -214,6 +227,7 @@ module.exports = {
         updatedAt: createdAt,
       },
       {
+        id: 14,
         firstName: "Pagadian",
         lastName: "Campus Admin",
         middleInitial: "A",
@@ -229,6 +243,7 @@ module.exports = {
         updatedAt: createdAt,
       },
       {
+        id: 15,
         firstName: "Pagadian",
         lastName: "Registrar",
         middleInitial: "A",
@@ -244,6 +259,7 @@ module.exports = {
         updatedAt: createdAt,
       },
       {
+        id: 16,
         firstName: "Siay",
         lastName: "Campus Admin",
         middleInitial: "A",
@@ -259,6 +275,7 @@ module.exports = {
         updatedAt: createdAt,
       },
       {
+        id: 17,
         firstName: "Siay",
         lastName: "Registrar",
         middleInitial: "A",
@@ -274,6 +291,7 @@ module.exports = {
         updatedAt: createdAt,
       },
       {
+        id: 18,
         firstName: "Tungawan",
         lastName: "Campus Admin",
         middleInitial: "A",
@@ -289,6 +307,7 @@ module.exports = {
         updatedAt: createdAt,
       },
       {
+        id: 19,
         firstName: "Tungawan",
         lastName: "Registrar",
         middleInitial: "A",
@@ -304,6 +323,7 @@ module.exports = {
         updatedAt: createdAt,
       },
       {
+        id: 20,
         firstName: "Josiel Mark",
         lastName: "Seroy",
         middleInitial: "M",
@@ -319,6 +339,7 @@ module.exports = {
         updatedAt: createdAt,
       },
       {
+        id: 21,
         firstName: "Sample",
         lastName: "Faculty",
         middleInitial: "B",
@@ -334,6 +355,7 @@ module.exports = {
         updatedAt: createdAt,
       },
       {
+        id: 22,
         firstName: "Malangas",
         lastName: "Faculty",
         middleInitial: "C",
@@ -349,6 +371,7 @@ module.exports = {
         updatedAt: createdAt,
       },
       {
+        id: 23,
         firstName: "Sample",
         lastName: "Faculty",
         middleInitial: "D",
@@ -364,14 +387,31 @@ module.exports = {
         updatedAt: createdAt,
       },
       {
-        firstName: "Sample",
+        id: 24,
+        firstName: "Ipil",
         lastName: "Faculty",
         middleInitial: "E",
-        email: "molave_faculty@gmail.com",
+        email: "ipil_faculty@gmail.com",
         birthDate: "1988-01-01",
         contactNumber: "01234567894",
         designation: JSON.stringify(["Faculty"]),
-        esuCampus: "WMSU-ESU Molave",
+        esuCampus: "WMSU-ESU Ipil",
+        role: rolesList.faculty,
+        password: hashPassword,
+        status: statusList.verified,
+        createdAt: createdAt,
+        updatedAt: createdAt,
+      },
+      {
+        id: 25,
+        firstName: "Naga",
+        lastName: "Faculty",
+        middleInitial: "E",
+        email: "naga_faculty@gmail.com",
+        birthDate: "1988-01-01",
+        contactNumber: "01234567894",
+        designation: JSON.stringify(["Faculty"]),
+        esuCampus: "WMSU-ESU Naga",
         role: rolesList.faculty,
         password: hashPassword,
         status: statusList.verified,

@@ -17,6 +17,10 @@ const Route = sequelize.define(
       type: DataTypes.JSON,
       allowNull: false,
     },
+    deadline: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,

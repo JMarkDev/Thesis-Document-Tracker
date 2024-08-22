@@ -19,6 +19,10 @@ const DocumentRecipient = sequelize.define(
       },
       onDelete: "CASCADE",
     },
+    user_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
     office_name: {
       type: DataTypes.STRING(100),
       allowNull: false,

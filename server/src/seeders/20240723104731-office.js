@@ -18,26 +18,31 @@ module.exports = {
      */
     return queryInterface.bulkInsert("offices", [
       {
+        id: 1,
         officeName: "OIC DEAN OF EXTERNAL STUDIES UNIT OFFICE",
         createdAt: createdAt,
         updatedAt: createdAt,
       },
       {
+        id: 2,
         officeName: "VICE PRESIDENT FOR ACADEMIC AFFAIRS OFFICE",
         createdAt: createdAt,
         updatedAt: createdAt,
       },
       {
+        id: 3,
         officeName: "HUMAN RESOURCE OFFICE",
         createdAt: createdAt,
         updatedAt: createdAt,
       },
       {
+        id: 4,
         officeName: "ACCOUNTING OFFICE",
         createdAt: createdAt,
         updatedAt: createdAt,
       },
       {
+        id: 5,
         officeName: "RECORDS OFFICE",
         createdAt: createdAt,
         updatedAt: createdAt,
