@@ -13,6 +13,7 @@ const userRoute = require("./src/routes/userRoute");
 const officeRoute = require("./src/routes/officeRoute");
 const notificationRoute = require("./src/routes/notificationRoute");
 const documentRoute = require("./src/routes/documentRoute");
+const trackingNumberRoute = require("./src/routes/trackDocumentRoute");
 const documentWorkflowRoute = require("./src/routes/documentWorkflow");
 
 const app = express();
@@ -42,6 +43,7 @@ app.get("/uploads/:filename", (req, res) => {
 
 // public routes no token required
 app.use("/auth", authRoute);
+app.use("/document", trackingNumberRoute);
 
 // refresh token route
 app.post("/refresh", refreshToken, async (req, res) => {

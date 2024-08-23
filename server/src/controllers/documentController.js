@@ -41,6 +41,32 @@ const getAllDocuments = async (req, res) => {
   }
 };
 
+const getDocumentByTrackingNum = async (req, res) => {
+  const { tracking_number } = req.params;
+
+  try {
+    const document = await documentModel.findOne({
+      where: {
+        tracking_number: tracking_number,
+      },
+      include: [
+        { model: documentHistoryModel, require: true },
+        { model: documentRecipientModel, require: true },
+      ],
+    });
+
+    if (!document) {
+      console.log("not found");
+      return res.status(400).json({
+        message: "No document found. Please enter valid tracking number.",
+      });
+    }
+    return res.status(200).json(document);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 const getDocumentById = async (req, res) => {
   const { id } = req.params;
 
@@ -205,6 +231,7 @@ const sortDocuments = async (req, res) => {
 
 module.exports = {
   getAllDocuments,
+  getDocumentByTrackingNum,
   searchDocuments,
   filterDocuments,
   getDocumentById,

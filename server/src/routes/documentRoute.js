@@ -3,6 +3,10 @@ const router = express.Router();
 const documentController = require("../controllers/documentController");
 
 router.get("/all", documentController.getAllDocuments);
+// router.get(
+//   "/tracking-number/:tracking_number",
+//   documentController.getDocumentByTrackingNum
+// );
 router.get("/id/:id", documentController.getDocumentById);
 router.get("/search/:name", documentController.searchDocuments);
 router.get(
