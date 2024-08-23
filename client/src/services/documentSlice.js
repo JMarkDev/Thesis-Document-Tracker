@@ -1,10 +1,17 @@
 import axios from "../api/axios";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-export const fetchAllDocuments = createAsyncThunk("document/all", async () => {
-  const response = await axios.get("/document/all");
-  return response.data;
-});
+export const fetchAllDocuments = createAsyncThunk(
+  "document/all",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axios.get("/document/all");
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data.message || error.message);
+    }
+  }
+);
 
 export const fetchDocumentById = createAsyncThunk("document/id", async (id) => {
   const response = await axios.get(`/document/id/${id}`);
@@ -60,14 +67,46 @@ export const sortDocuments = createAsyncThunk(
   }
 );
 
+// export const fetchDocumentByTrackingNum = createAsyncThunk(
+//   "document/tracking-numuber",
+//   async (tracking_number) => {
+//     const response = await axios.get(
+//       `/document/tracking-number/${tracking_number}`
+//     );
+//     console.log(tracking_number);
+//     console.log(response.data);
+//     return response.data;
+//   }
+// );
+export const fetchDocumentByTrackingNum = createAsyncThunk(
+  "document/tracking-number",
+  async (tracking_number, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        `/document/tracking-number/${tracking_number}`
+      );
+      return response.data;
+    } catch (error) {
+      // Check if the error response exists and return the server message
+      if (error.response && error.response.data) {
+        return rejectWithValue(error.response.data.message);
+      }
+      // Otherwise, return a generic error message
+      return rejectWithValue(error.message);
+    }
+  }
+);
+
 const documentsSlice = createSlice({
   name: "documents",
   initialState: {
     allDocuments: [],
     status: "idle",
     documentId: null,
+    tracing_number: null,
+    error: null,
   },
-  error: null,
+
   reducers: {},
   extraReducers: (builders) => {
     builders
@@ -80,7 +119,7 @@ const documentsSlice = createSlice({
       })
       .addCase(fetchAllDocuments.rejected, (state, action) => {
         state.status = "failed";
-        state.error = action.error.message;
+        state.error = action.payload || action.error.message;
       })
       .addCase(searchDocument.pending, (state) => {
         state.status = "loading";
@@ -150,13 +189,35 @@ const documentsSlice = createSlice({
       .addCase(sortDocuments.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
+      })
+      .addCase(fetchDocumentByTrackingNum.pending, (state) => {
+        state.status = "loading";
+        state.error = null;
+      })
+      .addCase(fetchDocumentByTrackingNum.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.tracing_number = action.payload;
+        state.error = null;
+      })
+      .addCase(fetchDocumentByTrackingNum.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload || action.error.message;
+        console.log(state.error);
       });
+    // .addCase(fetchDocumentByTrackingNum.rejected, (state, action) => {
+    //   state.status = "failed";
+    //   state.error = action.payload || action.error.message;
+    //   console.log(state.error); // Log the actual error message
+    // });
   },
 });
 
 // selectors
 export const getAllDocuments = (state) => state.documents.allDocuments;
 export const getDocumentById = (state) => state.documents.documentId;
+export const getDocumentByTrackingNum = (state) =>
+  state.documents.tracing_number;
 export const getStatus = (state) => state.documents.status;
+export const documentError = (state) => state.documents.error;
 
 export default documentsSlice.reducer;

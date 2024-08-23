@@ -10,8 +10,17 @@ import esuLogo from "../assets/images/WMSU ESU LOGO.png";
 import { FiSend } from "react-icons/fi";
 import CrossIcon from ".././assets/images/cross.png";
 import Loading from "../components/loader/loadingBall";
+import {
+  fetchDocumentByTrackingNum,
+  getDocumentByTrackingNum,
+  documentError,
+} from "../services/documentSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const Homepage = () => {
+  const dispatch = useDispatch();
+  const document = useSelector(getDocumentByTrackingNum);
+  const error = useSelector(documentError);
   const [userQuery, setUserQuery] = useState("");
   const [conversation, setConversation] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -19,11 +28,22 @@ const Homepage = () => {
   const option = ["track document", "upload document", "register account"];
   const text = "Welcome to our Chatbot! How can I assist you today?".split(" ");
   const [openChat, setOpenChat] = useState(false);
+  const [tracking_number, setTrackingNum] = useState(null);
 
   // useEffect(() => {
   //   // Scroll to the bottom of the chat container
   //   chatContainer.current.scrollTop = chatContainer.current.scrollHeight;
   // }, [conversation]);
+
+  const searchDocument = (e) => {
+    e.preventDefault();
+    if (tracking_number) {
+      dispatch(fetchDocumentByTrackingNum(tracking_number));
+    }
+  };
+
+  console.log(document);
+  console.log(error);
 
   return (
     <>
@@ -44,16 +64,22 @@ const Homepage = () => {
           <h2 className="text-document-tracker font-extrabold  md:text-5xl text-2xl mt-4">
             DOCUMENT TRACKER
           </h2>
-          <div className="flex items-center mt-4 relative w-full">
-            <input
-              type="text"
-              placeholder="Enter Tracking Number"
-              className="p-2 md:text-lg text-sm w-full rounded-lg border-2 outline-none border-[#8a7665] focus:outline-none focus:ring-0 focus:border-yellow shadow-lg"
-            />
-            <button className="absolute right-0 text-2xl bg-yellow hover:bg-yellow_hover md:h-12 p-2 rounded-lg">
-              <IoSearchSharp />
-            </button>
-          </div>
+          <form action="" onSubmit={searchDocument}>
+            <div className="flex items-center mt-4 relative w-full">
+              <input
+                type="text"
+                onChange={(e) => setTrackingNum(e.target.value)}
+                placeholder="Enter Tracking Number"
+                className="p-2 md:text-lg text-sm w-full rounded-lg border-2 outline-none border-[#8a7665] focus:outline-none focus:ring-0 focus:border-yellow shadow-lg"
+              />
+              <button
+                type="submit"
+                className="absolute right-0 text-2xl bg-yellow hover:bg-yellow_hover md:h-12 p-2 rounded-lg"
+              >
+                <IoSearchSharp />
+              </button>
+            </div>
+          </form>
         </div>
         <div className=" hidden sm:flex md:flex-row  absolute top-5 lg:right-20 right-5 z-30 gap-5">
           <img
