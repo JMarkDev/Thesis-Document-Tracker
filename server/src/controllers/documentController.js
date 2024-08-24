@@ -58,7 +58,7 @@ const getDocumentByTrackingNum = async (req, res) => {
     if (!document) {
       console.log("not found");
       return res.status(400).json({
-        message: "No document found. Please enter valid tracking number.",
+        message: "Document not found. Please enter valid tracking number.",
       });
     }
     return res.status(200).json(document);
