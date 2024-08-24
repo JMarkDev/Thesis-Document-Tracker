@@ -2,7 +2,7 @@ import "./LoginLoading.css";
 const LoginLoading = () => {
   return (
     <div className="absolute z-50">
-      <div className="loader">
+      <div className="loging_loader">
         <div className="bar1"></div>
         <div className="bar2"></div>
         <div className="bar3"></div>

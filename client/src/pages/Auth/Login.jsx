@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
 import api from "../../api/axios";
-import LoginLoading from "../../components/loader/LoginLoading";
+import LoginLoading from "../../components/loader/loginloader/LoginLoading";
 import VerifyOTP from "../Verification/VerifyOTP";
 import { useToast } from "../../hooks/useToast";
 import { FiEyeOff, FiEye } from "react-icons/fi";

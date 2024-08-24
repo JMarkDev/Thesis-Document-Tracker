@@ -1,6 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
-import QrCode from "../components/QrCode";
-import Stepper from "../components/Stepper";
+import { useRef, useState, useEffect } from "react";
 import landingImg from "../assets/images/landing page background (2).jpg";
 import NavBar from "../components/navbar/Navbar";
 import { IoSearchSharp } from "react-icons/io5";
@@ -10,12 +8,14 @@ import esuLogo from "../assets/images/WMSU ESU LOGO.png";
 import { FiSend } from "react-icons/fi";
 import CrossIcon from ".././assets/images/cross.png";
 import Loading from "../components/loader/loadingBall";
+import Loader from "../components/loader/track_loader/tracking_loader";
 import {
   fetchDocumentByTrackingNum,
   getDocumentByTrackingNum,
   documentError,
 } from "../services/documentSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { toastUtils } from "../hooks/useToast";
 
 const Homepage = () => {
   const dispatch = useDispatch();
@@ -29,7 +29,7 @@ const Homepage = () => {
   const text = "Welcome to our Chatbot! How can I assist you today?".split(" ");
   const [openChat, setOpenChat] = useState(false);
   const [tracking_number, setTrackingNum] = useState(null);
-
+  const [documentData, setDocumentData] = useState([]);
   // useEffect(() => {
   //   // Scroll to the bottom of the chat container
   //   chatContainer.current.scrollTop = chatContainer.current.scrollHeight;
@@ -37,18 +37,43 @@ const Homepage = () => {
 
   const searchDocument = (e) => {
     e.preventDefault();
-    if (tracking_number) {
-      dispatch(fetchDocumentByTrackingNum(tracking_number));
+    setDocumentData(null);
+    if (tracking_number !== null) {
+      setIsLoading(true);
+      setTimeout(() => {
+        dispatch(
+          fetchDocumentByTrackingNum({ tracking_number, toast: toastUtils() })
+        );
+      }, 1000);
     }
   };
 
-  console.log(document);
-  console.log(error);
+  console.log(documentData);
+
+  useEffect(() => {
+    if (error) {
+      setIsLoading(false);
+    }
+  }, [error]);
+
+  useEffect(() => {
+    if (document) {
+      setIsLoading(false);
+      setDocumentData(document);
+    }
+  }, [document]);
 
   return (
     <>
       <NavBar />
+
       <div className="relative w-full h-[calc(100vh-4rem)]">
+        {isLoading && (
+          <div className="absolute z-30 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white rounded-full p-2 bg-gray-500">
+            <Loader />
+          </div>
+        )}
+
         <img
           src={landingImg}
           alt=""

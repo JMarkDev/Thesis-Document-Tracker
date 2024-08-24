@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
 import api from "../../api/axios";
-import LoginLoading from "../../components/loader/LoginLoading";
+import LoginLoading from "../../components/loader/loginloader/LoginLoading";
 import { useToast } from "../../hooks/useToast";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import ForgotPasswordOTP from "../Verification/ForgotPasswordOTP";

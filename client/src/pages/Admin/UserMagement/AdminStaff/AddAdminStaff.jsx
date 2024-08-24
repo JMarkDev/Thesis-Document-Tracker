@@ -2,7 +2,7 @@ import Profile from "../../../../components/profile_image/Profile";
 import PropTypes from "prop-types";
 import api from "../../../../api/axios";
 import { useForm } from "react-hook-form";
-import LoginLoading from "../../../../components/loader/LoginLoading";
+import LoginLoading from "../../../../components/loader/loginloader/LoginLoading";
 import VerifyOTP from "../../../../pages/Verification/VerifyOTP";
 import { useState } from "react";
 import { useToast } from "../../../../hooks/useToast";

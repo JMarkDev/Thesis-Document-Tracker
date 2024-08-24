@@ -80,7 +80,7 @@ export const sortDocuments = createAsyncThunk(
 // );
 export const fetchDocumentByTrackingNum = createAsyncThunk(
   "document/tracking-number",
-  async (tracking_number, { rejectWithValue }) => {
+  async ({ tracking_number, toast }, { rejectWithValue }) => {
     try {
       const response = await axios.get(
         `/document/tracking-number/${tracking_number}`
@@ -89,6 +89,7 @@ export const fetchDocumentByTrackingNum = createAsyncThunk(
     } catch (error) {
       // Check if the error response exists and return the server message
       if (error.response && error.response.data) {
+        toast.error(error.response.data.message);
         return rejectWithValue(error.response.data.message);
       }
       // Otherwise, return a generic error message

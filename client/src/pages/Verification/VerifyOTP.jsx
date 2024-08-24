@@ -6,7 +6,7 @@ import sentImage from "../../assets/images/send-email.jpg";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../../api/axios";
-import LoginLoading from "../../components/loader/LoginLoading";
+import LoginLoading from "../../components/loader/loginloader/LoginLoading";
 import { useToast } from "../../hooks/useToast";
 import "react-toastify/dist/ReactToastify.css";
 import rolesList from "../../constants/rolesList";
