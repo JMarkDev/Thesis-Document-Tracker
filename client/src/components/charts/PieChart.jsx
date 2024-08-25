@@ -2,9 +2,9 @@ import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 import PropTypes from "prop-types";
 
 const COLORS = [
-  "#4CAF50", // Received
-  "#4c8ee6", // Incoming
-  "#e6564c", // Delayed
+  "#93e6c9", // Received
+  "#92b3f0", // Incoming
+  "#f0adad", // Delayed
 ];
 
 const sampleData = [

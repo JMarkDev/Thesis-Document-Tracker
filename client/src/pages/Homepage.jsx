@@ -16,6 +16,7 @@ import {
 } from "../services/documentSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { toastUtils } from "../hooks/useToast";
+import DocumentMedata from "./DocumentMetadata";
 
 const Homepage = () => {
   const dispatch = useDispatch();
@@ -30,6 +31,7 @@ const Homepage = () => {
   const [openChat, setOpenChat] = useState(false);
   const [tracking_number, setTrackingNum] = useState(null);
   const [documentData, setDocumentData] = useState([]);
+  const [modal, setModal] = useState(false);
   // useEffect(() => {
   //   // Scroll to the bottom of the chat container
   //   chatContainer.current.scrollTop = chatContainer.current.scrollHeight;
@@ -38,14 +40,14 @@ const Homepage = () => {
   const searchDocument = (e) => {
     e.preventDefault();
     setDocumentData(null);
-    if (tracking_number !== null) {
-      setIsLoading(true);
-      setTimeout(() => {
-        dispatch(
-          fetchDocumentByTrackingNum({ tracking_number, toast: toastUtils() })
-        );
-      }, 1000);
-    }
+    // if (tracking_number !== null) {
+    setIsLoading(true);
+    setTimeout(() => {
+      dispatch(
+        fetchDocumentByTrackingNum({ tracking_number, toast: toastUtils() })
+      );
+    }, 1000);
+    // }
   };
 
   console.log(documentData);
@@ -60,8 +62,14 @@ const Homepage = () => {
     if (document) {
       setIsLoading(false);
       setDocumentData(document);
+      setModal(true);
     }
   }, [document]);
+
+  const closeModal = () => {
+    setModal(false);
+    setDocumentData(null);
+  };
 
   return (
     <>
@@ -72,6 +80,13 @@ const Homepage = () => {
           <div className="absolute z-30 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-white rounded-full p-2 bg-gray-500">
             <Loader />
           </div>
+        )}
+        {modal && (
+          <DocumentMedata
+            modal={modal}
+            closeModal={closeModal}
+            document={documentData}
+          />
         )}
 
         <img
