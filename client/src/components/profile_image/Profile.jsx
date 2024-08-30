@@ -1,12 +1,19 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./ProfileStyle.css";
 import { FaCamera } from "react-icons/fa";
 import PropTypes from "prop-types";
+import axios from "../../api/axios";
 
-const Profile = ({ setValue }) => {
+const Profile = ({ setValue, image }) => {
   const [profilePic, setProfilePic] = useState(
     "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg"
   );
+
+  useEffect(() => {
+    if (image) {
+      setProfilePic(`${axios.defaults.baseURL}${image}`);
+    }
+  }, [image]);
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -58,6 +65,7 @@ const Profile = ({ setValue }) => {
 
 Profile.propTypes = {
   setValue: PropTypes.func,
+  image: PropTypes.string,
 };
 
 export default Profile;

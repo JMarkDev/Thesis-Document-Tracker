@@ -18,22 +18,22 @@ const Cards = () => {
     setData(cardData);
   }, []);
 
-  const colors = [
-    "#3ba840",
-    "#09adad",
-    "#69faeb",
-    "#b48af2",
-    "#1b60cf",
-    "#e34439",
-    "#f2b774",
-    "#c7c238",
-  ];
+  // const colors = [
+  //   "#3ba840",
+  //   "#09adad",
+  //   "#69faeb",
+  //   "#b48af2",
+  //   "#1b60cf",
+  //   "#e34439",
+  //   "#f2b774",
+  //   "#c7c238",
+  // ];
 
-  const getNextColor = () => {
-    const color = colors.shift();
-    colors.push(color);
-    return color;
-  };
+  // const getNextColor = () => {
+  //   const color = colors.shift();
+  //   colors.push(color);
+  //   return color;
+  // };
 
   return (
     <div className="grid lg:grid-cols-4 grid-cols-2 w-full gap-5">

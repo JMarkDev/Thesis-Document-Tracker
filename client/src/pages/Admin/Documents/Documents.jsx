@@ -26,11 +26,11 @@ const Documents = () => {
   const allDocuments = useSelector(getAllDocuments);
   const workflow = useSelector(getAllWorkflow);
   const status = useSelector(getStatus);
-  const documentType = ["IDP", "IOR", "DTR"];
+  // const documentType = ["IDP", "IOR", "DTR"];
+  const [documentType, setDocumentType] = useState([]);
   const [sortOrder, setSortOrder] = useState("asc");
-
   const [searchTerm, setSearchTerm] = useState("");
-  console.log(workflow);
+
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchAllDocuments());
@@ -56,7 +56,7 @@ const Documents = () => {
 
   const handleFilterByType = (type) => {
     if (type === "Type") {
-      dispatch(fetchAllDocuments);
+      dispatch(fetchAllDocuments());
     } else {
       dispatch(filterDocumentByType(type));
     }
@@ -75,6 +75,16 @@ const Documents = () => {
     setSortOrder(newOrder);
     dispatch(sortDocuments({ sortBy, order: newOrder }));
   };
+
+  useEffect(() => {
+    if (workflow) {
+      const formattedDocumentTypes = workflow.map((type) => {
+        return type.document_type.split(" ")[0]; // Split by spave and the take the first part
+      });
+
+      setDocumentType(formattedDocumentTypes);
+    }
+  }, [workflow]);
 
   return (
     <div className="">

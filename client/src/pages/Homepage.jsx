@@ -39,18 +39,24 @@ const Homepage = () => {
 
   const searchDocument = (e) => {
     e.preventDefault();
+
+    const trimmedTrackingNumber = tracking_number?.trim();
+
+    if (!trimmedTrackingNumber) {
+      toastUtils().error("Please enter valid tracking number.");
+      return;
+    }
     setDocumentData(null);
-    // if (tracking_number !== null) {
     setIsLoading(true);
     setTimeout(() => {
       dispatch(
-        fetchDocumentByTrackingNum({ tracking_number, toast: toastUtils() })
+        fetchDocumentByTrackingNum({
+          tracking_number: trimmedTrackingNumber,
+          toast: toastUtils(),
+        })
       );
     }, 1000);
-    // }
   };
-
-  console.log(documentData);
 
   useEffect(() => {
     if (error) {

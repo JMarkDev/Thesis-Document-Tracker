@@ -182,7 +182,7 @@ const Login = ({ modal, closeModal, openRegister }) => {
                           ? "border-red-500 "
                           : "border-gray-300 "
                       } text-gray-900 focus:ring-blue-500 focus:border-blue-100 block flex-1 min-w-0 w-full text-sm p-2.5 `}
-                      placeholder="Enter your email"
+                      placeholder="Enter your password"
                       onChange={(e) => setPassword(e.target.value)}
                     />
                     <span
