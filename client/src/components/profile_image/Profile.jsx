@@ -43,9 +43,9 @@ const Profile = ({ setValue, image }) => {
             alt="Profile"
           />
         </div>
-        <div className="p-image z-20 absolute">
+        <div className="p-image absolute">
           <FaCamera
-            className="fa fa-camera upload-button"
+            className="fa fa-camera upload-button z-10"
             onClick={handleUploadButtonClick}
           />
           <input

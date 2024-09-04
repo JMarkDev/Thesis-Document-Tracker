@@ -11,6 +11,12 @@ export const searchWorkflow = createAsyncThunk("/workflow", async (name) => {
   return response.data;
 });
 
+export const fetchWorkflowById = createAsyncThunk("/workflow/id", async (id) => {
+  const response = await axios.get(`/workflow/id/${id}`);
+  console.log(response.data)
+  return response.data;
+})
+
 export const deleteWorkflow = createAsyncThunk(
   "workflow/delete",
   async ({ id, toast }) => {
@@ -26,9 +32,11 @@ const workflowSlice = createSlice({
   name: "workflow",
   initialState: {
     allWorkflow: [],
+    workflowById : null,
     status: "idle",
+    error: null,
   },
-  error: null,
+
   reducers: {},
   extraReducers: (builders) => {
     builders
@@ -66,10 +74,23 @@ const workflowSlice = createSlice({
       .addCase(deleteWorkflow.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
+      })
+      .addCase(fetchWorkflowById.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchWorkflowById.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.workflowById  = action.payload;
+      })
+      .addCase(fetchWorkflowById.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
       });
+
   },
 });
 
 export const getAllWorkflow = (state) => state.workflow.allWorkflow;
+export const getWorkflowById = (state) => state.workflow.workflowById;
 
 export default workflowSlice.reducer;

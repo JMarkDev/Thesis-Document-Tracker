@@ -1,17 +1,22 @@
 import { FaEye, FaRegEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import { deleteWorkflow } from "../../services/documentWolkflowSlice";
 import { toastUtils } from "../../hooks/useToast";
 import DeleteModal from "../DeleteModal";
 import { useState } from "react";
+import WorkflowDetails from "../../pages/Admin/DocumentWorkflows/WorkflowDetails";
+import { fetchWorkflowById, getWorkflowById } from "../../services/documentWolkflowSlice";
 
 const DocumentWorkflow = ({ data }) => {
   const [showModal, setModal] = useState(false);
   const [selectedWorkflow, setSeletedWorkflow] = useState(null);
-
+  const [showWorkflowDetails, setShowWorkflowDetails] = useState(null);
+  const workflowDetails = useSelector(getWorkflowById);
+  console.log(workflowDetails)
+  
   const closeDeleteModal = () => {
     setModal(false);
     setSeletedWorkflow(null);
@@ -26,6 +31,15 @@ const DocumentWorkflow = ({ data }) => {
   const handleDelete = () => {
     dispatch(deleteWorkflow({ id: selectedWorkflow, toast: toastUtils() }));
   };
+
+  const handleWorkflow = (id) => {
+    setShowWorkflowDetails(id);
+    dispatch(fetchWorkflowById(id));
+  }
+
+  const closeModal = () => {
+    setShowWorkflowDetails(null);
+  }
   return (
     <>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -72,12 +86,17 @@ const DocumentWorkflow = ({ data }) => {
                   {new Date(createdAt).toLocaleString()}
                 </td>
                 <td className="px-6 py-4 flex gap-3 justify-center items-center">
-                  <Link
-                    to={`/document-workflow/${id}`}
+                  <button
+                    onClick={() => handleWorkflow(id)}
+                    // to={`/document-workflow/${id}`}
                     className="px-4 py-2 text-lg bg-[#fca326] hover:bg-[#f58e40] text-white rounded-lg"
                   >
                     <FaEye className="h-5 w-5" />
-                  </Link>
+                   
+                  </button>
+                  {showWorkflowDetails && (
+                      <WorkflowDetails closeModal={closeModal}/>
+                    )}
 
                   <button className="px-4 py-2 text-lg bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
                     <FaRegEdit className="h-5 w-5" />

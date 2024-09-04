@@ -2,7 +2,7 @@ import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import rolesList from "./constants/rolesList";
-import useIdleTimeout from "./hooks/useIdleTimeout";
+// import useIdleTimeout from "./hooks/useIdleTimeout";
 
 import ProtectedRoute from "./route/ProtectedRoute";
 import PageNotFound from "./pages/PageNotFound";
@@ -14,7 +14,7 @@ import LayoutAdmin from "./components/layout/LayoutAdmin";
 import Dashboard from "./pages/Admin/Dashboard/Dashboard";
 import Documents from "./pages/Admin/Documents/Documents";
 import DocumentWorkflow from "./pages/Admin/DocumentWorkflows/DocumentWorkflow";
-import WorkflowDetails from "./pages/Admin/DocumentWorkflows/WorkflowDetails";
+// import WorkflowDetails from "./pages/Admin/DocumentWorkflows/WorkflowDetails";
 import Offices from "./pages/Admin/Offices/Offices";
 import Reports from "./pages/Admin/Reports/Reports";
 import Faculty from "./pages/Admin/UserMagement/Faculty/Faculty";
@@ -43,11 +43,11 @@ function App() {
       path: "/document-workflow",
       component: <DocumentWorkflow />,
     },
-    {
-      title: "Document Workflow Details",
-      path: "/document-workflow/:id",
-      component: <WorkflowDetails />,
-    },
+    // {
+    //   title: "Document Workflow Details",
+    //   path: "/document-workflow/:id",
+    //   component: <WorkflowDetails />,
+    // },
     { title: "Offices", path: "/offices", component: <Offices /> },
     { title: "Reports", path: "/reports", component: <Reports /> },
     { title: "Faculty", path: "/users/faculty", component: <Faculty /> },
