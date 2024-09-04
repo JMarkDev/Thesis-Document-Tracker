@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const documentWorkflowController = require("../controllers/documentWorkflowController");
 
+router.post("/add", documentWorkflowController.addWorflow);
 router.get("/all", documentWorkflowController.getAllDocumentRoutes);
 router.get("/id/:id", documentWorkflowController.getRouteById);
 router.put("/update/:id", documentWorkflowController.updateRoute);
