@@ -1,5 +1,5 @@
 import { useLocation } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { getUserData } from "../../services/authSlice";
 import userIcon from "../../assets/images/user (1).png";
 import { IoMdNotificationsOutline } from "react-icons/io";
@@ -11,13 +11,18 @@ import Notification from "../Notification";
 import { useState, useEffect } from "react";
 // import { AuthContext } from "../../AuthContext/AuthContext";
 import api from "../../api/axios";
+import { getNotificationById, fetchNotificationById } from "../../services/notificationSlice";
 
 const NavDashboard = ({ handleBurger }) => {
+  const dispatch = useDispatch();
   const userData = useSelector(getUserData);
   // const { userData } = useContext(AuthContext);
   const [showProfile, setShowProfile] = useState(false);
   const [showNotification, setShowNotification] = useState(false);
   const [profilePic, setProfilePic] = useState(userIcon);
+  const [notifications, setNotifications] = useState([]);
+  const getNotification = useSelector(getNotificationById)
+
 
   useEffect(() => {
     if (userData && userData.image) {
@@ -48,6 +53,18 @@ const NavDashboard = ({ handleBurger }) => {
   };
   const location = useLocation();
   const title = pageTitles[location.pathname];
+
+  useEffect(() => {
+    if(userData) {
+      dispatch(fetchNotificationById(userData.id))
+    }
+  }, [userData, dispatch])
+
+  useEffect(() => {
+    if(getNotification) {
+      setNotifications(getNotification)
+    }
+  }, [getNotification])
   return (
     <div className="w-full z-20 md:w-[calc(100vw-16rem)] flex gap-5 items-center px-4 flex-grow fixed h-16 bg-[#D4A4AC]">
       <button
@@ -70,8 +87,8 @@ const NavDashboard = ({ handleBurger }) => {
           </div>
 
           <div className="relative  flex items-center">
-            <span className="text-sm absolute right-[-12px] top-0 text-white bg-red-600 rounded-full px-1">
-              10
+            <span className="text-sm  px-1.5 absolute right-[-12px] top-0 text-white bg-red-600 rounded-full text-center">
+              {notifications.length}
             </span>
             <button
               onClick={handleNotification}
@@ -87,7 +104,7 @@ const NavDashboard = ({ handleBurger }) => {
               onMouseLeave={handleNotification}
               className="absolute top-12 right-5"
             >
-              <Notification />
+              <Notification notifications={notifications}/>
             </div>
           )}
 
