@@ -29,10 +29,18 @@ const addOffice = async (req, res) => {
     if (!officeName) {
       return res.status(400).json({ message: "Office name is required" });
     }
-    const officeExist = await officeModel.findOne({
+
+    const officeExist = await userModel.findOne({
       where: {
-        officeName: officeName,
+        status: statusList.verified,
       },
+      include: [
+        {
+          model: officeModel,
+          where: { officeName },
+          required: true,
+        },
+      ],
     });
 
     if (officeExist) {
@@ -48,62 +56,76 @@ const addOffice = async (req, res) => {
 
     if (verifyUser) {
       return res.status(400).json({ message: "User already exists" });
-    } else {
+    }
+
+    const pendingUser = await userModel.findOne({
+      where: {
+        email,
+        status: statusList.pending,
+      },
+      include: officeModel,
+    });
+
+    if (pendingUser && pendingUser.officeId) {
+      await officeModel.destroy({
+        where: { id: pendingUser.officeId },
+      });
+
       await userModel.destroy({
         where: {
-          email: email,
+          email,
           status: statusList.pending,
         },
       });
-
-      // send OTP to email
-      await otpController.postOTP(email);
-
-      // upload image
-      let newFileName = null;
-      if (req.file) {
-        let filetype = req.file.mimetype.split("/")[1];
-        newFileName = req.file.filename + "." + filetype;
-        fs.rename(
-          `./uploads/${req.file.filename}`,
-          `./uploads/${newFileName}`,
-          async (err) => {
-            if (err) throw err;
-            console.log("uploaded successfully");
-          }
-        );
-      }
-
-      const hashPassword = await bcrypt.hash(password, saltsRounds);
-
-      // Create office entry in officeModel
-      const office = await officeModel.create({
-        officeName: officeName,
-        createdAt: createdAt,
-      });
-
-      await userModel.create({
-        image: newFileName ? `/uploads/${newFileName}` : null,
-        firstName,
-        lastName,
-        middleInitial,
-        email,
-        birthDate,
-        contactNumber,
-        designation,
-        esuCampus: null,
-        role,
-        password: hashPassword,
-        status: statusList.pending,
-        createdAt: createdAt,
-        officeId: office.id, // Associate the new office with the user
-      });
-
-      return res.status(201).json({
-        status: "success",
-        message: `Verification OTP sent to ${email}`,
-      });
     }
+
+    // send OTP to email
+    await otpController.postOTP(email);
+
+    // upload image
+    let newFileName = null;
+    if (req.file) {
+      let filetype = req.file.mimetype.split("/")[1];
+      newFileName = req.file.filename + "." + filetype;
+      fs.rename(
+        `./uploads/${req.file.filename}`,
+        `./uploads/${newFileName}`,
+        async (err) => {
+          if (err) throw err;
+          console.log("uploaded successfully");
+        }
+      );
+    }
+
+    const hashPassword = await bcrypt.hash(password, saltsRounds);
+
+    // Create office entry in officeModel
+    const office = await officeModel.create({
+      officeName: officeName,
+      createdAt: createdAt,
+    });
+
+    await userModel.create({
+      image: newFileName ? `/uploads/${newFileName}` : null,
+      firstName,
+      lastName,
+      middleInitial,
+      email,
+      birthDate,
+      contactNumber,
+      designation,
+      esuCampus: null,
+      role,
+      password: hashPassword,
+      status: statusList.pending,
+      createdAt: createdAt,
+      officeId: office.id, // Associate the new office with the user
+    });
+
+    return res.status(201).json({
+      status: "success",
+      message: `Verification OTP sent to ${email}`,
+    });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ Error: "Add office error in server" });

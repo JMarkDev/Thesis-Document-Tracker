@@ -59,6 +59,9 @@ export const useFormat = () => {
       // convert to 12 hour format
       const formatedHour = hour % 12 === 0 ? 12 : hour % 12;
 
+      if (!hour) {
+        return `${monthName[month]}  ${day}, ${year}`;
+      }
       return `${monthName[month]}  ${day}, ${year}, ${formatedHour}:${minutes} ${period}`;
     }
   };

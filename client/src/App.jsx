@@ -2,6 +2,7 @@ import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import rolesList from "./constants/rolesList";
+import useIdleTimeout from "./hooks/useIdleTimeout";
 
 import ProtectedRoute from "./route/ProtectedRoute";
 import PageNotFound from "./pages/PageNotFound";
@@ -31,6 +32,8 @@ import UserProfile from "./pages/Shared/UserProfile";
 import DocumentDetails from "./pages/Shared/DocumentDetails";
 
 function App() {
+  // useIdleTimeout();
+  // console.log(useIdleTimeout());
   const adminLinks = [
     { title: "Dashboard", path: "/dashboard", component: <Dashboard /> },
     { title: "Scan Now", path: "/scan-now", component: <ScanNow /> },

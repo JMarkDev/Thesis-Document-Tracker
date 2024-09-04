@@ -34,6 +34,7 @@ const NavDashboard = ({ handleBurger }) => {
     "/user-management": "User Management",
     "/reports": "Reports",
     "/transmittal": "Transmittal",
+    "/user-profile": "Profile",
   };
 
   const handleNotification = () => {
