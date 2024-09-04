@@ -9,6 +9,23 @@ const getAllNotifications = async (req, res) => {
   }
 };
 
+const getNotificationById = async (req, res) => {
+  const {user_id} = req.params
+
+  try {
+    const getNotifications = await notificationModel.findAll({
+      where: {
+        user_id: user_id
+      }
+    })
+
+    return res.status(200).json(getNotifications)
+  } catch (error) {
+    return res.status(500).json({message: error.message})
+  }
+}
+
 module.exports = {
   getAllNotifications,
+  getNotificationById
 };
