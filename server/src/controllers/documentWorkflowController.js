@@ -1,5 +1,6 @@
 const documentRouteModel = require("../models/documentRouteModel");
 const { Op } = require("sequelize");
+const {createdAt} = require("../utils/formattedTime");
 
 const getAllDocumentRoutes = async (req, res) => {
   try {
@@ -9,6 +10,51 @@ const getAllDocumentRoutes = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
+
+const getRouteById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+const route = await documentRouteModel.findOne({
+  where: {
+    id: id
+    }
+  });
+
+  if(!route) {
+    return res.status(404).json({ message: "Route not found" });
+  }
+
+  const parseRoute ={
+    ...route.toJSON(),
+    route: JSON.parse(route.route)  // Convert Sequelize instance to a plain object
+  }
+
+  return res.status(200).json(parseRoute);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+}
+
+const updateRoute = (req, res) => {
+  const { id } = req.params;
+  const { document_type, route } = req.body;
+
+  documentRouteModel.update(
+    { 
+      document_type: document_type,
+      route: JSON.stringify(route),
+      updatedAt: createdAt,
+    },
+    { where: { id: id } }
+  )
+    .then((route) => {
+      return res.status(200).json({ route, status: "success", message: "Updated successfully" });
+    })
+    .catch((error) => {
+      return res.status(500).json({ message: error.message });
+    });
+}
 
 const searchWorkflow = async (req, res) => {
   const { name } = req.params;
@@ -46,6 +92,8 @@ const deleteWorkflow = async (req, res) => {
 
 module.exports = {
   getAllDocumentRoutes,
+  updateRoute,
+  getRouteById,
   searchWorkflow,
   deleteWorkflow,
 };

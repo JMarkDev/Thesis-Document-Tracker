@@ -24,7 +24,8 @@ const updateNotification = async (req, res) => {
 
   try {
     const updateNotification = await notificationModel.update({
-      is_read: 1
+      is_read: 1,
+      updatedAt: createdAt
     }, {
       where: {
         id: id
