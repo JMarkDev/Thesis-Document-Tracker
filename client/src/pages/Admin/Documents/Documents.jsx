@@ -56,7 +56,7 @@ const Documents = () => {
 
   const handleFilterByType = (type) => {
     if (type === "Type") {
-      dispatch(fetchAllDocuments);
+      dispatch(fetchAllDocuments());
     } else {
       dispatch(filterDocumentByType(type));
     }

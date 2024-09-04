@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { deleteUser } from "../../services/usersSlice";
 import api from "../../api/axios";
-import ProfileModal from "../profileModal";
+import ProfileModal from "../ProfileModal";
 import DeleteModal from "../DeleteModal";
 import { toastUtils } from "../../hooks/useToast";
 import userIcon from "../../assets/images/user (1).png";

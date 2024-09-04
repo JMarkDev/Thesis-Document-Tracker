@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FaEye, FaRegEdit, FaTrashAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
-import ProfileModal from "../profileModal";
+import ProfileModal from "../ProfileModal";
 import api from "../../api/axios";
 import userIcon from "../../assets/images/user (1).png";
 import DeleteModal from "../DeleteModal";
