@@ -1,5 +1,9 @@
 import { FaEye, FaRegEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+<<<<<<< HEAD
+=======
+import { Link } from "react-router-dom";
+>>>>>>> 239ab4defec55e9b5488189daa2cf83aa7887320
 import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import { deleteWorkflow } from "../../services/documentWolkflowSlice";
@@ -7,6 +11,7 @@ import { toastUtils } from "../../hooks/useToast";
 import DeleteModal from "../DeleteModal";
 import { useState } from "react";
 import WorkflowDetails from "../../pages/Admin/DocumentWorkflows/WorkflowDetails";
+<<<<<<< HEAD
 import {
   fetchWorkflowById,
   getWorkflowById,
@@ -18,6 +23,17 @@ const DocumentWorkflow = ({ data }) => {
   const [showWorkflowDetails, setShowWorkflowDetails] = useState(null);
   const workflowDetails = useSelector(getWorkflowById);
 
+=======
+import { fetchWorkflowById, getWorkflowById } from "../../services/documentWolkflowSlice";
+
+const DocumentWorkflow = ({ data }) => {
+  const [showModal, setModal] = useState(false);
+  const [selectedWorkflow, setSeletedWorkflow] = useState(null);
+  const [showWorkflowDetails, setShowWorkflowDetails] = useState(null);
+  const workflowDetails = useSelector(getWorkflowById);
+  console.log(workflowDetails)
+  
+>>>>>>> 239ab4defec55e9b5488189daa2cf83aa7887320
   const closeDeleteModal = () => {
     setModal(false);
     setSelectedWorkflow(null);
@@ -34,6 +50,7 @@ const DocumentWorkflow = ({ data }) => {
   };
 
   const handleWorkflow = (id) => {
+<<<<<<< HEAD
     dispatch(fetchWorkflowById(id));
     setShowWorkflowDetails(id);
   };
@@ -41,6 +58,15 @@ const DocumentWorkflow = ({ data }) => {
   const closeModal = () => {
     setShowWorkflowDetails(null);
   };
+=======
+    setShowWorkflowDetails(id);
+    dispatch(fetchWorkflowById(id));
+  }
+
+  const closeModal = () => {
+    setShowWorkflowDetails(null);
+  }
+>>>>>>> 239ab4defec55e9b5488189daa2cf83aa7887320
   return (
     <>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -93,7 +119,15 @@ const DocumentWorkflow = ({ data }) => {
                     className="px-4 py-2 text-lg bg-[#fca326] hover:bg-[#f58e40] text-white rounded-lg"
                   >
                     <FaEye className="h-5 w-5" />
+<<<<<<< HEAD
                   </button>
+=======
+                   
+                  </button>
+                  {showWorkflowDetails && (
+                      <WorkflowDetails closeModal={closeModal}/>
+                    )}
+>>>>>>> 239ab4defec55e9b5488189daa2cf83aa7887320
 
                   <button className="px-4 py-2 text-lg bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
                     <FaRegEdit className="h-5 w-5" />

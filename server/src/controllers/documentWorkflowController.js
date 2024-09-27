@@ -1,9 +1,6 @@
 const documentRouteModel = require("../models/documentRouteModel");
+const { Op } = require("sequelize");
 const { createdAt } = require("../utils/formattedTime");
-const userModel = require("../models/userModel");
-const officeModel = require("../models/officeModel");
-const rolesList = require("../constants/rolesList");
-const { Sequelize, Op } = require("sequelize");
 
 const addWorflow = async (req, res) => {
   const { document_type, route } = req.body;
@@ -116,29 +113,6 @@ const deleteWorkflow = async (req, res) => {
   }
 };
 
-// const getAllRoute = async (req, res) => {
-//   try {
-//     const route = await userModel.findAll({
-//       where: {
-//         [Sequelize.Op.or]: [
-//           { role: rolesList.office },
-//           // { role: rolesList.registrar },
-//           // { role: rolesList.campus_admin },
-//         ],
-//       },
-//       include: [
-//         {
-//           model: officeModel,
-//           required: false, // Ensures only users with associated office data are include
-//         },
-//       ],
-//     });
-//     return res.status(200).json(route);
-//   } catch (error) {
-//     return res.status(500).json({ message: error.message });
-//   }
-// };
-
 module.exports = {
   addWorflow,
   getAllDocumentRoutes,
@@ -146,5 +120,4 @@ module.exports = {
   getRouteById,
   searchWorkflow,
   deleteWorkflow,
-  // getAllRoute,
 };

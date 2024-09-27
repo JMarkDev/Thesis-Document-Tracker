@@ -9,6 +9,7 @@ import Notification from "../Notification";
 import NavProfile from "../NavProfile";
 import userIcon from "../../assets/images/user (1).png";
 import api from "../../api/axios";
+import { fetchNotificationById, getNotificationById } from "../../services/notificationSlice";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -20,6 +21,9 @@ const Navbar = () => {
   const [showNotification, setShowNotification] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [profilePic, setProfilePic] = useState(userIcon);
+  const [notifications, setNotifications] = useState([]);
+  const getNotification = useSelector(getNotificationById)
+
 
   useEffect(() => {
     dispatch(fetchUser());
@@ -64,6 +68,18 @@ const Navbar = () => {
     setShowNotification(false);
   };
 
+  useEffect(() => {
+    if(userData) {
+      dispatch(fetchNotificationById(userData.id))
+    }
+  }, [userData, dispatch])
+
+  useEffect(() => {
+    if(getNotification) {
+      setNotifications(getNotification)
+    }
+  }, [getNotification])
+
   return (
     <div className="h-16 w-full flex items-center bg-main">
       <div className="mx-5 flex justify-between w-full">
@@ -80,7 +96,7 @@ const Navbar = () => {
                 <li>
                   <div className="relative">
                     <span className="text-sm absolute right-[-12px] top-0 text-white bg-red-600 rounded-full px-1.5">
-                      10
+                      {notifications.length}
                     </span>
                     <div
                       onClick={handleNotification}
@@ -95,7 +111,7 @@ const Navbar = () => {
                       onMouseLeave={handleNotification}
                       className="absolute right-5"
                     >
-                      <Notification />
+                      <Notification notifications={notifications}/>
                     </div>
                   )}
                 </li>
