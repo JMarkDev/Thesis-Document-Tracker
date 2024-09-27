@@ -22,6 +22,17 @@ export const addWorkflow = createAsyncThunk(
   }
 );
 
+export const updateWorkflow = createAsyncThunk(
+  "workflow/update/id",
+  async ({ id, workflow, toast }) => {
+    const response = await axios.put(`/workflow/update/${id}`, workflow);
+    if (response.data.status === "success") {
+      toast.success(response.data.message);
+      return response.data.workflow;
+    }
+  }
+);
+
 export const fetchWorkflowById = createAsyncThunk(
   "/workflow/id",
   async (id) => {
@@ -107,6 +118,19 @@ const workflowSlice = createSlice({
         state.allWorkflow = [...state.allWorkflow, action.payload];
       })
       .addCase(addWorkflow.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(updateWorkflow.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(updateWorkflow.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.allWorkflow = state.allWorkflow.map((workflow) =>
+          workflow.id === action.payload.id ? action.payload : workflow
+        );
+      })
+      .addCase(updateWorkflow.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });

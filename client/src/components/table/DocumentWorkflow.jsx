@@ -12,12 +12,15 @@ import {
   getWorkflowById,
 } from "../../services/documentWolkflowSlice";
 import { useFormat } from "../../hooks/useFormatDate";
+import EditWorkflow from "../../pages/Admin/DocumentWorkflows/EditWorkflow";
 
 const DocumentWorkflow = ({ data }) => {
   const [showModal, setModal] = useState(false);
   const [selectedWorkflow, setSelectedWorkflow] = useState(null);
   const [showWorkflowDetails, setShowWorkflowDetails] = useState(null);
   const workflowDetails = useSelector(getWorkflowById);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [title, setTitle] = useState("");
   const { dateFormat } = useFormat();
 
   const closeDeleteModal = () => {
@@ -28,6 +31,11 @@ const DocumentWorkflow = ({ data }) => {
   const openModal = (id) => {
     setSelectedWorkflow(id);
     setModal(!showModal);
+  };
+
+  const handleEdit = (id) => {
+    setSelectedWorkflow(id);
+    setShowEditModal(true);
   };
 
   const dispatch = useDispatch();
@@ -43,6 +51,11 @@ const DocumentWorkflow = ({ data }) => {
 
   const closeModal = () => {
     setShowWorkflowDetails(null);
+  };
+
+  const closeEditModal = () => {
+    setShowEditModal(false);
+    setSelectedWorkflow(null);
   };
   return (
     <>
@@ -98,23 +111,20 @@ const DocumentWorkflow = ({ data }) => {
                     <FaEye className="h-5 w-5" />
                   </button>
 
-                  <button className="px-4 py-2 text-lg bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
+                  <button
+                    onClick={() => handleEdit(id)}
+                    className="px-4 py-2 text-lg bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
+                  >
                     <FaRegEdit className="h-5 w-5" />
                   </button>
                   <button
-                    onClick={() => openModal(id)}
+                    onClick={() => {
+                      openModal(id), setTitle(document_type);
+                    }}
                     className="px-4 py-2 text-lg bg-red-600 hover:bg-red-700 text-white rounded-lg"
                   >
                     <MdDelete className="h-5 w-5" />
                   </button>
-                  {showModal && (
-                    <DeleteModal
-                      title={document_type}
-                      deleteModal={showModal}
-                      closeDeleteModal={closeDeleteModal}
-                      handleDelete={handleDelete}
-                    />
-                  )}
                 </td>
               </tr>
             ))}
@@ -126,6 +136,22 @@ const DocumentWorkflow = ({ data }) => {
             modal={showWorkflowDetails}
             closeModal={closeModal}
             workflowDetails={workflowDetails}
+          />
+        )}
+        {showEditModal && (
+          <EditWorkflow
+            id={selectedWorkflow}
+            closeModal={closeEditModal}
+            modal={showEditModal}
+          />
+        )}
+
+        {showModal && (
+          <DeleteModal
+            title={title}
+            deleteModal={showModal}
+            closeDeleteModal={closeDeleteModal}
+            handleDelete={handleDelete}
           />
         )}
       </div>

@@ -8,11 +8,14 @@ import {
   getRoleUsers,
 } from "../../../services/usersSlice";
 import { MdDelete } from "react-icons/md";
-import { addWorkflow } from "../../../services/documentWolkflowSlice";
+import {
+  updateWorkflow,
+  fetchWorkflowById,
+  getWorkflowById,
+} from "../../../services/documentWolkflowSlice";
 import { toastUtils } from "../../../hooks/useToast";
-import Loader from "../../../components/loader/loginloader/LoginLoading";
 
-const AddWorkflow = ({ modal, closeModal }) => {
+const EditWorkflow = ({ modal, closeModal, id }) => {
   const [documentType, setDocumentType] = useState("");
   const [route, setRoute] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -20,7 +23,14 @@ const AddWorkflow = ({ modal, closeModal }) => {
   const officeUsers = useSelector(getRoleUsers("office"));
   const officeStatus = useSelector(getRoleStatus("office"));
   const adminStatus = useSelector(getRoleStatus("admin"));
-  const [loading, setLoading] = useState(false);
+  const workflow = useSelector(getWorkflowById);
+
+  useEffect(() => {
+    if (workflow) {
+      setDocumentType(workflow.document_type);
+      setRoute(workflow.route);
+    }
+  }, [workflow]);
 
   useEffect(() => {
     if (officeStatus === "idle") {
@@ -31,6 +41,12 @@ const AddWorkflow = ({ modal, closeModal }) => {
       dispatch(fetchAdmin());
     }
   }, [officeStatus, adminStatus, dispatch]);
+
+  useEffect(() => {
+    if (id) {
+      dispatch(fetchWorkflowById(id));
+    }
+  }, [id, dispatch]);
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -61,13 +77,10 @@ const AddWorkflow = ({ modal, closeModal }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setLoading(true);
+
     const workflow = { document_type: documentType, route };
-    setTimeout(() => {
-      dispatch(addWorkflow({ workflow, toast: toastUtils() }));
-      closeModal();
-      setLoading(false);
-    }, 2000);
+    dispatch(updateWorkflow({ id, workflow, toast: toastUtils() }));
+    closeModal();
   };
 
   const isOfficeInRoute = (officeName) => {
@@ -87,10 +100,9 @@ const AddWorkflow = ({ modal, closeModal }) => {
         id="default-modal"
         tabIndex="-1"
         aria-hidden={!modal}
-        className="fixed overflow-y-auto overflow-hidden  inset-0 z-50 px-5 flex items-center justify-center w-full h-full bg-gray-700 bg-opacity-40 font-normal"
+        className="fixed overflow-y-auto overflow-hidden  inset-0 z-50 px-5 flex items-center justify-center w-full h-full bg-gray-700 bg-opacity-20 font-normal"
       >
         {/* <div className="relative w-full max-w-2xl bg-white  rounded-xl shadow-lg"> */}
-        {loading && <Loader />}
         <div
           className={`relative w-full max-w-2xl ${
             isOpen ? "h-full" : "h-fit"
@@ -98,7 +110,7 @@ const AddWorkflow = ({ modal, closeModal }) => {
         >
           <div className="relative text-gray-800 rounded-xl">
             <div className="flex items-center justify-between border-b border-gray-200 rounded-t p-4">
-              <h1 className="md:text-2xl font-bold text-lg">Add Workflow</h1>
+              <h1 className="md:text-2xl font-bold text-lg">Update Workflow</h1>
               <button
                 type="button"
                 className="absolute right-2 top-2 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-6 h-6 ms-auto inline-flex justify-center items-center"
@@ -130,7 +142,7 @@ const AddWorkflow = ({ modal, closeModal }) => {
                   </label>
                   <input
                     type="text"
-                    value={documentType}
+                    defaultValue={documentType}
                     onChange={(e) => setDocumentType(e.target.value)}
                     className=" block text-sm w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-0 focus:border-blue-600 peer "
                     placeholder="Enter Document Type"
@@ -315,7 +327,7 @@ const AddWorkflow = ({ modal, closeModal }) => {
                     type="submit"
                     className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-500  hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                   >
-                    Save Workflow
+                    Update Workflow
                   </button>
                 </div>
               </form>
@@ -327,9 +339,10 @@ const AddWorkflow = ({ modal, closeModal }) => {
   );
 };
 
-AddWorkflow.propTypes = {
+EditWorkflow.propTypes = {
+  id: PropTypes.number.isRequired,
   modal: PropTypes.bool.isRequired,
   closeModal: PropTypes.func.isRequired,
 };
 
-export default AddWorkflow;
+export default EditWorkflow;
