@@ -39,7 +39,7 @@ const Documents = () => {
   }, [status, dispatch]);
 
   const handleFilterByESU = (esu) => {
-    if (esu === "WMSU-ESU Campus") {
+    if (esu === "WMSU-ESU") {
       dispatch(fetchAllDocuments());
     } else {
       dispatch(filterDocumentsByESU(esu));
@@ -112,7 +112,7 @@ const Documents = () => {
               <Dropdown
                 handleFilter={handleFilterByESU}
                 data={wmsuCampus}
-                option={"WMSU-ESU Campus"}
+                option={"WMSU-ESU"}
               />
             </div>
             <div>

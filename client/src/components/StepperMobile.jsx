@@ -4,7 +4,7 @@ const StepperMobile = ({ data }) => {
   const { dateFormat } = useFormat();
   return (
     <div className="flex items-center  justify-center">
-      <ol className="relative  right-[-60px] text-gray-600 border-l-4 border-yellow ">
+      <ol className="relative  right-0 text-gray-600 border-l-4 border-yellow ">
         {data?.map(({ office_name, received_at }, index) => (
           <li key={index} className="last:mb-0 mb-10 ms-6">
             <p className="absolute left-[-120px] text-end max-w-24 text-sm">
@@ -58,7 +58,7 @@ const StepperMobile = ({ data }) => {
               </span>
             )}
 
-            <p className="font-bold text-[12px] max-w-40">{office_name}</p>
+            <p className="font-bold text-[12px] ">{office_name}</p>
           </li>
         ))}
       </ol>

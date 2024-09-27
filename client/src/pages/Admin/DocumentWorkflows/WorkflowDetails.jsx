@@ -108,7 +108,7 @@ const WorkflowDetails = ({ modal, closeModal, workflowDetails }) => {
                     {/* {" "}
                     <StepperMobile data={data} /> */}
                     <div className="flex items-center  justify-center">
-                      <ol className="relative  right-[-60px] text-gray-600 border-l-4 border-yellow ">
+                      <ol className="relative  right-0 text-gray-600 border-l-4 border-yellow ">
                         {route?.map(({ office_name }, index) => (
                           <li key={index} className="last:mb-0 mb-10 ms-6">
                             <span
@@ -132,7 +132,7 @@ const WorkflowDetails = ({ modal, closeModal, workflowDetails }) => {
                               </svg>
                             </span>
 
-                            <p className="font-bold text-[12px] max-w-40">
+                            <p className="font-bold text-[12px] ">
                               {office_name}
                             </p>
                           </li>

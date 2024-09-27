@@ -20,7 +20,7 @@ export default function Dropdown({ data, option, handleFilter }) {
   return (
     <div className="text-right ">
       <Menu>
-        <MenuButton className="inline-flex items-center gap-2 rounded-md bg-blue-600 hover:bg-blue-700 py-1.5 px-2 text-sm/6 font-semibold text-white ">
+        <MenuButton className="inline-flex whitespace-nowrap items-center gap-2 rounded-md bg-blue-600 hover:bg-blue-700 py-1.5 px-2 text-sm/6 font-semibold text-white ">
           {selectOption}
           <ChevronDownIcon className="size-4 fill-white/60" />
         </MenuButton>
@@ -40,7 +40,7 @@ export default function Dropdown({ data, option, handleFilter }) {
             <MenuItem>
               <button
                 onClick={() => handleOption(option)}
-                className="group flex w-full hover:bg-gray-300 items-center justify-start gap-2 rounded-lg py-1.5 px-3 "
+                className="group flex w-full  hover:bg-gray-300 items-center justify-start gap-2 rounded-lg py-1.5 px-3 "
               >
                 {option}
               </button>
