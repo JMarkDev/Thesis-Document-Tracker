@@ -22,13 +22,26 @@ export const addWorkflow = createAsyncThunk(
   }
 );
 
+// export const updateWorkflow = createAsyncThunk(
+//   "workflow/update/id",
+//   async ({ id, workflow, toast }) => {
+//     const response = await axios.put(`/workflow/update/${id}`, workflow);
+//     if (response.data.status === "success") {
+//       toast.success(response.data.message);
+//       fetchAllWorkflow();
+//       return response.data.workflow;
+//     }
+//   }
+// );
 export const updateWorkflow = createAsyncThunk(
   "workflow/update/id",
   async ({ id, workflow, toast }) => {
     const response = await axios.put(`/workflow/update/${id}`, workflow);
     if (response.data.status === "success") {
       toast.success(response.data.message);
-      return response.data.workflow;
+      // Fetch the updated workflow to return
+      const updatedWorkflowResponse = await axios.get(`/workflow/id/${id}`);
+      return updatedWorkflowResponse.data;
     }
   }
 );
