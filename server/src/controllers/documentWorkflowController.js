@@ -2,7 +2,7 @@ const documentRouteModel = require("../models/documentRouteModel");
 const { Op } = require("sequelize");
 const { createdAt } = require("../utils/formattedTime");
 
-const addWorflow = async (req, res) => {
+const addWorkflow = async (req, res) => {
   const { document_type, route } = req.body;
 
   try {
@@ -17,6 +17,7 @@ const addWorflow = async (req, res) => {
       .status(201)
       .json({ workflow, status: "success", message: "Added successfully" });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({ message: error.message });
   }
 };
@@ -114,7 +115,7 @@ const deleteWorkflow = async (req, res) => {
 };
 
 module.exports = {
-  addWorflow,
+  addWorkflow,
   getAllDocumentRoutes,
   updateRoute,
   getRouteById,
