@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FaEye, FaTrashAlt } from "react-icons/fa";
+import { FaEye, FaTrashAlt, FaRegEdit } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import ProfileModal from "../profileModal";
@@ -11,6 +11,8 @@ import { deleteUser } from "../../services/usersSlice";
 import { toastUtils } from "../../hooks/useToast";
 import { getStatus } from "../../utils/getStatus";
 import statusList from "../../constants/statusList";
+import { BsThreeDots } from "react-icons/bs";
+import { MdPreview } from "react-icons/md";
 
 const FacultyTable = ({ fetchFaculty }) => {
   const dispatch = useDispatch();
@@ -18,6 +20,7 @@ const FacultyTable = ({ fetchFaculty }) => {
   const [deleteModal, setDeleteModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [selectedEsuCampus, setSelectedEsuCampus] = useState(null);
+  const [openAction, setOpenAction] = useState(false);
 
   const openModal = (image) => {
     setSelectedImage(image);
@@ -130,7 +133,7 @@ const FacultyTable = ({ fetchFaculty }) => {
                           image ? `${api.defaults.baseURL}${image}` : userIcon
                         }`}
                         alt=""
-                        className="h-14 w-14 rounded-full cursor-pointer"
+                        className="h-10 w-10 rounded-full cursor-pointer"
                       />
                       {showModal && (
                         <ProfileModal
@@ -157,7 +160,66 @@ const FacultyTable = ({ fetchFaculty }) => {
                       {getStatus(status)}
                     </span>
                   </td>
+                  <td className="px-6 py-4 flex gap-3 justify-center items-center relative">
+                    <div className="relative">
+                      <button
+                        onClick={() => {
+                          setOpenAction(id === openAction ? null : id);
+                        }}
+                        className="text-xl text-gray-800 font-semibold"
+                      >
+                        <BsThreeDots />
+                      </button>
+                      {openAction === id && (
+                        <div
+                          className={`z-20 absolute flex flex-col right-[-25px] ${
+                            index === fetchFaculty.length - 1 ||
+                            index === fetchFaculty.length - 2
+                              ? "bottom-40"
+                              : "bottom-2"
+                          }  w-48 py-2 mt-2 bg-white rounded-md shadow-2xl transform translate-y-full`}
+                        >
+                          <Link
+                            to={`/user-profile/${id}`}
+                            className="w-full flex text-green-700 items-center gap-2 py-2 px-4 text-left hover:bg-gray-300 dark:hover:bg-gray-700"
+                          >
+                            <span>
+                              <MdPreview className="h-4 w-4" />
+                            </span>
+                            View
+                          </Link>
+                          <button
+                            // onClick={() => openDeleteModal(id)}
+                            className="w-full flex items-center gap-2 text-blue-500 py-2 px-4 text-left hover:bg-gray-300 dark:hover:bg-gray-700"
+                          >
+                            <span>
+                              <FaRegEdit className="h-4 w-4" />
+                            </span>
+                            Edit
+                          </button>
+                          <button
+                            onClick={() => openDeleteModal(id)}
+                            className="w-full flex items-center gap-2 text-red-500 py-2 px-4 text-left hover:bg-gray-300 dark:hover:bg-gray-700"
+                          >
+                            <span>
+                              <FaTrashAlt className="h-4 w-4" />
+                            </span>
+                            Delete
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                    {deleteModal && (
+                      <DeleteModal
+                        title={`${firstName} ${middleInitial}. ${lastName}`}
+                        deleteModal={deleteModal}
+                        closeDeleteModal={closeDeleteModal}
+                        handleDelete={handleDelete}
+                      />
+                    )}
+                  </td>
 
+                  {/* 
                   <td className="px-6 py-4 flex gap-3 justify-center items-center">
                     <Link
                       to={`/user-profile/${id}`}
@@ -181,7 +243,7 @@ const FacultyTable = ({ fetchFaculty }) => {
                       />
                     )}
                     {}
-                  </td>
+                  </td> */}
                 </tr>
               )
             )}

@@ -14,7 +14,7 @@ const Table = ({ documents, handleSort }) => {
             <tr>
               <th scope="col" className="px-6 py-3 whitespace-nowrap">
                 <div className="flex items-center  whitespace-nowrap">
-                  DOCUMENT ID
+                  ID
                   <a href="#" onClick={() => handleSort("id")}>
                     <svg
                       className="w-3 h-3 ms-1.5"

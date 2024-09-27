@@ -7,10 +7,12 @@ import {
 } from "../../../services/documentWolkflowSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
+import AddWorkflow from "./AddWorkflow";
 const DocumentWorkflow = () => {
   const dispatch = useDispatch();
   const workflow = useSelector(getAllWorkflow);
   const [searchTerm, setSearchTerm] = useState("");
+  const [modal, setModal] = useState(false);
 
   useEffect(() => {
     if (workflow === "idle") {
@@ -25,10 +27,18 @@ const DocumentWorkflow = () => {
       dispatch(fetchAllWorkflow());
     }
   }, [dispatch, searchTerm]);
+
+  const handleAddWorkflow = () => {
+    setModal(true);
+  };
+
+  const closeModal = () => {
+    setModal(false);
+  };
   return (
     <div>
       <div className="flex text-sm md:text-[16px] justify-between lg:flex-row flex-col-reverse gap-5">
-        <div className=" flex max-w-[450px] w-full  items-center relative">
+        <div className=" flex max-w-[450px] w-full h-auto items-center relative">
           <input
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -38,13 +48,17 @@ const DocumentWorkflow = () => {
           />
           <IoSearch className="text-2xl absolute right-2 text-gray-600" />
         </div>
-        <button className="w-fit p-2 px-4 rounded-lg bg-main hover:bg-main_hover text-white font-semi">
-          Add Document Workflow
+        <button
+          onClick={() => handleAddWorkflow()}
+          className="w-fit p-2 px-4 rounded-lg bg-main hover:bg-main_hover text-white font-semi"
+        >
+          Add Workflow
         </button>
       </div>
       <div className="mt-8">
         <DocumentWorkflowTable data={workflow} />
       </div>
+      {modal && <AddWorkflow modal={modal} closeModal={closeModal} />}
     </div>
   );
 };

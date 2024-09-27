@@ -1,30 +1,45 @@
 import { FaEye, FaRegEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
-import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import { deleteWorkflow } from "../../services/documentWolkflowSlice";
 import { toastUtils } from "../../hooks/useToast";
 import DeleteModal from "../DeleteModal";
 import { useState } from "react";
+import WorkflowDetails from "../../pages/Admin/DocumentWorkflows/WorkflowDetails";
+import {
+  fetchWorkflowById,
+  getWorkflowById,
+} from "../../services/documentWolkflowSlice";
 
 const DocumentWorkflow = ({ data }) => {
   const [showModal, setModal] = useState(false);
-  const [selectedWorkflow, setSeletedWorkflow] = useState(null);
+  const [selectedWorkflow, setSelectedWorkflow] = useState(null);
+  const [showWorkflowDetails, setShowWorkflowDetails] = useState(null);
+  const workflowDetails = useSelector(getWorkflowById);
 
   const closeDeleteModal = () => {
     setModal(false);
-    setSeletedWorkflow(null);
+    setSelectedWorkflow(null);
   };
 
   const openModal = (id) => {
-    setSeletedWorkflow(id);
+    setSelectedWorkflow(id);
     setModal(!showModal);
   };
 
   const dispatch = useDispatch();
   const handleDelete = () => {
     dispatch(deleteWorkflow({ id: selectedWorkflow, toast: toastUtils() }));
+  };
+
+  const handleWorkflow = (id) => {
+    dispatch(fetchWorkflowById(id));
+    setShowWorkflowDetails(id);
+  };
+
+  const closeModal = () => {
+    setShowWorkflowDetails(null);
   };
   return (
     <>
@@ -72,12 +87,13 @@ const DocumentWorkflow = ({ data }) => {
                   {new Date(createdAt).toLocaleString()}
                 </td>
                 <td className="px-6 py-4 flex gap-3 justify-center items-center">
-                  <Link
-                    to={`/document-workflow/${id}`}
+                  <button
+                    onClick={() => handleWorkflow(id)}
+                    // to={`/document-workflow/${id}`}
                     className="px-4 py-2 text-lg bg-[#fca326] hover:bg-[#f58e40] text-white rounded-lg"
                   >
                     <FaEye className="h-5 w-5" />
-                  </Link>
+                  </button>
 
                   <button className="px-4 py-2 text-lg bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
                     <FaRegEdit className="h-5 w-5" />
@@ -87,20 +103,28 @@ const DocumentWorkflow = ({ data }) => {
                     className="px-4 py-2 text-lg bg-red-600 hover:bg-red-700 text-white rounded-lg"
                   >
                     <MdDelete className="h-5 w-5" />
-                    {showModal && (
-                      <DeleteModal
-                        title={document_type}
-                        deleteModal={showModal}
-                        closeDeleteModal={closeDeleteModal}
-                        handleDelete={handleDelete}
-                      />
-                    )}
                   </button>
+                  {showModal && (
+                    <DeleteModal
+                      title={document_type}
+                      deleteModal={showModal}
+                      closeDeleteModal={closeDeleteModal}
+                      handleDelete={handleDelete}
+                    />
+                  )}
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
+
+        {showWorkflowDetails && (
+          <WorkflowDetails
+            modal={showWorkflowDetails}
+            closeModal={closeModal}
+            workflowDetails={workflowDetails}
+          />
+        )}
       </div>
     </>
   );

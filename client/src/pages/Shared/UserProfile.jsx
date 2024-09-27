@@ -13,6 +13,8 @@ const UserProfile = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const user = useSelector(getFetchedUserById);
+  const [newEmail, setNewEmail] = useState("");
+  const [otp, setOTP] = useState("");
   const [data, setData] = useState({
     // image: "",
     // firstName: "",
@@ -37,10 +39,11 @@ const UserProfile = () => {
   useEffect(() => {
     dispatch(fetchUserById(id));
   }, [id, dispatch]);
-  console.log(data);
+
+  const submitDisable = !(newEmail && otp);
 
   return (
-    <div className="flex flex-col lg:flex-row w-full gap-5">
+    <div className="flex text-sm flex-col lg:flex-row w-full gap-5">
       <div className="flex flex-col gap-3 justify-center items-center p-4 bg-white border border-gray-300 shadow-lg min-w-[250px] h-fit rounded-lg">
         {/* <img
           src={`${
@@ -56,9 +59,9 @@ const UserProfile = () => {
         </span>
       </div>
       <div className="flex flex-col w-full border border-gray-300 shadow-lg rounded-lg">
-        <ul className="flex gap-6 border-b-2 border-gray-300 w-full h-12 items-center p-6">
+        <ul className="flex gap-2 border-b-2 border-gray-300 w-full h-12 items-center md:p-6 p-2">
           <li
-            className={`cursor-pointer px-2 py-1 rounded-md ${
+            className={`cursor-pointer  text-sm text-nowrap px-2 py-1 rounded-md ${
               activeTab === "profile"
                 ? "bg-blue-600 text-white"
                 : "hover:bg-blue-600 hover:text-white"
@@ -68,17 +71,17 @@ const UserProfile = () => {
             Profile info
           </li>
           <li
-            className={`cursor-pointer px-2 py-1 rounded-md ${
+            className={`cursor-pointer text-sm text-nowrap px-2 py-1 rounded-md ${
               activeTab === "update"
                 ? "bg-blue-600 text-white"
                 : "hover:bg-blue-600 hover:text-white"
             }`}
             onClick={() => setActiveTab("update")}
           >
-            Update info
+            Change email
           </li>
           <li
-            className={`cursor-pointer px-2 py-1 rounded-md ${
+            className={`cursor-pointer  text-sm text-nowrap px-2 py-1 rounded-md  ${
               activeTab === "password"
                 ? "bg-blue-600 text-white"
                 : "hover:bg-blue-600 hover:text-white"
@@ -201,130 +204,51 @@ const UserProfile = () => {
           {activeTab === "update" && (
             <div>
               <div className="flex flex-col gap-3">
-                {data.office?.officeName && (
-                  <div className="flex items-center gap-5">
-                    <label
-                      htmlFor=""
-                      className="text-md font-semibold text-gray-700 w-1/4" // Adjust this width as needed
-                    >
-                      Office name
-                    </label>
-                    <input
-                      className="rounded-lg focus:ring-blue-500 focus:border-blue-100 border-2 bg-gray-50 border-gray-200 flex-grow p-2 text-sm"
-                      type="text"
-                      defaultValue={data.office?.officeName || ""}
-                    />
-                  </div>
-                )}
+                <div className="flex items-center gap-5">
+                  <label
+                    htmlFor=""
+                    className="text-md font-semibold text-gray-700 w-1/4" // Adjust this width as needed
+                  >
+                    New email
+                  </label>
+                  <input
+                    onChange={(e) => setNewEmail(e.target.value)}
+                    className="rounded-lg focus:ring-blue-500 focus:border-blue-100 border-2 bg-gray-50 border-gray-200 flex-grow p-2 text-sm"
+                    type="text"
+                    placeholder="Enter new email"
+                  />
+                </div>
 
-                <div className="flex items-center gap-5">
+                <div className="flex items-center relative gap-5">
                   <label
                     htmlFor=""
-                    className="text-md font-semibold text-gray-700 w-1/4"
+                    className="text-md font-semibold text-gray-700 w-1/4" // Adjust this width as needed
                   >
-                    First name
+                    OTP
                   </label>
                   <input
+                    onChange={(e) => setOTP(e.target.value)}
                     className="rounded-lg focus:ring-blue-500 focus:border-blue-100 border-2 bg-gray-50 border-gray-200 flex-grow p-2 text-sm"
                     type="text"
-                    defaultValue={`${data?.firstName || ""}`}
+                    placeholder="Enter 4 digits OTP"
                   />
-                </div>
-                <div className="flex items-center gap-5">
-                  <label
-                    htmlFor=""
-                    className="text-md font-semibold text-gray-700 w-1/4"
+                  <button
+                    // onClick={handleSubmit}
+                    type="button"
+                    className="text-[#1A9CE7] text-sm absolute right-5"
                   >
-                    Last name
-                  </label>
-                  <input
-                    className="rounded-lg focus:ring-blue-500 focus:border-blue-100 border-2 bg-gray-50 border-gray-200 flex-grow p-2 text-sm"
-                    type="text"
-                    defaultValue={`${data?.lastName || ""}`}
-                  />
+                    SEND
+                  </button>
                 </div>
-                <div className="flex items-center gap-5">
-                  <label
-                    htmlFor=""
-                    className="text-md font-semibold text-gray-700 w-1/4"
-                  >
-                    Middle initial
-                  </label>
-                  <input
-                    className="rounded-lg focus:ring-blue-500 focus:border-blue-100 border-2 bg-gray-50 border-gray-200 flex-grow p-2 text-sm"
-                    type="text"
-                    defaultValue={`${data?.middleInitial || ""}`}
-                  />
-                </div>
-                <div className="flex items-center gap-5">
-                  <label
-                    htmlFor=""
-                    className="text-md font-semibold text-gray-700 w-1/4"
-                  >
-                    Email
-                  </label>
-                  <input
-                    className="rounded-lg focus:ring-blue-500 focus:border-blue-100 border-2 bg-gray-50 border-gray-200 flex-grow p-2 text-sm"
-                    type="text"
-                    defaultValue={data?.email || ""}
-                  />
-                </div>
-                <div className="flex items-center gap-5">
-                  <label
-                    htmlFor=""
-                    className="text-md font-semibold text-gray-700 w-1/4"
-                  >
-                    Date of birth
-                  </label>
-                  <input
-                    className="rounded-lg focus:ring-blue-500 focus:border-blue-100 border-2 bg-gray-50 border-gray-200 flex-grow p-2 text-sm"
-                    type="date"
-                    defaultValue={data?.birthDate || ""}
-                  />
-                </div>
-                <div className="flex items-center gap-5">
-                  <label
-                    htmlFor=""
-                    className="text-md font-semibold text-gray-700 w-1/4"
-                  >
-                    Contact number
-                  </label>
-                  <input
-                    className="rounded-lg focus:ring-blue-500 focus:border-blue-100 border-2 bg-gray-50 border-gray-200 flex-grow p-2 text-sm"
-                    type="text"
-                    defaultValue={data?.contactNumber || ""}
-                  />
-                </div>
-                <div className="flex items-center gap-5">
-                  <label
-                    htmlFor=""
-                    className="text-md font-semibold text-gray-700 w-1/4"
-                  >
-                    Designation
-                  </label>
-                  <input
-                    className="rounded-lg focus:ring-blue-500 focus:border-blue-100 border-2 bg-gray-50 border-gray-200 flex-grow p-2 text-sm"
-                    type="text"
-                    defaultValue={data?.designation || ""}
-                  />
-                </div>
-                {data.esuCampus && (
-                  <div className="flex items-center gap-5">
-                    <label
-                      htmlFor=""
-                      className="text-md font-semibold text-gray-700 w-1/4"
-                    >
-                      Esu Campus
-                    </label>
-                    <input
-                      className="rounded-lg border-2 bg-gray-50 border-gray-200 flex-grow p-2 text-sm"
-                      type="text"
-                      defaultValue={data?.esuCampus || ""}
-                    />
-                  </div>
-                )}
-                <button className="w-1/4 mt-4 bg-blue-500 hover:bg-blue-700 text-white rounded-lg p-2">
-                  Update
+
+                <button
+                  type="button"
+                  disabled={submitDisable ? true : false}
+                  className={`${
+                    submitDisable ? "cursor-not-allowed" : "cursor-pointer"
+                  } w-1/4 mt-4 bg-blue-500 hover:bg-blue-700 text-white rounded-lg p-2`}
+                >
+                  Verify code
                 </button>
               </div>
             </div>
@@ -334,7 +258,7 @@ const UserProfile = () => {
               <div className="flex items-center gap-5 justify-between">
                 <label
                   htmlFor=""
-                  className="text-md w-1/4 text-nowrap font-semibold text-gray-700"
+                  className="text-md w-1/4 font-semibold text-gray-700"
                 >
                   Old password
                 </label>
@@ -347,7 +271,7 @@ const UserProfile = () => {
               <div className="flex items-center gap-5 justify-between">
                 <label
                   htmlFor=""
-                  className="text-md w-1/4 text-nowrap font-semibold text-gray-700"
+                  className="text-md w-1/4 font-semibold text-gray-700"
                 >
                   New password
                 </label>
@@ -360,7 +284,7 @@ const UserProfile = () => {
               <div className="flex items-center gap-5 justify-between">
                 <label
                   htmlFor=""
-                  className="text-md w-1/4 text-nowrap font-semibold text-gray-700"
+                  className="text-md w-1/4  font-semibold text-gray-700"
                 >
                   Confirm password
                 </label>

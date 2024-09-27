@@ -40,7 +40,7 @@ const Cards = () => {
       {data.map((card, index) => (
         <div
           key={index}
-          className="rounded-[20px] bg-[#daeff5] flex flex-col py-4  items-center cursor-pointer shadow-xl transform hover:scale-[103%] transition duration-300 ease-out "
+          className=" rounded-lg bg-[#daeff5] flex flex-col py-4  items-center cursor-pointer shadow-xl transform hover:scale-[103%] transition duration-300 ease-out "
           // style={{ borderColor: getNextColor() }}
         >
           <h1 className="font-bold py-1 w-full text-center text-sm lg:text-lg   whitespace-nowrap text-main rounded-md">
