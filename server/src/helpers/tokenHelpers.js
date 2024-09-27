@@ -2,11 +2,11 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 const generateAccessToken = (user) => {
-  return jwt.sign(user, process.env.ACCESS_TOKEN, { expiresIn: "30m" });
+  return jwt.sign(user, process.env.ACCESS_TOKEN, { expiresIn: "30d" });
 };
 
 const generateRefreshToken = (user) => {
-  return jwt.sign(user, process.env.REFRESH_TOKEN, { expiresIn: "1d" });
+  return jwt.sign(user, process.env.REFRESH_TOKEN, { expiresIn: "3d" });
 };
 
 const setTokens = (res, user) => {
@@ -16,11 +16,13 @@ const setTokens = (res, user) => {
   // Set secure HTTP-only cookies
   res.cookie("accessToken", accessToken, {
     // httpOnly: true,
-    maxAge: 30 * 60 * 1000,
+    // maxAge: 30 * 60 * 1000, // 30 minutes
+    maxAge: 30 * 24 * 60 * 60 * 1000, // 1 month
   }); // 30 minutes
   res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
-    maxAge: 30 * 60 * 1000,
+    // maxAge: 30 * 60 * 1000, // 30 minutes
+    maxAge: 30 * 24 * 60 * 60 * 1000, // 1 month
   }); // 60 minutes
 
   return { accessToken, refreshToken };

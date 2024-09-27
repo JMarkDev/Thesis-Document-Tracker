@@ -185,8 +185,76 @@ const searchOffice = async (req, res) => {
   }
 };
 
+const updateOffice = async (req, res) => {
+  const { id } = req.params;
+  const {
+    firstName,
+    lastName,
+    middleInitial,
+    birthDate,
+    contactNumber,
+    designation,
+    officeName,
+  } = req.body;
+
+  try {
+    if (!officeName) {
+      return res.status(400).json({ message: "Office name is required" });
+    }
+
+    // upload image
+    let newFileName = null;
+    if (req.file) {
+      let filetype = req.file.mimetype.split("/")[1];
+      newFileName = req.file.filename + "." + filetype;
+      fs.rename(
+        `./uploads/${req.file.filename}`,
+        `./uploads/${newFileName}`,
+        async (err) => {
+          if (err) throw err;
+          console.log("uploaded successfully");
+        }
+      );
+    }
+
+    await userModel.update(
+      {
+        officeName: officeName,
+        firstName: firstName,
+        lastName: lastName,
+        middleInitial: middleInitial,
+        birthDate: birthDate,
+        contactNumber: contactNumber,
+        designation: designation,
+        updatedAt: createdAt,
+      },
+      {
+        where: { id },
+      }
+    );
+
+    await officeModel.update(
+      {
+        officeName: officeName,
+        updatedAt: createdAt,
+      },
+      {
+        where: { id },
+      }
+    );
+    return res.status(200).json({
+      status: "success",
+      message: "Office updated successfully",
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: err.message });
+  }
+};
+
 module.exports = {
   addOffice,
+  updateOffice,
   getAllOffice,
   searchOffice,
 };

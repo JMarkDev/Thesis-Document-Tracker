@@ -17,5 +17,12 @@ router.post(
 );
 router.get("/all", officeController.getAllOffice);
 router.get("/search/:name", officeController.searchOffice);
+router.put(
+  "/update/id/:id",
+  upload.single("image"),
+  registerValidationRules(),
+  validateForm,
+  officeController.updateOffice
+);
 
 module.exports = router;
