@@ -8,6 +8,8 @@ import {
   getRoleUsers,
 } from "../../../services/usersSlice";
 import { MdDelete } from "react-icons/md";
+import { addWorkflow } from "../../../services/documentWolkflowSlice";
+import { toastUtils } from "../../../hooks/useToast";
 
 const AddWorkflow = ({ modal, closeModal }) => {
   const [documentType, setDocumentType] = useState("");
@@ -33,18 +35,35 @@ const AddWorkflow = ({ modal, closeModal }) => {
   };
 
   // Function to handle adding selected office to the route array
-  const handleSelectOffice = (officeName) => {
+  const handleSelectOffice = (officeName, userId) => {
     // Add new step with office name to the route
-    setRoute([...route, { office_name: officeName, user_id: null }]);
+    setRoute([...route, { office_name: officeName, user_id: userId }]);
+
+    if (officeName === "DEFAULT") {
+      const allOffices = officeUsers.map((office) => ({
+        office_name: office.office.officeName,
+        user_id: office.id,
+      }));
+
+      setRoute([
+        { office_name: "FACULTY", user_id: null },
+        { office_name: "REGISTRAR", user_id: null },
+        ...allOffices,
+      ]);
+    } else {
+      if (!isOfficeInRoute(officeName)) {
+        setRoute([...route, { office_name: officeName, user_id: userId }]);
+      }
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Submit logic here
-    console.log({ documentType, route });
-  };
 
-  console.log(route);
+    const workflow = { document_type: documentType, route };
+    dispatch(addWorkflow({ workflow, toast: toastUtils() }));
+    closeModal();
+  };
 
   const isOfficeInRoute = (officeName) => {
     return route.some((office) => office.office_name === officeName);
@@ -100,14 +119,14 @@ const AddWorkflow = ({ modal, closeModal }) => {
             <div className="">
               <form className="p-5  space-y-5" onSubmit={handleSubmit}>
                 <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700">
+                  <label className="block  font-semibold text-gray-700 mb-2">
                     Document Type
                   </label>
                   <input
                     type="text"
                     value={documentType}
                     onChange={(e) => setDocumentType(e.target.value)}
-                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    className=" block text-sm w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-0 focus:border-blue-600 peer "
                     placeholder="Enter Document Type"
                     required
                   />
@@ -156,6 +175,25 @@ const AddWorkflow = ({ modal, closeModal }) => {
                         <a
                           href="#"
                           className={`block px-4 py-2  ${
+                            isOfficeInRoute("DEFAULT")
+                              ? "text-gray-400 cursor-not-allowed"
+                              : "hover:bg-gray-300"
+                          }`}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            if (!isOfficeInRoute("DEFAULT")) {
+                              handleSelectOffice("DEFAULT", null);
+                            }
+                          }}
+                          disabled={isOfficeInRoute("DEFAULT")}
+                        >
+                          DEFAULT ROUTE
+                        </a>
+                      </li>
+                      <li>
+                        <a
+                          href="#"
+                          className={`block px-4 py-2  ${
                             isOfficeInRoute("FACULTY")
                               ? "text-gray-400 cursor-not-allowed"
                               : "hover:bg-gray-300"
@@ -163,7 +201,7 @@ const AddWorkflow = ({ modal, closeModal }) => {
                           onClick={(e) => {
                             e.preventDefault();
                             if (!isOfficeInRoute("FACULTY")) {
-                              handleSelectOffice("FACULTY");
+                              handleSelectOffice("FACULTY", null);
                             }
                           }}
                           disabled={isOfficeInRoute("FACULTY")}
@@ -182,7 +220,7 @@ const AddWorkflow = ({ modal, closeModal }) => {
                           onClick={(e) => {
                             e.preventDefault();
                             if (!isOfficeInRoute("REGISTRAR")) {
-                              handleSelectOffice("REGISTRAR");
+                              handleSelectOffice("REGISTRAR", null);
                             }
                           }}
                           disabled={isOfficeInRoute("REGISTRAR")}
@@ -202,7 +240,10 @@ const AddWorkflow = ({ modal, closeModal }) => {
                             onClick={(e) => {
                               e.preventDefault();
                               if (!isOfficeInRoute(office.office.officeName)) {
-                                handleSelectOffice(office.office.officeName);
+                                handleSelectOffice(
+                                  office.office.officeName,
+                                  office.officeId
+                                );
                               }
                             }}
                             disabled={isOfficeInRoute(office.office.officeName)}
@@ -214,49 +255,59 @@ const AddWorkflow = ({ modal, closeModal }) => {
                     </ul>
                   </div>
                 </div>
-                <div className="flex items-center  justify-center">
-                  <ol className="relative  right-0 text-gray-600 border-l-4 border-yellow ">
-                    {route?.map(({ office_name }, index) => (
-                      <li key={index} className="last:mb-0 mb-10 ms-6">
-                        <span
-                          className="absolute flex items-center justify-center w-8 h-8 bg-red-300
-                 rounded-full -start-4 ring-4 ring-white dark:ring-gray-900 dark:bg-green-900"
-                        >
-                          <svg
-                            className="w-3.5 h-3.5 text-blue-500 dark:text-green-400"
-                            aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 16 12"
-                          >
-                            <path
-                              stroke="currentColor"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth="2"
-                              d="M1 5.917 5.724 10.5 15 1.5"
-                            />
-                          </svg>
-                        </span>
 
-                        <p className="font-bold hover:bg-gray-300 px-2 rounded-sm py-1 flex w-full justify-between items-center text-[12px] ">
-                          {office_name}
+                {route.length > 0 && (
+                  <div className="flex items-center  justify-center">
+                    <ol className="relative  right-0 text-gray-600 border-l-4 border-yellow ">
+                      {route?.map(({ office_name }, index) => (
+                        <li key={index} className="last:mb-0 mb-10 ms-6">
                           <span
-                            onClick={() => handleDeleteOffice(office_name)}
-                            className="text-xl cursor-pointer text-red-500 ml-20"
+                            className="absolute flex items-center justify-center w-8 h-8 bg-red-300
+                 rounded-full -start-4 ring-4 ring-white dark:ring-gray-900 dark:bg-green-900"
                           >
-                            <MdDelete />
+                            <svg
+                              className="w-3.5 h-3.5 text-blue-500 dark:text-green-400"
+                              aria-hidden="true"
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 16 12"
+                            >
+                              <path
+                                stroke="currentColor"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M1 5.917 5.724 10.5 15 1.5"
+                              />
+                            </svg>
                           </span>
-                        </p>
-                      </li>
-                    ))}
-                  </ol>
-                </div>
 
-                <div className="mt-5 flex justify-end">
+                          <p className="font-bold hover:bg-gray-300 px-2 rounded-sm py-1 flex w-full justify-between items-center text-[12px] ">
+                            {office_name}
+                            <span
+                              onClick={() => handleDeleteOffice(office_name)}
+                              className="text-xl cursor-pointer text-red-500 hover:bg-gray-400 rounded-sm ml-20"
+                            >
+                              <MdDelete />
+                            </span>
+                          </p>
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
+                )}
+
+                <div className=" flex justify-end gap-3">
+                  <button
+                    onClick={closeModal}
+                    type="button"
+                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-gray-500 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  >
+                    Cancel
+                  </button>
                   <button
                     type="submit"
-                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-500  hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                   >
                     Save Workflow
                   </button>

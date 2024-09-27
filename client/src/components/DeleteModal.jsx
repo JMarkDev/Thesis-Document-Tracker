@@ -21,7 +21,7 @@ const DeleteModal = ({
           location.pathname === "/users/faculty" ||
           location.pathname === "/users/campus-admin" ||
           location.pathname === "/document-workflow"
-            ? "bg-opacity-20"
+            ? "bg-opacity-10"
             : "bg-opacity-40"
         }`}
       >

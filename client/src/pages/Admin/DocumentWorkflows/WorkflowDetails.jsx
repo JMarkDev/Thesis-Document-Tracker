@@ -14,7 +14,7 @@ const WorkflowDetails = ({ modal, closeModal, workflowDetails }) => {
         id="default-modal"
         tabIndex="-1"
         aria-hidden={!modal}
-        className="fixed inset-0 z-[40] px-5 flex items-center justify-center rounded-xl w-full h-full bg-gray-800 bg-opacity-20 font-normal"
+        className="fixed inset-0 z-[40] px-5 flex items-center justify-center rounded-xl w-full h-full bg-gray-800 bg-opacity-30 font-normal"
       >
         {" "}
         <div className="relative w-full max-w-6xl md:mt-10 bg-white  overflow-y-auto rounded-xl">

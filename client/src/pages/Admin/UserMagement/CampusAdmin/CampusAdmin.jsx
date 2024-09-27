@@ -49,7 +49,7 @@ const CampusAdmin = () => {
             placeholder="Search..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="border border-[#d67c80] focus:border-blue  rounded-xl w-full bg-gray-100"
+            className="border border-[#d67c80] focus:border-blue  rounded-xl w-full bg-gray-100 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
           />
           <IoSearch className="text-2xl absolute right-2 text-gray-600" />
         </div>

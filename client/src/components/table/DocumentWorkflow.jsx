@@ -11,12 +11,14 @@ import {
   fetchWorkflowById,
   getWorkflowById,
 } from "../../services/documentWolkflowSlice";
+import { useFormat } from "../../hooks/useFormatDate";
 
 const DocumentWorkflow = ({ data }) => {
   const [showModal, setModal] = useState(false);
   const [selectedWorkflow, setSelectedWorkflow] = useState(null);
   const [showWorkflowDetails, setShowWorkflowDetails] = useState(null);
   const workflowDetails = useSelector(getWorkflowById);
+  const { dateFormat } = useFormat();
 
   const closeDeleteModal = () => {
     setModal(false);
@@ -31,6 +33,7 @@ const DocumentWorkflow = ({ data }) => {
   const dispatch = useDispatch();
   const handleDelete = () => {
     dispatch(deleteWorkflow({ id: selectedWorkflow, toast: toastUtils() }));
+    closeDeleteModal();
   };
 
   const handleWorkflow = (id) => {
@@ -84,7 +87,7 @@ const DocumentWorkflow = ({ data }) => {
                 <td className="px-6 py-4 whitespace-nowrap">{document_type}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   {" "}
-                  {new Date(createdAt).toLocaleString()}
+                  {dateFormat(createdAt)}
                 </td>
                 <td className="px-6 py-4 flex gap-3 justify-center items-center">
                   <button

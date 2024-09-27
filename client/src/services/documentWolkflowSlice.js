@@ -11,6 +11,17 @@ export const searchWorkflow = createAsyncThunk("/workflow", async (name) => {
   return response.data;
 });
 
+export const addWorkflow = createAsyncThunk(
+  "workflow/add",
+  async ({ workflow, toast }) => {
+    const response = await axios.post("/workflow/add", workflow);
+    if (response.data.status === "success") {
+      toast.success(response.data.message);
+      return response.data.workflow;
+    }
+  }
+);
+
 export const fetchWorkflowById = createAsyncThunk(
   "/workflow/id",
   async (id) => {
@@ -87,11 +98,23 @@ const workflowSlice = createSlice({
       .addCase(fetchWorkflowById.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
+      })
+      .addCase(addWorkflow.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(addWorkflow.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.allWorkflow = [...state.allWorkflow, action.payload];
+      })
+      .addCase(addWorkflow.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
       });
   },
 });
 
 export const getAllWorkflow = (state) => state.workflow.allWorkflow;
 export const getWorkflowById = (state) => state.workflow.workflowById;
+export const getWorkflowStatus = (state) => state.workflow.status;
 
 export default workflowSlice.reducer;
