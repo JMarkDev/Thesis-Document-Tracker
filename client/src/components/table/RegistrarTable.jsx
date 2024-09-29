@@ -16,6 +16,7 @@ const RegistrarTable = ({ registrarUser }) => {
   const [deleteModal, setDeleteModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [selectedEsuCampus, setSelectedEsuCampus] = useState(null);
+  const [name, setName] = useState("");
 
   const openModal = (image) => {
     setSelectedImage(image);
@@ -27,7 +28,8 @@ const RegistrarTable = ({ registrarUser }) => {
     setSelectedImage(null);
   };
 
-  const openDeleteModal = (id) => {
+  const openDeleteModal = ({ id, name }) => {
+    setName(name);
     setSelectedEsuCampus(id);
     setDeleteModal(true);
   };
@@ -144,19 +146,17 @@ const RegistrarTable = ({ registrarUser }) => {
                     </button>
 
                     <button
-                      onClick={() => openDeleteModal(id)}
+                      onClick={() =>
+                        openDeleteModal({
+                          id,
+                          name: `${firstName} ${middleInitial}. ${lastName}`,
+                        })
+                      }
                       className="px-4 py-2 text-lg bg-red-500 hover:bg-red-700 text-white rounded-lg"
                     >
                       <FaTrashAlt className="h-5 w-5" />
                     </button>
-                    {deleteModal && (
-                      <DeleteModal
-                        title={`${firstName} ${middleInitial}. ${lastName}`}
-                        deleteModal={deleteModal}
-                        closeDeleteModal={closeDeleteModal}
-                        handleDelete={handleDelete}
-                      />
-                    )}
+
                     {}
                   </td>
                 </tr>
@@ -164,6 +164,15 @@ const RegistrarTable = ({ registrarUser }) => {
             )}
           </tbody>
         </table>
+
+        {deleteModal && (
+          <DeleteModal
+            title={name}
+            deleteModal={deleteModal}
+            closeDeleteModal={closeDeleteModal}
+            handleDelete={handleDelete}
+          />
+        )}
       </div>
     </>
   );

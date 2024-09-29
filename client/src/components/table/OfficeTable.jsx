@@ -19,6 +19,7 @@ const Office = ({ officeUsers }) => {
   const [deleteModal, setDeleteModal] = useState(false);
   const [selecedOffice, setSelectedOffice] = useState(null);
   const [openAction, setOpenAction] = useState(false);
+  const [name, setName] = useState("");
 
   const openModal = (image) => {
     setSelectedImage(image);
@@ -30,7 +31,8 @@ const Office = ({ officeUsers }) => {
     setSelectedImage(null);
   };
 
-  const openDeleteModal = (id) => {
+  const openDeleteModal = ({ id, name }) => {
+    setName(name);
     setSelectedOffice(id);
     setDeleteModal(true);
   };
@@ -179,7 +181,12 @@ const Office = ({ officeUsers }) => {
                             Edit
                           </button>
                           <button
-                            onClick={() => openDeleteModal(id)}
+                            onClick={() =>
+                              openDeleteModal({
+                                id,
+                                name: `${firstName} ${middleInitial}. ${lastName}`,
+                              })
+                            }
                             className="w-full flex items-center gap-2 text-red-500 py-2 px-4 text-left hover:bg-gray-300 dark:hover:bg-gray-700"
                           >
                             <span>
@@ -190,14 +197,6 @@ const Office = ({ officeUsers }) => {
                         </div>
                       )}
                     </div>
-                    {deleteModal && (
-                      <DeleteModal
-                        title={`${firstName} ${middleInitial}. ${lastName}`}
-                        deleteModal={deleteModal}
-                        closeDeleteModal={closeDeleteModal}
-                        handleDelete={handleDelete}
-                      />
-                    )}
                   </td>
 
                   {/* <td className="px-6 py-4 flex gap-3 justify-center items-center">
@@ -232,6 +231,14 @@ const Office = ({ officeUsers }) => {
             )}
           </tbody>
         </table>
+        {deleteModal && (
+          <DeleteModal
+            title={name}
+            deleteModal={deleteModal}
+            closeDeleteModal={closeDeleteModal}
+            handleDelete={handleDelete}
+          />
+        )}
       </div>
     </>
   );

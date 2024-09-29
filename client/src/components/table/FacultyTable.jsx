@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FaEye, FaTrashAlt, FaRegEdit } from "react-icons/fa";
+import { FaTrashAlt, FaRegEdit } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import ProfileModal from "../ProfileModal";
@@ -21,6 +21,7 @@ const FacultyTable = ({ fetchFaculty }) => {
   const [showModal, setShowModal] = useState(false);
   const [selectedEsuCampus, setSelectedEsuCampus] = useState(null);
   const [openAction, setOpenAction] = useState(false);
+  const [name, setName] = useState("");
 
   const openModal = (image) => {
     setSelectedImage(image);
@@ -32,7 +33,8 @@ const FacultyTable = ({ fetchFaculty }) => {
     setSelectedImage(null);
   };
 
-  const openDeleteModal = (id) => {
+  const openDeleteModal = ({ id, name }) => {
+    setName(name);
     setSelectedEsuCampus(id);
     setDeleteModal(true);
   };
@@ -198,7 +200,12 @@ const FacultyTable = ({ fetchFaculty }) => {
                             Edit
                           </button>
                           <button
-                            onClick={() => openDeleteModal(id)}
+                            onClick={() =>
+                              openDeleteModal({
+                                id,
+                                name: `${firstName} ${middleInitial}. ${lastName}`,
+                              })
+                            }
                             className="w-full flex items-center gap-2 text-red-500 py-2 px-4 text-left hover:bg-gray-300 dark:hover:bg-gray-700"
                           >
                             <span>
@@ -209,14 +216,6 @@ const FacultyTable = ({ fetchFaculty }) => {
                         </div>
                       )}
                     </div>
-                    {deleteModal && (
-                      <DeleteModal
-                        title={`${firstName} ${middleInitial}. ${lastName}`}
-                        deleteModal={deleteModal}
-                        closeDeleteModal={closeDeleteModal}
-                        handleDelete={handleDelete}
-                      />
-                    )}
                   </td>
 
                   {/* 
@@ -249,6 +248,14 @@ const FacultyTable = ({ fetchFaculty }) => {
             )}
           </tbody>
         </table>
+        {deleteModal && (
+          <DeleteModal
+            title={name}
+            deleteModal={deleteModal}
+            closeDeleteModal={closeDeleteModal}
+            handleDelete={handleDelete}
+          />
+        )}
       </div>
     </>
   );

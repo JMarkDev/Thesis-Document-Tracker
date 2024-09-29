@@ -43,10 +43,10 @@ const Cards = () => {
           className=" rounded-lg bg-[#daeff5] flex flex-col py-4  items-center cursor-pointer shadow-xl transform hover:scale-[103%] transition duration-300 ease-out "
           // style={{ borderColor: getNextColor() }}
         >
-          <h1 className="font-bold py-1 w-full text-center text-sm lg:text-lg   whitespace-nowrap text-main rounded-md">
+          <h1 className="font-bold py-1 w-full text-center text-sm xl:text-lg   whitespace-nowrap text-main rounded-md">
             {card.title}
           </h1>
-          <h1 className=" font-bold md:text-4xl text-xl text-[#4e4e50]">
+          <h1 className=" font-bold lg:text-4xl md:text-2xl text-xl text-[#4e4e50]">
             {card.value}
           </h1>
         </div>
