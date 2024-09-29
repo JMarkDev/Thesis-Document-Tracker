@@ -4,6 +4,7 @@ import {
   getAllWorkflow,
   fetchAllWorkflow,
   searchWorkflow,
+  resetWorkflowStatus,
 } from "../../../services/documentWolkflowSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
@@ -29,6 +30,7 @@ const DocumentWorkflow = () => {
   }, [dispatch, searchTerm]);
 
   const handleAddWorkflow = () => {
+    dispatch(resetWorkflowStatus());
     setModal(true);
   };
 

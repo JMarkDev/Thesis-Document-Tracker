@@ -8,7 +8,10 @@ import {
   getRoleUsers,
 } from "../../../services/usersSlice";
 import { MdDelete } from "react-icons/md";
-import { addWorkflow } from "../../../services/documentWolkflowSlice";
+import {
+  addWorkflow,
+  getWorkflowStatus,
+} from "../../../services/documentWolkflowSlice";
 import { toastUtils } from "../../../hooks/useToast";
 import Loader from "../../../components/loader/loginloader/LoginLoading";
 
@@ -21,6 +24,10 @@ const AddWorkflow = ({ modal, closeModal }) => {
   const officeStatus = useSelector(getRoleStatus("office"));
   const adminStatus = useSelector(getRoleStatus("admin"));
   const [loading, setLoading] = useState(false);
+  const workflowStatus = useSelector(getWorkflowStatus);
+  useEffect(() => {
+    console.log(workflowStatus);
+  }, [workflowStatus]);
 
   useEffect(() => {
     if (officeStatus === "idle") {
@@ -63,12 +70,19 @@ const AddWorkflow = ({ modal, closeModal }) => {
     e.preventDefault();
     setLoading(true);
     const workflow = { document_type: documentType, route };
-    setTimeout(() => {
-      dispatch(addWorkflow({ workflow, toast: toastUtils() }));
+    dispatch(addWorkflow({ workflow, toast: toastUtils() }));
+  };
+
+  useEffect(() => {
+    if (workflowStatus === "succeeded") {
       closeModal();
       setLoading(false);
-    }, 2000);
-  };
+    } else if (workflowStatus === "loading") {
+      setLoading(false);
+    } else {
+      setLoading(false);
+    }
+  }, [workflowStatus, closeModal, dispatch]);
 
   const isOfficeInRoute = (officeName) => {
     return route.some((office) => office.office_name === officeName);
@@ -134,7 +148,6 @@ const AddWorkflow = ({ modal, closeModal }) => {
                     onChange={(e) => setDocumentType(e.target.value)}
                     className=" block text-sm w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-0 focus:border-blue-600 peer "
                     placeholder="Enter Document Type"
-                    required
                   />
                 </div>
 

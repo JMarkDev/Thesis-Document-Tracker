@@ -12,8 +12,11 @@ import {
   updateWorkflow,
   fetchWorkflowById,
   getWorkflowById,
+  updateWorkflowStatus,
+  resetWorkflowStatus,
 } from "../../../services/documentWolkflowSlice";
 import { toastUtils } from "../../../hooks/useToast";
+import Loader from "../../../components/loader/loginloader/LoginLoading";
 
 const EditWorkflow = ({ modal, closeModal, id }) => {
   const [documentType, setDocumentType] = useState("");
@@ -24,6 +27,8 @@ const EditWorkflow = ({ modal, closeModal, id }) => {
   const officeStatus = useSelector(getRoleStatus("office"));
   const adminStatus = useSelector(getRoleStatus("admin"));
   const workflow = useSelector(getWorkflowById);
+  const workflowStatus = useSelector(updateWorkflowStatus);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (workflow) {
@@ -77,11 +82,22 @@ const EditWorkflow = ({ modal, closeModal, id }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    setLoading(true);
     const workflow = { document_type: documentType, route };
     dispatch(updateWorkflow({ id, workflow, toast: toastUtils() }));
-    closeModal();
   };
+
+  useEffect(() => {
+    if (workflowStatus === "succeeded") {
+      dispatch(resetWorkflowStatus());
+      closeModal();
+      setLoading(false);
+    } else if (workflowStatus === "loading") {
+      setLoading(false);
+    } else {
+      setLoading(false);
+    }
+  }, [workflowStatus, closeModal, dispatch]);
 
   const isOfficeInRoute = (officeName) => {
     return route.some((office) => office.office_name === officeName);
@@ -103,6 +119,7 @@ const EditWorkflow = ({ modal, closeModal, id }) => {
         className="fixed overflow-y-auto overflow-hidden  inset-0 z-50 px-5 flex items-center justify-center w-full h-full bg-gray-700 bg-opacity-20 font-normal"
       >
         {/* <div className="relative w-full max-w-2xl bg-white  rounded-xl shadow-lg"> */}
+        {loading && <Loader />}
         <div
           className={`relative w-full max-w-2xl ${
             isOpen ? "h-full" : "h-fit"

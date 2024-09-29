@@ -10,11 +10,13 @@ import WorkflowDetails from "../../pages/Admin/DocumentWorkflows/WorkflowDetails
 import {
   fetchWorkflowById,
   getWorkflowById,
+  resetWorkflowStatus,
 } from "../../services/documentWolkflowSlice";
 import { useFormat } from "../../hooks/useFormatDate";
 import EditWorkflow from "../../pages/Admin/DocumentWorkflows/EditWorkflow";
 
 const DocumentWorkflow = ({ data }) => {
+  const dispatch = useDispatch();
   const [showModal, setModal] = useState(false);
   const [selectedWorkflow, setSelectedWorkflow] = useState(null);
   const [showWorkflowDetails, setShowWorkflowDetails] = useState(null);
@@ -36,9 +38,9 @@ const DocumentWorkflow = ({ data }) => {
   const handleEdit = (id) => {
     setSelectedWorkflow(id);
     setShowEditModal(true);
+    dispatch(resetWorkflowStatus());
   };
 
-  const dispatch = useDispatch();
   const handleDelete = () => {
     dispatch(deleteWorkflow({ id: selectedWorkflow, toast: toastUtils() }));
     closeDeleteModal();
