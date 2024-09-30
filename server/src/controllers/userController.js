@@ -5,6 +5,7 @@ const { createdAt } = require("../utils/formattedTime");
 const { sendNotification } = require("../utils/emailNotifications");
 const statusList = require("../constants/statusList");
 const rolesList = require("../constants/rolesList");
+const otpController = require("./otpController");
 const getUserByEmail = async (req, res) => {
   const { email } = req.query;
   try {
@@ -203,8 +204,33 @@ const filterFacultyByCampus = async (req, res) => {
   }
 };
 
-const updateUser = async (req, res) => {
+const updateEmail = async (req, res) => {
+  const { email } = req.body;
+
   try {
+    const existUser = await userModel.findOne({
+      where: {
+        email: email,
+      },
+    });
+
+    if (!email.trim()) {
+      return res.status(400).json({
+        message: "Email is required",
+      });
+    }
+
+    if (existUser) {
+      return res.status(400).json({
+        message: "Email already exists",
+      });
+    }
+
+    await otpController.postOTP(email);
+    return res.status(200).json({
+      status: "success",
+      message: `Verification OTP sent to ${email}`,
+    });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: error.message });
@@ -220,4 +246,5 @@ module.exports = {
   deleteUser,
   searchUser,
   filterFacultyByCampus,
+  updateEmail,
 };

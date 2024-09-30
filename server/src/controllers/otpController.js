@@ -162,8 +162,55 @@ const resendOTP = async (req, res) => {
   }
 };
 
+const verifyChangeEmail = async (req, res) => {
+  const { id } = req.params;
+  const { email, otp } = req.body;
+
+  try {
+    const matchedOTPRecord = await otpModel.findOne({
+      where: { email: email },
+    });
+
+    const { expiresAt, otp: storedOTP } = matchedOTPRecord;
+
+    // Check if the OTP matches
+    const matchOTP = await bcrypt.compare(otp, storedOTP);
+
+    if (!matchedOTPRecord || !matchOTP) {
+      return res
+        .status(400)
+        .json({ message: "Invalid OTP. Please try again." });
+    }
+
+    if (expiresAt < Date.now()) {
+      return res
+        .status(400)
+        .json({ message: "OTP expired. Pleae request a new OTP." });
+    }
+
+    await userModel.update(
+      {
+        email: email,
+        updatedAt: createdAt,
+      },
+      { where: { id: id } }
+    );
+    // Delete the OTP after successful verification
+    await otpModel.destroy({ where: { email: email } });
+
+    return res.status(200).json({
+      status: "success",
+      message: "Email successfully changed",
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   postOTP,
   verifyOTP,
   resendOTP,
+  verifyChangeEmail,
 };
