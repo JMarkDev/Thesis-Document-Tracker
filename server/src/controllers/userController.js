@@ -203,6 +203,14 @@ const filterFacultyByCampus = async (req, res) => {
   }
 };
 
+const updateUser = async (req, res) => {
+  try {
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getUserByEmail,
   getUserById,

@@ -195,6 +195,7 @@ const updateOffice = async (req, res) => {
     contactNumber,
     designation,
     officeName,
+    password,
   } = req.body;
 
   try {
@@ -217,15 +218,18 @@ const updateOffice = async (req, res) => {
       );
     }
 
+    const hashPassword = await bcrypt.hash(password, saltsRounds);
+
     await userModel.update(
       {
-        officeName: officeName,
+        image: newFileName ? `/uploads/${newFileName}` : null,
         firstName: firstName,
         lastName: lastName,
         middleInitial: middleInitial,
         birthDate: birthDate,
         contactNumber: contactNumber,
         designation: designation,
+        password: hashPassword,
         updatedAt: createdAt,
       },
       {
@@ -233,13 +237,20 @@ const updateOffice = async (req, res) => {
       }
     );
 
+    // Fetch the officeId from the userModel
+    const user = await userModel.findOne({ where: { id } });
+
+    if (!user || !user.officeId) {
+      return res.status(404).json({ message: "Office not found" });
+    }
+
     await officeModel.update(
       {
         officeName: officeName,
         updatedAt: createdAt,
       },
       {
-        where: { id },
+        where: { id: user.officeId },
       }
     );
     return res.status(200).json({
