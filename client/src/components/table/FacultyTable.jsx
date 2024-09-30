@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FaTrashAlt, FaRegEdit } from "react-icons/fa";
+import { FaTrashAlt, FaRegEdit, FaEye } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import ProfileModal from "../ProfileModal";
@@ -164,7 +164,7 @@ const FacultyTable = ({ fetchFaculty }) => {
                       {getStatus(status)}
                     </span>
                   </td>
-                  <td className="px-6 py-4 flex gap-3 justify-center items-center relative">
+                  {/* <td className="px-6 py-4 flex gap-3 justify-center items-center relative">
                     <div className="relative">
                       <button
                         onClick={(e) => {
@@ -221,20 +221,19 @@ const FacultyTable = ({ fetchFaculty }) => {
                         </div>
                       )}
                     </div>
-                  </td>
+                  </td> */}
 
-                  {/* 
-                  <td className="px-6 py-4 flex gap-3 justify-center items-center">
+                  <td className=" py-4 flex gap-3 justify-center items-center">
                     <Link
                       to={`/user-profile/${id}`}
-                      className="px-4 py-2 text-lg bg-[#c9872a] hover:bg-[#c27c47] text-white rounded-lg"
+                      className="p-2 md:text-lg text-sm border bg-gray-200 border-[#c9872a] hover:bg-gray-300 text-[#c9872a] rounded-lg"
                     >
                       <FaEye className="h-5 w-5" />
                     </Link>
 
                     <button
                       onClick={() => openDeleteModal(id)}
-                      className="px-4 py-2 text-lg bg-red-500 hover:bg-red-700 text-white rounded-lg"
+                      className="p-2 md:text-lg text-sm border border-red-500 bg-gray-200 hover:bg-gray-300 text-red-500 rounded-lg"
                     >
                       <FaTrashAlt className="h-5 w-5" />
                     </button>
@@ -247,7 +246,7 @@ const FacultyTable = ({ fetchFaculty }) => {
                       />
                     )}
                     {}
-                  </td> */}
+                  </td>
                 </tr>
               )
             )}

@@ -3,7 +3,7 @@ import api from "../../api/axios";
 import { useState } from "react";
 import { useToast } from "../../hooks/useToast";
 import LoginLoading from "../../components/loader/loginloader/LoginLoading";
-import { fetchUserById, fetchOffice } from "../../services/usersSlice";
+import { fetchOffice } from "../../services/usersSlice";
 import { useDispatch } from "react-redux";
 
 const ChangeEmail = ({ modal, closeModal, id }) => {

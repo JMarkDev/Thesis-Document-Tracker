@@ -138,15 +138,14 @@ const AdminTable = ({ adminUser }) => {
                   <td className="px-6 py-4 flex gap-3 justify-center items-center">
                     <Link
                       to={`/user-profile/${id}`}
-                      className="px-4 py-2 text-lg bg-[#c9872a] hover:bg-[#c27c47] text-white rounded-lg"
+                      className="p-2 md:text-lg text-sm border bg-gray-200 border-[#c9872a] hover:bg-gray-300 text-[#c9872a] rounded-lg"
                     >
                       <FaEye className="h-5 w-5" />
                     </Link>
 
-                    <button className="px-4 py-2 text-lg bg-blue-500 hover:bg-blue-700 text-white rounded-lg">
+                    <button className="p-2 md:text-lg text-sm border border-blue-500 bg-gray-200  hover:bg-gray-300 text-blue-700 rounded-lg">
                       <FaRegEdit className="h-5 w-5" />
                     </button>
-
                     <button
                       onClick={(e) => {
                         openDeleteModal({
@@ -155,7 +154,7 @@ const AdminTable = ({ adminUser }) => {
                         });
                         e.stopPropagation();
                       }}
-                      className="px-4 py-2 text-lg bg-red-500 hover:bg-red-700 text-white rounded-lg"
+                      className="p-2 md:text-lg text-sm border border-red-500 bg-gray-200  hover:bg-gray-300 text-red-700 rounded-lg"
                     >
                       <FaTrashAlt className="h-5 w-5" />
                     </button>

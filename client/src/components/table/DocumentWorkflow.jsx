@@ -113,7 +113,7 @@ const DocumentWorkflow = ({ data }) => {
                       e.stopPropagation();
                     }}
                     // to={`/document-workflow/${id}`}
-                    className="px-4 py-2 text-lg bg-[#fca326] hover:bg-[#f58e40] text-white rounded-lg"
+                    className="p-2 md:text-lg text-sm border bg-gray-200 border-[#c9872a] hover:bg-gray-300 text-[#c9872a] rounded-lg"
                   >
                     <FaEye className="h-5 w-5" />
                   </button>
@@ -123,7 +123,7 @@ const DocumentWorkflow = ({ data }) => {
                       handleEdit(id);
                       e.stopPropagation();
                     }}
-                    className="px-4 py-2 text-lg bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
+                    className="p-2 md:text-lg text-sm border border-blue-500 bg-gray-200  hover:bg-gray-300 text-blue-700 rounded-lg"
                   >
                     <FaRegEdit className="h-5 w-5" />
                   </button>
@@ -133,7 +133,7 @@ const DocumentWorkflow = ({ data }) => {
                       setTitle(document_type);
                       e.stopPropagation();
                     }}
-                    className="px-4 py-2 text-lg bg-red-600 hover:bg-red-700 text-white rounded-lg"
+                    className="p-2 md:text-lg text-sm border border-red-500 bg-gray-200  hover:bg-gray-300 text-red-700 rounded-lg"
                   >
                     <MdDelete className="h-5 w-5" />
                   </button>
