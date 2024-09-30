@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FaEye, FaRegEdit, FaTrashAlt } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import ProfileModal from "../ProfileModal";
 import api from "../../api/axios";
@@ -11,6 +11,7 @@ import { deleteUser } from "../../services/usersSlice";
 import { toastUtils } from "../../hooks/useToast";
 
 const AdminTable = ({ adminUser }) => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [selectedImage, setSelectedImage] = useState(null);
   const [deleteModal, setDeleteModal] = useState(false);
@@ -97,8 +98,9 @@ const AdminTable = ({ adminUser }) => {
                 index
               ) => (
                 <tr
+                  onClick={() => navigate(`/user-profile/${id}`)}
                   key={index}
-                  className="bg-white dark:bg-gray-800 hover:bg-gray-100"
+                  className="bg-white dark:bg-gray-800 hover:bg-gray-200 cursor-pointer"
                 >
                   {/* <th
                     scope="row"
@@ -117,7 +119,7 @@ const AdminTable = ({ adminUser }) => {
                           image ? `${api.defaults.baseURL}${image}` : userIcon
                         }`}
                         alt=""
-                        className="h-14 w-14 rounded-full cursor-pointer"
+                        className="h-10 w-10 rounded-full cursor-pointer"
                       />
                       {showModal && (
                         <ProfileModal
@@ -146,12 +148,13 @@ const AdminTable = ({ adminUser }) => {
                     </button>
 
                     <button
-                      onClick={() =>
+                      onClick={(e) => {
                         openDeleteModal({
                           id,
                           name: `${firstName} ${middleInitial}. ${lastName}`,
-                        })
-                      }
+                        });
+                        e.stopPropagation();
+                      }}
                       className="px-4 py-2 text-lg bg-red-500 hover:bg-red-700 text-white rounded-lg"
                     >
                       <FaTrashAlt className="h-5 w-5" />

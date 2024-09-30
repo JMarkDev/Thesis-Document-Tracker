@@ -111,7 +111,11 @@ const usersSlice = createSlice({
     },
   },
   error: null,
-  reducers: {},
+  reducers: {
+    clearUser(state) {
+      state.userByid = null;
+    },
+  },
   extraReducers(builders) {
     // search faculty
     builders
@@ -294,6 +298,7 @@ export const getUserById = (id) => (state) =>
   state.users.users.find((user) => user.id === id);
 export const getUserStatus = (state) => state.users.status.users;
 export const getFetchedUserById = (state) => state.users.userByid;
+export const getStatusById = (state) => state.users.status.fetchById;
 
 export const getUserError = (state) => state.users.error;
 
@@ -302,5 +307,7 @@ export const getRoleStatus = (role) => (state) => state.users.status[role];
 
 export const getFilterStatus = (state) => state.users.state.filter;
 export const getSearchStatus = (state) => state.user.state.search;
+
+export const { clearUser } = usersSlice.actions;
 
 export default usersSlice.reducer;

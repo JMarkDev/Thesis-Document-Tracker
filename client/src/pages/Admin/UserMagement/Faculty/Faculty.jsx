@@ -55,7 +55,9 @@ const Faculty = () => {
         </div>
         <div>
           <div className="flex justify-end items-center gap-3">
-            <span className="text-gray-700">Filter faculty by:</span>
+            <span className="text-gray-700 text-sm w-fit text-nowrap">
+              Filter faculty by:
+            </span>
             <Dropdown
               data={wmsuCampus}
               option={"WMSU-ESU-CAMPUS"}

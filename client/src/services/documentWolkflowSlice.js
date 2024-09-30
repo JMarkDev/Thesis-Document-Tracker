@@ -76,8 +76,14 @@ const workflowSlice = createSlice({
 
   reducers: {
     resetWorkflowStatus: (state) => {
+      state.updateStatus = "idle";
+    },
+    resetAddworkflowStatus: (state) => {
       state.status = "idle";
     },
+    // clearWorkflowById(state) {
+    //   state.workflowById = null;
+    // },
   },
   extraReducers: (builders) => {
     builders
@@ -158,6 +164,7 @@ export const getAllWorkflow = (state) => state.workflow.allWorkflow;
 export const getWorkflowById = (state) => state.workflow.workflowById;
 export const getWorkflowStatus = (state) => state.workflow.status;
 export const updateWorkflowStatus = (state) => state.workflow.updateStatus;
-export const { resetWorkflowStatus } = workflowSlice.actions;
+export const { resetWorkflowStatus, resetAddworkflowStatus } =
+  workflowSlice.actions;
 
 export default workflowSlice.reducer;

@@ -25,9 +25,6 @@ const AddWorkflow = ({ modal, closeModal }) => {
   const adminStatus = useSelector(getRoleStatus("admin"));
   const [loading, setLoading] = useState(false);
   const workflowStatus = useSelector(getWorkflowStatus);
-  useEffect(() => {
-    console.log(workflowStatus);
-  }, [workflowStatus]);
 
   useEffect(() => {
     if (officeStatus === "idle") {

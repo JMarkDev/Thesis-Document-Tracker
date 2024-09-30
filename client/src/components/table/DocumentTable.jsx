@@ -1,11 +1,12 @@
 import { FaEye, FaFileDownload } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import { getDocumentStatus } from "../../utils/documentStatus";
 import { documentBackground } from "../../utils/documentBackgroundColor";
 import { useFormat } from "../../hooks/useFormatDate";
 const Table = ({ documents, handleSort }) => {
   const { dateFormat } = useFormat();
+  const navigate = useNavigate();
   return (
     <>
       <div className="relative overflow-x-auto  shadow-md sm:rounded-lg">
@@ -147,8 +148,9 @@ const Table = ({ documents, handleSort }) => {
                 index
               ) => (
                 <tr
+                  onClick={() => navigate(`/document/details/${id}`)}
                   key={index}
-                  className="bg-white dark:bg-gray-800 hover:bg-gray-100"
+                  className="bg-white dark:bg-gray-800 hover:bg-gray-200 cursor-pointer"
                 >
                   <th
                     scope="row"

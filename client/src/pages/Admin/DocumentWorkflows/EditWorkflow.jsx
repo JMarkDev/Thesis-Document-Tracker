@@ -31,6 +31,17 @@ const EditWorkflow = ({ modal, closeModal, id }) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    if (workflowStatus === "succeeded") {
+      closeModal();
+      setLoading(false);
+
+      dispatch(resetWorkflowStatus());
+    } else {
+      setLoading(false);
+    }
+  }, [workflowStatus, closeModal, dispatch]);
+
+  useEffect(() => {
     if (workflow) {
       setDocumentType(workflow.document_type);
       setRoute(workflow.route);
@@ -49,6 +60,7 @@ const EditWorkflow = ({ modal, closeModal, id }) => {
 
   useEffect(() => {
     if (id) {
+      dispatch(resetWorkflowStatus());
       dispatch(fetchWorkflowById(id));
     }
   }, [id, dispatch]);
@@ -86,18 +98,6 @@ const EditWorkflow = ({ modal, closeModal, id }) => {
     const workflow = { document_type: documentType, route };
     dispatch(updateWorkflow({ id, workflow, toast: toastUtils() }));
   };
-
-  useEffect(() => {
-    if (workflowStatus === "succeeded") {
-      dispatch(resetWorkflowStatus());
-      closeModal();
-      setLoading(false);
-    } else if (workflowStatus === "loading") {
-      setLoading(false);
-    } else {
-      setLoading(false);
-    }
-  }, [workflowStatus, closeModal, dispatch]);
 
   const isOfficeInRoute = (officeName) => {
     return route.some((office) => office.office_name === officeName);

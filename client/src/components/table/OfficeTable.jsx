@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { FaEye, FaRegEdit, FaTrashAlt } from "react-icons/fa";
+import { FaRegEdit, FaTrashAlt } from "react-icons/fa";
 import { MdPreview } from "react-icons/md";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { deleteUser } from "../../services/usersSlice";
 import api from "../../api/axios";
@@ -11,8 +11,10 @@ import { toastUtils } from "../../hooks/useToast";
 import userIcon from "../../assets/images/user (1).png";
 import PropTypes from "prop-types";
 import { BsThreeDots } from "react-icons/bs";
+import EditOffice from "../../pages/Admin/Offices/EditOffice";
 
 const Office = ({ officeUsers }) => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [showModal, setShowModal] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -20,6 +22,7 @@ const Office = ({ officeUsers }) => {
   const [selecedOffice, setSelectedOffice] = useState(null);
   const [openAction, setOpenAction] = useState(false);
   const [name, setName] = useState("");
+  const [editModal, setEditModal] = useState(false);
 
   const openModal = (image) => {
     setSelectedImage(image);
@@ -45,6 +48,16 @@ const Office = ({ officeUsers }) => {
   const handleDelete = () => {
     dispatch(deleteUser({ id: selecedOffice, toast: toastUtils() }));
     closeDeleteModal();
+  };
+
+  const handleUpdate = (id) => {
+    setEditModal(true);
+    setSelectedOffice(id);
+  };
+
+  const closeUpdateModal = () => {
+    setSelectedOffice(null);
+    setEditModal(false);
   };
 
   return (
@@ -99,7 +112,7 @@ const Office = ({ officeUsers }) => {
                   firstName,
                   lastName,
                   middleInitial,
-                  designation,
+                  // designation,
                   image,
                   office: { officeName },
                   email,
@@ -108,7 +121,8 @@ const Office = ({ officeUsers }) => {
               ) => (
                 <tr
                   key={index}
-                  className="bg-white dark:bg-gray-800 hover:bg-gray-100"
+                  onClick={() => navigate(`/user-profile/${id}`)}
+                  className="bg-white dark:bg-gray-800 hover:bg-gray-200 cursor-pointer"
                 >
                   {/* <th
                     scope="row"
@@ -146,8 +160,9 @@ const Office = ({ officeUsers }) => {
                   <td className="px-6 py-4 flex gap-3 justify-center items-center relative">
                     <div className="relative">
                       <button
-                        onClick={() => {
+                        onClick={(e) => {
                           setOpenAction(id === openAction ? null : id);
+                          e.stopPropagation();
                         }}
                         className="text-xl text-gray-800 font-semibold"
                       >
@@ -155,6 +170,7 @@ const Office = ({ officeUsers }) => {
                       </button>
                       {openAction === id && (
                         <div
+                          onMouseLeave={() => setOpenAction(null)}
                           className={`z-20 absolute flex flex-col right-[-25px] ${
                             index === officeUsers.length - 1 ||
                             index === officeUsers.length - 2
@@ -172,7 +188,10 @@ const Office = ({ officeUsers }) => {
                             View
                           </Link>
                           <button
-                            // onClick={() => openDeleteModal(id)}
+                            onClick={(e) => {
+                              handleUpdate(id);
+                              e.stopPropagation();
+                            }}
                             className="w-full flex items-center gap-2 text-blue-500 py-2 px-4 text-left hover:bg-gray-300 dark:hover:bg-gray-700"
                           >
                             <span>
@@ -181,12 +200,13 @@ const Office = ({ officeUsers }) => {
                             Edit
                           </button>
                           <button
-                            onClick={() =>
+                            onClick={(e) => {
                               openDeleteModal({
                                 id,
                                 name: `${firstName} ${middleInitial}. ${lastName}`,
-                              })
-                            }
+                              });
+                              e.stopPropagation();
+                            }}
                             className="w-full flex items-center gap-2 text-red-500 py-2 px-4 text-left hover:bg-gray-300 dark:hover:bg-gray-700"
                           >
                             <span>
@@ -231,6 +251,13 @@ const Office = ({ officeUsers }) => {
             )}
           </tbody>
         </table>
+        {editModal && (
+          <EditOffice
+            modal={editModal}
+            closeModal={closeUpdateModal}
+            id={selecedOffice}
+          />
+        )}
         {deleteModal && (
           <DeleteModal
             title={name}

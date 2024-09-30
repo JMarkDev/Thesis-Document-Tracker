@@ -45,10 +45,7 @@ const DocumentDetails = () => {
   return (
     <div className="bg-white ">
       <div className="flex items-center gap-5">
-        <Link to="/documents">
-          {" "}
-          <Back />
-        </Link>
+        <Back />
 
         <h1 className="font-bold text-2xl text-gray-900"> Document Details</h1>
       </div>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FaTrashAlt, FaRegEdit } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import ProfileModal from "../ProfileModal";
 import api from "../../api/axios";
@@ -15,6 +15,7 @@ import { BsThreeDots } from "react-icons/bs";
 import { MdPreview } from "react-icons/md";
 
 const FacultyTable = ({ fetchFaculty }) => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const [selectedImage, setSelectedImage] = useState(null);
   const [deleteModal, setDeleteModal] = useState(false);
@@ -115,8 +116,9 @@ const FacultyTable = ({ fetchFaculty }) => {
                 index
               ) => (
                 <tr
+                  onClick={() => navigate(`/user-profile/${id}`)}
                   key={index}
-                  className="bg-white dark:bg-gray-800 hover:bg-gray-100"
+                  className="bg-white dark:bg-gray-800 hover:bg-gray-200 cursor-pointer"
                 >
                   {/* <th
                     scope="row"
@@ -165,8 +167,9 @@ const FacultyTable = ({ fetchFaculty }) => {
                   <td className="px-6 py-4 flex gap-3 justify-center items-center relative">
                     <div className="relative">
                       <button
-                        onClick={() => {
+                        onClick={(e) => {
                           setOpenAction(id === openAction ? null : id);
+                          e.stopPropagation();
                         }}
                         className="text-xl text-gray-800 font-semibold"
                       >
@@ -174,6 +177,7 @@ const FacultyTable = ({ fetchFaculty }) => {
                       </button>
                       {openAction === id && (
                         <div
+                          onMouseLeave={() => setOpenAction(null)}
                           className={`z-20 absolute flex flex-col right-[-25px] ${
                             index === fetchFaculty.length - 1 ||
                             index === fetchFaculty.length - 2
@@ -200,12 +204,13 @@ const FacultyTable = ({ fetchFaculty }) => {
                             Edit
                           </button>
                           <button
-                            onClick={() =>
+                            onClick={(e) => {
                               openDeleteModal({
                                 id,
                                 name: `${firstName} ${middleInitial}. ${lastName}`,
-                              })
-                            }
+                              });
+                              e.stopPropagation();
+                            }}
                             className="w-full flex items-center gap-2 text-red-500 py-2 px-4 text-left hover:bg-gray-300 dark:hover:bg-gray-700"
                           >
                             <span>

@@ -143,7 +143,7 @@ const AddCampusAdmin = ({ modal, closeModal }) => {
           id="default-modal"
           tabIndex="-1"
           aria-hidden={!modal}
-          className="fixed overflow-y-auto overflow-hidden  inset-0 z-50 px-5 flex items-center justify-center w-full h-full bg-gray-800 bg-opacity-40 font-normal"
+          className="fixed overflow-y-auto overflow-hidden  inset-0 z-50 px-4 flex items-center justify-center w-full h-full bg-gray-800 bg-opacity-40 font-normal"
         >
           {loading && <LoginLoading />}
           <div className="relative w-full max-w-2xl max-h-full py-5 ">
@@ -175,7 +175,7 @@ const AddCampusAdmin = ({ modal, closeModal }) => {
                 </button>
               </div>
 
-              <div className="p-6  space-y-4 text-sm text-[#221f1f]">
+              <div className="p-4  space-y-4 text-sm text-[#221f1f]">
                 <form
                   onSubmit={handleSubmit(onSubmit)}
                   method="POST"

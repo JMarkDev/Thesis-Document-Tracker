@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import { deleteWorkflow } from "../../services/documentWolkflowSlice";
 import { toastUtils } from "../../hooks/useToast";
 import DeleteModal from "../DeleteModal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import WorkflowDetails from "../../pages/Admin/DocumentWorkflows/WorkflowDetails";
 import {
   fetchWorkflowById,
@@ -37,8 +37,8 @@ const DocumentWorkflow = ({ data }) => {
 
   const handleEdit = (id) => {
     setSelectedWorkflow(id);
+    // dispatch(resetWorkflowStatus());
     setShowEditModal(true);
-    dispatch(resetWorkflowStatus());
   };
 
   const handleDelete = () => {
@@ -59,6 +59,7 @@ const DocumentWorkflow = ({ data }) => {
     setShowEditModal(false);
     setSelectedWorkflow(null);
   };
+
   return (
     <>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -89,8 +90,9 @@ const DocumentWorkflow = ({ data }) => {
           <tbody>
             {data.map(({ id, document_type, createdAt }, index) => (
               <tr
+                onClick={() => handleWorkflow(id)}
                 key={index}
-                className="bg-white dark:bg-gray-800 hover:bg-gray-100"
+                className="bg-white dark:bg-gray-800 hover:bg-gray-200 cursor-pointer"
               >
                 <th
                   scope="row"
@@ -106,7 +108,10 @@ const DocumentWorkflow = ({ data }) => {
                 </td>
                 <td className="px-6 py-4 flex gap-3 justify-center items-center">
                   <button
-                    onClick={() => handleWorkflow(id)}
+                    onClick={(e) => {
+                      handleWorkflow(id);
+                      e.stopPropagation();
+                    }}
                     // to={`/document-workflow/${id}`}
                     className="px-4 py-2 text-lg bg-[#fca326] hover:bg-[#f58e40] text-white rounded-lg"
                   >
@@ -114,14 +119,19 @@ const DocumentWorkflow = ({ data }) => {
                   </button>
 
                   <button
-                    onClick={() => handleEdit(id)}
+                    onClick={(e) => {
+                      handleEdit(id);
+                      e.stopPropagation();
+                    }}
                     className="px-4 py-2 text-lg bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
                   >
                     <FaRegEdit className="h-5 w-5" />
                   </button>
                   <button
-                    onClick={() => {
-                      openModal(id), setTitle(document_type);
+                    onClick={(e) => {
+                      openModal(id);
+                      setTitle(document_type);
+                      e.stopPropagation();
                     }}
                     className="px-4 py-2 text-lg bg-red-600 hover:bg-red-700 text-white rounded-lg"
                   >
