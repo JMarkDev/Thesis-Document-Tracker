@@ -10,6 +10,7 @@ import {
   fetchUserById,
   getFetchedUserById,
   fetchOffice,
+  clearUser,
 } from "../../../services/usersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import rolesList from "../../../constants/rolesList";
@@ -39,9 +40,9 @@ const EditOffice = ({ modal, closeModal, id }) => {
   useEffect(() => {
     if (id) {
       dispatch(fetchUserById(id));
-      // return () => {
-      //   dispatch(clearUser());
-      // };
+      return () => {
+        dispatch(clearUser());
+      };
     }
   }, [id, dispatch]);
 
@@ -135,6 +136,20 @@ const EditOffice = ({ modal, closeModal, id }) => {
     setChangeEmail(true);
   };
 
+  useEffect(() => {
+    if (office) {
+      setValue("image", office.image);
+      setValue("officeName", office.office.officeName);
+      setValue("firstName", office.firstName);
+      setValue("lastName", office.lastName);
+      setValue("middleInitial", office.middleInitial);
+      setValue("email", office.email);
+      setValue("birthDate", office.birthDate);
+      setValue("contactNumber", office.contactNumber);
+      setValue("designation", office.designation);
+    }
+  }, [office, setValue]);
+
   return (
     <>
       {changeEmail ? (
@@ -191,7 +206,6 @@ const EditOffice = ({ modal, closeModal, id }) => {
                       <input
                         {...register("officeName")}
                         type="text"
-                        defaultValue={office?.office.officeName}
                         id="officeName"
                         className={`${
                           officeNameError
@@ -221,7 +235,6 @@ const EditOffice = ({ modal, closeModal, id }) => {
                           {...register("firstName")}
                           type="text"
                           id="first_name"
-                          defaultValue={office?.firstName}
                           className={`${
                             firstnameError
                               ? "border-red-500 "
@@ -247,7 +260,6 @@ const EditOffice = ({ modal, closeModal, id }) => {
                           {...register("lastName")}
                           type="text"
                           id="last_name"
-                          defaultValue={office?.lastName}
                           className={`${
                             lastnameError
                               ? "border-red-500 "
@@ -272,7 +284,6 @@ const EditOffice = ({ modal, closeModal, id }) => {
                           {...register("middleInitial")}
                           type="text"
                           id="middle_initial"
-                          defaultValue={office?.middleInitial}
                           className={`${
                             middleInitialError
                               ? "border-red-500 "
@@ -300,7 +311,6 @@ const EditOffice = ({ modal, closeModal, id }) => {
                         {...register("email")}
                         type="text"
                         id="email"
-                        defaultValue={office?.email}
                         disabled={true}
                         className={`${
                           emailError ? "border-red-500 " : "border-gray-300 "
@@ -331,7 +341,6 @@ const EditOffice = ({ modal, closeModal, id }) => {
                           {...register("birthDate")}
                           type="date"
                           id="birth_date"
-                          defaultValue={office?.birthDate}
                           className={`${
                             birthDateError
                               ? "border-red-500 "
@@ -357,7 +366,6 @@ const EditOffice = ({ modal, closeModal, id }) => {
                           {...register("contactNumber")}
                           type="number"
                           id="contact_number"
-                          defaultValue={office?.contactNumber}
                           className={`${
                             contactError
                               ? "border-red-500 "
@@ -383,7 +391,6 @@ const EditOffice = ({ modal, closeModal, id }) => {
                         {...register("designation")}
                         type="text"
                         id="designation"
-                        defaultValue={office?.designation}
                         className={`${
                           designationError
                             ? "border-red-500 "
@@ -471,7 +478,7 @@ const EditOffice = ({ modal, closeModal, id }) => {
                       loading ? "cursor-not-allowed" : "cursor-pointer"
                     } w-full  mt-6 p-2 bg-main hover:bg-main_hover text-[#fff] md:text-lg text-sm rounded-lg`}
                   >
-                    Add Office
+                    Update Office
                   </button>
                 </form>
               </div>

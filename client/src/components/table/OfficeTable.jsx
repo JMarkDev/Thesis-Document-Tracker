@@ -164,7 +164,7 @@ const Office = ({ officeUsers }) => {
                           setOpenAction(id === openAction ? null : id);
                           e.stopPropagation();
                         }}
-                        className="text-xl text-gray-800 font-semibold"
+                        className="text-2xl text-gray-800 font-semibold"
                       >
                         <BsThreeDots />
                       </button>

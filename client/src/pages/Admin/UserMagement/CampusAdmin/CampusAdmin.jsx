@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import RegistrarTable from "../../../../components/table/RegistrarTable";
+import CampusAdminTable from "../../../../components/table/CampusAdminTable";
 import { IoSearch } from "react-icons/io5";
 import AddCampusAdmin from "./AddCampusAdmin";
 import {
@@ -68,7 +68,7 @@ const CampusAdmin = () => {
         )}
       </div>
       <div className="mt-8">
-        <RegistrarTable registrarUser={campusAdminUsers} />
+        <CampusAdminTable campusAdmin={campusAdminUsers} />
       </div>
     </div>
   );

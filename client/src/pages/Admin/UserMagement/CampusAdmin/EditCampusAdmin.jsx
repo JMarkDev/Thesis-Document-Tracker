@@ -3,25 +3,27 @@ import PropTypes from "prop-types";
 import api from "../../../../api/axios";
 import { useForm } from "react-hook-form";
 import LoginLoading from "../../../../components/loader/loginloader/LoginLoading";
-import VerifyOTP from "../../../../pages/Verification/VerifyOTP";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useToast } from "../../../../hooks/useToast";
-import wmsuCampus from "../../../../constants/Campus";
-import { fetchCampusAdmin } from "../../../../services/usersSlice";
-
 import { FiEyeOff, FiEye } from "react-icons/fi";
-import { useDispatch } from "react-redux";
+import {
+  fetchUserById,
+  getFetchedUserById,
+  clearUser,
+  fetchCampusAdmin,
+} from "../../../../services/usersSlice";
+import { useDispatch, useSelector } from "react-redux";
 import rolesList from "../../../../constants/rolesList";
+import ChangeEmail from "../../../Shared/ChangeEmail";
+import wmsuCampus from "../../../../constants/Campus";
 
-const AddCampusAdmin = ({ modal, closeModal }) => {
+const EditCampusAdmin = ({ modal, closeModal, id }) => {
   const dispatch = useDispatch();
   const [showPass, setShowPass] = useState(false);
-
   const toast = useToast();
   const { register, handleSubmit, setValue } = useForm();
-  const [showOTP, setShowOTP] = useState(false);
-  const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
+  const campusAdmin = useSelector(getFetchedUserById);
 
   // Error state for backend validation messages
   const [esuError, setEsuError] = useState("");
@@ -34,13 +36,18 @@ const AddCampusAdmin = ({ modal, closeModal }) => {
   const [designationError, setDesignationError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmpasswordError] = useState("");
+  const [changeEmail, setChangeEmail] = useState(false);
 
-  const onVerificationSuccess = () => {
-    dispatch(fetchCampusAdmin());
-  };
+  useEffect(() => {
+    if (id) {
+      dispatch(fetchUserById(id));
+      return () => {
+        dispatch(clearUser());
+      };
+    }
+  }, [id, dispatch]);
 
   const onSubmit = async (data) => {
-    setEmail(data.email);
     data.role = rolesList.campus_admin;
     setLoading(true);
 
@@ -60,27 +67,30 @@ const AddCampusAdmin = ({ modal, closeModal }) => {
       formData.append("firstName", data.firstName);
       formData.append("lastName", data.lastName);
       formData.append("middleInitial", data.middleInitial);
-      formData.append("email", data.email);
+      formData.append("email", campusAdmin.email);
       formData.append("birthDate", data.birthDate);
       formData.append("contactNumber", data.contactNumber);
       formData.append("designation", data.designation);
-      formData.append("esuCampus", data.esuCampus);
+      formData.append("officeName", data.officeName);
       formData.append("role", data.role);
       formData.append("password", data.password);
       formData.append("confirmPassword", data.confirmPassword);
       formData.append("image", data.image); // Append the file
 
-      const response = await api.post("/auth/register", formData);
+      const response = await api.put(
+        `/users/update-user-data/id/${id}`,
+        formData
+      );
       if (response.data.status === "success") {
         toast.success(response.data.message);
-        setShowOTP(true);
+        closeModal(false);
         setLoading(false);
+        dispatch(fetchCampusAdmin());
       }
     } catch (error) {
+      console.log(error);
       setLoading(false);
-      if (data.esuCampus === "") {
-        setEsuError("ESU CAMPUS is required");
-      }
+
       if (error.response.data.errors) {
         error.response.data.errors.forEach((error) => {
           switch (error.path) {
@@ -120,37 +130,45 @@ const AddCampusAdmin = ({ modal, closeModal }) => {
     }
   };
 
-  const closeOTP = () => {
-    setShowOTP(false);
-  };
-
   const handleShowPass = () => {
     setShowPass(!showPass);
   };
 
+  const handleChangeEmail = () => {
+    setChangeEmail(true);
+  };
+
+  useEffect(() => {
+    if (campusAdmin) {
+      setValue("image", campusAdmin.image);
+      setValue("esuCampus", campusAdmin.esuCampus);
+      setValue("firstName", campusAdmin.firstName);
+      setValue("lastName", campusAdmin.lastName);
+      setValue("middleInitial", campusAdmin.middleInitial);
+      setValue("email", campusAdmin.email);
+      setValue("birthDate", campusAdmin.birthDate);
+      setValue("contactNumber", campusAdmin.contactNumber);
+      setValue("designation", campusAdmin.designation);
+    }
+  }, [campusAdmin, setValue]);
+
   return (
     <>
-      {showOTP ? (
-        <VerifyOTP
-          showOTP={showOTP}
-          closeOTP={closeOTP}
-          closeModal={closeModal}
-          email={email}
-          onVerificationSuccess={onVerificationSuccess}
-        />
+      {changeEmail ? (
+        <ChangeEmail modal={changeEmail} closeModal={closeModal} id={id} />
       ) : (
         <div
           id="default-modal"
           tabIndex="-1"
           aria-hidden={!modal}
-          className="fixed overflow-y-auto overflow-hidden  inset-0 z-50 px-4 flex items-center justify-center w-full h-full bg-gray-800 bg-opacity-40 font-normal"
+          className="fixed overflow-y-auto overflow-hidden  inset-0 z-50 px-4 flex items-center justify-center w-full h-full bg-gray-800 bg-opacity-20 font-normal"
         >
           {loading && <LoginLoading />}
           <div className="relative w-full max-w-2xl max-h-full py-5 ">
             <div className="relative text-gray-800 bg-white rounded-xl shadow-lg">
               <div className="flex items-center justify-center">
                 <h1 className="md:text-2xl font-bold text-lg p-4">
-                  Add Campus Admin
+                  Update Campus Admin
                 </h1>
                 <button
                   type="button"
@@ -182,7 +200,7 @@ const AddCampusAdmin = ({ modal, closeModal }) => {
                   encType="multipart/form-data"
                 >
                   <div className="flex justify-center items-center">
-                    <Profile setValue={setValue} />
+                    <Profile setValue={setValue} image={campusAdmin?.image} />
                   </div>
 
                   <div className="flex flex-col mt-4">
@@ -304,6 +322,7 @@ const AddCampusAdmin = ({ modal, closeModal }) => {
                         {...register("email")}
                         type="text"
                         id="email"
+                        disabled={true}
                         className={`${
                           emailError ? "border-red-500 " : "border-gray-300 "
                         } block pb-2 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 appearance-none   focus:outline-none focus:ring-0 focus:border-blue-600 peer`}
@@ -313,7 +332,13 @@ const AddCampusAdmin = ({ modal, closeModal }) => {
                         htmlFor="email"
                         className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"
                       >
-                        Email Address
+                        Email Address |{" "}
+                        <span
+                          onClick={() => handleChangeEmail()}
+                          className="font-bold cursor-pointer text-[#1a9cb7]"
+                        >
+                          Change
+                        </span>
                       </label>
                     </div>
                     {emailError && (
@@ -464,7 +489,7 @@ const AddCampusAdmin = ({ modal, closeModal }) => {
                       loading ? "cursor-not-allowed" : "cursor-pointer"
                     } w-full  mt-6 p-2 bg-main hover:bg-main_hover text-[#fff] md:text-lg text-sm rounded-lg`}
                   >
-                    Add ESU Campus
+                    Update Campus Admin
                   </button>
                 </form>
               </div>
@@ -479,9 +504,10 @@ const AddCampusAdmin = ({ modal, closeModal }) => {
   );
 };
 
-AddCampusAdmin.propTypes = {
-  modal: PropTypes.func,
+EditCampusAdmin.propTypes = {
+  modal: PropTypes.bool,
   closeModal: PropTypes.func,
+  id: PropTypes.number,
 };
 
-export default AddCampusAdmin;
+export default EditCampusAdmin;
