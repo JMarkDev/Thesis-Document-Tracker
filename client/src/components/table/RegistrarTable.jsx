@@ -9,7 +9,7 @@ import DeleteModal from "../DeleteModal";
 import { useDispatch } from "react-redux";
 import { deleteUser } from "../../services/usersSlice";
 import { toastUtils } from "../../hooks/useToast";
-import EditCampusAdmin from "../../pages/Admin/UserMagement/CampusAdmin/EditCampusAdmin";
+import EditRegistrar from "../../pages/Admin/UserMagement/ESU Registrar/EditRegistrar";
 
 const RegistrarTable = ({ registrarUser }) => {
   const navigate = useNavigate();
@@ -20,6 +20,7 @@ const RegistrarTable = ({ registrarUser }) => {
   const [selectedEsuCampus, setSelectedEsuCampus] = useState(null);
   const [name, setName] = useState("");
   const [editModal, setEditModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
 
   const openModal = (image) => {
     setSelectedImage(image);
@@ -42,7 +43,8 @@ const RegistrarTable = ({ registrarUser }) => {
     setSelectedEsuCampus(null);
   };
 
-  const openEditModal = () => {
+  const openEditModal = (id) => {
+    setSelectedUser(id);
     setEditModal(true);
   };
 
@@ -155,7 +157,7 @@ const RegistrarTable = ({ registrarUser }) => {
 
                     <button
                       onClick={(e) => {
-                        openEditModal();
+                        openEditModal(id);
                         e.stopPropagation();
                       }}
                       className="p-2 md:text-lg text-sm border border-blue-500 bg-gray-200  hover:bg-gray-300 text-blue-700 rounded-lg"
@@ -184,7 +186,11 @@ const RegistrarTable = ({ registrarUser }) => {
           </tbody>
         </table>
         {editModal && (
-          <EditCampusAdmin modal={editModal} closeModal={closeEditModal} />
+          <EditRegistrar
+            modal={editModal}
+            closeModal={closeEditModal}
+            id={selectedUser}
+          />
         )}
 
         {deleteModal && (
