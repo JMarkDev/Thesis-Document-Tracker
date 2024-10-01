@@ -9,6 +9,7 @@ import DeleteModal from "../DeleteModal";
 import { useDispatch } from "react-redux";
 import { deleteUser } from "../../services/usersSlice";
 import { toastUtils } from "../../hooks/useToast";
+import EditAdminStaff from "../../pages/Admin/UserMagement/AdminStaff/EditAdminStaff";
 
 const AdminTable = ({ adminUser }) => {
   const navigate = useNavigate();
@@ -18,6 +19,8 @@ const AdminTable = ({ adminUser }) => {
   const [showModal, setShowModal] = useState(false);
   const [selectedEsuCampus, setSelectedEsuCampus] = useState(null);
   const [name, setName] = useState("");
+  const [editModal, setEditModal] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
 
   const openModal = (image) => {
     setSelectedImage(image);
@@ -38,6 +41,15 @@ const AdminTable = ({ adminUser }) => {
   const closeDeleteModal = () => {
     setDeleteModal(false);
     setSelectedEsuCampus(null);
+  };
+
+  const openEditModal = (id) => {
+    setSelectedUser(id);
+    setEditModal(true);
+  };
+
+  const closeEditModal = () => {
+    setEditModal(false);
   };
 
   const handleDelete = () => {
@@ -143,7 +155,13 @@ const AdminTable = ({ adminUser }) => {
                       <FaEye className="h-5 w-5" />
                     </Link>
 
-                    <button className="p-2 md:text-lg text-sm border border-blue-500 bg-gray-200  hover:bg-gray-300 text-blue-700 rounded-lg">
+                    <button
+                      onClick={(e) => {
+                        openEditModal(id);
+                        e.stopPropagation();
+                      }}
+                      className="p-2 md:text-lg text-sm border border-blue-500 bg-gray-200  hover:bg-gray-300 text-blue-700 rounded-lg"
+                    >
                       <FaRegEdit className="h-5 w-5" />
                     </button>
                     <button
@@ -166,6 +184,14 @@ const AdminTable = ({ adminUser }) => {
             )}
           </tbody>
         </table>
+
+        {editModal && (
+          <EditAdminStaff
+            modal={editModal}
+            closeModal={closeEditModal}
+            id={selectedUser}
+          />
+        )}
         {deleteModal && (
           <DeleteModal
             title={name}
