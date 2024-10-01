@@ -188,6 +188,7 @@ const searchOffice = async (req, res) => {
 const updateOffice = async (req, res) => {
   const { id } = req.params;
   const {
+    image,
     firstName,
     lastName,
     middleInitial,
@@ -222,7 +223,7 @@ const updateOffice = async (req, res) => {
 
     await userModel.update(
       {
-        image: newFileName ? `/uploads/${newFileName}` : null,
+        image: newFileName ? `/uploads/${newFileName}` : image,
         firstName: firstName,
         lastName: lastName,
         middleInitial: middleInitial,

@@ -2,6 +2,12 @@ const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/userController");
 const otpController = require("../controllers/otpController");
+const multer = require("multer");
+const upload = multer({ dest: "./uploads" });
+const {
+  registerValidationRules,
+  validateForm,
+} = require("../middlewares/formValidation");
 
 // req.query
 //http://localhost:3001/users/get-user?email=jmseroy@gmail.com
@@ -18,5 +24,12 @@ router.get("/search/:name/:role", userController.searchUser);
 router.get("/filter-faculty/:esuCampus", userController.filterFacultyByCampus);
 router.post("/update-email", userController.updateEmail);
 router.put("/update-email/verify-otp/:id", otpController.verifyChangeEmail);
+router.put(
+  "/update-user-data/id/:id",
+  upload.single("image"),
+  registerValidationRules(),
+  validateForm,
+  userController.updateUserData
+);
 
 module.exports = router;

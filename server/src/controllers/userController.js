@@ -6,6 +6,10 @@ const { sendNotification } = require("../utils/emailNotifications");
 const statusList = require("../constants/statusList");
 const rolesList = require("../constants/rolesList");
 const otpController = require("./otpController");
+const fs = require("fs");
+const bcrypt = require("bcryptjs");
+const saltsRounds = 10;
+
 const getUserByEmail = async (req, res) => {
   const { email } = req.query;
   try {
@@ -237,6 +241,68 @@ const updateEmail = async (req, res) => {
   }
 };
 
+const updateUserData = async (req, res) => {
+  const { id } = req.params;
+  const {
+    image,
+    firstName,
+    lastName,
+    middleInitial,
+    birthDate,
+    contactNumber,
+    designation,
+    esuCampus,
+    password,
+  } = req.body;
+
+  try {
+    // upload image
+    let newFileName = null;
+    if (req.file) {
+      let filetype = req.file.mimetype.split("/")[1];
+      newFileName = req.file.filename + "." + filetype;
+      fs.rename(
+        `./uploads/${req.file.filename}`,
+        `./uploads/${newFileName}`,
+        async (err) => {
+          if (err) throw err;
+          console.log("uploaded successfully");
+        }
+      );
+    }
+
+    console.log(newFileName, "newFileName");
+
+    const hashPassword = await bcrypt.hash(password, saltsRounds);
+
+    await userModel.update(
+      {
+        image: newFileName ? `/uploads/${newFileName}` : image,
+        firstName: firstName,
+        lastName: lastName,
+        middleInitial: middleInitial,
+        birthDate: birthDate,
+        contactNumber: contactNumber,
+        designation: designation,
+        esuCampus: esuCampus,
+        password: hashPassword,
+        updatedAt: createdAt,
+      },
+      {
+        where: { id },
+      }
+    );
+
+    return res.status(200).json({
+      status: "success",
+      message: "User updated successfully",
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: err.message });
+  }
+};
+
 module.exports = {
   getUserByEmail,
   getUserById,
@@ -247,4 +313,5 @@ module.exports = {
   searchUser,
   filterFacultyByCampus,
   updateEmail,
+  updateUserData,
 };
