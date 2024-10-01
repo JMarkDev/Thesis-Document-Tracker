@@ -29,6 +29,7 @@ import FacultyReports from "./pages/Faculty/Reports/FacultyReports";
 import AllDocuments from "./pages/Faculty/AllDocuments/AllDocuments";
 
 import UserProfile from "./pages/Shared/UserProfile";
+import UserDetails from "./pages/Shared/UserDetails";
 import DocumentDetails from "./pages/Shared/DocumentDetails";
 
 function App() {
@@ -77,8 +78,13 @@ function App() {
       component: <DocumentDetails />,
     },
     {
+      title: "User Details",
+      path: "/user-details/:id",
+      component: <UserDetails />,
+    },
+    {
       title: "User Profile",
-      path: "/user-profile/:id",
+      path: "/user-profile",
       component: <UserProfile />,
     },
   ];

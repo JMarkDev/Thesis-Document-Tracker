@@ -10,7 +10,7 @@ import {
   fetchUserById,
   getFetchedUserById,
   clearUser,
-  fetchCampusAdmin,
+  fetchAdmin,
 } from "../../../../services/usersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import rolesList from "../../../../constants/rolesList";
@@ -68,7 +68,6 @@ const EditAdminStaff = ({ modal, closeModal, id }) => {
       formData.append("birthDate", data.birthDate);
       formData.append("contactNumber", data.contactNumber);
       formData.append("designation", data.designation);
-      formData.append("officeName", data.officeName);
       formData.append("role", data.role);
       formData.append("password", data.password);
       formData.append("confirmPassword", data.confirmPassword);
@@ -82,7 +81,7 @@ const EditAdminStaff = ({ modal, closeModal, id }) => {
         toast.success(response.data.message);
         closeModal(false);
         setLoading(false);
-        dispatch(fetchCampusAdmin());
+        dispatch(fetchAdmin());
       }
     } catch (error) {
       console.log(error);
@@ -138,7 +137,6 @@ const EditAdminStaff = ({ modal, closeModal, id }) => {
   useEffect(() => {
     if (campusAdmin) {
       setValue("image", campusAdmin.image);
-      setValue("esuCampus", campusAdmin.esuCampus);
       setValue("firstName", campusAdmin.firstName);
       setValue("lastName", campusAdmin.lastName);
       setValue("middleInitial", campusAdmin.middleInitial);

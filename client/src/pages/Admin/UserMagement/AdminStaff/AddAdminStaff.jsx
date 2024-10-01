@@ -39,7 +39,6 @@ const AddAdminStaff = ({ modal, closeModal }) => {
   const onSubmit = async (data) => {
     setEmail(data.email);
     data.role = rolesList.admin;
-    data.esuCampus = null;
     setLoading(true);
 
     setFirstnameError("");
@@ -61,7 +60,6 @@ const AddAdminStaff = ({ modal, closeModal }) => {
       formData.append("birthDate", data.birthDate);
       formData.append("contactNumber", data.contactNumber);
       formData.append("designation", data.designation);
-      formData.append("esuCampus", data.esuCampus);
       formData.append("role", data.role);
       formData.append("password", data.password);
       formData.append("confirmPassword", data.confirmPassword);

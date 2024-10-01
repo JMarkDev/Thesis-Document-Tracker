@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FaTrashAlt, FaRegEdit, FaEye } from "react-icons/fa";
+import { FaTrashAlt, FaEye } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import ProfileModal from "../ProfileModal";
@@ -11,8 +11,6 @@ import { deleteUser } from "../../services/usersSlice";
 import { toastUtils } from "../../hooks/useToast";
 import { getStatus } from "../../utils/getStatus";
 import statusList from "../../constants/statusList";
-import { BsThreeDots } from "react-icons/bs";
-import { MdPreview } from "react-icons/md";
 
 const FacultyTable = ({ fetchFaculty }) => {
   const navigate = useNavigate();
@@ -21,7 +19,6 @@ const FacultyTable = ({ fetchFaculty }) => {
   const [deleteModal, setDeleteModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [selectedEsuCampus, setSelectedEsuCampus] = useState(null);
-  const [openAction, setOpenAction] = useState(false);
   const [name, setName] = useState("");
 
   const openModal = (image) => {
@@ -116,7 +113,7 @@ const FacultyTable = ({ fetchFaculty }) => {
                 index
               ) => (
                 <tr
-                  onClick={() => navigate(`/user-profile/${id}`)}
+                  onClick={() => navigate(`/user-details/${id}`)}
                   key={index}
                   className="bg-white dark:bg-gray-800 hover:bg-gray-200 cursor-pointer"
                 >
@@ -164,68 +161,10 @@ const FacultyTable = ({ fetchFaculty }) => {
                       {getStatus(status)}
                     </span>
                   </td>
-                  {/* <td className="px-6 py-4 flex gap-3 justify-center items-center relative">
-                    <div className="relative">
-                      <button
-                        onClick={(e) => {
-                          setOpenAction(id === openAction ? null : id);
-                          e.stopPropagation();
-                        }}
-                        className="text-xl text-gray-800 font-semibold"
-                      >
-                        <BsThreeDots />
-                      </button>
-                      {openAction === id && (
-                        <div
-                          onMouseLeave={() => setOpenAction(null)}
-                          className={`z-20 absolute flex flex-col right-[-25px] ${
-                            index === fetchFaculty.length - 1 ||
-                            index === fetchFaculty.length - 2
-                              ? "bottom-40"
-                              : "bottom-2"
-                          }  w-48 py-2 mt-2 bg-white rounded-md shadow-2xl transform translate-y-full`}
-                        >
-                          <Link
-                            to={`/user-profile/${id}`}
-                            className="w-full flex text-green-700 items-center gap-2 py-2 px-4 text-left hover:bg-gray-300 dark:hover:bg-gray-700"
-                          >
-                            <span>
-                              <MdPreview className="h-4 w-4" />
-                            </span>
-                            View
-                          </Link>
-                          <button
-                            // onClick={() => openDeleteModal(id)}
-                            className="w-full flex items-center gap-2 text-blue-500 py-2 px-4 text-left hover:bg-gray-300 dark:hover:bg-gray-700"
-                          >
-                            <span>
-                              <FaRegEdit className="h-4 w-4" />
-                            </span>
-                            Edit
-                          </button>
-                          <button
-                            onClick={(e) => {
-                              openDeleteModal({
-                                id,
-                                name: `${firstName} ${middleInitial}. ${lastName}`,
-                              });
-                              e.stopPropagation();
-                            }}
-                            className="w-full flex items-center gap-2 text-red-500 py-2 px-4 text-left hover:bg-gray-300 dark:hover:bg-gray-700"
-                          >
-                            <span>
-                              <FaTrashAlt className="h-4 w-4" />
-                            </span>
-                            Delete
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  </td> */}
 
                   <td className=" py-4 flex gap-3 justify-center items-center">
                     <Link
-                      to={`/user-profile/${id}`}
+                      to={`/user-details/${id}`}
                       className="p-2 md:text-lg text-sm border bg-gray-200 border-[#c9872a] hover:bg-gray-300 text-[#c9872a] rounded-lg"
                     >
                       <FaEye className="h-5 w-5" />

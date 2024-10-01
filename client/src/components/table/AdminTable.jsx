@@ -110,7 +110,7 @@ const AdminTable = ({ adminUser }) => {
                 index
               ) => (
                 <tr
-                  onClick={() => navigate(`/user-profile/${id}`)}
+                  onClick={() => navigate(`/user-details/${id}`)}
                   key={index}
                   className="bg-white dark:bg-gray-800 hover:bg-gray-200 cursor-pointer"
                 >
@@ -149,7 +149,7 @@ const AdminTable = ({ adminUser }) => {
 
                   <td className="px-6 py-4 flex gap-3 justify-center items-center">
                     <Link
-                      to={`/user-profile/${id}`}
+                      to={`/user-details/${id}`}
                       className="p-2 md:text-lg text-sm border bg-gray-200 border-[#c9872a] hover:bg-gray-300 text-[#c9872a] rounded-lg"
                     >
                       <FaEye className="h-5 w-5" />

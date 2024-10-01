@@ -1,45 +1,36 @@
-import { useDispatch, useSelector } from "react-redux";
-import { useParams, Link } from "react-router-dom";
-import { fetchUserById, getFetchedUserById } from "../../services/usersSlice";
+import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import axios from "../../api/axios";
-import userIcon from "../../assets/images/user (1).png";
 import { getUserRole } from "../../utils/userRoles";
 import { useFormat } from "../../hooks/useFormatDate";
 import Profile from "../../components/profile_image/Profile";
 import Back from "../../components/buttons/Back";
+import { getUserData } from "../../services/authSlice";
 
 const UserProfile = () => {
   const { fullDateFormat } = useFormat();
-  const { id } = useParams();
-  const dispatch = useDispatch();
-  const user = useSelector(getFetchedUserById);
   const [newEmail, setNewEmail] = useState("");
   const [otp, setOTP] = useState("");
+  const userData = useSelector(getUserData);
   const [data, setData] = useState({
-    // image: "",
-    // firstName: "",
-    // middleInitial: "",
-    // lastName: "",
-    // birthDate: "",
-    // email: "",
-    // role: "",
-    // contactNumber: "",
-    // designation: "",
-    // esuCampus: "",
-    // office: "",
+    image: "",
+    firstName: "",
+    middleInitial: "",
+    lastName: "",
+    birthDate: "",
+    email: "",
+    role: "",
+    contactNumber: "",
+    designation: "",
+    esuCampus: "",
+    office: "",
   });
   const [activeTab, setActiveTab] = useState("profile");
 
   useEffect(() => {
-    if (user) {
-      setData(user);
+    if (userData) {
+      setData(userData);
     }
-  }, [user]);
-
-  useEffect(() => {
-    dispatch(fetchUserById(id));
-  }, [id, dispatch]);
+  }, [userData]);
 
   const submitDisable = !(newEmail && otp);
 
@@ -191,22 +182,24 @@ const UserProfile = () => {
                     value={data?.designation || ""}
                   />
                 </div>
-                {data.esuCampus && (
-                  <div className="flex items-center gap-5">
-                    <label
-                      htmlFor=""
-                      className="text-md font-semibold text-gray-700 w-1/4"
-                    >
-                      Esu Campus
-                    </label>
-                    <input
-                      className="rounded-lg border-2 bg-gray-50 border-gray-200 flex-grow p-2 text-sm"
-                      type="text"
-                      disabled={true}
-                      value={data?.esuCampus || ""}
-                    />
-                  </div>
-                )}
+                {data?.esuCampus &&
+                  (console.log(data?.esuCampus),
+                  (
+                    <div className="flex items-center gap-5">
+                      <label
+                        htmlFor=""
+                        className="text-md font-semibold text-gray-700 w-1/4"
+                      >
+                        Esu Campus
+                      </label>
+                      <input
+                        className="rounded-lg border-2 bg-gray-50 border-gray-200 flex-grow p-2 text-sm"
+                        type="text"
+                        disabled={true}
+                        value={data?.esuCampus || ""}
+                      />
+                    </div>
+                  ))}
               </div>
             )}
             {activeTab === "update" && (
