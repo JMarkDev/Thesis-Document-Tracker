@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
 import Back from "../../components/buttons/Back";
 import Stepper from "../../components/Stepper";
 import StepperMobile from "../../components/StepperMobile";
@@ -47,7 +46,10 @@ const DocumentDetails = () => {
       <div className="flex items-center gap-5">
         <Back />
 
-        <h1 className="font-bold text-2xl text-gray-900"> Document Details</h1>
+        <h1 className="font-bold md:text-2xl text-lg  text-gray-900">
+          {" "}
+          Document Details
+        </h1>
       </div>
       <div className="mt-8 flex flex-col gap-5">
         <div className="hidden lg:block">

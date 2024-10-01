@@ -53,9 +53,11 @@ const UserProfile = () => {
   return (
     <>
       <div className="flex items-center gap-5">
-        {" "}
         <Back />
-        <h1 className="font-bold text-2xl text-gray-900"> User Details</h1>
+        <h1 className="font-bold md:text-2xl text-lg text-gray-900">
+          {" "}
+          User Details
+        </h1>
       </div>
 
       <div className="flex text-sm flex-col lg:flex-row w-full gap-5 mt-5">

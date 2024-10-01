@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FaRegEdit, FaTrashAlt } from "react-icons/fa";
 import { MdPreview } from "react-icons/md";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { deleteUser } from "../../services/usersSlice";
 import api from "../../api/axios";
@@ -121,7 +121,7 @@ const Office = ({ officeUsers }) => {
               ) => (
                 <tr
                   key={index}
-                  onClick={() => navigate(`/user-profile/${id}`)}
+                  onClick={() => navigate(`/user-details/${id}`)}
                   className="bg-white dark:bg-gray-800 hover:bg-gray-200 cursor-pointer"
                 >
                   {/* <th
@@ -178,15 +178,18 @@ const Office = ({ officeUsers }) => {
                               : "bottom-2"
                           }  w-48 py-2 mt-2 bg-white rounded-md shadow-2xl transform translate-y-full`}
                         >
-                          <Link
-                            to={`/user-profile/${id}`}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              navigate(`/user-details/${id}`);
+                            }}
                             className="w-full flex text-green-700 items-center gap-2 py-2 px-4 text-left hover:bg-gray-300 dark:hover:bg-gray-700"
                           >
                             <span>
                               <MdPreview className="h-4 w-4" />
                             </span>
                             View
-                          </Link>
+                          </button>
                           <button
                             onClick={(e) => {
                               handleUpdate(id);

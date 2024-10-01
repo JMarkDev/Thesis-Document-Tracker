@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { FaEye, FaRegEdit, FaTrashAlt } from "react-icons/fa";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import ProfileModal from "../ProfileModal";
 import api from "../../api/axios";
@@ -148,12 +148,15 @@ const RegistrarTable = ({ registrarUser }) => {
                   <td className="px-6 py-4 whitespace-nowrap">{email}</td>
 
                   <td className="px-6 py-4 flex gap-3 justify-center items-center">
-                    <Link
-                      to={`/user-details/${id}`}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/user-details/${id}`);
+                      }}
                       className="p-2 md:text-lg text-sm border bg-gray-200 border-[#c9872a] hover:bg-gray-300 text-[#c9872a] rounded-lg"
                     >
                       <FaEye className="h-5 w-5" />
-                    </Link>
+                    </button>
 
                     <button
                       onClick={(e) => {

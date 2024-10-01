@@ -1,5 +1,5 @@
 import { FaEye, FaFileDownload } from "react-icons/fa";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import { getDocumentStatus } from "../../utils/documentStatus";
 import { documentBackground } from "../../utils/documentBackgroundColor";
@@ -184,12 +184,15 @@ const Table = ({ documents, handleSort }) => {
                     {dateFormat(createdAt)}
                   </td>
                   <td className="px-6 py-4 flex gap-3">
-                    <Link
-                      to={`/document/details/${id}`}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/document/details/${id}`);
+                      }}
                       className="px-4 py-2 text-lg bg-[#fca326] hover:bg-[#f58e40] text-white rounded-lg"
                     >
                       <FaEye className="h-5 w-5" />
-                    </Link>
+                    </button>
                     <button className="px-4 py-2 text-lg bg-[#3b9c3e] hover:bg-[#47a632] text-white rounded-lg">
                       <FaFileDownload className="h-5 w-5" />
                     </button>

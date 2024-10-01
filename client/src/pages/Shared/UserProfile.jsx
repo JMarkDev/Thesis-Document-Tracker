@@ -5,12 +5,20 @@ import { useFormat } from "../../hooks/useFormatDate";
 import Profile from "../../components/profile_image/Profile";
 import Back from "../../components/buttons/Back";
 import { getUserData } from "../../services/authSlice";
+import api from "../../api/axios";
+import { useToast } from "../../hooks/useToast";
+import Loading from "../../components/loader/loginloader/LoginLoading";
+import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const UserProfile = () => {
+  const navigate = useNavigate();
   const { fullDateFormat } = useFormat();
   const [newEmail, setNewEmail] = useState("");
-  const [otp, setOTP] = useState("");
   const userData = useSelector(getUserData);
+  const toast = useToast();
+  const [otp, setOTP] = useState("");
+  const [loader, setLoader] = useState(false);
   const [data, setData] = useState({
     image: "",
     firstName: "",
@@ -32,6 +40,56 @@ const UserProfile = () => {
     }
   }, [userData]);
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    setLoader(true);
+    try {
+      const response = await api.post(`/users/update-email`, {
+        email: newEmail,
+      });
+      if (response.data.status === "success") {
+        toast.success(response.data.message);
+        setLoader(false);
+      }
+    } catch (error) {
+      setLoader(false);
+      toast.error(error.response.data.message);
+    }
+  };
+
+  const handleChangeUsername = async (e) => {
+    const id = userData?.id;
+    e.preventDefault();
+    const values = {
+      email: newEmail,
+      otp: otp,
+    };
+
+    setLoader(true);
+
+    try {
+      const response = await api.put(
+        `/users/update-email/verify-otp/${id}`,
+        values
+      );
+
+      if (response.data.status === "success") {
+        toast.success("Email updated successfully. Please login again.");
+        Cookies.remove("accessToken");
+        setTimeout(() => {
+          navigate("/home");
+        }, 2000);
+      }
+
+      setLoader(false);
+    } catch (error) {
+      setLoader(false);
+      toast.error(error.response.data.message);
+      console.log(error);
+    }
+  };
+
   const submitDisable = !(newEmail && otp);
 
   return (
@@ -39,7 +97,10 @@ const UserProfile = () => {
       <div className="flex items-center gap-5">
         {" "}
         <Back />
-        <h1 className="font-bold text-2xl text-gray-900"> User Profile</h1>
+        <h1 className="font-bold md:text-2xl text-lg text-gray-900">
+          {" "}
+          User Profile
+        </h1>
       </div>
 
       <div className="flex text-sm flex-col lg:flex-row w-full gap-5 mt-5">
@@ -51,6 +112,7 @@ const UserProfile = () => {
           alt=""
           className="h-32 w-32 rounded-full"
         /> */}
+          {loader && <Loading />}
           <Profile image={data.image} />
           <h1 className="font-bold text-lg text-gray-800 text-center">{`${data.firstName} ${data.middleInitial}. ${data.lastName}`}</h1>
           <span className="text-gray-700 md:text-md text-sm">
@@ -214,7 +276,7 @@ const UserProfile = () => {
                     </label>
                     <input
                       onChange={(e) => setNewEmail(e.target.value)}
-                      className="rounded-lg focus:ring-blue-500 focus:border-blue-100 border-2 bg-gray-50 border-gray-200 flex-grow p-2 text-sm"
+                      className={`rounded-lg focus:ring-blue-500 focus:border-blue-100 border-2 bg-gray-50 border-gray-200 flex-grow p-2 text-sm`}
                       type="text"
                       placeholder="Enter new email"
                     />
@@ -234,7 +296,7 @@ const UserProfile = () => {
                       placeholder="Enter 4 digits OTP"
                     />
                     <button
-                      // onClick={handleSubmit}
+                      onClick={handleSubmit}
                       type="button"
                       className="text-[#1A9CE7] text-sm absolute right-5"
                     >
@@ -244,6 +306,7 @@ const UserProfile = () => {
 
                   <button
                     type="button"
+                    onClick={handleChangeUsername}
                     disabled={submitDisable ? true : false}
                     className={`${
                       submitDisable ? "cursor-not-allowed" : "cursor-pointer"
@@ -264,8 +327,8 @@ const UserProfile = () => {
                     Old password
                   </label>
                   <input
-                    className="rounded-lg focus:ring-blue-500 focus:border-blue-100 flex flex-grow border-2 bg-gray-50 border-gray-200 w-full p-2 text-sm"
-                    type="text"
+                    className="rounded-lg focus:ring-blue-500 focus:border-blue-100 border-2 bg-gray-50 border-gray-200 flex-grow p-2 text-sm"
+                    type="password"
                     placeholder="Enter old password"
                   />
                 </div>
@@ -277,8 +340,8 @@ const UserProfile = () => {
                     New password
                   </label>
                   <input
-                    className="rounded-lg focus:ring-blue-500 focus:border-blue-100 flex flex-grow border-2 bg-gray-50 border-gray-200 w-full p-2 text-sm"
-                    type="text"
+                    className="rounded-lg focus:ring-blue-500 focus:border-blue-100 border-2 bg-gray-50 border-gray-200 flex-grow p-2 text-sm"
+                    type="password"
                     placeholder="Enter new password"
                   />
                 </div>
@@ -290,7 +353,7 @@ const UserProfile = () => {
                     Confirm password
                   </label>
                   <input
-                    className="rounded-lg focus:ring-blue-500 focus:border-blue-100 flex flex-grow border-2 bg-gray-50 border-gray-200 w-full p-2 text-sm"
+                    className="rounded-lg focus:ring-blue-500 focus:border-blue-100 border-2 bg-gray-50 border-gray-200 flex-grow p-2 text-sm"
                     type="text"
                     placeholder="Confirm password"
                   />

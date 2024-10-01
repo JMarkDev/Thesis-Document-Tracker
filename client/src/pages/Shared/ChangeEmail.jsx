@@ -30,12 +30,8 @@ const ChangeEmail = ({ modal, closeModal, id }) => {
       }
     } catch (error) {
       setLoader(false);
-      if (error.response.data.errors) {
-        setEmailError(error.response.data.errors[0].msg);
-      } else if (error.response.data.status === "error") {
-        setEmailError(error.response.data.message);
-      }
-      console.log(error);
+      setEmailError(error.response.data.message);
+      // toast.error(error.response.data.message);
     }
   };
 
