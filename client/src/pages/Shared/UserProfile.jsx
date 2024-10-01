@@ -10,15 +10,23 @@ import { useToast } from "../../hooks/useToast";
 import Loading from "../../components/loader/loginloader/LoginLoading";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import { FiEyeOff, FiEye } from "react-icons/fi";
 
 const UserProfile = () => {
   const navigate = useNavigate();
   const { fullDateFormat } = useFormat();
   const [newEmail, setNewEmail] = useState("");
   const userData = useSelector(getUserData);
+  const id = userData?.id;
   const toast = useToast();
   const [otp, setOTP] = useState("");
   const [loader, setLoader] = useState(false);
+  const [password, setPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const [showPass, setShowPass] = useState(false);
+
   const [data, setData] = useState({
     image: "",
     firstName: "",
@@ -59,7 +67,6 @@ const UserProfile = () => {
   };
 
   const handleChangeUsername = async (e) => {
-    const id = userData?.id;
     e.preventDefault();
     const values = {
       email: newEmail,
@@ -88,6 +95,32 @@ const UserProfile = () => {
       toast.error(error.response.data.message);
       console.log(error);
     }
+  };
+
+  const changePassword = async () => {
+    setLoader(true);
+    const data = {
+      password: password,
+      new_password: newPassword,
+      confirm_password: confirmPassword,
+    };
+
+    try {
+      const response = await api.put(`/users/update-password/${id}`, data);
+      if (response.data.status === "success") {
+        toast.success(response.data.message);
+        setActiveTab("profile");
+        setLoader(false);
+      }
+    } catch (error) {
+      console.log(error);
+      setLoader(false);
+      toast.error(error.response.data.message);
+    }
+  };
+
+  const showPassword = () => {
+    setShowPass(!showPass);
   };
 
   const submitDisable = !(newEmail && otp);
@@ -326,11 +359,20 @@ const UserProfile = () => {
                   >
                     Old password
                   </label>
-                  <input
-                    className="rounded-lg focus:ring-blue-500 focus:border-blue-100 border-2 bg-gray-50 border-gray-200 flex-grow p-2 text-sm"
-                    type="password"
-                    placeholder="Enter old password"
-                  />
+                  <div className="flex-grow flex relative">
+                    <input
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="rounded-lg focus:ring-blue-500 focus:border-blue-100 border-2 flex-grow bg-gray-50 border-gray-200  p-2 text-sm"
+                      type={`${showPass ? "text" : "password"}`}
+                      placeholder="Enter old password"
+                    />
+                    <span
+                      onClick={showPassword}
+                      className="absolute right-2 top-1/3 cursor-pointer"
+                    >
+                      {showPass ? <FiEye /> : <FiEyeOff />}
+                    </span>
+                  </div>
                 </div>
                 <div className="flex items-center gap-5 justify-between">
                   <label
@@ -339,11 +381,20 @@ const UserProfile = () => {
                   >
                     New password
                   </label>
-                  <input
-                    className="rounded-lg focus:ring-blue-500 focus:border-blue-100 border-2 bg-gray-50 border-gray-200 flex-grow p-2 text-sm"
-                    type="password"
-                    placeholder="Enter new password"
-                  />
+                  <div className="flex-grow flex relative">
+                    <input
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      className="rounded-lg focus:ring-blue-500 focus:border-blue-100 border-2 flex-grow bg-gray-50 border-gray-200  p-2 text-sm"
+                      type={`${showPass ? "text" : "password"}`}
+                      placeholder="Enter new password"
+                    />
+                    <span
+                      onClick={showPassword}
+                      className="absolute right-2 top-1/3 cursor-pointer"
+                    >
+                      {showPass ? <FiEye /> : <FiEyeOff />}
+                    </span>
+                  </div>
                 </div>
                 <div className="flex items-center gap-5 justify-between">
                   <label
@@ -352,14 +403,27 @@ const UserProfile = () => {
                   >
                     Confirm password
                   </label>
-                  <input
-                    className="rounded-lg focus:ring-blue-500 focus:border-blue-100 border-2 bg-gray-50 border-gray-200 flex-grow p-2 text-sm"
-                    type="text"
-                    placeholder="Confirm password"
-                  />
+
+                  <div className="flex-grow flex relative">
+                    <input
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      className="rounded-lg focus:ring-blue-500 focus:border-blue-100 border-2 flex-grow bg-gray-50 border-gray-200  p-2 text-sm"
+                      type={`${showPass ? "text" : "password"}`}
+                      placeholder="Enter new password"
+                    />
+                    <span
+                      onClick={showPassword}
+                      className="absolute right-2 top-1/3 cursor-pointer"
+                    >
+                      {showPass ? <FiEye /> : <FiEyeOff />}
+                    </span>
+                  </div>
                 </div>
 
-                <button className="w-1/4 mt-4 bg-blue-500 hover:bg-blue-700 text-white rounded-lg p-2">
+                <button
+                  onClick={() => changePassword()}
+                  className="w-1/4 mt-4 bg-blue-500 hover:bg-blue-700 text-white rounded-lg p-2"
+                >
                   Update
                 </button>
               </div>
