@@ -23,7 +23,6 @@ import EsuRegistrar from "./pages/Admin/UserMagement/ESU Registrar/EsuRegistrar"
 import AdminStaff from "./pages/Admin/UserMagement/AdminStaff/AdminStaff";
 
 import LayoutFaculty from "./components/layout/LayoutFaculty";
-import FacultyProfile from "./pages/Faculty/Profile/FacultyProfile";
 import Upload from "./pages/Faculty/UploadDocuments/UploadDocuments";
 import FacultyReports from "./pages/Faculty/Reports/FacultyReports";
 import AllDocuments from "./pages/Faculty/AllDocuments/AllDocuments";
@@ -93,7 +92,7 @@ function App() {
     {
       title: "Faculty Profile",
       path: "/faculty-profile",
-      component: <FacultyProfile />,
+      component: <UserProfile />,
     },
     {
       title: "Upload",

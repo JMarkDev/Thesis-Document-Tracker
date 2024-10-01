@@ -47,6 +47,7 @@ const EditOffice = ({ modal, closeModal, id }) => {
   }, [id, dispatch]);
 
   const onSubmit = async (data) => {
+    console.log(data);
     data.role = rolesList.office;
     setLoading(true);
 
@@ -58,8 +59,6 @@ const EditOffice = ({ modal, closeModal, id }) => {
     setBirthDateError("");
     setContactError("");
     setDesignationError("");
-    setPasswordError("");
-    setConfirmpasswordError("");
 
     try {
       const formData = new FormData();
