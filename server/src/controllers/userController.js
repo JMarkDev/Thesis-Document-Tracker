@@ -17,6 +17,7 @@ const getUserByEmail = async (req, res) => {
       where: {
         email: email,
       },
+      include: [{ model: officeModel, require: false }],
     });
 
     if (!user) {
@@ -245,6 +246,7 @@ const updateUserData = async (req, res) => {
   const { id } = req.params;
   const {
     image,
+    officeName,
     firstName,
     lastName,
     middleInitial,
@@ -271,8 +273,6 @@ const updateUserData = async (req, res) => {
       );
     }
 
-    console.log(newFileName, "newFileName");
-
     const hashPassword = await bcrypt.hash(password, saltsRounds);
 
     await userModel.update(
@@ -290,6 +290,23 @@ const updateUserData = async (req, res) => {
       },
       {
         where: { id },
+      }
+    );
+
+    // Fetch the officeId from the userModel
+    const user = await userModel.findOne({ where: { id } });
+
+    if (!user || !user.officeId) {
+      return res.status(404).json({ message: "Office not found" });
+    }
+
+    await officeModel.update(
+      {
+        officeName: officeName,
+        updatedAt: createdAt,
+      },
+      {
+        where: { id: user.officeId },
       }
     );
 
@@ -327,7 +344,9 @@ const updatePassword = async (req, res) => {
     }
 
     if (new_password !== confirm_password) {
-      return res.status(400).json({ message: "Passwords do not match" });
+      return res
+        .status(400)
+        .json({ message: "New password and Confirm password do not match" });
     }
 
     const hashPassword = await bcrypt.hash(new_password, saltsRounds);
@@ -352,6 +371,78 @@ const updatePassword = async (req, res) => {
   }
 };
 
+const updateProfile = async (req, res) => {
+  const { id } = req.params;
+  const {
+    image,
+    firstName,
+    lastName,
+    middleInitial,
+    birthDate,
+    contactNumber,
+    designation,
+    esuCampus,
+    officeName,
+  } = req.body;
+
+  try {
+    // upload image
+    let newFileName = null;
+    if (req.file) {
+      let filetype = req.file.mimetype.split("/")[1];
+      newFileName = req.file.filename + "." + filetype;
+      fs.rename(
+        `./uploads/${req.file.filename}`,
+        `./uploads/${newFileName}`,
+        async (err) => {
+          if (err) throw err;
+          console.log("uploaded successfully");
+        }
+      );
+    }
+
+    await userModel.update(
+      {
+        image: newFileName ? `/uploads/${newFileName}` : image,
+        firstName: firstName,
+        lastName: lastName,
+        middleInitial: middleInitial,
+        birthDate: birthDate,
+        contactNumber: contactNumber,
+        designation: designation,
+        esuCampus: esuCampus,
+        updatedAt: createdAt,
+      },
+      {
+        where: { id },
+      }
+    );
+
+    // Fetch the officeId from the userModel
+    const user = await userModel.findOne({ where: { id } });
+
+    if (user) {
+      await officeModel.update(
+        {
+          officeName: officeName,
+          updatedAt: createdAt,
+        },
+        {
+          where: { id: user.officeId },
+        }
+      );
+    }
+
+    return res.status(200).json({
+      status: "success",
+      message: "User updated successfully",
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: err.message });
+  }
+};
+
 module.exports = {
   getUserByEmail,
   getUserById,
@@ -364,4 +455,5 @@ module.exports = {
   updateEmail,
   updateUserData,
   updatePassword,
+  updateProfile,
 };

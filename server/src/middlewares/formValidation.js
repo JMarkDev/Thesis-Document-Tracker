@@ -90,6 +90,18 @@ const registerValidationRules = () => {
   ];
 };
 
+const updateProfileValidation = () => {
+  return [
+    validateRequiredField("firstName"),
+    validateRequiredField("lastName"),
+    validateRequiredField("middleInitial"),
+    validateEmail(),
+    validateRequiredField("birthDate"),
+    validateRequiredField("contactNumber"),
+    validateRequiredField("designation"),
+  ];
+};
+
 // Middleware to validate form
 const validateForm = (req, res, next) => {
   const errors = validationResult(req);
@@ -106,4 +118,5 @@ module.exports = {
   validateForm,
   validateEmail,
   validateForgotPassword,
+  updateProfileValidation,
 };

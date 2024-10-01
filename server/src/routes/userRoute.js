@@ -7,6 +7,7 @@ const upload = multer({ dest: "./uploads" });
 const {
   registerValidationRules,
   validateForm,
+  updateProfileValidation,
 } = require("../middlewares/formValidation");
 
 // req.query
@@ -37,6 +38,13 @@ router.put(
   // validateForgotPassword(),
   // validateForm,
   userController.updatePassword
+);
+router.put(
+  "/update-profile/id/:id",
+  upload.single("image"),
+  updateProfileValidation(),
+  validateForm,
+  userController.updateProfile
 );
 
 module.exports = router;
