@@ -303,6 +303,55 @@ const updateUserData = async (req, res) => {
   }
 };
 
+const updatePassword = async (req, res) => {
+  const { id } = req.params;
+  const { password, new_password, confirm_password } = req.body;
+
+  try {
+    const user = await userModel.findByPk(id);
+
+    if (!password) {
+      return res.status(404).json({ message: "Password is required" });
+    }
+
+    const isPasswordMatch = await bcrypt.compare(password, user.password);
+
+    if (new_password.length < 8) {
+      return res
+        .status(400)
+        .json({ message: "New password must be at least 8 characters" });
+    }
+
+    if (!isPasswordMatch) {
+      return res.status(400).json({ message: "Incorrect password" });
+    }
+
+    if (new_password !== confirm_password) {
+      return res.status(400).json({ message: "Passwords do not match" });
+    }
+
+    const hashPassword = await bcrypt.hash(new_password, saltsRounds);
+
+    await userModel.update(
+      {
+        password: hashPassword,
+        updatedAt: createdAt,
+      },
+      {
+        where: { id },
+      }
+    );
+
+    return res.status(200).json({
+      status: "success",
+      message: "Password updated successfully",
+    });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: err.message });
+  }
+};
+
 module.exports = {
   getUserByEmail,
   getUserById,
@@ -314,4 +363,5 @@ module.exports = {
   filterFacultyByCampus,
   updateEmail,
   updateUserData,
+  updatePassword,
 };

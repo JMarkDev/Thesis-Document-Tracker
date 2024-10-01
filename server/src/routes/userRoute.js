@@ -32,4 +32,11 @@ router.put(
   userController.updateUserData
 );
 
+router.put(
+  "/update-password/:id",
+  // validateForgotPassword(),
+  // validateForm,
+  userController.updatePassword
+);
+
 module.exports = router;
