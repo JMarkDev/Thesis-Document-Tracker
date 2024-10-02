@@ -30,6 +30,7 @@ import AllDocuments from "./pages/Faculty/AllDocuments/AllDocuments";
 import UserProfile from "./pages/Shared/UserProfile";
 import UserDetails from "./pages/Shared/UserDetails";
 import DocumentDetails from "./pages/Shared/DocumentDetails";
+import UploadDocuments from "./pages/Shared/UploadDocuments";
 
 function App() {
   // useIdleTimeout();
@@ -38,6 +39,11 @@ function App() {
     { title: "Dashboard", path: "/dashboard", component: <Dashboard /> },
     { title: "Scan Now", path: "/scan-now", component: <ScanNow /> },
     { title: "Documents", path: "/documents", component: <Documents /> },
+    {
+      title: "Upload Documents",
+      path: "/upload-documents",
+      component: <UploadDocuments />,
+    },
     {
       title: "Document Workflow",
       path: "/document-workflow",
@@ -83,7 +89,7 @@ function App() {
     },
     {
       title: "User Profile",
-      path: "/user-profile",
+      path: "/admin-profile",
       component: <UserProfile />,
     },
   ];
@@ -97,7 +103,7 @@ function App() {
     {
       title: "Upload",
       path: "/faculty-upload-documents",
-      component: <Upload />,
+      component: <UploadDocuments />,
     },
     {
       title: "Reports",

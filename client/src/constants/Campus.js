@@ -1,16 +1,16 @@
 const wmsuCampus = [
-  "WMSU-ESU Alicia",
-  "WMSU-ESU Aurora",
-  "WMSU-ESU Diplahan",
-  "WMSU-ESU Imelda",
-  "WMSU-ESU Ipil",
-  "WMSU-ESU Mabuhay",
-  "WMSU-ESU Malangas",
-  "WMSU-ESU Naga",
-  "WMSU-ESU Olutanga",
-  "WMSU-ESU Pagadian",
-  "WMSU-ESU Siay",
-  "WMSU-ESU Tungawan",
+  "WMSU-ESU ALICIA",
+  "WMSU-ESU AURORA",
+  "WMSU-ESU DIPLAHAN",
+  "WMSU-ESU IMELDA",
+  "WMSU-ESU IPIL",
+  "WMSU-ESU MABUHAY",
+  "WMSU-ESU MALANGAS",
+  "WMSU-ESU NAGA",
+  "WMSU-ESU OLUTANGA",
+  "WMSU-ESU PAGADIAN",
+  "WMSU-ESU SIAY",
+  "WMSU-ESU TUNGAWAN",
 ];
 
 export default wmsuCampus;

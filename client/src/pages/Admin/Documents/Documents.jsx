@@ -20,6 +20,7 @@ import {
   getAllWorkflow,
   fetchAllWorkflow,
 } from "../../../services/documentWolkflowSlice";
+import { Link } from "react-router-dom";
 
 const Documents = () => {
   const dispatch = useDispatch();
@@ -90,9 +91,12 @@ const Documents = () => {
     <div className="">
       <div className="flex  flex-col gap-5 justify-between mb-8">
         <div className="flex text-sm md:text-[16px] justify-between lg:flex-row flex-col gap-5">
-          <button className="w-fit p-2 px-4 rounded-lg bg-main hover:bg-main_hover text-white font-semi">
+          <Link
+            to={"/upload-documents"}
+            className="w-fit p-2 flex items-center text-center px-4 rounded-lg bg-main hover:bg-main_hover text-white font-semi"
+          >
             Upload Documents
-          </button>
+          </Link>
           <div className=" flex max-w-[450px] w-full  items-center relative">
             <input
               value={searchTerm}

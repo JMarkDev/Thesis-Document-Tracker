@@ -1,10 +1,8 @@
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { fetchUser } from "../../services/authSlice";
+import { fetchUser, getUserData } from "../../services/authSlice";
 import Profile from "../../components/profile_image/Profile";
-import Back from "../../components/buttons/Back";
-import { getUserData } from "../../services/authSlice";
 import api from "../../api/axios";
 import { useToast } from "../../hooks/useToast";
 import Loading from "../../components/loader/loginloader/LoginLoading";
@@ -13,25 +11,26 @@ import Cookies from "js-cookie";
 import { FiEyeOff, FiEye } from "react-icons/fi";
 import { useForm } from "react-hook-form";
 import wmsuCampus from "../../constants/Campus";
-import rolesList from "../../constants/rolesList";
 
 const UserProfile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [newEmail, setNewEmail] = useState("");
-  const userData = useSelector(getUserData);
-  const id = userData?.id;
-  const [fullName, setFullName] = useState("");
   const toast = useToast();
-  const [sendOtp, setSendOtp] = useState(true);
+  const userData = useSelector(getUserData);
+  const { register, handleSubmit, setValue } = useForm();
+
+  const [newEmail, setNewEmail] = useState("");
   const [otp, setOTP] = useState("");
+  const [sendOtp, setSendOtp] = useState(true);
   const [loader, setLoader] = useState(false);
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const { register, handleSubmit, setValue } = useForm();
+  const [activeTab, setActiveTab] = useState("profile");
   const [showPass, setShowPass] = useState(false);
   const [edit, setEdit] = useState(true);
+
+  const [fullName, setFullName] = useState("");
   const [profilePic, setProfilePic] = useState(
     "https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg"
   );
@@ -49,7 +48,8 @@ const UserProfile = () => {
     esuCampus: "",
     office: "",
   });
-  const [activeTab, setActiveTab] = useState("profile");
+
+  const id = userData?.id;
 
   useEffect(() => {
     if (userData) {
@@ -189,26 +189,8 @@ const UserProfile = () => {
 
   return (
     <>
-      {/* {data?.role === rolesList.admin && (
-        <div className="flex items-center gap-5">
-          {" "}
-          <Back />
-          <h1 className="font-bold md:text-2xl text-lg text-gray-900">
-            {" "}
-            User Profile
-          </h1>
-        </div>
-      )} */}
-
       <div className="flex text-sm flex-col lg:flex-row w-full gap-5">
         <div className="flex flex-col gap-3 justify-center items-center p-4 bg-white border border-gray-300 shadow-lg min-w-[250px] h-fit rounded-lg">
-          {/* <img
-          src={`${
-            data.image ? `${axios.defaults.baseURL}${data.image}` : userIcon
-          }`}
-          alt=""
-          className="h-32 w-32 rounded-full"
-        /> */}
           {loader && <Loading />}
           {edit ? (
             <img className="w-32 h-32 rounded-full" src={profilePic} alt="" />
