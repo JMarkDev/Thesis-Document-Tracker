@@ -23,7 +23,7 @@ import EsuRegistrar from "./pages/Admin/UserMagement/ESU Registrar/EsuRegistrar"
 import AdminStaff from "./pages/Admin/UserMagement/AdminStaff/AdminStaff";
 
 import LayoutFaculty from "./components/layout/LayoutFaculty";
-import Upload from "./pages/Faculty/UploadDocuments/UploadDocuments";
+// import Upload from "./pages/Faculty/UploadDocuments/UploadDocuments";
 import FacultyReports from "./pages/Faculty/Reports/FacultyReports";
 import AllDocuments from "./pages/Faculty/AllDocuments/AllDocuments";
 
@@ -31,6 +31,7 @@ import UserProfile from "./pages/Shared/UserProfile";
 import UserDetails from "./pages/Shared/UserDetails";
 import DocumentDetails from "./pages/Shared/DocumentDetails";
 import UploadDocuments from "./pages/Shared/UploadDocuments";
+import PrintQRCode from "./pages/Shared/PrintQRCode";
 
 function App() {
   // useIdleTimeout();
@@ -81,6 +82,11 @@ function App() {
       title: "Document Details",
       path: "/document/details/:id",
       component: <DocumentDetails />,
+    },
+    {
+      title: "Print QR Code",
+      path: "/document/:tracking_number",
+      component: <PrintQRCode />,
     },
     {
       title: "User Details",

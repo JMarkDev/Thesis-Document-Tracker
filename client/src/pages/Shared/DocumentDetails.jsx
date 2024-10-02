@@ -41,8 +41,6 @@ const DocumentDetails = () => {
     }
   }, [documentData]);
 
-  console.log(document);
-
   return (
     <div className="bg-white ">
       <div className="flex items-center gap-5">

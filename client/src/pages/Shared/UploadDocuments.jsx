@@ -23,6 +23,12 @@ const UploadDocuments = () => {
   const [user_id, setUserId] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const [trackingNumberError, setTrackingNumberError] = useState("");
+  const [documentNameError, setDocumentNameError] = useState("");
+  const [documentTypeError, setDocumentTypeError] = useState("");
+  const [routeError, setRouteError] = useState("");
+  const [fileTypeError, setFileTypeError] = useState("");
+
   useEffect(() => {
     setUploadedBy(
       `${user?.firstName} ${user?.middleInitial}. ${user?.lastName}`
@@ -104,9 +110,13 @@ const UploadDocuments = () => {
     );
     setRoute(newRoute);
   };
-  console.log(route);
 
   const handleUpdateDocument = async (e) => {
+    setTrackingNumberError("");
+    setDocumentNameError("");
+    setDocumentTypeError("");
+    setRouteError("");
+    setFileTypeError("");
     setLoading(true);
     e.preventDefault();
     const data = {
@@ -127,10 +137,34 @@ const UploadDocuments = () => {
       console.log(response.data);
       if (response.data.status === "success") {
         setLoading(false);
+        navigate(`/document/${trackingNumber}`);
       }
     } catch (error) {
-      console.log(error);
       setLoading(false);
+      console.log(error.response.data);
+      if (error.response.data.errors) {
+        error.response.data.errors.forEach((error) => {
+          switch (error.path) {
+            case "tracking_number":
+              setTrackingNumberError(error.msg);
+              break;
+            case "document_name":
+              setDocumentNameError(error.msg);
+              break;
+            case "document_type":
+              setDocumentTypeError(error.msg);
+              break;
+            case "route":
+              setRouteError(error.msg);
+              break;
+            case "file_type":
+              setFileTypeError(error.msg);
+              break;
+            default:
+              console.log(error);
+          }
+        });
+      }
     }
   };
   return (
@@ -162,7 +196,9 @@ const UploadDocuments = () => {
               <input
                 type="text"
                 id="tracking"
-                className="flex flex-grow bg-gray-200 border-1 border-gray-300 text-gray-900 text-sm rounded-lg border-1 appearance-none   focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                className={`flex flex-grow ${
+                  trackingNumberError ? "border-red-500" : "border-gray-300"
+                } bg-gray-200 border-1 border-gray-300 text-gray-900 text-sm rounded-lg border-1 appearance-none   focus:outline-none focus:ring-0 focus:border-blue-600 peer`}
                 placeholder="Tracking Number"
                 value={trackingNumber}
                 disabled={true}
@@ -175,6 +211,11 @@ const UploadDocuments = () => {
                 Generate Code
               </button>
             </div>
+            {trackingNumberError && (
+              <span className="text-red-500 text-sm">
+                {trackingNumberError}
+              </span>
+            )}
           </div>
 
           <div className="mb-5">
@@ -204,10 +245,15 @@ const UploadDocuments = () => {
               type="text"
               id="name"
               onChange={(e) => setDocumentName(e.target.value)}
-              className="bg-gray-200 border w-full border-gray-300 text-gray-900 text-sm rounded-lg border-1 appearance-none   focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+              className={` ${
+                documentNameError ? "border-red-500" : "border-gray-300"
+              } bg-gray-200 border w-full  text-gray-900 text-sm rounded-lg border-1 appearance-none   focus:outline-none focus:ring-0 focus:border-blue-600 peer `}
               placeholder="Enter document name"
               required
             />
+            {documentNameError && (
+              <span className="text-red-500 text-sm">{documentNameError}</span>
+            )}
           </div>
           <div className="mb-5">
             <label
@@ -218,7 +264,9 @@ const UploadDocuments = () => {
             </label>
             <select
               id="type"
-              className="bg-gray-200 border w-full border-gray-300 text-gray-900 text-sm rounded-lg border-1 appearance-none   focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+              className={` ${
+                documentTypeError ? "border-red-500" : "border-gray-300"
+              } bg-gray-200 border w-full  text-gray-900 text-sm rounded-lg border-1 appearance-none   focus:outline-none focus:ring-0 focus:border-blue-600 peer`}
               placeholder="Enter document name"
               required
               onChange={handleDocumentType}
@@ -230,6 +278,9 @@ const UploadDocuments = () => {
                 </option>
               ))}
             </select>
+            {documentTypeError && (
+              <span className="text-red-500 text-sm">{documentTypeError}</span>
+            )}
           </div>
 
           {route.length > 0 && (
@@ -297,8 +348,10 @@ const UploadDocuments = () => {
             </label>
             <select
               onChange={(e) => setFileType(e.target.value)}
-              id="file"
-              className="bg-gray-200 border w-full border-gray-300 text-gray-900 text-sm rounded-lg border-1 appearance-none   focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+              id="file_type"
+              className={`${
+                fileTypeError ? "border-red-500" : "border-gray-300"
+              } bg-gray-200 border w-full  text-gray-900 text-sm rounded-lg border-1 appearance-none   focus:outline-none focus:ring-0 focus:border-blue-600 peer`}
               placeholder="Enter document name"
               required
             >
@@ -306,6 +359,9 @@ const UploadDocuments = () => {
               <option value="Soft Copy">Soft Copy</option>
               <option value="Hard Copy">Hard Copy</option>
             </select>
+            {fileTypeError && (
+              <span className="text-red-500 text-sm">{fileTypeError}</span>
+            )}
           </div>
 
           <div className="mb-5">
