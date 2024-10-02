@@ -264,6 +264,21 @@ const updateOffice = async (req, res) => {
   }
 };
 
+const getCampus = async (req, res) => {
+  const { esuCampus } = req.params;
+  try {
+    const campuses = await officeModel.findAll({
+      where: {
+        status: statusList.verified,
+        role: rolesList.registrar,
+      },
+    });
+    return res.status(200).json(campuses);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   addOffice,
   updateOffice,

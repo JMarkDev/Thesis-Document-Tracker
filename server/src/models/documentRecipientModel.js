@@ -25,7 +25,7 @@ const DocumentRecipient = sequelize.define(
     },
     office_name: {
       type: DataTypes.STRING(100),
-      allowNull: false,
+      allowNull: true,
     },
     status: {
       type: DataTypes.INTEGER,

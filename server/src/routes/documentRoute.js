@@ -1,8 +1,18 @@
 const express = require("express");
 const router = express.Router();
 const documentController = require("../controllers/documentController");
+const {
+  validateForm,
+  uploadDocumentValidation,
+} = require("../middlewares/formValidation");
 
 router.get("/all", documentController.getAllDocuments);
+router.post(
+  "/upload",
+  uploadDocumentValidation(),
+  validateForm,
+  documentController.uploadDocument
+);
 // router.get(
 //   "/tracking-number/:tracking_number",
 //   documentController.getDocumentByTrackingNum

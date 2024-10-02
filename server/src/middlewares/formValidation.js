@@ -90,6 +90,49 @@ const registerValidationRules = () => {
   ];
 };
 
+const uploadDocumentValidation = () => {
+  return [
+    body("tracking_number")
+      .trim()
+      .custom((value) => {
+        if (!value) {
+          throw new Error("Tracking number is required");
+        }
+        return true;
+      }),
+    body("document_name")
+      .trim()
+      .custom((value) => {
+        if (!value) {
+          throw new Error("Document name is required");
+        }
+        return true;
+      }),
+    body("document_type")
+      .trim()
+      .custom((value) => {
+        if (!value) {
+          throw new Error("Document type is required");
+        }
+        return true;
+      }),
+    body("uploaded_by")
+      .trim()
+      .custom((value) => {
+        if (!value) {
+          throw new Error("Uploaded by is required");
+        }
+        return true;
+      }),
+    body("route").custom((value) => {
+      if (!value) {
+        throw new Error("Route is required");
+      }
+      return true;
+    }),
+  ];
+};
+
 const updateProfileValidation = () => {
   return [
     validateRequiredField("firstName"),
@@ -119,4 +162,5 @@ module.exports = {
   validateEmail,
   validateForgotPassword,
   updateProfileValidation,
+  uploadDocumentValidation,
 };

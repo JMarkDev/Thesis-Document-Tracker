@@ -26,6 +26,10 @@ const Document = sequelize.define(
       type: DataTypes.STRING(55),
       allowNull: false,
     },
+    document_desc: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
     file_type: {
       type: DataTypes.STRING(55),
       allowNull: false,

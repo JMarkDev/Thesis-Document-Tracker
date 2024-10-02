@@ -2,24 +2,109 @@ const { Sequelize, Op } = require("sequelize");
 const documentModel = require("../models/documentModel");
 const documentHistoryModel = require("../models/documentHistoryModel");
 const documentRecipientModel = require("../models/documentRecipientModel");
+const { createdAt } = require("../utils/formattedTime");
+const documentStatus = require("../constants/documentStatus");
+const userModel = require("../models/userModel");
+const officeModel = require("../models/officeModel");
+const rolesList = require("../constants/rolesList");
+const statusList = require("../constants/statusList");
 
-// const uploadDocuments = async (req, res) => {
-//   const {
-//     tracking_number,
-//     document_name,
-//     document_type,
-//     file_type,
-//     files,
-//     uploaded_by,
-//     esuCampus,
-//     user_id,
-//   } = req.body;
-//   try {
-//     const newDocuments = await
-//   } catch (error) {
-//     return res.status(500).json({ message: error.message });
-//   }
-// };
+const uploadDocument = async (req, res) => {
+  const {
+    tracking_number,
+    document_name,
+    document_type,
+    document_desc,
+    file_type,
+    files,
+    uploaded_by,
+    esuCampus,
+    user_id,
+    route,
+  } = req.body;
+
+  try {
+    const user = await userModel.findOne({
+      where: {
+        id: user_id,
+        [Sequelize.Op.or]: [
+          { status: statusList.verified },
+          { status: statusList.approved },
+        ],
+      },
+      include: [
+        {
+          model: officeModel,
+          required: false,
+        },
+      ],
+    });
+
+    let recipient;
+    if (user) {
+      if (user.office?.officeName) {
+        recipient = user.office.officeName;
+      } else if (user.esuCampus && user.role === rolesList.faculty) {
+        recipient = `${user.esuCampus} FACULTY`;
+      } else if (user.esuCampus && user.role === rolesList.registrar) {
+        recipient = `${esuCampus} REGISTRAR`;
+      }
+    }
+
+    const newDocuments = await documentModel.create({
+      tracking_number,
+      document_name,
+      document_type,
+      document_desc,
+      file_type,
+      files,
+      uploaded_by,
+      esuCampus,
+      status: documentStatus.incoming,
+      user_id,
+    });
+
+    // Format the route data to match the required schema for document history
+    const formattedRouteData = route?.map((office) => {
+      let received_at = null;
+      if (office.office_name === recipient) {
+        received_at = createdAt;
+      }
+      return {
+        document_id: newDocuments.id,
+        user_id: office.user_id, // user ID from the route object
+        office_name: office.office_name,
+        status: documentStatus.incoming,
+        received_at: received_at, // Default as null for now, you can update this later
+        createdAt: createdAt,
+        updatedAt: createdAt,
+      };
+    });
+
+    const documentHistory = {
+      document_id: newDocuments.id,
+      action: "uploaded",
+      recipient_office: recipient,
+      recipient_user: uploaded_by,
+      createdAt: createdAt,
+    };
+
+    // Insert the formatted route data into documentHistoryModel
+    await documentRecipientModel.bulkCreate(formattedRouteData);
+
+    // Insert the document history
+    await documentHistoryModel.create(documentHistory);
+
+    return res.status(201).json({
+      user,
+      status: "success",
+      message: "Document uploaded successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: error.message });
+  }
+};
 
 const getAllDocuments = async (req, res) => {
   try {
@@ -229,6 +314,7 @@ const sortDocuments = async (req, res) => {
 };
 
 module.exports = {
+  uploadDocument,
   getAllDocuments,
   getDocumentByTrackingNum,
   searchDocuments,
