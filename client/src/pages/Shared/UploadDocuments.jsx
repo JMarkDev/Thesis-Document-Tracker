@@ -8,7 +8,9 @@ import { MdDelete } from "react-icons/md";
 import DocumentRoute from "../../components/dropdown/DocumentRoute";
 import api from "../../api/axios";
 import Loading from "../../components/loader/loginloader/LoginLoading";
+import { useToast } from "../../hooks/useToast";
 const UploadDocuments = () => {
+  const toast = useToast();
   const navigate = useNavigate();
   const documentType = useSelector(getAllWorkflow);
   const user = useSelector(getUserData);
@@ -136,8 +138,11 @@ const UploadDocuments = () => {
       const response = await api.post("/document/upload", data);
       console.log(response.data);
       if (response.data.status === "success") {
-        setLoading(false);
-        navigate(`/document/${trackingNumber}`);
+        toast.success(response.data.message);
+        setTimeout(() => {
+          setLoading(false);
+          navigate(`/document/${trackingNumber}`);
+        }, 1000);
       }
     } catch (error) {
       setLoading(false);

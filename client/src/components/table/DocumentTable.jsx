@@ -1,12 +1,63 @@
+import { useState, useRef, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { FaEye, FaFileDownload } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import { getDocumentStatus } from "../../utils/documentStatus";
 import { documentBackground } from "../../utils/documentBackgroundColor";
 import { useFormat } from "../../hooks/useFormatDate";
+import html2pdf from "html2pdf.js";
+import DownloadMetadata from "../../pages/Shared/DownloadMetadata";
+import {
+  fetchDocumentByTrackingNum,
+  getDocumentByTrackingNumber,
+} from "../../services/documentSlice";
+import { useToast } from "../../hooks/useToast";
+
 const Table = ({ documents, handleSort }) => {
+  const toast = useToast();
   const { dateFormat } = useFormat();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const contentRef = useRef(); // Reference for printing and downloading
+  const document = useSelector(getDocumentByTrackingNumber);
+  const [documentData, setDocumentData] = useState({});
+
+  useEffect(() => {
+    if (document) {
+      setDocumentData(document);
+    }
+  }, [document]);
+  // Download the content as a searchable PDF (not image)
+  const handleDownloadPDF = () => {
+    const element = contentRef.current;
+
+    const options = {
+      margin: 0.5,
+      filename: "Document_Metadata.pdf",
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+    };
+
+    // Convert HTML content into PDF
+    html2pdf().set(options).from(element).save();
+    toast.success("Document Metadata successfully");
+  };
+
+  const handleDownload = (tracking_number) => {
+    dispatch(fetchDocumentByTrackingNum(tracking_number));
+    setTimeout(() => {
+      handleDownloadPDF();
+    }, 100);
+  };
+
+  useEffect(() => {
+    if (document) {
+      setDocumentData(document);
+    }
+  }, [document]);
+
   return (
     <>
       <div className="relative overflow-x-auto  shadow-md sm:rounded-lg">
@@ -47,7 +98,7 @@ const Table = ({ documents, handleSort }) => {
               </th>
               <th scope="col" className="px-6 py-3">
                 <div className="flex items-center  whitespace-nowrap">
-                  DOCUMENT TYPE
+                  TYPE
                   <a href="#" onClick={() => handleSort("document_type")}>
                     <svg
                       className="w-3 h-3 ms-1.5"
@@ -61,7 +112,7 @@ const Table = ({ documents, handleSort }) => {
                   </a>
                 </div>
               </th>
-              <th scope="col" className="px-6 py-3">
+              {/* <th scope="col" className="px-6 py-3">
                 <div className="flex items-center  whitespace-nowrap">
                   FILE TYPE
                   <a href="#" onClick={() => handleSort("file_type")}>
@@ -76,7 +127,7 @@ const Table = ({ documents, handleSort }) => {
                     </svg>
                   </a>
                 </div>
-              </th>
+              </th> */}
               <th scope="col" className="px-6 py-3">
                 <div className="flex items-center  whitespace-nowrap">
                   UPLOADED BY
@@ -137,10 +188,10 @@ const Table = ({ documents, handleSort }) => {
               (
                 {
                   id,
-                  // trackingNumber,
+                  tracking_number,
                   document_name,
                   document_type,
-                  file_type,
+                  // file_type,
                   uploaded_by,
                   status,
                   createdAt,
@@ -159,7 +210,7 @@ const Table = ({ documents, handleSort }) => {
                     {id}
                   </th>
                   {/* <td className="px-6 py-4 whitespace-nowrap">
-                    {trackingNumber}
+                    {tracking_number}
                   </td> */}
                   <td className="px-6 py-4 whitespace-nowrap">
                     {document_name}
@@ -167,7 +218,7 @@ const Table = ({ documents, handleSort }) => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     {document_type}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">{file_type}</td>
+                  {/* <td className="px-6 py-4 whitespace-nowrap">{file_type}</td> */}
                   <td className="px-6 py-4 whitespace-nowrap">{uploaded_by}</td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <p
@@ -179,7 +230,7 @@ const Table = ({ documents, handleSort }) => {
                       {getDocumentStatus(status)}
                     </p>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-6 w-5 py-4 whitespace-nowrap">
                     {" "}
                     {dateFormat(createdAt)}
                   </td>
@@ -193,7 +244,13 @@ const Table = ({ documents, handleSort }) => {
                     >
                       <FaEye className="h-5 w-5" />
                     </button>
-                    <button className="px-4 py-2 text-lg bg-[#3b9c3e] hover:bg-[#47a632] text-white rounded-lg">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDownload(tracking_number);
+                      }}
+                      className="px-4 py-2 text-lg bg-[#3b9c3e] hover:bg-[#47a632] text-white rounded-lg"
+                    >
                       <FaFileDownload className="h-5 w-5" />
                     </button>
                   </td>
@@ -202,6 +259,16 @@ const Table = ({ documents, handleSort }) => {
             )}
           </tbody>
         </table>
+        {Object.keys(documentData).length !== 0 && (
+          <div style={{ display: "none" }}>
+            {" "}
+            {/* Hidden offscreen */}
+            <DownloadMetadata
+              documentData={documentData}
+              contentRef={contentRef}
+            />
+          </div>
+        )}
       </div>
     </>
   );

@@ -80,6 +80,13 @@ const DocumentDetails = () => {
               <h1 className="font-bold  text-gray-800">File Type:</h1>
               <p className="text-gray-700">{documentData.file_type}</p>
             </div>
+            {documentData.document_desc && (
+              <div className="flex items-center gap-5 border-b pb-2">
+                <h1 className="font-bold  text-gray-800">Description:</h1>
+                <p className="text-gray-700">{documentData.document_desc}</p>
+              </div>
+            )}
+
             <div className="flex items-center gap-5 border-b pb-2">
               <h1 className="font-bold  text-gray-800">Uploaded By:</h1>
               <p className="text-gray-700">{documentData.uploaded_by}</p>

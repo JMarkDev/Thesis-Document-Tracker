@@ -68,11 +68,11 @@ const FacultyTable = ({ fetchFaculty }) => {
                   FULL NAME
                 </div>
               </th>
-              <th scope="col" className="px-6 py-3 whitespace-nowrap">
+              {/* <th scope="col" className="px-6 py-3 whitespace-nowrap">
                 <div className="flex items-center  whitespace-nowrap">
                   DESIGNATION
                 </div>
-              </th>
+              </th> */}
               <th scope="col" className="px-6 py-3">
                 <div className="flex items-center  whitespace-nowrap">
                   ESU CAMPUS
@@ -104,7 +104,7 @@ const FacultyTable = ({ fetchFaculty }) => {
                   firstName,
                   lastName,
                   middleInitial,
-                  designation,
+                  // designation,
                   image,
                   esuCampus,
                   email,
@@ -147,7 +147,7 @@ const FacultyTable = ({ fetchFaculty }) => {
                   </th>
 
                   <td className="px-6 py-4 whitespace-nowrap">{`${firstName} ${middleInitial}. ${lastName}`}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{designation}</td>
+                  {/* <td className="px-6 py-4 whitespace-nowrap">{designation}</td> */}
                   <td className="px-6 py-4 whitespace-nowrap">{esuCampus}</td>
                   <td className="px-6 py-4 whitespace-nowrap">{email}</td>
                   <td className="px-6 py-4 whitespace-nowrap ">

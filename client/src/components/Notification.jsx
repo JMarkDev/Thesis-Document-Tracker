@@ -10,7 +10,7 @@ const Notification = ({ notifications }) => {
         Notifications
       </h1>
       <div className="h-[400px] rounded-b-lg  overflow-y-auto">
-        <ul className="bg-red-500">
+        <ul className="bg-gray-200">
           {notifications.length === 0 && (
             <li className="p-4 text-sm">No notifications</li>
           )}

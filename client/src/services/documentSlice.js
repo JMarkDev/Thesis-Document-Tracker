@@ -73,8 +73,6 @@ export const fetchDocumentByTrackingNum = createAsyncThunk(
     const response = await axios.get(
       `/document/tracking-number/${tracking_number}`
     );
-    console.log(tracking_number);
-    console.log(response.data);
     return response.data;
   }
 );
