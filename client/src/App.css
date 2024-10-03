@@ -11,6 +11,19 @@
   scroll-behavior: smooth; */
 }
 
+@media print {
+  .h2_print {
+    font-size: 2.25rem; /* Tailwind's 4xl size */
+  }
+
+  .print_container {
+    display: block; /* No quotes around CSS values */
+    max-width: 500px;
+    margin: 0 auto;
+    margin-top: 20px;
+  }
+}
+
 .text-wmsu {
   color: #d4220d;
   text-shadow: 2px 2px 0 #ffcc00, -2px -2px 0 #ffcc00, -2px 2px 0 #ffcc00,

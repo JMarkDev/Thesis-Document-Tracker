@@ -67,36 +67,36 @@ export const sortDocuments = createAsyncThunk(
   }
 );
 
-// export const fetchDocumentByTrackingNum = createAsyncThunk(
-//   "document/tracking-numuber",
-//   async (tracking_number) => {
-//     const response = await axios.get(
-//       `/document/tracking-number/${tracking_number}`
-//     );
-//     console.log(tracking_number);
-//     console.log(response.data);
-//     return response.data;
-//   }
-// );
 export const fetchDocumentByTrackingNum = createAsyncThunk(
-  "document/tracking-number",
-  async ({ tracking_number, toast }, { rejectWithValue }) => {
-    try {
-      const response = await axios.get(
-        `/document/tracking-number/${tracking_number}`
-      );
-      return response.data;
-    } catch (error) {
-      // Check if the error response exists and return the server message
-      if (error.response && error.response.data) {
-        toast.error(error.response.data.message);
-        return rejectWithValue(error.response.data.message);
-      }
-      // Otherwise, return a generic error message
-      return rejectWithValue(error.message);
-    }
+  "document/tracking-numuber",
+  async (tracking_number) => {
+    const response = await axios.get(
+      `/document/tracking-number/${tracking_number}`
+    );
+    console.log(tracking_number);
+    console.log(response.data);
+    return response.data;
   }
 );
+// export const fetchDocumentByTrackingNum = createAsyncThunk(
+//   "document/tracking-number",
+//   async ({ tracking_number, toast }, { rejectWithValue }) => {
+//     try {
+//       const response = await axios.get(
+//         `/document/tracking-number/${tracking_number}`
+//       );
+//       return response.data;
+//     } catch (error) {
+//       // Check if the error response exists and return the server message
+//       if (error.response && error.response.data) {
+//         toast.error(error.response.data.message);
+//         return rejectWithValue(error.response.data.message);
+//       }
+//       // Otherwise, return a generic error message
+//       return rejectWithValue(error.message);
+//     }
+//   }
+// );
 
 const documentsSlice = createSlice({
   name: "documents",
@@ -220,5 +220,7 @@ export const getDocumentByTrackingNum = (state) =>
   state.documents.tracing_number;
 export const getStatus = (state) => state.documents.status;
 export const documentError = (state) => state.documents.error;
+export const getDocumentByTrackingNumber = (state) =>
+  state.documents.tracing_number;
 
 export default documentsSlice.reducer;
