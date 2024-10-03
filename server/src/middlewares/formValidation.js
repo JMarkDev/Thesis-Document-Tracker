@@ -116,17 +116,15 @@ const uploadDocumentValidation = () => {
         }
         return true;
       }),
-    body("uploaded_by")
-      .trim()
-      .custom((value) => {
-        if (!value) {
-          throw new Error("Uploaded by is required");
-        }
-        return true;
-      }),
     body("route").custom((value) => {
       if (!value) {
         throw new Error("Route is required");
+      }
+      return true;
+    }),
+    body("file_type").custom((value) => {
+      if (!value) {
+        throw new Error("File type is required");
       }
       return true;
     }),

@@ -13,10 +13,10 @@ router.post(
   validateForm,
   documentController.uploadDocument
 );
-// router.get(
-//   "/tracking-number/:tracking_number",
-//   documentController.getDocumentByTrackingNum
-// );
+router.get(
+  "/tracking-number/:tracking_number",
+  documentController.getDocumentByTrackingNum
+);
 router.get("/id/:id", documentController.getDocumentById);
 router.get("/search/:name", documentController.searchDocuments);
 router.get(
