@@ -176,6 +176,31 @@ const getDocumentById = async (req, res) => {
   }
 };
 
+const getAllDocumentsByUserId = async (req, res) => {
+  const { user_id } = req.params;
+
+  try {
+    const documents = await documentModel.findAll({
+      where: {
+        user_id: user_id,
+      },
+      include: [
+        {
+          model: documentHistoryModel,
+          required: true,
+        },
+        {
+          model: documentRecipientModel,
+          required: true,
+        },
+      ],
+    });
+    return res.status(200).json(documents);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 const searchDocuments = async (req, res) => {
   const { name } = req.params;
 
@@ -313,6 +338,48 @@ const sortDocuments = async (req, res) => {
   }
 };
 
+const sortDocumentsByUserId = async (req, res) => {
+  try {
+    const { sortBy, order = "asc", user_id } = req.query;
+    const validFields = [
+      "id",
+      "createdAt",
+      "document_name",
+      "file_type",
+      "uploaded_by",
+      "status",
+      "document_type",
+      "esuCampus",
+    ];
+
+    if (!validFields.includes(sortBy)) {
+      return res.status(400).json({ message: "Invalid field to sort by" });
+    }
+
+    const documents = await documentModel.findAll({
+      where: {
+        user_id: user_id,
+      },
+      include: [
+        {
+          model: documentHistoryModel,
+          required: true,
+        },
+        {
+          model: documentRecipientModel,
+          required: true,
+        },
+      ],
+    });
+
+    const sortedDocuments = quickSortDocuments(documents, sortBy, order);
+    return res.status(200).json(sortedDocuments);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   uploadDocument,
   getAllDocuments,
@@ -321,4 +388,7 @@ module.exports = {
   filterDocuments,
   getDocumentById,
   sortDocuments,
+  getAllDocumentsByUserId,
+  sortDocumentsByUserId,
+  // searchDocumentsByUserId,
 };
