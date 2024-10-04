@@ -36,6 +36,14 @@ export const searchDocument = createAsyncThunk(
   }
 );
 
+export const searchDocumentByUserId = createAsyncThunk(
+  "/search/:name/:user_id",
+  async ({ name, user_id }) => {
+    const response = await axios.get(`/document/search/${name}/${user_id}`);
+    return response.data;
+  }
+);
+
 export const filterDocumentsByESU = createAsyncThunk(
   "document/filter-by-esu",
   async (esu) => {
@@ -62,6 +70,16 @@ export const filterDocumentByStatus = createAsyncThunk(
   async (status) => {
     const response = await axios.get(
       `/document/filter/field/status/value/${status}`
+    );
+    return response.data;
+  }
+);
+
+export const filterUserDocuments = createAsyncThunk(
+  "document/filter/status/:status/user_id/:user_id",
+  async ({ status, user_id }) => {
+    const response = await axios.get(
+      `/document/filter/status/${status}/user_id/${user_id}`
     );
     return response.data;
   }
@@ -152,6 +170,17 @@ const documentsSlice = createSlice({
         state.status = "failed";
         state.error = action.error.message;
       })
+      .addCase(searchDocumentByUserId.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(searchDocumentByUserId.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.documentsByUserId = action.payload;
+      })
+      .addCase(searchDocumentByUserId.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
       // filter documents
       .addCase(filterDocumentsByESU.pending, (state) => {
         state.status = "loading";
@@ -194,6 +223,17 @@ const documentsSlice = createSlice({
         state.documentId = action.payload;
       })
       .addCase(fetchDocumentById.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(filterUserDocuments.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(filterUserDocuments.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.documentsByUserId = action.payload;
+      })
+      .addCase(filterUserDocuments.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       })

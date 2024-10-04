@@ -4,6 +4,8 @@ import {
   sortSubmittedDocuments,
   fetchDocumentsByUserId,
   getAllDocumentsByUserId,
+  searchDocumentByUserId,
+  filterUserDocuments,
 } from "../../../services/documentSlice";
 import { getUserData } from "../../../services/authSlice";
 import { IoSearch } from "react-icons/io5";
@@ -35,6 +37,23 @@ const AllDocuments = () => {
     setSortOrder(newOrder);
     dispatch(sortSubmittedDocuments({ sortBy, order: newOrder, user_id }));
   };
+
+  useEffect(() => {
+    if (searchTerm) {
+      dispatch(searchDocumentByUserId({ name: searchTerm, user_id }));
+    } else {
+      dispatch(fetchDocumentsByUserId(user_id));
+    }
+  }, [searchTerm, dispatch, user_id]);
+
+  const handleFilter = (status) => {
+    if (status === "Status") {
+      dispatch(fetchDocumentsByUserId(user_id));
+    } else {
+      dispatch(filterUserDocuments({ status, user_id }));
+    }
+  };
+
   return (
     <div className="flex flex-col gap-5">
       <div className="flex  lg:flex-row gap-5 flex-col justify-between">
@@ -50,7 +69,7 @@ const AllDocuments = () => {
         </div>
         <div className="flex items-center justify-end gap-3">
           <span className="text-gray-700">Filter documents by:</span>
-          <DrowdownStatus />
+          <DrowdownStatus handleFilter={handleFilter} />
         </div>
       </div>
       <DocumentTable documents={documentList} handleSort={handleSort} />
