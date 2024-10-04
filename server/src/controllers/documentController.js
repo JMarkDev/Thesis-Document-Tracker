@@ -262,6 +262,33 @@ const filterDocuments = async (req, res) => {
   }
 };
 
+const filterUserDocuments = async (req, res) => {
+  const { status, user_id } = req.params;
+
+  try {
+    const documents = await documentModel.findAll({
+      where: {
+        status: status,
+        user_id: user_id,
+      },
+      include: [
+        {
+          model: documentHistoryModel,
+          required: true,
+        },
+        {
+          model: documentRecipientModel,
+          required: true,
+        },
+      ],
+    });
+
+    return res.status(200).json(documents);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 // quick sort algorithm
 // asc = ascending
 const quickSortDocuments = (documents, field, order = "asc") => {
@@ -380,6 +407,35 @@ const sortDocumentsByUserId = async (req, res) => {
   }
 };
 
+const searchDocumentsByUserId = async (req, res) => {
+  const { name, user_id } = req.params;
+
+  try {
+    const documents = await documentModel.findAll({
+      where: {
+        user_id: user_id,
+        [Sequelize.Op.or]: [
+          { document_name: { [Op.like]: `${name}%` } },
+          { uploaded_by: { [Op.like]: `${name}%` } },
+        ],
+      },
+      include: [
+        {
+          model: documentHistoryModel,
+          required: true,
+        },
+        {
+          model: documentRecipientModel,
+          required: true,
+        },
+      ],
+    });
+    return res.status(200).json(documents);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   uploadDocument,
   getAllDocuments,
@@ -390,5 +446,6 @@ module.exports = {
   sortDocuments,
   getAllDocumentsByUserId,
   sortDocumentsByUserId,
-  // searchDocumentsByUserId,
+  searchDocumentsByUserId,
+  filterUserDocuments,
 };

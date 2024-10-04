@@ -28,9 +28,19 @@ router.get(
 //http://localhost:3001/document/sort?sortBy=createdAt
 router.get("/sort", documentController.sortDocuments);
 router.get("/submitted-by-user/sort", documentController.sortDocumentsByUserId);
+
+// Documents submitted by user
 router.get(
   "/get-all-documents-by-user-id/:user_id",
   documentController.getAllDocumentsByUserId
+);
+router.get(
+  "/search/:name/:user_id",
+  documentController.searchDocumentsByUserId
+);
+router.get(
+  "/filter/status/:status/user_id/:user_id",
+  documentController.filterUserDocuments
 );
 
 module.exports = router;
