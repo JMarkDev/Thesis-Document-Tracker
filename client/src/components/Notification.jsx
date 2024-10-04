@@ -12,7 +12,7 @@ const Notification = ({ notifications }) => {
       <div className="h-[400px] rounded-b-lg  overflow-y-auto">
         <ul className="bg-gray-200">
           {notifications.length === 0 && (
-            <li className="p-4 text-sm">No notifications</li>
+            <li className="p-4 text-sm text-gray-700">No notifications</li>
           )}
           {notifications?.map(({ content, createdAt, is_read }, id) => (
             <li

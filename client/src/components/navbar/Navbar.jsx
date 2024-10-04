@@ -9,7 +9,10 @@ import Notification from "../Notification";
 import NavProfile from "../NavProfile";
 import userIcon from "../../assets/images/user (1).png";
 import api from "../../api/axios";
-import { fetchNotificationById, getNotificationById } from "../../services/notificationSlice";
+import {
+  fetchNotificationById,
+  getNotificationById,
+} from "../../services/notificationSlice";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -22,8 +25,7 @@ const Navbar = () => {
   const [showProfile, setShowProfile] = useState(false);
   const [profilePic, setProfilePic] = useState(userIcon);
   const [notifications, setNotifications] = useState([]);
-  const getNotification = useSelector(getNotificationById)
-
+  const getNotification = useSelector(getNotificationById);
 
   useEffect(() => {
     dispatch(fetchUser());
@@ -69,16 +71,16 @@ const Navbar = () => {
   };
 
   useEffect(() => {
-    if(userData) {
-      dispatch(fetchNotificationById(userData.id))
+    if (userData) {
+      dispatch(fetchNotificationById(userData.id));
     }
-  }, [userData, dispatch])
+  }, [userData, dispatch]);
 
   useEffect(() => {
-    if(getNotification) {
-      setNotifications(getNotification)
+    if (getNotification) {
+      setNotifications(getNotification);
     }
-  }, [getNotification])
+  }, [getNotification]);
 
   return (
     <div className="h-16 w-full flex items-center bg-main">
@@ -109,9 +111,9 @@ const Navbar = () => {
                   {showNotification && (
                     <div
                       onMouseLeave={handleNotification}
-                      className="absolute right-5"
+                      className="absolute z-50 right-5"
                     >
-                      <Notification notifications={notifications}/>
+                      <Notification notifications={notifications} />
                     </div>
                   )}
                 </li>
@@ -127,7 +129,7 @@ const Navbar = () => {
                   {showProfile && (
                     <div
                       onMouseLeave={handleProfile}
-                      className="absolute right-5 text-sm"
+                      className="absolute right-5 text-sm text-gray-700"
                     >
                       <NavProfile />
                     </div>

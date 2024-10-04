@@ -85,7 +85,7 @@ function App() {
     },
     {
       title: "Print QR Code",
-      path: "/document/:tracking_number",
+      path: "/admin-document/:tracking_number",
       component: <PrintQRCode />,
     },
     {
@@ -120,6 +120,11 @@ function App() {
       title: "Uploaded Documents",
       path: "/faculty-all-documents",
       component: <AllDocuments />,
+    },
+    {
+      title: "Print QR Code",
+      path: "/faculty-document/:tracking_number",
+      component: <PrintQRCode />,
     },
   ];
 

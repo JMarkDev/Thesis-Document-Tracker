@@ -41,8 +41,16 @@ const Table = ({ documents, handleSort }) => {
     };
 
     // Convert HTML content into PDF
-    html2pdf().set(options).from(element).save();
-    toast.success("Document Metadata successfully");
+    html2pdf()
+      .set(options)
+      .from(element)
+      .save()
+      .then(() => {
+        toast.success("Document Metadata successfully");
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   const handleDownload = (tracking_number) => {
@@ -276,7 +284,7 @@ const Table = ({ documents, handleSort }) => {
 
 Table.propTypes = {
   documents: PropTypes.array.isRequired,
-  handleSort: PropTypes.func.isRequired,
+  handleSort: PropTypes.func,
 };
 
 export default Table;

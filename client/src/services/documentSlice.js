@@ -13,6 +13,16 @@ export const fetchAllDocuments = createAsyncThunk(
   }
 );
 
+export const fetchDocumentsByUserId = createAsyncThunk(
+  "/document/get-all-documents-by-user-id/:user_id",
+  async (user_id) => {
+    const response = await axios.get(
+      `/document/get-all-documents-by-user-id/${user_id}`
+    );
+    return response.data;
+  }
+);
+
 export const fetchDocumentById = createAsyncThunk("document/id", async (id) => {
   const response = await axios.get(`/document/id/${id}`);
   return response.data;
@@ -67,6 +77,16 @@ export const sortDocuments = createAsyncThunk(
   }
 );
 
+export const sortSubmittedDocuments = createAsyncThunk(
+  "document/submitted-by-user/sort",
+  async ({ sortBy, order, user_id }) => {
+    const response = await axios.get(
+      `/document/submitted-by-user/sort?sortBy=${sortBy}&order=${order}&user_id=${user_id}`
+    );
+    return response.data;
+  }
+);
+
 export const fetchDocumentByTrackingNum = createAsyncThunk(
   "document/tracking-numuber",
   async (tracking_number) => {
@@ -100,6 +120,7 @@ const documentsSlice = createSlice({
   name: "documents",
   initialState: {
     allDocuments: [],
+    documentsByUserId: [],
     status: "idle",
     documentId: null,
     tracing_number: null,
@@ -189,6 +210,17 @@ const documentsSlice = createSlice({
         state.status = "failed";
         state.error = action.error.message;
       })
+      .addCase(sortSubmittedDocuments.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(sortSubmittedDocuments.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.documentsByUserId = action.payload;
+      })
+      .addCase(sortSubmittedDocuments.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
       .addCase(fetchDocumentByTrackingNum.pending, (state) => {
         state.status = "loading";
         state.error = null;
@@ -202,6 +234,17 @@ const documentsSlice = createSlice({
         state.status = "failed";
         state.error = action.payload || action.error.message;
         console.log(state.error);
+      })
+      .addCase(fetchDocumentsByUserId.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchDocumentsByUserId.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.documentsByUserId = action.payload;
+      })
+      .addCase(fetchDocumentsByUserId.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload || action.error.message;
       });
     // .addCase(fetchDocumentByTrackingNum.rejected, (state, action) => {
     //   state.status = "failed";
@@ -220,5 +263,7 @@ export const getStatus = (state) => state.documents.status;
 export const documentError = (state) => state.documents.error;
 export const getDocumentByTrackingNumber = (state) =>
   state.documents.tracing_number;
+export const getAllDocumentsByUserId = (state) =>
+  state.documents.documentsByUserId;
 
 export default documentsSlice.reducer;

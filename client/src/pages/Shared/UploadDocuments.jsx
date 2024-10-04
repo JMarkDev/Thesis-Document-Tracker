@@ -9,6 +9,7 @@ import DocumentRoute from "../../components/dropdown/DocumentRoute";
 import api from "../../api/axios";
 import Loading from "../../components/loader/loginloader/LoginLoading";
 import { useToast } from "../../hooks/useToast";
+import rolesList from "../../constants/rolesList";
 const UploadDocuments = () => {
   const toast = useToast();
   const navigate = useNavigate();
@@ -141,7 +142,24 @@ const UploadDocuments = () => {
         toast.success(response.data.message);
         setTimeout(() => {
           setLoading(false);
-          navigate(`/document/${trackingNumber}`);
+          let path;
+          switch (user?.role) {
+            case rolesList.faculty:
+              path = `/faculty-document/${trackingNumber}`;
+              break;
+            case rolesList.registrar || rolesList.campus_admin:
+              path = `/registrar-document/${trackingNumber}`;
+              break;
+            case rolesList.admin:
+              path = `/admin-document/${trackingNumber}`;
+              break;
+            case rolesList.office:
+              path = `/office-document/${trackingNumber}`;
+              break;
+            default:
+              break;
+          }
+          navigate(path);
         }, 1000);
       }
     } catch (error) {
