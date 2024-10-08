@@ -11,7 +11,11 @@ import Notification from "../Notification";
 import { useState, useEffect } from "react";
 // import { AuthContext } from "../../AuthContext/AuthContext";
 import api from "../../api/axios";
-import { getNotificationById, fetchNotificationById } from "../../services/notificationSlice";
+import {
+  getNotificationById,
+  fetchNotificationById,
+} from "../../services/notificationSlice";
+import { getUserRole } from "../../utils/userRoles";
 
 const NavDashboard = ({ handleBurger }) => {
   const dispatch = useDispatch();
@@ -21,8 +25,7 @@ const NavDashboard = ({ handleBurger }) => {
   const [showNotification, setShowNotification] = useState(false);
   const [profilePic, setProfilePic] = useState(userIcon);
   const [notifications, setNotifications] = useState([]);
-  const getNotification = useSelector(getNotificationById)
-
+  const getNotification = useSelector(getNotificationById);
 
   useEffect(() => {
     if (userData && userData.image) {
@@ -55,16 +58,16 @@ const NavDashboard = ({ handleBurger }) => {
   const title = pageTitles[location.pathname];
 
   useEffect(() => {
-    if(userData) {
-      dispatch(fetchNotificationById(userData.id))
+    if (userData) {
+      dispatch(fetchNotificationById(userData.id));
     }
-  }, [userData, dispatch])
+  }, [userData, dispatch]);
 
   useEffect(() => {
-    if(getNotification) {
-      setNotifications(getNotification)
+    if (getNotification) {
+      setNotifications(getNotification);
     }
-  }, [getNotification])
+  }, [getNotification]);
   return (
     <div className="w-full z-20 md:w-[calc(100vw-16rem)] flex gap-5 items-center px-4 flex-grow fixed h-16 bg-[#D4A4AC]">
       <button
@@ -104,14 +107,14 @@ const NavDashboard = ({ handleBurger }) => {
               onMouseLeave={handleNotification}
               className="absolute top-12 right-5"
             >
-              <Notification notifications={notifications}/>
+              <Notification notifications={notifications} />
             </div>
           )}
 
           <div className="flex items-center gap-3">
             <div className="flex-col flex">
-              <span className="font-bold">Josiel mark</span>
-              <span className="text-[12px]">Admin</span>
+              <span className="font-bold">{userData?.firstName}</span>
+              <span className="text-[12px]">{getUserRole(userData?.role)}</span>
             </div>
 
             <img

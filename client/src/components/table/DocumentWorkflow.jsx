@@ -5,12 +5,11 @@ import PropTypes from "prop-types";
 import { deleteWorkflow } from "../../services/documentWolkflowSlice";
 import { toastUtils } from "../../hooks/useToast";
 import DeleteModal from "../DeleteModal";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import WorkflowDetails from "../../pages/Admin/DocumentWorkflows/WorkflowDetails";
 import {
   fetchWorkflowById,
   getWorkflowById,
-  resetWorkflowStatus,
 } from "../../services/documentWolkflowSlice";
 import { useFormat } from "../../hooks/useFormatDate";
 import EditWorkflow from "../../pages/Admin/DocumentWorkflows/EditWorkflow";
@@ -113,7 +112,7 @@ const DocumentWorkflow = ({ data }) => {
                       e.stopPropagation();
                     }}
                     // to={`/document-workflow/${id}`}
-                    className="p-2 md:text-lg text-sm border bg-gray-200 border-[#c9872a] hover:bg-gray-300 text-[#c9872a] rounded-lg"
+                    className="p-2 md:text-lg text-sm bg-[#fca326] hover:bg-[#f58e40] text-white rounded-lg"
                   >
                     <FaEye className="h-5 w-5" />
                   </button>
@@ -123,7 +122,7 @@ const DocumentWorkflow = ({ data }) => {
                       handleEdit(id);
                       e.stopPropagation();
                     }}
-                    className="p-2 md:text-lg text-sm border border-blue-500 bg-gray-200  hover:bg-gray-300 text-blue-700 rounded-lg"
+                    className="p-2 md:text-lg text-sm  bg-[#3577c2] hover:bg-[#2d4199] text-white rounded-lg"
                   >
                     <FaRegEdit className="h-5 w-5" />
                   </button>
@@ -133,7 +132,7 @@ const DocumentWorkflow = ({ data }) => {
                       setTitle(document_type);
                       e.stopPropagation();
                     }}
-                    className="p-2 md:text-lg text-sm border border-red-500 bg-gray-200  hover:bg-gray-300 text-red-700 rounded-lg"
+                    className="p-2 md:text-lg text-sm   hover:bg-red-700 bg-red-500 text-white rounded-lg"
                   >
                     <MdDelete className="h-5 w-5" />
                   </button>

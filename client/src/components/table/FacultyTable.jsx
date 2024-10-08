@@ -168,14 +168,14 @@ const FacultyTable = ({ fetchFaculty }) => {
                         e.stopPropagation();
                         navigate(`/user-details/${id}`);
                       }}
-                      className="p-2 md:text-lg text-sm border bg-gray-200 border-[#c9872a] hover:bg-gray-300 text-[#c9872a] rounded-lg"
+                      className="p-2 text-lg bg-[#fca326] hover:bg-[#f58e40] text-white rounded-lg"
                     >
                       <FaEye className="h-5 w-5" />
                     </button>
 
                     <button
                       onClick={() => openDeleteModal(id)}
-                      className="p-2 md:text-lg text-sm border border-red-500 bg-gray-200 hover:bg-gray-300 text-red-500 rounded-lg"
+                      className="p-2 text-lg hover:bg-red-700 bg-red-500 text-white rounded-lg"
                     >
                       <FaTrashAlt className="h-5 w-5" />
                     </button>

@@ -117,7 +117,7 @@ const Navbar = () => {
                     </div>
                   )}
                 </li>
-                <li className="font-bold">{userData.firstName}</li>
+                <li className="font-bold">{userData?.firstName}</li>
                 <li>
                   <img
                     src={profilePic}
