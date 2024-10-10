@@ -33,8 +33,8 @@ const NavFaculty = ({ handleBurger }) => {
 
   const pageTitles = {
     "/faculty-profile": "Profile",
-    "/faculty-upload-documents": "Upload Documents",
-    "/faculty-all-documents": "All Documents",
+    "/faculty-upload-documents": "Upload",
+    "/faculty-all-documents": "Documents",
     "/faculty-reports": "Reports",
   };
 
@@ -76,7 +76,7 @@ const NavFaculty = ({ handleBurger }) => {
         <h1 className="md:text-2xl text-lg font-bold text-main">{title}</h1>
         <div className="flex  lg:text-[16px] text-sm gap-7">
           <div className="relative flex items-center">
-            <span className="text-sm absolute right-[-12px] top-[-4px]  text-white bg-red-600 rounded-full px-1.5">
+            <span className="text-sm absolute right-[-12px] top-0  text-white bg-red-600 rounded-full px-1.5">
               {notifications.length}
             </span>
             <button
@@ -99,7 +99,9 @@ const NavFaculty = ({ handleBurger }) => {
 
           <div className="flex items-center gap-3">
             <div className="flex-col flex">
-              <span className="font-bold">{userData?.firstName}</span>
+              <span className="font-bold text-nowrap">
+                {userData?.firstName}
+              </span>
               <span className="text-[12px]">{getUserRole(userData?.role)}</span>
             </div>
 

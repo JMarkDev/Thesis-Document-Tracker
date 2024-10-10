@@ -10,6 +10,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import Back from "../../components/buttons/Back";
 import PrintMetadata from "./PrintMetadata";
+import { toastUtils } from "../../hooks/useToast";
 
 const PrintQRCode = () => {
   const { tracking_number } = useParams();
@@ -21,7 +22,9 @@ const PrintQRCode = () => {
 
   useEffect(() => {
     if (tracking_number) {
-      dispatch(fetchDocumentByTrackingNum(tracking_number)).then(() => {
+      dispatch(
+        fetchDocumentByTrackingNum({ tracking_number, toast: toastUtils() })
+      ).then(() => {
         setIsLoading(false); // Set loading to false when data is fetched
       });
     }

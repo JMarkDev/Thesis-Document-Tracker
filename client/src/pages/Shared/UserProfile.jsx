@@ -205,8 +205,8 @@ const UserProfile = () => {
             {data?.email}
           </span>
         </div>
-        <div className="flex  flex-col flex-grow border md:border-gray-300 shadow-lg rounded-lg">
-          <ul className="flex gap-2 border md:border-gray-300 w-full h-12 items-center md:p-4 ">
+        <div className="flex  flex-col flex-grow sm:border md:border-gray-300 md:shadow-lg rounded-lg">
+          <ul className="flex gap-2 md:border md:border-gray-300 w-full h-12 items-center md:p-4 ">
             <li
               className={`cursor-pointer  text-sm text-nowrap px-2 py-1 rounded-md ${
                 activeTab === "profile"

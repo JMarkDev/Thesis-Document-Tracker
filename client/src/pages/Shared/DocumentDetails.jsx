@@ -19,7 +19,7 @@ const DocumentDetails = () => {
   const [sortedHistories, setSortedHistories] = useState([]);
   const [data, setData] = useState([]);
   const [documentData, setDocumentData] = useState([]);
-  const { fullDateFormat } = useFormat();
+  const { dateFormat } = useFormat();
 
   useEffect(() => {
     dispatch(fetchDocumentById(id));
@@ -94,7 +94,7 @@ const DocumentDetails = () => {
             <div className="flex items-center gap-5 border-b pb-2">
               <h1 className="font-bold  text-gray-800">Date:</h1>
               <p className="text-gray-700">
-                {fullDateFormat(documentData.createdAt)}
+                {dateFormat(documentData.createdAt)}
               </p>
             </div>
             <div className="flex items-center gap-5">
@@ -130,7 +130,7 @@ const DocumentDetails = () => {
                       Document {action} by: {recipient_user}
                     </span>
                     <p className="text-gray-600">
-                      Date: {fullDateFormat(createdAt)}
+                      Date: {dateFormat(createdAt)}
                     </p>
                   </li>
                 )

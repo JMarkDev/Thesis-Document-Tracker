@@ -5,12 +5,11 @@ import PropTypes from "prop-types";
 const PrintMetadata = ({ isLoading, contentRef, documentData }) => {
   return (
     <div>
-      {" "}
       <div
-        className="print_container m-auto bg-white rounded-lg shadow-lg border w-lg border-gray-300 p-6 max-w-xl"
+        className="print_container m-auto bg-white rounded-lg shadow-lg border border-gray-300 p-6 max-w-xl"
         ref={contentRef}
       >
-        {/* QR Code Section */}
+        {/* Loading and No Data Handling */}
         {isLoading ? (
           <>
             <div className="mb-6 w-[450px] flex gap-5 items-center animate-pulse">
@@ -18,17 +17,13 @@ const PrintMetadata = ({ isLoading, contentRef, documentData }) => {
               <div className="h-8 bg-gray-200 rounded w-3/5"></div>
             </div>
             <div className="space-y-3 animate-pulse">
-              <div className="h-6 bg-gray-200 rounded"></div>
-              <div className="h-6 bg-gray-200 rounded"></div>
-              <div className="h-6 bg-gray-200 rounded"></div>
-              <div className="h-6 bg-gray-200 rounded"></div>
-              <div className="h-6 bg-gray-200 rounded"></div>
-              <div className="h-6 bg-gray-200 rounded"></div>
-              <div className="h-6 bg-gray-200 rounded"></div>
+              {[...Array(7)].map((_, i) => (
+                <div key={i} className="h-6 bg-gray-200 rounded"></div>
+              ))}
             </div>
           </>
         ) : Object.keys(documentData).length === 0 ? (
-          <div className="flex flex-col gap-5 justify-center">
+          <div className="flex flex-col gap-5 justify-center items-center">
             <h2 className="md:text-3xl text-lg font-semibold text-gray-800 text-center">
               Documents not found
             </h2>
@@ -40,7 +35,8 @@ const PrintMetadata = ({ isLoading, contentRef, documentData }) => {
           </div>
         ) : (
           <div>
-            <div className="mb-6 flex gap-5 items-center">
+            {/* QR Code and Document Tracking Number */}
+            <div className="mb-6 flex gap-5 items-center justify-center">
               <div
                 className="flex justify-center"
                 style={{ height: "auto", maxWidth: 120, width: "100%" }}
@@ -61,11 +57,12 @@ const PrintMetadata = ({ isLoading, contentRef, documentData }) => {
                 {documentData?.tracking_number}
               </h2>
             </div>
+
+            {/* Document Information Section */}
             <div className="rounded-lg">
               <h2 className="text-2xl font-semibold text-gray-800 mb-6 text-center">
                 Document Information
               </h2>
-
               <div className="space-y-3">
                 <div>
                   <p className="text-gray-600 flex gap-3">
@@ -81,19 +78,19 @@ const PrintMetadata = ({ isLoading, contentRef, documentData }) => {
                 </div>
                 <div>
                   <p className="text-gray-600 flex gap-3">
-                    <strong className="text-gray-800">Document Type:</strong>
+                    <strong className="text-gray-800">Document Type:</strong>{" "}
                     {documentData?.document_type}
                   </p>
                 </div>
                 <div>
                   <p className="text-gray-600 flex gap-3">
-                    <strong className="text-gray-800">File Type:</strong>
+                    <strong className="text-gray-800">File Type:</strong>{" "}
                     {documentData?.file_type}
                   </p>
                 </div>
                 <div>
                   <p className="text-gray-600 flex gap-3">
-                    <strong className="text-gray-800">Uploaded By:</strong>
+                    <strong className="text-gray-800">Uploaded By:</strong>{" "}
                     {documentData?.uploaded_by}
                   </p>
                 </div>
@@ -125,4 +122,5 @@ PrintMetadata.propTypes = {
   documentData: PropTypes.object,
   contentRef: PropTypes.object,
 };
+
 export default PrintMetadata;

@@ -25,6 +25,8 @@ const UploadDocuments = () => {
   const [esuCampus, setEsuCampus] = useState("");
   const [user_id, setUserId] = useState("");
   const [loading, setLoading] = useState(false);
+  const [registrarId, setRegistrarId] = useState(null);
+  const [facultyId, setFacultyId] = useState(null);
 
   const [trackingNumberError, setTrackingNumberError] = useState("");
   const [documentNameError, setDocumentNameError] = useState("");
@@ -38,6 +40,26 @@ const UploadDocuments = () => {
     );
     setEsuCampus(user?.esuCampus);
     setUserId(user?.id);
+
+    if (user?.role === rolesList.faculty) {
+      setFacultyId(user?.id);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    const getRegistrar = async () => {
+      try {
+        const response = await api.get(
+          `/office/esu-registrar/${user?.esuCampus}`
+        );
+        if (response.data) {
+          setRegistrarId(response.data.id);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getRegistrar();
   }, [user]);
 
   const [route, setRoute] = useState([]);
@@ -78,6 +100,37 @@ const UploadDocuments = () => {
     }
   };
 
+  console.log(route);
+
+  // const handleDocumentType = (e) => {
+  //   const selectedId = e.target.value;
+  //   const selectedDocumentType = documentType.find(
+  //     (type) => type.id === parseInt(selectedId)
+  //   );
+  //   setDocumentType(selectedDocumentType.document_type);
+
+  //   if (selectedDocumentType) {
+  //     // Ensure that route is always an array
+  //     const updatedRoute = Array.isArray(selectedDocumentType.route)
+  //       ? selectedDocumentType.route.map((routeItem) => {
+  //           if (
+  //             routeItem.office_name === "FACULTY" ||
+  //             routeItem.office_name === "REGISTRAR"
+  //           ) {
+  //             return {
+  //               ...routeItem,
+  //               office_name: `${esuCampus} ${routeItem.office_name}`,
+  //             };
+  //           }
+  //           return routeItem;
+  //         })
+  //       : [];
+
+  //     setRoute(updatedRoute);
+  //     setDefaultRoute(updatedRoute);
+  //   }
+  // };
+
   const handleDocumentType = (e) => {
     const selectedId = e.target.value;
     const selectedDocumentType = documentType.find(
@@ -89,13 +142,21 @@ const UploadDocuments = () => {
       // Ensure that route is always an array
       const updatedRoute = Array.isArray(selectedDocumentType.route)
         ? selectedDocumentType.route.map((routeItem) => {
+            // Separate conditions for FACULTY and REGISTRAR
             if (
-              routeItem.office_name === "FACULTY" ||
-              routeItem.office_name === "REGISTRAR"
+              routeItem.office_name === "FACULTY" &&
+              user.role === rolesList.faculty
             ) {
               return {
                 ...routeItem,
-                office_name: `${esuCampus} ${routeItem.office_name}`,
+                office_name: `${esuCampus} FACULTY`,
+                user_id: facultyId, // Assign facultyId for FACULTY
+              };
+            } else if (routeItem.office_name === "REGISTRAR" && registrarId) {
+              return {
+                ...routeItem,
+                office_name: `${esuCampus} REGISTRAR`,
+                user_id: registrarId, // Assign registrarId for REGISTRAR
               };
             }
             return routeItem;
@@ -190,6 +251,7 @@ const UploadDocuments = () => {
       }
     }
   };
+
   return (
     <div className="bg-white ">
       {" "}
@@ -318,6 +380,8 @@ const UploadDocuments = () => {
                 route={route}
                 handleSelectOffice={handleSelectOffice}
                 campus={esuCampus}
+                registrarId={registrarId}
+                facultyId={facultyId}
               />
               {route?.length > 0 && (
                 <div className="flex items-center  justify-center">

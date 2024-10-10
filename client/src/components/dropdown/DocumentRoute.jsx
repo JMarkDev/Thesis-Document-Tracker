@@ -8,7 +8,13 @@ import {
 } from "../../services/usersSlice";
 import PropTypes from "prop-types";
 
-const DocumentRoute = ({ route, handleSelectOffice, campus }) => {
+const DocumentRoute = ({
+  route,
+  handleSelectOffice,
+  campus,
+  registrarId,
+  facultyId,
+}) => {
   const dispatch = useDispatch();
   const officeUsers = useSelector(getRoleUsers("office"));
   const officeStatus = useSelector(getRoleStatus("office"));
@@ -46,11 +52,11 @@ const DocumentRoute = ({ route, handleSelectOffice, campus }) => {
       }
     } else if (selectedOffice === "FACULTY") {
       if (!isOfficeInRoute("FACULTY")) {
-        handleSelectOffice(`${campus} FACULTY`, null);
+        handleSelectOffice(`${campus} FACULTY`, facultyId || null);
       }
     } else if (selectedOffice === "REGISTRAR") {
       if (!isOfficeInRoute("REGISTRAR")) {
-        handleSelectOffice(`${campus} REGISTRAR`, null);
+        handleSelectOffice(`${campus} REGISTRAR`, registrarId || null);
       }
     } else {
       const officeUser = officeUsers.find(
@@ -100,6 +106,8 @@ DocumentRoute.propTypes = {
   route: PropTypes.array.isRequired,
   handleSelectOffice: PropTypes.func.isRequired,
   campus: PropTypes.string.isRequired,
+  registrarId: PropTypes.number,
+  facultyId: PropTypes.number,
 };
 
 export default DocumentRoute;

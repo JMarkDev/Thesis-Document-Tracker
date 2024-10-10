@@ -90,7 +90,7 @@ const NavDashboard = ({ handleBurger }) => {
           </div>
 
           <div className="relative  flex items-center">
-            <span className="text-sm  px-1.5 absolute right-[-12px] top-0 text-white bg-red-600 rounded-full text-center">
+            <span className="text-sm  px-1.5 absolute right-[-10px] top-0 text-white bg-red-600 rounded-full text-center">
               {notifications.length}
             </span>
             <button

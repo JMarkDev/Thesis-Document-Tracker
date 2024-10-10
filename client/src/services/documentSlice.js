@@ -105,34 +105,35 @@ export const sortSubmittedDocuments = createAsyncThunk(
   }
 );
 
-export const fetchDocumentByTrackingNum = createAsyncThunk(
-  "document/tracking-numuber",
-  async (tracking_number) => {
-    const response = await axios.get(
-      `/document/tracking-number/${tracking_number}`
-    );
-    return response.data;
-  }
-);
 // export const fetchDocumentByTrackingNum = createAsyncThunk(
-//   "document/tracking-number",
-//   async ({ tracking_number, toast }, { rejectWithValue }) => {
-//     try {
-//       const response = await axios.get(
-//         `/document/tracking-number/${tracking_number}`
-//       );
-//       return response.data;
-//     } catch (error) {
-//       // Check if the error response exists and return the server message
-//       if (error.response && error.response.data) {
-//         toast.error(error.response.data.message);
-//         return rejectWithValue(error.response.data.message);
-//       }
-//       // Otherwise, return a generic error message
-//       return rejectWithValue(error.message);
-//     }
+//   "document/tracking-numuber",
+//   async (tracking_number) => {
+//     const response = await axios.get(
+//       `/document/tracking-number/${tracking_number}`
+//     );
+//     return response.data;
 //   }
 // );
+export const fetchDocumentByTrackingNum = createAsyncThunk(
+  "document/tracking-number",
+  async ({ tracking_number, toast }, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        `/document/tracking-number/${tracking_number}`
+      );
+
+      return response.data;
+    } catch (error) {
+      // Check if the error response exists and return the server message
+      if (error.response && error.response.data) {
+        toast.error(error.response.data.message);
+        return rejectWithValue(error.response.data.message);
+      }
+      // Otherwise, return a generic error message
+      return rejectWithValue(error.message);
+    }
+  }
+);
 
 const documentsSlice = createSlice({
   name: "documents",
@@ -145,7 +146,12 @@ const documentsSlice = createSlice({
     error: null,
   },
 
-  reducers: {},
+  reducers: {
+    reset: (state) => {
+      state.tracing_number = null;
+      state.status = "idle";
+    },
+  },
   extraReducers: (builders) => {
     builders
       .addCase(fetchAllDocuments.pending, (state) => {
@@ -273,7 +279,6 @@ const documentsSlice = createSlice({
       .addCase(fetchDocumentByTrackingNum.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload || action.error.message;
-        console.log(state.error);
       })
       .addCase(fetchDocumentsByUserId.pending, (state) => {
         state.status = "loading";
@@ -305,5 +310,7 @@ export const getDocumentByTrackingNumber = (state) =>
   state.documents.tracing_number;
 export const getAllDocumentsByUserId = (state) =>
   state.documents.documentsByUserId;
+
+export const { reset } = documentsSlice.actions;
 
 export default documentsSlice.reducer;

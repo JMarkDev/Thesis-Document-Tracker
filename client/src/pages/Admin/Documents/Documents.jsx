@@ -80,7 +80,7 @@ const Documents = () => {
   useEffect(() => {
     if (workflow) {
       const formattedDocumentTypes = workflow.map((type) => {
-        return type.document_type.split(" ")[0]; // Split by spave and the take the first part
+        return type.document_type; // Split by spave and the take the first part
       });
 
       setDocumentType(formattedDocumentTypes);

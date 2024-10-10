@@ -32,6 +32,7 @@ import UserDetails from "./pages/Shared/UserDetails";
 import DocumentDetails from "./pages/Shared/DocumentDetails";
 import UploadDocuments from "./pages/Shared/UploadDocuments";
 import PrintQRCode from "./pages/Shared/PrintQRCode";
+import Scanner from "./components/qr_scanner/Scanner";
 
 function App() {
   // useIdleTimeout();
@@ -163,7 +164,7 @@ function App() {
         ))}
 
         {/* Not found page */}
-
+        <Route path="/scan-qr-code" element={<Scanner />} />
         <Route path="/*" element={<PageNotFound />} />
       </Routes>
     </>

@@ -3,7 +3,8 @@ import Cookie from "js-cookie";
 
 // Create an instance of axios
 const api = axios.create({
-  baseURL: "http://localhost:3001",
+  // baseURL: "http://localhost:3001",
+  baseURL: "http://192.168.1.8:3001",
   withCredentials: true,
 });
 

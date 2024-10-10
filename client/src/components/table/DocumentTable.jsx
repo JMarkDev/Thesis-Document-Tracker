@@ -18,6 +18,12 @@ import { useToast } from "../../hooks/useToast";
 
 import noDataImage from "../../assets/images/undraw_no_data_re_kwbl.svg";
 import PrintMetadata from "../../pages/Shared/PrintMetadata";
+import { toastUtils } from "../../hooks/useToast";
+
+// Utility to detect if it's a mobile device
+const isMobileDevice = () => {
+  return /Mobi|Android/i.test(navigator.userAgent);
+};
 
 const Table = ({ documents, handleSort }) => {
   const toast = useToast();
@@ -28,11 +34,11 @@ const Table = ({ documents, handleSort }) => {
   const document = useSelector(getDocumentByTrackingNumber);
   const [documentData, setDocumentData] = useState({});
 
-  useEffect(() => {
-    if (document) {
-      setDocumentData(document);
-    }
-  }, [document]);
+  // useEffect(() => {
+  //   if (document) {
+  //     setDocumentData(document);
+  //   }
+  // }, [document]);
   // Download the content as a searchable PDF (not image)
   const handleDownloadPDF = () => {
     const element = contentRef.current;
@@ -59,13 +65,15 @@ const Table = ({ documents, handleSort }) => {
   };
 
   const handleDownload = (tracking_number) => {
-    dispatch(fetchDocumentByTrackingNum(tracking_number));
+    dispatch(
+      fetchDocumentByTrackingNum({ tracking_number, toast: toastUtils() })
+    );
     setTimeout(() => {
       handleDownloadPDF();
-    }, 100);
+    }, 300);
   };
 
-  const handlePrint = useReactToPrint({
+  const handleReactToPrint = useReactToPrint({
     contentRef,
     documentTitle: "Document Metadata",
     onAfterPrint: () => console.log("Printing completed"),
@@ -73,11 +81,36 @@ const Table = ({ documents, handleSort }) => {
       console.error("Error:", errorLocation, error),
   });
 
+  const handleMobilePrint = () => {
+    const printWindow = window.open("", "_blank");
+    printWindow.document.write(contentRef.current.outerHTML);
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+  };
+
+  const handlePrint = () => {
+    if (isMobileDevice()) {
+      handleMobilePrint();
+    } else {
+      handleReactToPrint();
+    }
+  };
+
   const printMetadata = (tracking_number) => {
-    dispatch(fetchDocumentByTrackingNum(tracking_number));
+    // Dispatch and fetch the document by tracking number
+    dispatch(
+      fetchDocumentByTrackingNum({ tracking_number, toast: toastUtils() })
+    );
+
+    // Wait for the document data to be set in the state before triggering the print
     setTimeout(() => {
-      handlePrint();
-    }, 100);
+      if (documentData) {
+        handlePrint();
+      } else {
+        toast.error("Document not ready for printing.");
+      }
+    }, 500); // You may need to adjust the timeout duration based on how long fetching takes.
   };
 
   useEffect(() => {

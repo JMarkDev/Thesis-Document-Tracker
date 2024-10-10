@@ -97,7 +97,7 @@ const Navbar = () => {
               <>
                 <li>
                   <div className="relative">
-                    <span className="text-sm absolute right-[-12px] top-0 text-white bg-red-600 rounded-full px-1.5">
+                    <span className="text-sm absolute right-0 top-0 text-white bg-red-600 rounded-full px-1.5">
                       {notifications.length}
                     </span>
                     <div
