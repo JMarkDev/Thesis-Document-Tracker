@@ -264,16 +264,17 @@ const updateOffice = async (req, res) => {
   }
 };
 
-const getCampus = async (req, res) => {
+const getRegistrar = async (req, res) => {
   const { esuCampus } = req.params;
   try {
-    const campuses = await officeModel.findAll({
+    const registrar = await userModel.findOne({
       where: {
+        esuCampus,
         status: statusList.verified,
         role: rolesList.registrar,
       },
     });
-    return res.status(200).json(campuses);
+    return res.status(200).json(registrar);
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
@@ -284,4 +285,5 @@ module.exports = {
   updateOffice,
   getAllOffice,
   searchOffice,
+  getRegistrar,
 };

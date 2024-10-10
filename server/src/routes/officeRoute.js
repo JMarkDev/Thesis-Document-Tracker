@@ -24,5 +24,6 @@ router.put(
   validateForm,
   officeController.updateOffice
 );
+router.get("/esu-registrar/:esuCampus", officeController.getRegistrar);
 
 module.exports = router;

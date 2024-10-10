@@ -43,4 +43,6 @@ router.get(
   documentController.filterUserDocuments
 );
 
+router.post("/receive-document", documentController.receiveDocuments);
+
 module.exports = router;

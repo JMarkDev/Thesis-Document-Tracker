@@ -130,6 +130,12 @@ const getDocumentByTrackingNum = async (req, res) => {
   const { tracking_number } = req.params;
 
   try {
+    if (!tracking_number) {
+      return res.status(400).json({
+        message: "Please enter a tracking number.",
+      });
+    }
+
     const document = await documentModel.findOne({
       where: {
         tracking_number: tracking_number,
@@ -147,6 +153,7 @@ const getDocumentByTrackingNum = async (req, res) => {
     }
     return res.status(200).json(document);
   } catch (error) {
+    console.log(error);
     return res.status(500).json({ message: error.message });
   }
 };
@@ -436,6 +443,51 @@ const searchDocumentsByUserId = async (req, res) => {
   }
 };
 
+const receiveDocuments = async (req, res) => {
+  const {
+    document_id,
+    office_name,
+    user_id,
+    action,
+    recipient_user,
+    recipient_office,
+  } = req.body;
+
+  try {
+    const receiveAt = await documentRecipientModel.update(
+      {
+        status: documentStatus.received,
+        received_at: createdAt,
+        updatedAt: createdAt,
+      },
+      {
+        where: {
+          document_id: document_id,
+          user_id: user_id,
+        },
+      }
+    );
+
+    const documentHistory = {
+      document_id,
+      action,
+      recipient_office,
+      recipient_user,
+      createdAt: createdAt,
+    };
+
+    await documentHistoryModel.create(documentHistory);
+
+    return res.status(200).json({
+      receiveAt,
+      status: "success",
+      message: "Document received successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   uploadDocument,
   getAllDocuments,
@@ -448,4 +500,5 @@ module.exports = {
   sortDocumentsByUserId,
   searchDocumentsByUserId,
   filterUserDocuments,
+  receiveDocuments,
 };
