@@ -71,12 +71,11 @@ const getAllUser = async (req, res) => {
     return res.status(500).json({ Error: "Get all users error in server" });
   }
 };
-
 const approveFaculty = async (req, res) => {
   const { id, email } = req.params;
 
   try {
-    await userModel.update(
+    const [updatedCount] = await userModel.update(
       {
         status: statusList.approved,
         updatedAt: createdAt,
@@ -88,6 +87,15 @@ const approveFaculty = async (req, res) => {
       }
     );
 
+    if (updatedCount === 0) {
+      return res.status(404).json({
+        status: "error",
+        message: "User not found or no updates were made",
+      });
+    }
+
+    const updatedUser = await userModel.findOne({ where: { id } }); // Fetch the updated user data
+
     await sendNotification({
       email: email,
       subject: "WMSU-ESU Document Tracker Account",
@@ -96,6 +104,7 @@ const approveFaculty = async (req, res) => {
     });
 
     return res.status(200).json({
+      updatedUser, // Return the updated user data
       status: "success",
       message: "Account approved successfully",
     });

@@ -27,7 +27,7 @@ router.get(
 // SORTING USING QUICK SORT ALGORITHM
 //http://localhost:3001/document/sort?sortBy=createdAt
 router.get("/sort", documentController.sortDocuments);
-router.get("/submitted-by-user/sort", documentController.sortDocumentsByUserId);
+router.get("/submitted-by-user/sort", documentController.sortDocumentsByUser);
 
 // Documents submitted by user
 router.get(

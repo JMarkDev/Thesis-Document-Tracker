@@ -372,9 +372,9 @@ const sortDocuments = async (req, res) => {
   }
 };
 
-const sortDocumentsByUserId = async (req, res) => {
+const sortDocumentsByUser = async (req, res) => {
   try {
-    const { sortBy, order = "asc", user_id } = req.query;
+    const { sortBy, order = "asc", user_id, esuCampus } = req.query;
     const validFields = [
       "id",
       "createdAt",
@@ -390,10 +390,19 @@ const sortDocumentsByUserId = async (req, res) => {
       return res.status(400).json({ message: "Invalid field to sort by" });
     }
 
+    // Build the filter dynamically based on the query parameters
+    const filter = {};
+    // Only include user_id and esuCampus in the filter if they are not null or undefined
+    if (user_id && user_id !== "null") {
+      filter.user_id = Number(user_id); // Ensure user_id is an integer
+    }
+
+    if (esuCampus && esuCampus !== "null") {
+      filter.esuCampus = esuCampus;
+    }
+
     const documents = await documentModel.findAll({
-      where: {
-        user_id: user_id,
-      },
+      where: filter,
       include: [
         {
           model: documentHistoryModel,
@@ -497,7 +506,7 @@ module.exports = {
   getDocumentById,
   sortDocuments,
   getAllDocumentsByUserId,
-  sortDocumentsByUserId,
+  sortDocumentsByUser,
   searchDocumentsByUserId,
   filterUserDocuments,
   receiveDocuments,
