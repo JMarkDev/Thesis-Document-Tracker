@@ -24,6 +24,30 @@ export const fetchUserById = createAsyncThunk(
   }
 );
 
+export const approveFaculty = createAsyncThunk(
+  "/approved-faculty/id/:id/email/:email",
+  async ({ id, email, toast }, { rejectWithValue }) => {
+    try {
+      const response = await axios.put(
+        `/users/approved-faculty/id/${id}/email/${email}`
+      );
+
+      const updatedUser = response.data.updatedUser;
+      console.log(updatedUser);
+
+      if (response.data.status === "success") {
+        toast.success(response.data.message);
+        return updatedUser; // Return the updated user data to the thunk's payload
+      }
+
+      throw new Error("Failed to approve faculty");
+    } catch (error) {
+      toast.error("Approval failed.");
+      return rejectWithValue(error.message); // Return error message if request fails
+    }
+  }
+);
+
 const fetchRoleUsers = (role) => {
   return createAsyncThunk(`users/fetch${role}`, async () => {
     const response = await axios.get(`/users/get-user-by-role?role=${role}`);
@@ -288,6 +312,15 @@ const usersSlice = createSlice({
       .addCase(filterFacultyByCampus.rejected, (state, action) => {
         state.status.filter = "failed";
         state.error = action.error.message;
+      })
+      // approve faculty
+      .addCase(approveFaculty.fulfilled, (state, action) => {
+        state.roleUsers.faculty = state.roleUsers.faculty.map((user) => {
+          if (user.id === action.payload.id) {
+            return action.payload;
+          }
+          return user;
+        });
       });
   },
 });

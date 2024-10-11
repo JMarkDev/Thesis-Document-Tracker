@@ -10,7 +10,7 @@ import LoginLoading from "../../components/loader/loginloader/LoginLoading";
 import { useToast } from "../../hooks/useToast";
 import "react-toastify/dist/ReactToastify.css";
 import rolesList from "../../constants/rolesList";
-
+import Cookies from "js-cookie";
 const VerifyOTP = ({ email, closeOTP, closeModal, onVerificationSuccess }) => {
   const toast = useToast();
   const dispatch = useDispatch();
@@ -48,6 +48,7 @@ const VerifyOTP = ({ email, closeOTP, closeModal, onVerificationSuccess }) => {
       const response = await api.post("/auth/verify-otp", data, {
         withCredentials: true,
       });
+      console.log(response.data);
 
       if (response.data.status === "success") {
         dispatch(fetchUser());
@@ -57,6 +58,7 @@ const VerifyOTP = ({ email, closeOTP, closeModal, onVerificationSuccess }) => {
         }
 
         const accessToken = response.data?.accessToken;
+        Cookies.set("accessToken", accessToken, { expires: 1 });
         toast.success(response.data.message);
         if (accessToken) {
           // Set the access token in the axios headers
@@ -69,13 +71,13 @@ const VerifyOTP = ({ email, closeOTP, closeModal, onVerificationSuccess }) => {
           let path = "/";
           switch (role) {
             case rolesList.faculty:
-              path = "/faculty-profile";
+              path = "/user-profile";
               break;
             case rolesList.campus_admin:
-              path = "/campus-admin-dashboard";
+              path = "/esu-campus/dashboard";
               break;
             case rolesList.registrar:
-              path = "/dashboard-registrar";
+              path = "/esu-campus/dashboard";
               break;
             case rolesList.admin:
               path = "/dashboard";

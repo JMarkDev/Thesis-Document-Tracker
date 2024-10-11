@@ -3,7 +3,7 @@ import { logoutUser } from "../../services/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserData } from "../../services/authSlice";
 import { Link, useLocation } from "react-router-dom";
-import { MdQrCodeScanner } from "react-icons/md";
+import { MdQrCodeScanner, MdOutlineDocumentScanner } from "react-icons/md";
 import { IoDocuments } from "react-icons/io5";
 import { GoWorkflow } from "react-icons/go";
 import { HiBuildingOffice2 } from "react-icons/hi2";
@@ -15,7 +15,6 @@ import { FiChevronDown, FiChevronRight } from "react-icons/fi";
 import { GiFiles } from "react-icons/gi";
 import Logo from "../../assets/images/logo with word.png";
 import PropTypes from "prop-types";
-// import { AuthContext } from "../../AuthContext/AuthContext";
 import rolesList from "../../constants/rolesList";
 
 const Sidebar = ({ sidebar, handleBurger }) => {
@@ -50,11 +49,10 @@ const Sidebar = ({ sidebar, handleBurger }) => {
       ],
     },
     { title: "Reports", path: "/reports", src: <TbReportAnalytics /> },
-    // { title: "Logout", path: "/home", src: <BiLogOut /> },
   ];
 
   const facultyLinks = [
-    { title: "Profile", path: "/faculty-profile", src: <FaRegUser /> },
+    { title: "Profile", path: "/user-profile", src: <FaRegUser /> },
     {
       title: "Upload Documents",
       path: "/faculty-upload-documents",
@@ -62,11 +60,44 @@ const Sidebar = ({ sidebar, handleBurger }) => {
     },
     {
       title: "All Documents",
-      path: "/faculty-all-documents",
+      path: "/faculty/all-documents",
       src: <GiFiles />,
     },
     { title: "Reports", path: "/faculty-reports", src: <TbReportSearch /> },
-    // { title: "Logout", path: "/home", src: <BiLogOut /> },
+  ];
+
+  const campusAdminLinks = [
+    {
+      title: "Scan Now",
+      path: "/esu-campus/scan-now",
+      src: <MdQrCodeScanner />,
+    },
+    {
+      title: "Dashboard",
+      path: "/esu-campus/dashboard",
+      src: <RiPieChart2Fill />,
+    },
+    {
+      title: "Transmittal",
+      path: "/esu-campus/transmittal",
+      src: <MdOutlineDocumentScanner />,
+    },
+    {
+      title: "Documents",
+      path: "/esu-campus/documents",
+      src: <IoDocuments />,
+    },
+
+    {
+      title: "Faculties",
+      path: "/esu-campus/faculties",
+      src: <TbReportSearch />,
+    },
+    {
+      title: "Reports",
+      path: "/esu-campus/reports",
+      src: <TbReportSearch />,
+    },
   ];
 
   useEffect(() => {
@@ -74,6 +105,11 @@ const Sidebar = ({ sidebar, handleBurger }) => {
       setSidebarLinks(adminLinks);
     } else if (role === rolesList.faculty) {
       setSidebarLinks(facultyLinks);
+    } else if (
+      role === rolesList.campus_admin ||
+      role === rolesList.registrar
+    ) {
+      setSidebarLinks(campusAdminLinks);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [role]);

@@ -4,11 +4,21 @@ import YearDropdown from "../../../components/dropdown/Dropdown";
 import PieChart from "../../../components/charts/PieChart";
 
 const Dashboard = () => {
+  const cardData = [
+    { title: "Total Documents", value: 100 },
+    { title: "Received Documents", value: 100 },
+    { title: "Incoming Documents", value: 100 },
+    { title: "Delayed Documents", value: 100 },
+    { title: "Documents types", value: 100 },
+    { title: "Total Offices", value: 100 },
+    { title: "Total ESU Campus", value: 100 },
+    { title: "Total Faculties", value: 100 },
+  ];
   const year = [2024, 2025, 2026, 2027];
   return (
     <div className="w-full">
       <div className=" flex flex-wrap">
-        <Cards />
+        <Cards data={cardData} />
       </div>
       <div className="flex justify-between lg:flex-row flex-col gap-5 mt-10">
         <div className=" w-full bg-white">

@@ -16,6 +16,7 @@ import {
   fetchNotificationById,
 } from "../../services/notificationSlice";
 import { getUserRole } from "../../utils/userRoles";
+import rolesList from "../../constants/rolesList";
 
 const NavDashboard = ({ handleBurger }) => {
   const dispatch = useDispatch();
@@ -81,13 +82,15 @@ const NavDashboard = ({ handleBurger }) => {
       <div className="flex  justify-between items-center w-full">
         <h1 className="md:text-2xl text-lg font-bold text-main">{title}</h1>
         <div className="flex lg:text-[16px] text-sm gap-4">
-          <div className="flex items-center gap-2">
-            <button className="flex items-center">
-              {" "}
-              <TiPlus className="text-2xl" />
-              <span className="hidden lg:block">Deadline</span>
-            </button>
-          </div>
+          {userData?.role === rolesList.admin && (
+            <div className="flex items-center gap-2">
+              <button className="flex items-center">
+                {" "}
+                <TiPlus className="text-2xl" />
+                <span className="hidden lg:block">Deadline</span>
+              </button>
+            </div>
+          )}
 
           <div className="relative  flex items-center">
             <span className="text-sm  px-1.5 absolute right-[-10px] top-0 text-white bg-red-600 rounded-full text-center">

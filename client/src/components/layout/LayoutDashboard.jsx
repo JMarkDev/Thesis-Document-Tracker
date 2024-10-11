@@ -1,11 +1,9 @@
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
-import Sidebar from "../../components/sidebar/Sidebar";
+import Sidebar from "../sidebar/Sidebar";
 import NavbarDashboard from "../navbar/NavbarDashboard";
 import PropTypes from "prop-types";
 
-const LayoutAdmin = ({ children }) => {
-  const location = useLocation();
+const LayoutDashboard = ({ children }) => {
   const [sidebar, setSidebar] = useState(false);
   const handleBurger = () => {
     setSidebar(!sidebar);
@@ -18,7 +16,9 @@ const LayoutAdmin = ({ children }) => {
       <div className="flex flex-col flex-grow">
         <NavbarDashboard handleBurger={handleBurger} sidebar={sidebar} />
       </div>
-      {/* <div className="flex-grow bg-white w-full p-4 mt-20 mx-2 overflow-hidden"> */}
+      {/* <div className="flex-grow bg-white w-full p-4 mt-20 mx-2 overflow-hidden">
+        {children}
+      </div> */}
       <div
         className={`flex-grow bg-white w-full p-4 mt-20 mx-2 ${
           location.pathname.includes("/document/details")
@@ -32,7 +32,7 @@ const LayoutAdmin = ({ children }) => {
   );
 };
 
-LayoutAdmin.propTypes = {
+LayoutDashboard.propTypes = {
   children: PropTypes.node,
 };
-export default LayoutAdmin;
+export default LayoutDashboard;

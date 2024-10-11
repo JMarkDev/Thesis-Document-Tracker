@@ -1,23 +1,5 @@
-import { useEffect, useState } from "react";
-
-const cardData = [
-  { title: "Total Documents", value: 100 },
-  { title: "Received Documents", value: 100 },
-  { title: "Incoming Documents", value: 100 },
-  { title: "Delayed Documents", value: 100 },
-  { title: "Documents types", value: 100 },
-  { title: "Total Offices", value: 100 },
-  { title: "Total ESU Campus", value: 100 },
-
-  { title: "Total Faculties", value: 100 },
-];
-const Cards = () => {
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    setData(cardData);
-  }, []);
-
+import PropTypes from "prop-types";
+const Cards = ({ data }) => {
   // const colors = [
   //   "#3ba840",
   //   "#09adad",
@@ -53,6 +35,10 @@ const Cards = () => {
       ))}
     </div>
   );
+};
+
+Cards.propTypes = {
+  data: PropTypes.array.isRequired,
 };
 
 export default Cards;

@@ -17,7 +17,7 @@ const FacultyReports = () => {
       <div className="flex justify-between lg:flex-row flex-col gap-5 ">
         <div className="w-full bg-white">
           <div className="flex p-2 bg-gray-400 justify-between items-center">
-            <h1 className="font-bold">Documents Uploaded Chart</h1>
+            <h1 className="font-bold">Document Reports</h1>
             <YearDropdown data={year} option={year[0]} />
           </div>
           <LineChartAdmin />
@@ -35,7 +35,7 @@ const FacultyReports = () => {
                 {documentNames.map((doc, index) => (
                   <tr
                     key={index}
-                    className="bg-white border-b hover:bg-gray-100 transition-colors"
+                    className="bg-gray-100 border-b hover:bg-gray-200 transition-colors"
                   >
                     <th
                       scope="row"

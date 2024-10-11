@@ -97,10 +97,11 @@ export const sortDocuments = createAsyncThunk(
 
 export const sortSubmittedDocuments = createAsyncThunk(
   "document/submitted-by-user/sort",
-  async ({ sortBy, order, user_id }) => {
+  async ({ sortBy, order, user_id, esuCampus }) => {
     const response = await axios.get(
-      `/document/submitted-by-user/sort?sortBy=${sortBy}&order=${order}&user_id=${user_id}`
+      `/document/submitted-by-user/sort?sortBy=${sortBy}&order=${order}&user_id=${user_id}&esuCampus=${esuCampus}`
     );
+
     return response.data;
   }
 );

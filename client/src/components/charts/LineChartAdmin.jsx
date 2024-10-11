@@ -94,7 +94,7 @@ const LineChartAdmin = () => {
   }, []);
 
   return (
-    <div className="w-full mt-4">
+    <div className="w-full shadow-xl mt-4">
       <div className="lineChart">
         <ResponsiveContainer width="100%" height={350}>
           <LineChart

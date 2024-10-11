@@ -10,7 +10,7 @@ import PageNotFound from "./pages/PageNotFound";
 import Homepage from "./pages/Homepage";
 import ScanNow from "./pages/Admin/ScanNow/ScanNow";
 
-import LayoutAdmin from "./components/layout/LayoutAdmin";
+// import LayoutAdmin from "./components/layout/LayoutAdmin";
 import Dashboard from "./pages/Admin/Dashboard/Dashboard";
 import Documents from "./pages/Admin/Documents/Documents";
 import DocumentWorkflow from "./pages/Admin/DocumentWorkflows/DocumentWorkflow";
@@ -22,7 +22,7 @@ import CampusAdmin from "./pages/Admin/UserMagement/CampusAdmin/CampusAdmin";
 import EsuRegistrar from "./pages/Admin/UserMagement/ESU Registrar/EsuRegistrar";
 import AdminStaff from "./pages/Admin/UserMagement/AdminStaff/AdminStaff";
 
-import LayoutFaculty from "./components/layout/LayoutFaculty";
+import LayoutDashboard from "./components/layout/LayoutDashboard";
 // import Upload from "./pages/Faculty/UploadDocuments/UploadDocuments";
 import FacultyReports from "./pages/Faculty/Reports/FacultyReports";
 import AllDocuments from "./pages/Faculty/AllDocuments/AllDocuments";
@@ -33,6 +33,10 @@ import DocumentDetails from "./pages/Shared/DocumentDetails";
 import UploadDocuments from "./pages/Shared/UploadDocuments";
 import PrintQRCode from "./pages/Shared/PrintQRCode";
 import Scanner from "./components/qr_scanner/Scanner";
+import EsuReports from "./pages/EsuCampus/Reports/EsuReports";
+import EsuFaculties from "./pages/EsuCampus/Faculties/EsuFaculties";
+import EsuDashboard from "./pages/EsuCampus/Dashboard/EsuDashboard";
+import EsuDocuments from "./pages/EsuCampus/Documents/EsuDocuments";
 
 function App() {
   // useIdleTimeout();
@@ -51,11 +55,6 @@ function App() {
       path: "/document-workflow",
       component: <DocumentWorkflow />,
     },
-    // {
-    //   title: "Document Workflow Details",
-    //   path: "/document-workflow/:id",
-    //   component: <WorkflowDetails />,
-    // },
     { title: "Offices", path: "/offices", component: <Offices /> },
     { title: "Reports", path: "/reports", component: <Reports /> },
     { title: "Faculty", path: "/users/faculty", component: <Faculty /> },
@@ -80,33 +79,13 @@ function App() {
       component: <Faculty />,
     },
     {
-      title: "Document Details",
-      path: "/document/details/:id",
-      component: <DocumentDetails />,
-    },
-    {
       title: "Print QR Code",
       path: "/admin-document/:tracking_number",
       component: <PrintQRCode />,
     },
-    {
-      title: "User Details",
-      path: "/user-details/:id",
-      component: <UserDetails />,
-    },
-    {
-      title: "User Profile",
-      path: "/admin-profile",
-      component: <UserProfile />,
-    },
   ];
 
   const facultyLinks = [
-    {
-      title: "Faculty Profile",
-      path: "/faculty-profile",
-      component: <UserProfile />,
-    },
     {
       title: "Upload",
       path: "/faculty-upload-documents",
@@ -119,13 +98,70 @@ function App() {
     },
     {
       title: "Uploaded Documents",
-      path: "/faculty-all-documents",
+      path: "/faculty/all-documents",
       component: <AllDocuments />,
     },
     {
       title: "Print QR Code",
       path: "/faculty-document/:tracking_number",
       component: <PrintQRCode />,
+    },
+  ];
+
+  const esuCampusLinks = [
+    {
+      title: "Dashboard",
+      path: "/esu-campus/dashboard",
+      component: <EsuDashboard />,
+    },
+    {
+      title: "Scan Now",
+      path: "/esu-campus/scan-now",
+      component: <ScanNow />,
+    },
+    {
+      title: "Documents",
+      path: "/esu-campus/documents",
+      component: <EsuDocuments />,
+    },
+    {
+      title: "Upload Documents",
+      path: "/esu-campus/upload-documents",
+      component: <UploadDocuments />,
+    },
+
+    {
+      title: "Faculties",
+      path: "/esu-campus/faculties",
+      component: <EsuFaculties />,
+    },
+    {
+      title: "Reports",
+      path: "/esu-campus/reports",
+      component: <EsuReports />,
+    },
+  ];
+
+  const sharedLinks = [
+    {
+      title: "Document Details",
+      path: "/document-details/:id",
+      component: <DocumentDetails />,
+    },
+    {
+      title: "Print QR Code",
+      path: "/document/tracking-number/:tracking_number",
+      component: <PrintQRCode />,
+    },
+    {
+      title: "User Profile",
+      path: "/user-profile",
+      component: <UserProfile />,
+    },
+    {
+      title: "User Details",
+      path: "/user-details/:id",
+      component: <UserDetails />,
     },
   ];
 
@@ -142,7 +178,7 @@ function App() {
             path={link.path}
             element={
               <ProtectedRoute
-                element={<LayoutAdmin>{link.component}</LayoutAdmin>}
+                element={<LayoutDashboard>{link.component}</LayoutDashboard>}
                 allowedRoles={[rolesList.admin]}
               />
             }
@@ -156,8 +192,59 @@ function App() {
             // element={<LayoutFaculty>{link.component}</LayoutFaculty>}
             element={
               <ProtectedRoute
-                element={<LayoutFaculty>{link.component}</LayoutFaculty>}
+                element={<LayoutDashboard>{link.component}</LayoutDashboard>}
                 allowedRoles={[rolesList.faculty]}
+              />
+            }
+          />
+        ))}
+
+        {esuCampusLinks.map((link, index) => (
+          <Route
+            key={index}
+            path={link.path}
+            element={
+              <ProtectedRoute
+                element={<LayoutDashboard>{link.component}</LayoutDashboard>}
+                allowedRoles={[rolesList.campus_admin, rolesList.registrar]}
+              />
+            }
+          />
+        ))}
+        {/* Document Details - Multiple Role Access */}
+        <Route
+          path="/document/details/:id"
+          element={
+            <ProtectedRoute
+              element={
+                <LayoutDashboard>
+                  <DocumentDetails />
+                </LayoutDashboard>
+              }
+              allowedRoles={[
+                rolesList.faculty,
+                rolesList.admin,
+                rolesList.campus_admin,
+              ]} // Both admin and campus_admin can access
+            />
+          }
+        />
+
+        {sharedLinks.map((link, index) => (
+          <Route
+            key={index}
+            path={link.path}
+            element={
+              // <LayoutDashboard>{link.component}</LayoutDashboard>
+              <ProtectedRoute
+                element={<LayoutDashboard>{link.component}</LayoutDashboard>}
+                allowedRoles={[
+                  rolesList.faculty,
+                  rolesList.admin,
+                  rolesList.campus_admin,
+                  rolesList.registrar,
+                  rolesList.office,
+                ]}
               />
             }
           />

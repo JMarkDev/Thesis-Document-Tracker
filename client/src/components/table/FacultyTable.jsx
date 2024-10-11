@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FaTrashAlt, FaEye } from "react-icons/fa";
+import { FaTrashAlt, FaEye, FaCheckCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import ProfileModal from "../ProfileModal";
@@ -7,10 +7,11 @@ import api from "../../api/axios";
 import userIcon from "../../assets/images/user (1).png";
 import DeleteModal from "../DeleteModal";
 import { useDispatch } from "react-redux";
-import { deleteUser } from "../../services/usersSlice";
+import { deleteUser, approveFaculty } from "../../services/usersSlice";
 import { toastUtils } from "../../hooks/useToast";
 import { getStatus } from "../../utils/getStatus";
 import statusList from "../../constants/statusList";
+import Loading from "../loader/loginloader/LoginLoading";
 
 const FacultyTable = ({ fetchFaculty }) => {
   const navigate = useNavigate();
@@ -20,6 +21,7 @@ const FacultyTable = ({ fetchFaculty }) => {
   const [showModal, setShowModal] = useState(false);
   const [selectedEsuCampus, setSelectedEsuCampus] = useState(null);
   const [name, setName] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const openModal = (image) => {
     setSelectedImage(image);
@@ -47,9 +49,23 @@ const FacultyTable = ({ fetchFaculty }) => {
     closeDeleteModal();
   };
 
+  const handleApprove = ({ id, email }) => {
+    setLoading(true);
+    dispatch(approveFaculty({ id, email, toast: toastUtils() }))
+      .unwrap()
+      .then(() => {
+        setLoading(false);
+      })
+      .catch((error) => {
+        setLoading(false);
+        console.log(error);
+      });
+  };
   return (
     <>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+        <div className="flex justify-center">{loading && <Loading />}</div>
+
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead className="text-xs text-gray-700 uppercase bg-gray-300 dark:bg-gray-700 dark:text-gray-400">
             <tr>
@@ -158,11 +174,49 @@ const FacultyTable = ({ fetchFaculty }) => {
                           : "bg-green-400"
                       }  text-gray-700 p-2 px-4 rounded-lg`}
                     >
-                      {getStatus(status)}
+                      {status === statusList.verified
+                        ? "pending"
+                        : getStatus(status)}
                     </span>
                   </td>
+                  <td className="px-6 py-4 flex gap-3 justify-center items-center relative">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleApprove({ id, email });
+                      }}
+                      className={`${
+                        status === statusList.verified
+                          ? "vissible"
+                          : "invisible"
+                      } p-2 text-lg bg-green-500 hover:bg-green-800 text-white rounded-lg`}
+                    >
+                      <FaCheckCircle className="h-5 w-5" />
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        navigate(`/user-details/${id}`);
+                      }}
+                      className="p-2 text-lg bg-[#fca326] hover:bg-[#f58e40] text-white rounded-lg"
+                    >
+                      <FaEye className="h-5 w-5" />
+                    </button>
 
-                  <td className=" py-4 flex gap-3 justify-center items-center">
+                    <button
+                      onClick={(e) => {
+                        openDeleteModal({
+                          id,
+                          name: `${firstName} ${middleInitial}. ${lastName}`,
+                        });
+                        e.stopPropagation();
+                      }}
+                      className="p-2 text-lg hover:bg-red-700 bg-red-500 text-white rounded-lg"
+                    >
+                      <FaTrashAlt className="h-5 w-5" />
+                    </button>
+                  </td>
+                  {/* <td className=" py-4 flex gap-3 justify-center items-center">
                     <button
                       onClick={(e) => {
                         e.stopPropagation();
@@ -188,7 +242,7 @@ const FacultyTable = ({ fetchFaculty }) => {
                       />
                     )}
                     {}
-                  </td>
+                  </td> */}
                 </tr>
               )
             )}

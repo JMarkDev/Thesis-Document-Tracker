@@ -35,7 +35,14 @@ const AllDocuments = () => {
   const handleSort = (sortBy) => {
     const newOrder = sortOrder === "asc" ? "desc" : "asc";
     setSortOrder(newOrder);
-    dispatch(sortSubmittedDocuments({ sortBy, order: newOrder, user_id }));
+    dispatch(
+      sortSubmittedDocuments({
+        sortBy,
+        order: newOrder,
+        user_id,
+        esuCampus: null,
+      })
+    );
   };
 
   useEffect(() => {

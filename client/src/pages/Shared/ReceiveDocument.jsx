@@ -62,14 +62,16 @@ const ReceiveDocument = ({
               <strong className="text-gray-800">Uploaded By:</strong>{" "}
               {documentData.uploaded_by}
             </p>
-            <p>
-              <strong className="text-gray-800">Date & Time:</strong>{" "}
-              {new Date(documentData.createdAt).toLocaleString()}
-            </p>
+            {documentData.esuCampus && (
+              <p>
+                <strong className="text-gray-800">ESU Campus:</strong>{" "}
+                {documentData.esuCampus}
+              </p>
+            )}
           </div>
           {documentData.document_desc && (
             <p>
-              <strong className="text-gray-800">Description:</strong>{" "}
+              <strong className="text-gray-800">Description: lorem </strong>{" "}
               {documentData.document_desc}
             </p>
           )}
