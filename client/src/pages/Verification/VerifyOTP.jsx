@@ -51,16 +51,17 @@ const VerifyOTP = ({ email, closeOTP, closeModal, onVerificationSuccess }) => {
       console.log(response.data);
 
       if (response.data.status === "success") {
-        dispatch(fetchUser());
         // fetch the latest added data
         if (onVerificationSuccess) {
           onVerificationSuccess();
         }
 
         const accessToken = response.data?.accessToken;
-        Cookies.set("accessToken", accessToken, { expires: 1 });
+
         toast.success(response.data.message);
         if (accessToken) {
+          Cookies.set("accessToken", accessToken, { expires: 1 });
+          dispatch(fetchUser());
           // Set the access token in the axios headers
           api.defaults.headers.common[
             "Authorization"
@@ -83,11 +84,12 @@ const VerifyOTP = ({ email, closeOTP, closeModal, onVerificationSuccess }) => {
               path = "/dashboard";
               break;
             case rolesList.office:
-              path = "/offices-dashboard";
+              path = "/office/dashboard";
               break;
             default:
               break;
           }
+
           navigate(path);
         }
         closeOTP();

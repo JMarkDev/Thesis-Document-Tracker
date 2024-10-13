@@ -66,7 +66,7 @@ const Sidebar = ({ sidebar, handleBurger }) => {
     { title: "Reports", path: "/faculty-reports", src: <TbReportSearch /> },
   ];
 
-  const campusAdminLinks = [
+  const EsuCampus = [
     {
       title: "Scan Now",
       path: "/esu-campus/scan-now",
@@ -81,6 +81,7 @@ const Sidebar = ({ sidebar, handleBurger }) => {
       title: "Transmittal",
       path: "/esu-campus/transmittal",
       src: <MdOutlineDocumentScanner />,
+      restrictedTo: [rolesList.campus_admin],
     },
     {
       title: "Documents",
@@ -91,7 +92,7 @@ const Sidebar = ({ sidebar, handleBurger }) => {
     {
       title: "Faculties",
       path: "/esu-campus/faculties",
-      src: <TbReportSearch />,
+      src: <FaUsers />,
     },
     {
       title: "Reports",
@@ -100,7 +101,37 @@ const Sidebar = ({ sidebar, handleBurger }) => {
     },
   ];
 
+  const officeLinks = [
+    {
+      title: "Scan Now",
+      path: "/office/scan-now",
+      src: <MdQrCodeScanner />,
+    },
+    {
+      title: "Dashboard",
+      path: "/office/dashboard",
+      src: <RiPieChart2Fill />,
+    },
+    {
+      title: "Documents",
+      path: "/office/documents",
+      src: <IoDocuments />,
+    },
+
+    {
+      title: "Staff",
+      path: "/office-staff",
+      src: <FaUsers />,
+    },
+    {
+      title: "Reports",
+      path: "/office/reports",
+      src: <TbReportSearch />,
+    },
+  ];
+
   useEffect(() => {
+    let filterdLinks;
     if (role === rolesList.admin) {
       setSidebarLinks(adminLinks);
     } else if (role === rolesList.faculty) {
@@ -109,7 +140,12 @@ const Sidebar = ({ sidebar, handleBurger }) => {
       role === rolesList.campus_admin ||
       role === rolesList.registrar
     ) {
-      setSidebarLinks(campusAdminLinks);
+      filterdLinks = EsuCampus.filter(
+        (link) => !link.restrictedTo || link.restrictedTo.includes(role)
+      );
+      setSidebarLinks(filterdLinks);
+    } else if (role === rolesList.office) {
+      setSidebarLinks(officeLinks);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [role]);

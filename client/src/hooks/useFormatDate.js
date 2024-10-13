@@ -61,7 +61,6 @@ export const useFormat = () => {
   };
 
   const fullDateFormat = (date) => {
-    console.log(date);
     if (date) {
       const month = parseInt(date.substring(5, 7), 10) - 1;
       const day = date.substring(8, 10);

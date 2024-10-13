@@ -47,7 +47,6 @@ const EditOffice = ({ modal, closeModal, id }) => {
   }, [id, dispatch]);
 
   const onSubmit = async (data) => {
-    console.log(data);
     data.role = rolesList.office;
     setLoading(true);
 

@@ -37,6 +37,10 @@ import EsuReports from "./pages/EsuCampus/Reports/EsuReports";
 import EsuFaculties from "./pages/EsuCampus/Faculties/EsuFaculties";
 import EsuDashboard from "./pages/EsuCampus/Dashboard/EsuDashboard";
 import EsuDocuments from "./pages/EsuCampus/Documents/EsuDocuments";
+import EsuTransmittal from "./pages/EsuCampus/Transmittal/EsuTransmittal";
+import Staff from "./pages/Offices/Staff/Staff";
+import OfficeDocument from "./pages/Offices/Documents/OfficeDocuments";
+import OfficeDashboard from "./pages/Offices/Dashboard/Dashboard";
 
 function App() {
   // useIdleTimeout();
@@ -140,7 +144,70 @@ function App() {
       path: "/esu-campus/reports",
       component: <EsuReports />,
     },
+    {
+      title: "Transmittal",
+      path: "/esu-campus/transmittal",
+      component: <EsuTransmittal />,
+    },
   ];
+
+  const officeLinks = [
+    {
+      title: "Dashboard",
+      path: "/office/dashboard",
+      component: <OfficeDashboard />,
+    },
+    {
+      title: "Scan Now",
+      path: "/office/scan-now",
+      component: <ScanNow />,
+    },
+    {
+      title: "Documents",
+      path: "/office/documents",
+      component: <OfficeDocument />,
+    },
+    {
+      title: "Reports",
+      path: "/office/reports",
+      component: <EsuReports />,
+    },
+    { title: "Staff", path: "/office-staff", component: <Staff /> },
+  ];
+
+  {
+    /**
+    
+      const officeLinks = [
+    {
+      title: "Scan Now",
+      path: "/office/scan-now",
+      src: <MdQrCodeScanner />,
+    },
+    {
+      title: "Dashboard",
+      path: "/office/dashboard",
+      src: <RiPieChart2Fill />,
+    },
+    {
+      title: "Documents",
+      path: "/office/documents",
+      src: <IoDocuments />,
+    },
+
+    {
+      title: "Staff",
+      path: "/office-staff",
+      src: <FaUsers />,
+    },
+    {
+      title: "Reports",
+      path: "/esu-campus/reports",
+      src: <TbReportSearch />,
+    },
+  ];
+    */
+  }
 
   const sharedLinks = [
     {
@@ -206,13 +273,32 @@ function App() {
             element={
               <ProtectedRoute
                 element={<LayoutDashboard>{link.component}</LayoutDashboard>}
-                allowedRoles={[rolesList.campus_admin, rolesList.registrar]}
+                // allowedRoles={[rolesList.campus_admin, rolesList.registrar]}
+                allowedRoles={
+                  link.path === "/esu-campus/transmittal"
+                    ? [rolesList.campus_admin] // Only campus admin can access Transmittal
+                    : [rolesList.campus_admin, rolesList.registrar] // Other routes accessible by both
+                }
+              />
+            }
+          />
+        ))}
+
+        {officeLinks.map((link, index) => (
+          <Route
+            key={index}
+            path={link.path}
+            // element={<LayoutFaculty>{link.component}</LayoutFaculty>}
+            element={
+              <ProtectedRoute
+                element={<LayoutDashboard>{link.component}</LayoutDashboard>}
+                allowedRoles={[rolesList.office]}
               />
             }
           />
         ))}
         {/* Document Details - Multiple Role Access */}
-        <Route
+        {/* <Route
           path="/document/details/:id"
           element={
             <ProtectedRoute
@@ -228,7 +314,7 @@ function App() {
               ]} // Both admin and campus_admin can access
             />
           }
-        />
+        /> */}
 
         {sharedLinks.map((link, index) => (
           <Route

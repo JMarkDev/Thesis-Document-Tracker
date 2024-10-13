@@ -32,7 +32,7 @@ const EsuFaculties = () => {
 
   return (
     <div>
-      <div className="flex text-sm md:text-[16px] justify-between lg:flex-row flex-col-reverse gap-5">
+      <div className="flex text-sm md:text-[16px] justify-end lg:flex-row flex-col-reverse gap-5">
         <div className=" flex max-w-[450px] w-full  items-center relative">
           <input
             type="text"
@@ -45,12 +45,12 @@ const EsuFaculties = () => {
         </div>
         <div>
           <div className="flex justify-end items-center gap-3">
-            <button
+            {/* <button
               // onClick={openModal}
               className="w-fit p-2 px-6  rounded-lg bg-main hover:bg-main_hover text-white font-semi"
             >
               Add Faculty
-            </button>
+            </button> */}
           </div>
         </div>
       </div>

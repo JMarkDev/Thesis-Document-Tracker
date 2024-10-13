@@ -272,7 +272,7 @@ const Table = ({ documents, handleSort }) => {
                   index
                 ) => (
                   <tr
-                    onClick={() => navigate(`/document/details/${id}`)}
+                    onClick={() => navigate(`/document-details/${id}`)}
                     key={index}
                     className="bg-white dark:bg-gray-800 hover:bg-gray-200 cursor-pointer"
                   >
