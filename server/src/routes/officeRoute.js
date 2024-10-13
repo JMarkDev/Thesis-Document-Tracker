@@ -25,5 +25,20 @@ router.put(
   officeController.updateOffice
 );
 router.get("/esu-registrar/:esuCampus", officeController.getRegistrar);
-
+router.post(
+  "/add-staff",
+  upload.single("image"),
+  registerValidationRules(),
+  validateForm,
+  officeController.addOfficeStaff
+);
+router.get("/staff-by-officeId/:officeId", officeController.getAllStaffById);
+router.delete("/delete-staff/:email", officeController.deleteStaff);
+router.put(
+  "/update-staff/:email",
+  upload.single("image"),
+  registerValidationRules(),
+  validateForm,
+  officeController.updateStaff
+);
 module.exports = router;
