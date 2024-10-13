@@ -236,6 +236,18 @@ const getAllStaffById = async (req, res) => {
   }
 };
 
+const deleteStaff = async (req, res) => {
+  const { email } = req.params;
+  try {
+    await userModel.destroy({
+      where: { email },
+    });
+    return res.status(200).json({ message: "Staff deleted successfully" });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 const getAllOffice = async (req, res) => {
   try {
     const users = await userModel.findAll({
