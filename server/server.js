@@ -15,6 +15,7 @@ const notificationRoute = require("./src/routes/notificationRoute");
 const documentRoute = require("./src/routes/documentRoute");
 const trackingNumberRoute = require("./src/routes/trackDocumentRoute");
 const documentWorkflowRoute = require("./src/routes/documentWorkflow");
+const chatBotRoute = require("./src/routes/chatbotRoute");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -45,6 +46,7 @@ app.get("/uploads/:filename", (req, res) => {
 // public routes no token required
 app.use("/auth", authRoute);
 app.use("/document", trackingNumberRoute);
+app.use("/chatbot", chatBotRoute);
 
 // refresh token route
 app.post("/refresh", refreshToken, async (req, res) => {
