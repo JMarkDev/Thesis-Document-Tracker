@@ -292,7 +292,7 @@ function App() {
             element={
               <ProtectedRoute
                 element={<LayoutDashboard>{link.component}</LayoutDashboard>}
-                allowedRoles={[rolesList.office]}
+                allowedRoles={[rolesList.office, rolesList.office_staff]}
               />
             }
           />
@@ -330,6 +330,7 @@ function App() {
                   rolesList.campus_admin,
                   rolesList.registrar,
                   rolesList.office,
+                  rolesList.office_staff,
                 ]}
               />
             }

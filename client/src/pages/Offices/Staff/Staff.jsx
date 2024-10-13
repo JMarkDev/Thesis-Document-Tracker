@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { IoSearch } from "react-icons/io5";
 import AddStaff from "./AddStaff";
-import { searchOfficeRole } from "../../../services/usersSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { getUserData } from "../../../services/authSlice";
 import OfficeStaff from "../../../components/table/OfficeStaff";
@@ -9,6 +8,7 @@ import {
   getStaff,
   fetchStaff,
   staffStatus,
+  searchStaff,
 } from "../../../services/staffSlice";
 const Staff = () => {
   const dispatch = useDispatch();
@@ -35,7 +35,7 @@ const Staff = () => {
 
   useEffect(() => {
     if (searchTerm) {
-      dispatch(searchOfficeRole(searchTerm));
+      dispatch(searchStaff({ name: searchTerm, officeId: user.office?.id }));
     } else {
       dispatch(fetchStaff(user.office?.id));
     }

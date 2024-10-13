@@ -144,7 +144,7 @@ const Sidebar = ({ sidebar, handleBurger }) => {
         (link) => !link.restrictedTo || link.restrictedTo.includes(role)
       );
       setSidebarLinks(filterdLinks);
-    } else if (role === rolesList.office) {
+    } else if (role === rolesList.office || role === rolesList.office_staff) {
       setSidebarLinks(officeLinks);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

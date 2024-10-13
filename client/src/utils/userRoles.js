@@ -17,6 +17,7 @@ export const getUserRole = (role) => {
       userRole = "admin";
       break;
     case rolesList.office:
+    case rolesList.office_staff:
       userRole = "office";
       break;
     default:

@@ -117,7 +117,11 @@ const NavDashboard = ({ handleBurger }) => {
           <div className="flex items-center gap-3">
             <div className="flex-col flex">
               <span className="font-bold">{userData?.firstName}</span>
-              <span className="text-[12px]">{getUserRole(userData?.role)}</span>
+              <span className="text-[12px]">
+                {userData?.role === rolesList.office_staff
+                  ? getUserRole(userData?.role) + " staff"
+                  : getUserRole(userData?.role)}
+              </span>
             </div>
 
             <img

@@ -23,6 +23,20 @@ export const deleteStaff = createAsyncThunk(
   }
 );
 
+export const searchStaff = createAsyncThunk(
+  "staff/searchStaff",
+  async ({ name, officeId }) => {
+    try {
+      const response = await axios.get(
+        `/office/staff/search/${name}/officeId/${officeId}`
+      );
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
 const staffSlice = createSlice({
   name: "staff",
   initialState: {
@@ -53,6 +67,17 @@ const staffSlice = createSlice({
       );
     });
     builders.addCase(deleteStaff.rejected, (state, action) => {
+      state.status = "failed";
+      state.error = action.error.message;
+    });
+    builders.addCase(searchStaff.pending, (state) => {
+      state.status = "loading";
+    });
+    builders.addCase(searchStaff.fulfilled, (state, action) => {
+      state.status = "succeeded";
+      state.allStaff = action.payload;
+    });
+    builders.addCase(searchStaff.rejected, (state, action) => {
       state.status = "failed";
       state.error = action.error.message;
     });
