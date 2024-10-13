@@ -220,6 +220,22 @@ const addOfficeStaff = async (req, res) => {
   }
 };
 
+const getAllStaffById = async (req, res) => {
+  const { officeId } = req.params;
+  try {
+    const users = await userModel.findAll({
+      where: {
+        status: statusList.verified,
+        role: rolesList.office_staff,
+        officeId,
+      },
+    });
+    return res.status(200).json(users);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 const getAllOffice = async (req, res) => {
   try {
     const users = await userModel.findAll({
@@ -240,34 +256,6 @@ const getAllOffice = async (req, res) => {
       ],
     });
     return res.status(200).json(users);
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
-  }
-};
-
-const getAllStaffById = async (req, res) => {
-  const { officeId } = req.params;
-  try {
-    const users = await userModel.findAll({
-      where: {
-        status: statusList.verified,
-        role: rolesList.office_staff,
-        officeId,
-      },
-    });
-    return res.status(200).json(users);
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
-  }
-};
-
-const deleteStaff = async (req, res) => {
-  const { email } = req.params;
-  try {
-    await userModel.destroy({
-      where: { email },
-    });
-    return res.status(200).json({ message: "Staff deleted successfully" });
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
