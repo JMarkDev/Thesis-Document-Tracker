@@ -17,6 +17,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { toastUtils } from "../hooks/useToast";
 import DocumentMedata from "./DocumentMetadata";
+import api from "../api/axios";
 
 const Homepage = () => {
   const dispatch = useDispatch();
@@ -32,10 +33,6 @@ const Homepage = () => {
   const [tracking_number, setTrackingNum] = useState(null);
   const [documentData, setDocumentData] = useState([]);
   const [modal, setModal] = useState(false);
-  // useEffect(() => {
-  //   // Scroll to the bottom of the chat container
-  //   chatContainer.current.scrollTop = chatContainer.current.scrollHeight;
-  // }, [conversation]);
 
   const searchDocument = (e) => {
     e.preventDefault();
@@ -76,6 +73,57 @@ const Homepage = () => {
     setModal(false);
     setDocumentData(null);
   };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setUserQuery("");
+    try {
+      if (userQuery === "") return;
+      const response = await api.post("/chatbot/query", {
+        user_query: userQuery,
+      });
+      const updatedConversation = [
+        ...conversation,
+        { user_query: userQuery, bot_response: response.data.data },
+      ];
+      setIsLoading(!isLoading);
+      setConversation(updatedConversation);
+      setTimeout(() => {
+        setIsLoading(false);
+        setUserQuery("");
+      }, 3000);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleOptionClick = async (option) => {
+    try {
+      const response = await api.post("/chatbot/query", {
+        user_query: option,
+      });
+      const updatedConversation = [
+        ...conversation,
+        { user_query: option, bot_response: response.data.data },
+      ];
+      setIsLoading(true);
+      setConversation(updatedConversation);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 3000);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const formatResponse = (response) => {
+    return response.replace(/\n/g, "<br>");
+  };
+
+  // useEffect(() => {
+  //   // Scroll to the bottom of the chat container
+  //   chatContainer.current.scrollTop = chatContainer.current.scrollHeight;
+  // }, [conversation]);
 
   return (
     <>
@@ -188,7 +236,6 @@ const Homepage = () => {
                         <div className="mr-3 flex justify-end">
                           <p className="text-sm ml-12 my-2 p-2 rounded-lg bg-slate-500 text-white">
                             {convo.user_query}
-                            hello
                           </p>
                         </div>
                         <div className="flex gap-2">
@@ -203,11 +250,9 @@ const Homepage = () => {
                             ) : (
                               <p
                                 className="text-sm rounded-lg p-2 mr-8 bg-gray-300"
-                                dangerouslySetInnerHTML={
-                                  {
-                                    // __html: formatResponse(convo.bot_response),
-                                  }
-                                }
+                                dangerouslySetInnerHTML={{
+                                  __html: formatResponse(convo.bot_response),
+                                }}
                               ></p>
                             )}
                           </div>
@@ -222,28 +267,25 @@ const Homepage = () => {
                   <div
                     key={index}
                     className="text-sm px-2 py-1 hover:bg-main hover:text-white border border-main rounded-full text-main cursor-pointer transition-all"
-                    // onClick={() => handleOptionClick(options)}
+                    onClick={() => handleOptionClick(options)}
                   >
                     {options}
                   </div>
                 ))}
               </div>
               <div className="absolute z-30 rounded-b-lg bg-[#f2f2f2] left-0 bottom-0 w-full px-3">
-                <form
-                  action=""
-                  // onSubmit={handleSubmit}
-                >
+                <form action="" onSubmit={handleSubmit}>
                   <div className="flex relative flex-row-reverse justify-center items-center">
                     <FiSend
-                      // onClick={handleSubmit}
+                      onClick={handleSubmit}
                       className="text-xl text-main cursor-pointer absolute z-10 bottom-4 right-3"
                     />
                     <input
                       type="text"
                       className="relative w-full mb-2 p-2 rounded-full text-sm focus:outline-none border border-[#d67878] focus:border-main"
                       placeholder="Type a message"
-                      // value={userQuery}
-                      // onChange={(e) => setUserQuery(e.target.value)}
+                      value={userQuery}
+                      onChange={(e) => setUserQuery(e.target.value)}
                     />
                   </div>
                 </form>
