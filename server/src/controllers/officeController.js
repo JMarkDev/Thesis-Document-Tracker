@@ -248,6 +248,26 @@ const deleteStaff = async (req, res) => {
   }
 };
 
+const searchStaff = async (req, res) => {
+  const { name, officeId } = req.params;
+  try {
+    const users = await userModel.findAll({
+      where: {
+        status: statusList.verified,
+        officeId: officeId,
+        role: rolesList.office_staff,
+        [Op.or]: [
+          { firstName: { [Op.like]: `${name}%` } },
+          { lastName: { [Op.like]: `${name}%` } },
+        ],
+      },
+    });
+    return res.status(200).json(users);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 const getAllOffice = async (req, res) => {
   try {
     const users = await userModel.findAll({
@@ -464,4 +484,5 @@ module.exports = {
   getAllStaffById,
   deleteStaff,
   updateStaff,
+  searchStaff,
 };

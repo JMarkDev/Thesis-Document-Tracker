@@ -41,4 +41,8 @@ router.put(
   validateForm,
   officeController.updateStaff
 );
+router.get(
+  "/staff/search/:name/officeId/:officeId",
+  officeController.searchStaff
+);
 module.exports = router;
