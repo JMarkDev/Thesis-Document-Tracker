@@ -269,7 +269,7 @@ const Homepage = () => {
                 {option.map((options, index) => (
                   <div
                     key={index}
-                    className="text-sm px-2 py-1 hover:bg-main hover:text-white border border-main rounded-full text-main cursor-pointer transition-all"
+                    className="text-sm p-1.5 hover:bg-main hover:text-white border border-main rounded-full text-main cursor-pointer transition-all"
                     onClick={() => handleOptionClick(options)}
                   >
                     {options}

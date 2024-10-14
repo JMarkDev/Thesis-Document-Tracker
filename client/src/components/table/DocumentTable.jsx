@@ -15,10 +15,9 @@ import {
   getDocumentByTrackingNumber,
 } from "../../services/documentSlice";
 import { useToast } from "../../hooks/useToast";
-
-import noDataImage from "../../assets/images/undraw_no_data_re_kwbl.svg";
 import PrintMetadata from "../../pages/Shared/PrintMetadata";
 import { toastUtils } from "../../hooks/useToast";
+import NoData from "./NoData";
 
 // Utility to detect if it's a mobile device
 const isMobileDevice = () => {
@@ -122,16 +121,7 @@ const Table = ({ documents, handleSort }) => {
   return (
     <>
       {documents.length === 0 ? (
-        <div className="flex flex-col p-4 bg-gray-200 gap-5 justify-center items-center">
-          <h2 className="md:text-3xl text-lg font-semibold text-gray-800 text-center">
-            Documents not found
-          </h2>
-          <img
-            src={noDataImage}
-            alt="No data available"
-            className="w-64 h-64"
-          />
-        </div>
+        <NoData />
       ) : (
         <div className="relative overflow-x-auto  shadow-md sm:rounded-lg">
           <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">

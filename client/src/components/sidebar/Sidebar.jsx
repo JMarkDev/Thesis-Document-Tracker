@@ -45,7 +45,7 @@ const Sidebar = ({ sidebar, handleBurger }) => {
         { title: "Faculty", path: "/users/faculty" },
         { title: "Campus Admin", path: "/users/campus-admin" },
         { title: "ESU Registrar", path: "/users/esu-registrar" },
-        { title: "Admin Staff", path: "/users/admin-staff" },
+        { title: "Admin ", path: "/users/admin-staff" },
       ],
     },
     { title: "Reports", path: "/reports", src: <TbReportAnalytics /> },

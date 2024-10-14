@@ -138,7 +138,7 @@ const ScanNow = () => {
   return (
     <div className="w-full ">
       {startScan ? (
-        <div className="App">
+        <div className="App flex items-center">
           <QrReader
             facingMode={selected}
             delay={1000}
