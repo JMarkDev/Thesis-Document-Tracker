@@ -463,22 +463,40 @@ const receiveDocuments = async (req, res) => {
   } = req.body;
 
   try {
-    const receiveAt = await documentRecipientModel.update(
-      {
-        status: documentStatus.received,
-        received_at: createdAt,
-        updatedAt: createdAt,
-      },
-      {
-        where: {
-          document_id: document_id,
-          user_id: user_id,
+    if (action === "received") {
+      await documentRecipientModel.update(
+        {
+          status: documentStatus.received,
+          received_at: createdAt,
+          updatedAt: createdAt,
         },
-      }
-    );
+        {
+          where: {
+            document_id: document_id,
+            user_id: user_id,
+          },
+        }
+      );
+    }
+
+    if (action === "forwarded") {
+      await documentRecipientModel.update(
+        {
+          status: documentStatus.forwarded,
+          updatedAt: createdAt,
+        },
+        {
+          where: {
+            document_id: document_id,
+            user_id: user_id,
+          },
+        }
+      );
+    }
 
     const documentHistory = {
       document_id,
+      office_name,
       action,
       recipient_office,
       recipient_user,
@@ -488,9 +506,8 @@ const receiveDocuments = async (req, res) => {
     await documentHistoryModel.create(documentHistory);
 
     return res.status(200).json({
-      receiveAt,
       status: "success",
-      message: "Document received successfully",
+      message: `Document ${action} successfully`,
     });
   } catch (error) {
     return res.status(500).json({ message: error.message });
