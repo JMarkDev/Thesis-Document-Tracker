@@ -7,7 +7,7 @@ import wmsuLogo from "../assets/images/wmsu logo.png";
 import esuLogo from "../assets/images/WMSU ESU LOGO.png";
 import { FiSend } from "react-icons/fi";
 import CrossIcon from ".././assets/images/cross.png";
-import Loading from "../components/loader/loadingBall";
+import Loading from "../components/loader/chatbot_loader/loadingBall";
 import Loader from "../components/loader/track_loader/tracking_loader";
 import {
   fetchDocumentByTrackingNum,
@@ -26,6 +26,7 @@ const Homepage = () => {
   const [userQuery, setUserQuery] = useState("");
   const [conversation, setConversation] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [chatbotLoading, setChatbotLoading] = useState(false);
   const chatContainer = useRef(null);
   const option = ["track document", "upload document", "register account"];
   const text = "Welcome to our Chatbot! How can I assist you today?".split(" ");
@@ -86,10 +87,10 @@ const Homepage = () => {
         ...conversation,
         { user_query: userQuery, bot_response: response.data.data },
       ];
-      setIsLoading(!isLoading);
+      setChatbotLoading(!chatbotLoading);
       setConversation(updatedConversation);
       setTimeout(() => {
-        setIsLoading(false);
+        setChatbotLoading(false);
         setUserQuery("");
       }, 3000);
     } catch (error) {
@@ -106,10 +107,10 @@ const Homepage = () => {
         ...conversation,
         { user_query: option, bot_response: response.data.data },
       ];
-      setIsLoading(true);
+      setChatbotLoading(true);
       setConversation(updatedConversation);
       setTimeout(() => {
-        setIsLoading(false);
+        setChatbotLoading(false);
       }, 3000);
     } catch (error) {
       console.log(error);
@@ -119,11 +120,13 @@ const Homepage = () => {
   const formatResponse = (response) => {
     return response.replace(/\n/g, "<br>");
   };
-
-  // useEffect(() => {
-  //   // Scroll to the bottom of the chat container
-  //   chatContainer.current.scrollTop = chatContainer.current.scrollHeight;
-  // }, [conversation]);
+  useEffect(() => {
+    if (openChat && chatContainer.current) {
+      setTimeout(() => {
+        chatContainer.current.scrollTop = chatContainer.current.scrollHeight;
+      }, 0);
+    }
+  }, [conversation, openChat]);
 
   return (
     <>
@@ -242,10 +245,10 @@ const Homepage = () => {
                           <img
                             src={chatbotImg}
                             alt="chatbot"
-                            className="w-7 h-7 rounded-full"
+                            className="w-7 h-7 filter-orange rounded-full"
                           />
                           <div className="flex items-center">
-                            {lastItem && isLoading ? (
+                            {lastItem && chatbotLoading ? (
                               <Loading />
                             ) : (
                               <p

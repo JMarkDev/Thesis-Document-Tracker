@@ -1,76 +1,20 @@
-// import "./styles.css";
-// import { useState } from "react";
-// import QrReader from "react-qr-reader";
-
-// const App = () => {
-//   const [selected, setSelected] = useState("environment");
-//   const [startScan, setStartScan] = useState(false);
-//   const [loadingScan, setLoadingScan] = useState(false);
-//   const [data, setData] = useState("");
-
-//   const handleScan = async (scanData) => {
-//     setLoadingScan(true);
-//     console.log(`loaded data data`, scanData);
-//     if (scanData && scanData !== "") {
-//       console.log(`loaded >>>`, scanData);
-//       setData(scanData);
-//       setStartScan(false);
-//       setLoadingScan(false);
-//       // setPrecScan(scanData);
-//     }
-//   };
-//   const handleError = (err) => {
-//     console.error(err);
-//   };
-//   return (
-//     <div className="App">
-//       <h1>Hello CodeSandbox</h1>
-//       <h2>
-//         Last Scan:
-//         {selected}
-//       </h2>
-
-//       <button
-//         onClick={() => {
-//           setStartScan(!startScan);
-//         }}
-//       >
-//         {startScan ? "Stop Scan" : "Start Scan"}
-//       </button>
-//       {startScan && (
-//         <>
-//           <select onChange={(e) => setSelected(e.target.value)}>
-//             <option value={"environment"}>Back Camera</option>
-//             <option value={"user"}>Front Camera</option>
-//           </select>
-//           <QrReader
-//             facingMode={selected}
-//             delay={1000}
-//             onError={handleError}
-//             onScan={handleScan}
-//             // chooseDeviceId={()=>selected}
-//             style={{ width: "300px" }}
-//           />
-//         </>
-//       )}
-//       {loadingScan && <p>Loading</p>}
-//       {data !== "" && <p>{data}</p>}
-//     </div>
-//   );
-// };
-
-// export default App;
 import "./styles.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import QrReader from "react-qr-reader";
 
 const App = () => {
-  const [selected, setSelected] = useState("environment");
+  const [selected, setSelected] = useState("environment"); // Default to environment camera
   const [startScan, setStartScan] = useState(false);
   const [loadingScan, setLoadingScan] = useState(false);
   const [data, setData] = useState("");
 
+  // Function to detect if the user is on a mobile device
+  const isMobileDevice = () => {
+    return /Mobi|Android/i.test(navigator.userAgent);
+  };
+
   const handleScan = async (scanData) => {
+    console.log("click");
     setLoadingScan(true);
     console.log(`loaded data data`, scanData);
     if (scanData && scanData !== "") {
@@ -83,28 +27,14 @@ const App = () => {
 
   const handleError = (err) => {
     console.error(err);
-    if (err.name === "NotAllowedError") {
-      alert(
-        "Camera permission denied. Please allow camera access in your browser settings."
-      );
-    } else if (err.name === "NotFoundError") {
-      alert("No camera found. Please ensure your device has a camera.");
-    } else {
-      alert("An unexpected error occurred: " + err.message);
-    }
   };
 
   const requestCameraPermission = async () => {
     try {
       await navigator.mediaDevices.getUserMedia({ video: true });
-      // Permission granted
       console.log("Camera permission granted");
     } catch (error) {
-      // Permission denied or error occurred
       console.error("Camera permission denied or error occurred:", error);
-      alert(
-        "Camera permission is required to scan QR codes. Please allow access."
-      );
     }
   };
 
@@ -112,6 +42,17 @@ const App = () => {
     await requestCameraPermission();
     setStartScan(!startScan);
   };
+
+  useEffect(() => {
+    // Automatically select the camera based on the device type
+    if (startScan) {
+      const facingMode = isMobileDevice() ? "environment" : "user"; // Set to back camera on mobile
+      setSelected(facingMode);
+    }
+  }, [startScan]);
+
+  console.log(startScan, "startScan");
+  console.log(loadingScan, "loadingScan");
 
   return (
     <div className="App">
@@ -124,10 +65,6 @@ const App = () => {
 
       {startScan && (
         <>
-          <select onChange={(e) => setSelected(e.target.value)}>
-            <option value={"environment"}>Back Camera</option>
-            <option value={"user"}>Front Camera</option>
-          </select>
           <QrReader
             facingMode={selected}
             delay={1000}

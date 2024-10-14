@@ -55,7 +55,7 @@ const Sidebar = ({ sidebar, handleBurger }) => {
     { title: "Profile", path: "/user-profile", src: <FaRegUser /> },
     {
       title: "Upload Documents",
-      path: "/faculty-upload-documents",
+      path: "/upload-documents",
       src: <FaFileUpload />,
     },
     {

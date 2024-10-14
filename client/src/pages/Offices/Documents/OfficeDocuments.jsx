@@ -20,8 +20,9 @@ import {
   getAllWorkflow,
   fetchAllWorkflow,
 } from "../../../services/documentWolkflowSlice";
+import { Link } from "react-router-dom";
 
-const OfficeDocument = () => {
+const OfficeDocuments = () => {
   const dispatch = useDispatch();
   const allDocuments = useSelector(getAllDocuments);
   const workflow = useSelector(getAllWorkflow);
@@ -90,6 +91,12 @@ const OfficeDocument = () => {
     <div className="">
       <div className="flex  flex-col gap-5 justify-between mb-8">
         <div className="flex text-sm md:text-[16px] justify-between lg:flex-row flex-col gap-5">
+          <Link
+            to={"/upload-documents"}
+            className="w-fit p-2 flex items-center text-center px-4 rounded-lg bg-main hover:bg-main_hover text-white font-semi"
+          >
+            Upload Documents
+          </Link>
           <div className=" flex max-w-[450px] w-full  items-center relative">
             <input
               value={searchTerm}
@@ -100,28 +107,28 @@ const OfficeDocument = () => {
             />
             <IoSearch className="text-2xl absolute right-2 text-gray-600" />
           </div>
+        </div>
 
-          <div className="flex sm:justify-end justify-center flex-col lg:flex-row lg:items-center items-end  gap-3">
-            <span className="text-gray-700">Filter documents by:</span>
-            <div className="flex items-center gap-3">
-              <div>
-                <Dropdown
-                  handleFilter={handleFilterByESU}
-                  data={wmsuCampus}
-                  option={"WMSU-ESU"}
-                />
-              </div>
-              <div>
-                <Dropdown
-                  handleFilter={handleFilterByType}
-                  data={documentType}
-                  option={"Type"}
-                />
-              </div>
+        <div className="flex sm:justify-end justify-center flex-col lg:flex-row lg:items-center items-end  gap-3">
+          <span className="text-gray-700">Filter documents by:</span>
+          <div className="flex items-center gap-3">
+            <div>
+              <Dropdown
+                handleFilter={handleFilterByESU}
+                data={wmsuCampus}
+                option={"WMSU-ESU"}
+              />
+            </div>
+            <div>
+              <Dropdown
+                handleFilter={handleFilterByType}
+                data={documentType}
+                option={"Type"}
+              />
+            </div>
 
-              <div>
-                <Status handleFilter={handleFIlterByStatus} />
-              </div>
+            <div>
+              <Status handleFilter={handleFIlterByStatus} />
             </div>
           </div>
         </div>
@@ -134,4 +141,4 @@ const OfficeDocument = () => {
   );
 };
 
-export default OfficeDocument;
+export default OfficeDocuments;

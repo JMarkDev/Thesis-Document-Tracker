@@ -49,11 +49,11 @@ function App() {
     { title: "Dashboard", path: "/dashboard", component: <Dashboard /> },
     { title: "Scan Now", path: "/scan-now", component: <ScanNow /> },
     { title: "Documents", path: "/documents", component: <Documents /> },
-    {
-      title: "Upload Documents",
-      path: "/upload-documents",
-      component: <UploadDocuments />,
-    },
+    // {
+    //   title: "Upload Documents",
+    //   path: "/upload-documents",
+    //   component: <UploadDocuments />,
+    // },
     {
       title: "Document Workflow",
       path: "/document-workflow",
@@ -90,11 +90,11 @@ function App() {
   ];
 
   const facultyLinks = [
-    {
-      title: "Upload",
-      path: "/faculty-upload-documents",
-      component: <UploadDocuments />,
-    },
+    // {
+    //   title: "Upload",
+    //   path: "/faculty-upload-documents",
+    //   component: <UploadDocuments />,
+    // },
     {
       title: "Reports",
       path: "/faculty-reports",
@@ -127,11 +127,6 @@ function App() {
       title: "Documents",
       path: "/esu-campus/documents",
       component: <EsuDocuments />,
-    },
-    {
-      title: "Upload Documents",
-      path: "/esu-campus/upload-documents",
-      component: <UploadDocuments />,
     },
 
     {
@@ -214,6 +209,11 @@ function App() {
       title: "Document Details",
       path: "/document-details/:id",
       component: <DocumentDetails />,
+    },
+    {
+      title: "Upload Documents",
+      path: "/upload-documents",
+      component: <UploadDocuments />,
     },
     {
       title: "Print QR Code",
@@ -338,7 +338,7 @@ function App() {
         ))}
 
         {/* Not found page */}
-        <Route path="/scan-qr-code" element={<Scanner />} />
+        {/* <Route path="/scan-qr-code" element={<Scanner />} /> */}
         <Route path="/*" element={<PageNotFound />} />
       </Routes>
     </>
