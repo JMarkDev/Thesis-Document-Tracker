@@ -12,7 +12,7 @@ import { toastUtils } from "../../hooks/useToast";
 import { getStatus } from "../../utils/getStatus";
 import statusList from "../../constants/statusList";
 import Loading from "../loader/loginloader/LoginLoading";
-import NoData from "./NoData";
+import NoData from "../NoData";
 
 const FacultyTable = ({ fetchFaculty }) => {
   const navigate = useNavigate();

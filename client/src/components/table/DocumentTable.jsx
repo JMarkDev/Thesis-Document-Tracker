@@ -17,7 +17,7 @@ import {
 import { useToast } from "../../hooks/useToast";
 import PrintMetadata from "../../pages/Shared/PrintMetadata";
 import { toastUtils } from "../../hooks/useToast";
-import NoData from "./NoData";
+import NoData from "../NoData";
 
 // Utility to detect if it's a mobile device
 const isMobileDevice = () => {

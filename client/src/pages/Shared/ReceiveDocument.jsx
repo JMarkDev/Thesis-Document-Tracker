@@ -5,6 +5,9 @@ const ReceiveDocument = ({
   closeModal,
   documentData,
   handleReceive,
+  isReceived,
+  isForwarded,
+  lastRecipient,
 }) => {
   return (
     <div
@@ -77,16 +80,23 @@ const ReceiveDocument = ({
           )}
         </div>
 
-        {/* Action Button */}
-        <div className="flex justify-end pt-3 border-t">
-          <button
-            className="px-6 py-2 text-white bg-green-600 hover:bg-green-700 rounded-md shadow-md transition"
-            onClick={() => {
-              handleReceive();
-            }}
-          >
-            Receive
-          </button>
+        <div className="flex justify-end items-center pt-3 border-t">
+          {isForwarded ? (
+            <p className="text-gray-600">
+              Document has already been forwarded.
+            </p>
+          ) : lastRecipient ? (
+            <p className="text-gray-600">Document has already been received.</p>
+          ) : (
+            <button
+              className="px-6 py-2 text-white bg-green-600 hover:bg-green-800 rounded-md shadow-md transition"
+              onClick={() => {
+                handleReceive();
+              }}
+            >
+              {isReceived ? "Forward" : "Receive"}
+            </button>
+          )}
         </div>
       </div>
     </div>
@@ -98,6 +108,9 @@ ReceiveDocument.propTypes = {
   closeModal: PropTypes.func,
   documentData: PropTypes.object.isRequired,
   handleReceive: PropTypes.func,
+  isReceived: PropTypes.bool,
+  isForwarded: PropTypes.bool,
+  lastRecipient: PropTypes.bool,
 };
 
 export default ReceiveDocument;

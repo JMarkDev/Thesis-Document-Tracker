@@ -13,7 +13,7 @@ import {
 } from "../../services/documentWolkflowSlice";
 import { useFormat } from "../../hooks/useFormatDate";
 import EditWorkflow from "../../pages/Admin/DocumentWorkflows/EditWorkflow";
-import NoData from "./NoData";
+import NoData from "../NoData";
 
 const DocumentWorkflow = ({ data }) => {
   const dispatch = useDispatch();

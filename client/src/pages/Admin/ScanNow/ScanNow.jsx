@@ -16,6 +16,7 @@ import { useToast } from "../../../hooks/useToast";
 import qrImg from "../../../assets/images/qr-code.png";
 // import Scanner from "../../../components/qr_scanner/Scanner";
 import QrReader from "react-qr-reader";
+import documentStatusList from "../../../constants/documentStatusList";
 
 const ScanNow = () => {
   const toast = useToast();
@@ -30,7 +31,9 @@ const ScanNow = () => {
   const [selected, setSelected] = useState("environment"); // Default to environment camera
   const [startScan, setStartScan] = useState(false);
   const [loadingScan, setLoadingScan] = useState(false);
-  // const [data, setData] = useState("");
+  const [isReceived, setIsReceived] = useState(false);
+  const [isForwarded, setIsForwarded] = useState(false);
+  const [lastRecipient, setLastRecipient] = useState(false);
 
   useEffect(() => {
     if (document) {
@@ -70,9 +73,9 @@ const ScanNow = () => {
       document_id: documentData.id,
       // office_name,
       user_id: user?.id,
-      action: "received",
+      action: isReceived ? "forwarded" : "received",
       recipient_user: `${user?.firstName} ${user?.middleInitial} ${user?.lastName}`,
-      recipient_office: user?.office.officeName || user?.esuCampus,
+      recipient_office: user?.office?.officeName || user?.esuCampus,
     };
     try {
       const response = await api.post("/document/receive-document", data);
@@ -86,6 +89,40 @@ const ScanNow = () => {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    if (documentData?.document_recipients) {
+      const isReceived = documentData.document_recipients.find(
+        (recipient) =>
+          recipient.user_id === user?.id && recipient.received_at !== null
+      );
+      if (isReceived) {
+        setIsReceived(true);
+      }
+
+      const isForwarded = documentData.document_recipients.find(
+        (recipient) =>
+          recipient.user_id === user?.id &&
+          recipient.status === documentStatusList.forwarded
+      );
+
+      if (isForwarded) {
+        setIsForwarded(true);
+      }
+
+      const lastRecipient =
+        documentData.document_recipients[
+          documentData.document_recipients.length - 1
+        ];
+
+      if (
+        lastRecipient?.user_id === user?.id &&
+        lastRecipient?.status === documentStatusList.received
+      ) {
+        setLastRecipient(true);
+      }
+    }
+  }, [user, documentData]);
 
   // Function to detect if the user is on a mobile device
   const isMobileDevice = () => {
@@ -174,7 +211,7 @@ const ScanNow = () => {
               onClick={handleStartScan}
               src={qrImg}
               alt="qr-code"
-              className="w-14 hover:scale-110 transform transition-all"
+              className="w-16 hover:scale-110 transform transition-all"
             />
             <button
               onClick={handleStartScan}
@@ -194,6 +231,10 @@ const ScanNow = () => {
           closeModal={closeMOdal}
           documentData={documentData}
           handleReceive={handleReceive}
+          id={user?.id}
+          isReceived={isReceived}
+          isForwarded={isForwarded}
+          lastRecipient={lastRecipient}
         />
       )}
     </div>

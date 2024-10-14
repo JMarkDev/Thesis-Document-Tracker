@@ -10,7 +10,7 @@ import { useDispatch } from "react-redux";
 import { deleteUser } from "../../services/usersSlice";
 import { toastUtils } from "../../hooks/useToast";
 import EditRegistrar from "../../pages/Admin/UserMagement/ESU Registrar/EditRegistrar";
-import NoData from "./NoData";
+import NoData from "../NoData";
 
 const RegistrarTable = ({ registrarUser }) => {
   const navigate = useNavigate();

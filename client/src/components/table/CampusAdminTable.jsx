@@ -10,7 +10,7 @@ import { useDispatch } from "react-redux";
 import { deleteUser } from "../../services/usersSlice";
 import { toastUtils } from "../../hooks/useToast";
 import EditCampusAdmin from "../../pages/Admin/UserMagement/CampusAdmin/EditCampusAdmin";
-import NoData from "./NoData";
+import NoData from "../NoData";
 
 const CampusAdminTable = ({ campusAdmin }) => {
   const navigate = useNavigate();

@@ -48,7 +48,6 @@ const VerifyOTP = ({ email, closeOTP, closeModal, onVerificationSuccess }) => {
       const response = await api.post("/auth/verify-otp", data, {
         withCredentials: true,
       });
-      console.log(response.data);
 
       if (response.data.status === "success") {
         // fetch the latest added data

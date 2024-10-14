@@ -10,7 +10,7 @@ import { toastUtils } from "../../hooks/useToast";
 import userIcon from "../../assets/images/user (1).png";
 import PropTypes from "prop-types";
 import EditStaff from "../../pages/Offices/Staff/EditStaff";
-import NoData from "./NoData";
+import NoData from "../NoData";
 
 const OfficeStaff = ({ officeStaff, officeId }) => {
   const navigate = useNavigate();
