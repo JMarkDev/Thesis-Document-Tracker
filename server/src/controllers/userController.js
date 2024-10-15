@@ -196,6 +196,32 @@ const searchUser = async (req, res) => {
   }
 };
 
+const searchFaculty = async (req, res) => {
+  const { name, role, esuCampus } = req.params;
+
+  try {
+    const searchCriteria = {
+      where: {
+        [Sequelize.Op.or]: [
+          { status: statusList.verified },
+          { status: statusList.approved },
+        ],
+        role: role,
+        esuCampus: esuCampus,
+        [Op.or]: [
+          { firstName: { [Op.like]: `${name}%` } },
+          { lastName: { [Op.like]: `${name}%` } },
+        ],
+      },
+    };
+    const users = await userModel.findAll(searchCriteria);
+    return res.status(200).json(users);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ Error: "Search user error in server" });
+  }
+};
+
 const filterFacultyByCampus = async (req, res) => {
   const { esuCampus } = req.params;
   try {
@@ -460,6 +486,7 @@ module.exports = {
   getUserByRole,
   deleteUser,
   searchUser,
+  searchFaculty,
   filterFacultyByCampus,
   updateEmail,
   updateUserData,

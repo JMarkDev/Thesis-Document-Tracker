@@ -42,6 +42,10 @@ const Document = sequelize.define(
       type: DataTypes.STRING(100),
       allowNull: false,
     },
+    contact_number: {
+      type: DataTypes.STRING(55),
+      allowNull: false,
+    },
     esuCampus: {
       type: DataTypes.STRING(55),
       allowNull: true,
