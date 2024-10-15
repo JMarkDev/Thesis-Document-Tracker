@@ -68,7 +68,7 @@ const UserProfile = () => {
             {data?.email}
           </span>
         </div>
-        <div className="flex flex-col flex-grow border border-gray-300 shadow-lg rounded-lg">
+        <div className="flex flex-col flex-grow md:border md:border-gray-300 md:shadow-lg rounded-lg">
           <div className="py-6  md:px-4 text-gray-600">
             <div className="flex flex-col gap-3">
               {data.office?.officeName && (

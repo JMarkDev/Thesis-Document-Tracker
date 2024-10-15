@@ -53,7 +53,7 @@ const DocumentDetails = () => {
       user.role === rolesList.registrar
     ) {
       setRecipientOffice(user.esuCampus);
-    } else {
+    } else if (user.office?.office_name) {
       setRecipientOffice(user.office.office_name);
     }
   }, [user]);
@@ -100,8 +100,9 @@ const DocumentDetails = () => {
             <StepperMobile data={data} />
           </div>
 
-          <div className=" bg-gray-200 mt-10 md:p-4 rounded-lg flex flex-col lg:flex-row gap-5 justify-between text-gray-700">
-            <div className="lg:sticky lg:top-20 flex flex-col gap-4 h-fit lg:w-1/2  p-4 bg-white text-sm md:text-[16px]  shadow-lg rounded-md">
+          {/* Document Details Section */}
+          <div className=" md:bg-gray-100 mt-10 md:p-4 rounded-lg flex flex-col lg:flex-row gap-5 justify-between text-gray-700">
+            <div className="lg:sticky  lg:top-20 flex flex-col gap-4 h-fit lg:w-1/2  p-4 bg-white text-sm   shadow-lg rounded-md">
               <div className=" flex items-center gap-5 border-b pb-2 fix">
                 <h1 className="font-bold text-gray-800">Tracking Number:</h1>
                 <p className="text-gray-700">{documentData.tracking_number}</p>
@@ -149,18 +150,17 @@ const DocumentDetails = () => {
               </div>
               <div className="flex items-center gap-5">
                 <h1 className="font-bold  text-gray-800">Status:</h1>
-                <p
-                  className={`${documentBackground(
+                <span
+                  className={`px-4 py-1 rounded-full text-sm ${documentBackground(
                     documentData.status
-                  )} text-gray-700  p-2 rounded-lg`}
+                  )}`}
                 >
                   {isReceived ? "Received" : "Incoming"}
-                  {/* {getDocumentStatus(documentData.status)} */}
-                </p>
+                </span>
               </div>
             </div>
 
-            <div className="lg:w-1/2 w-full p-4 text-gray-600 bg-white text-sm md:text-[16px] shadow-lg rounded-md">
+            {/* <div className="lg:w-1/2 w-full p-4 text-gray-600 bg-white text-sm md:text-[16px] shadow-lg rounded-md">
               <h1 className="text-main lg:text-xl font-bold text-lg mb-4">
                 Tracking History
               </h1>
@@ -176,13 +176,42 @@ const DocumentDetails = () => {
                     <li key={id} className="border-b pb-2">
                       <p className="font-semibold text-gray-800">
                         {recipient_office}
-                        {/* {action !== "forwarded" ? recipient_office : null} */}
                       </p>
                       <span>
                         Document {action} by: {recipient_user}
                       </span>
                       <p className="text-gray-600">
                         Date: {dateFormat(createdAt)}
+                      </p>
+                    </li>
+                  )
+                )}
+              </ul>
+            </div> */}
+            <div className="lg:w-1/2 w-full p-4 bg-white shadow-md rounded-md">
+              <h1 className="font-bold text-md text-main mb-3">
+                Tracking History
+              </h1>
+              <ul className="space-y-4">
+                {sortedHistories.map(
+                  ({
+                    id,
+                    action,
+                    recipient_office,
+                    recipient_user,
+                    createdAt,
+                  }) => (
+                    <li key={id} className="pb-3 border-b last:border-none">
+                      <div className="flex justify-between items-start">
+                        <span className="font-semibold text-gray-700 text-sm">
+                          {recipient_office}
+                        </span>
+                        <span className="text-xs text-gray-500 text-nowrap">
+                          {dateFormat(createdAt)}
+                        </span>
+                      </div>
+                      <p className="text-xs text-gray-600 mt-1">
+                        Document {action} by: {recipient_user}
                       </p>
                     </li>
                   )
