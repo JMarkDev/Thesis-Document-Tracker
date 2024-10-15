@@ -9,7 +9,7 @@ import Table from "../../../components/table/DocumentTable";
 import { IoSearch } from "react-icons/io5";
 import Dropdown from "../../../components/dropdown/Dropdown";
 import Status from "../../../components/dropdown/Status";
-import Paganation from "../../../components/Paganation";
+import Pagination from "../../../components/Pagination";
 import {
   getAllDocumentsByUserId,
   getStatus,
@@ -38,6 +38,8 @@ const Documents = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const user = useSelector(getUserData);
   const [documentData, setDocumentData] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const documentsPerPage = 7;
 
   useEffect(() => {
     if (documents) {
@@ -110,6 +112,16 @@ const Documents = () => {
     }
   }, [workflow]);
 
+  // Paganation
+  const indexOfLastDocument = currentPage * documentsPerPage;
+  const indexOfFirstDocument = indexOfLastDocument - documentsPerPage;
+  const currentDocuments = documentData.slice(
+    indexOfFirstDocument,
+    indexOfLastDocument
+  );
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   return (
     <div className="">
       <div className="flex  flex-col gap-5 justify-between mb-8">
@@ -149,9 +161,14 @@ const Documents = () => {
           </div>
         </div>
       </div>
-      <Table documents={documentData} handleSort={handleSort} />
-      <div className="flex justify-end mt-10">
-        <Paganation />
+      <Table documents={currentDocuments} handleSort={handleSort} />
+      <div className="flex justify-end mt-5">
+        <Pagination
+          documentsPerPage={documentsPerPage}
+          totalDocuments={documentData.length}
+          paginate={paginate}
+          currentPage={currentPage}
+        />
       </div>
     </div>
   );

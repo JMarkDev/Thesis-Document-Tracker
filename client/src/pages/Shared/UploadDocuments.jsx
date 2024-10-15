@@ -149,13 +149,13 @@ const UploadDocuments = () => {
             ) {
               return {
                 ...routeItem,
-                office_name: `${esuCampus} FACULTY`,
+                office_name: esuCampus ? `${esuCampus} FACULTY` : "FACULTY",
                 user_id: facultyId, // Assign facultyId for FACULTY
               };
             } else if (routeItem.office_name === "REGISTRAR" && registrarId) {
               return {
                 ...routeItem,
-                office_name: `${esuCampus} REGISTRAR`,
+                office_name: esuCampus ? `${esuCampus} REGISTRAR` : "REGISTRAR",
                 user_id: registrarId, // Assign registrarId for REGISTRAR
               };
             }

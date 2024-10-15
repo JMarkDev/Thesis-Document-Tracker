@@ -10,6 +10,7 @@ import {
   getRoleStatus,
 } from "../../../services/usersSlice";
 import { useSelector, useDispatch } from "react-redux";
+import Pagination from "../../../components/Pagination";
 const Office = () => {
   const dispatch = useDispatch();
   const officeUsers = useSelector(getRoleUsers("office"));
@@ -17,6 +18,8 @@ const Office = () => {
   const adminStatus = useSelector(getRoleStatus("admin"));
   const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const documentsPerPage = 7;
 
   useEffect(() => {
     if (officeStatus === "idle") {
@@ -44,6 +47,16 @@ const Office = () => {
     }
   }, [searchTerm, dispatch]);
 
+  // Paganation
+  const indexOfLastDocument = currentPage * documentsPerPage;
+  const indexOfFirstDocument = indexOfLastDocument - documentsPerPage;
+  const currentDocuments = officeUsers.slice(
+    indexOfFirstDocument,
+    indexOfLastDocument
+  );
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   return (
     <div>
       <div className="flex text-sm md:text-[16px] justify-between lg:flex-row flex-col-reverse gap-5">
@@ -66,7 +79,15 @@ const Office = () => {
         {showModal && <AddOffice modal={openModal} closeModal={closeModal} />}
       </div>
       <div className="mt-8">
-        <OfficeTable officeUsers={officeUsers} />
+        <OfficeTable officeUsers={currentDocuments} />
+        <div className="flex justify-end mt-5">
+          <Pagination
+            documentsPerPage={documentsPerPage}
+            totalDocuments={officeUsers.length}
+            paginate={paginate}
+            currentPage={currentPage}
+          />
+        </div>
       </div>
     </div>
   );

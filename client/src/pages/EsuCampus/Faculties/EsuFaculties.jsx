@@ -10,6 +10,7 @@ import {
 } from "../../../services/usersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserData } from "../../../services/authSlice";
+import Pagination from "../../../components/Pagination";
 
 const EsuFaculties = () => {
   const dispatch = useDispatch();
@@ -17,6 +18,8 @@ const EsuFaculties = () => {
   const registrarStatus = useSelector(getRoleStatus("faculty"));
   const [searchTerm, setSearchTerm] = useState("");
   const user = useSelector(getUserData);
+  const [currentPage, setCurrentPage] = useState(1);
+  const documentsPerPage = 7;
 
   useEffect(() => {
     if (registrarStatus === "idle") {
@@ -31,6 +34,16 @@ const EsuFaculties = () => {
       dispatch(filterFacultyByCampus(user?.esuCampus));
     }
   }, [searchTerm, dispatch, user]);
+
+  // Paganation
+  const indexOfLastDocument = currentPage * documentsPerPage;
+  const indexOfFirstDocument = indexOfLastDocument - documentsPerPage;
+  const currentDocuments = facultyUser.slice(
+    indexOfFirstDocument,
+    indexOfLastDocument
+  );
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <div>
@@ -57,7 +70,15 @@ const EsuFaculties = () => {
         </div>
       </div>
       <div className="mt-8">
-        <FacultyTable fetchFaculty={facultyUser} />
+        <FacultyTable fetchFaculty={currentDocuments} />
+        <div className="flex justify-end mt-5">
+          <Pagination
+            documentsPerPage={documentsPerPage}
+            totalDocuments={facultyUser.length}
+            paginate={paginate}
+            currentPage={currentPage}
+          />
+        </div>
       </div>
     </div>
   );

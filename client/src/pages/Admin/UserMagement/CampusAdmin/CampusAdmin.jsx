@@ -10,6 +10,7 @@ import {
   searchCampusAdminRole,
 } from "../../../../services/usersSlice";
 import { useDispatch, useSelector } from "react-redux";
+import Pagination from "../../../../components/Pagination";
 
 const CampusAdmin = () => {
   const dispatch = useDispatch();
@@ -17,6 +18,8 @@ const CampusAdmin = () => {
   const campusAdminStatus = useSelector(getRoleStatus("campus_admin"));
   const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const documentsPerPage = 7;
 
   useEffect(() => {
     if (campusAdminStatus === "idle") {
@@ -39,6 +42,16 @@ const CampusAdmin = () => {
       dispatch(fetchCampusAdmin());
     }
   }, [searchTerm, dispatch]);
+
+  // Paganation
+  const indexOfLastDocument = currentPage * documentsPerPage;
+  const indexOfFirstDocument = indexOfLastDocument - documentsPerPage;
+  const currentDocuments = campusAdminUsers.slice(
+    indexOfFirstDocument,
+    indexOfLastDocument
+  );
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <div>
@@ -68,7 +81,16 @@ const CampusAdmin = () => {
         )}
       </div>
       <div className="mt-8">
-        <CampusAdminTable campusAdmin={campusAdminUsers} />
+        <CampusAdminTable campusAdmin={currentDocuments} />
+
+        <div className="flex justify-end mt-5">
+          <Pagination
+            documentsPerPage={documentsPerPage}
+            totalDocuments={campusAdminUsers.length}
+            paginate={paginate}
+            currentPage={currentPage}
+          />
+        </div>
       </div>
     </div>
   );

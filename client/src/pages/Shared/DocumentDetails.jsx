@@ -8,19 +8,24 @@ import {
   getDocumentById,
   fetchDocumentById,
 } from "../../services/documentSlice";
-import { getDocumentStatus } from "../../utils/documentStatus";
+// import { getDocumentStatus } from "../../utils/documentStatus";
 import { useFormat } from "../../hooks/useFormatDate";
 import { documentBackground } from "../../utils/documentBackgroundColor";
 import NoData from "../../components/NoData";
+import { getUserData } from "../../services/authSlice";
+import rolesList from "../../constants/rolesList";
 
 const DocumentDetails = () => {
   const { id } = useParams();
+  const user = useSelector(getUserData);
   const dispatch = useDispatch();
   const document = useSelector(getDocumentById);
   const [sortedHistories, setSortedHistories] = useState([]);
   const [data, setData] = useState([]);
   const [documentData, setDocumentData] = useState([]);
   const { dateFormat } = useFormat();
+  const [recipientOffice, setRecipientOffice] = useState("");
+  const [isReceived, setIsReceived] = useState(false);
 
   useEffect(() => {
     dispatch(fetchDocumentById(id));
@@ -41,6 +46,33 @@ const DocumentDetails = () => {
       setSortedHistories(sortedData);
     }
   }, [documentData]);
+
+  useEffect(() => {
+    if (
+      user.role === rolesList.campus_admin ||
+      user.role === rolesList.registrar
+    ) {
+      setRecipientOffice(user.esuCampus);
+    } else {
+      setRecipientOffice(user.office.office_name);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (document && recipientOffice) {
+      const recipientReceived = document.document_recipients.find(
+        (recipient) =>
+          recipient.office_name
+            .toLowerCase()
+            .includes(recipientOffice.trim().toLowerCase()) &&
+          !recipient.office_name.toLowerCase().includes("faculty") &&
+          recipient.received_at !== null
+      );
+
+      // Set the received status
+      setIsReceived(!!recipientReceived); // Use !! to ensure it sets a boolean (true/false)
+    }
+  }, [document, recipientOffice]);
 
   return (
     <div className="bg-white ">
@@ -122,7 +154,8 @@ const DocumentDetails = () => {
                     documentData.status
                   )} text-gray-700  p-2 rounded-lg`}
                 >
-                  {getDocumentStatus(documentData.status)}
+                  {isReceived ? "Received" : "Incoming"}
+                  {/* {getDocumentStatus(documentData.status)} */}
                 </p>
               </div>
             </div>

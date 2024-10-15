@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Table from "../../../components/table/TransmittalTable";
 import { IoSearch } from "react-icons/io5";
-import Paganation from "../../../components/Paganation";
+// import Pagination from "../../../components/Pagination";
 import {
   fetchAllDocuments,
   getAllDocuments,
@@ -76,9 +76,9 @@ const EsuTransmittal = () => {
         contentRef={contentRef}
         campus={user?.esuCampus}
       />
-      <div className="flex justify-end mt-10">
-        <Paganation />
-      </div>
+      {/* <div className="flex justify-end mt-10">
+        <Pagination />
+      </div> */}
     </div>
   );
 };

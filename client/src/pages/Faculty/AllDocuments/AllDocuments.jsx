@@ -11,6 +11,7 @@ import { getUserData } from "../../../services/authSlice";
 import { IoSearch } from "react-icons/io5";
 import DrowdownStatus from "../../../components/dropdown/Status";
 import DocumentTable from "../../../components/table/DocumentTable";
+import Pagination from "../../../components/Pagination";
 const AllDocuments = () => {
   const dispatch = useDispatch();
   const user = useSelector(getUserData);
@@ -19,6 +20,8 @@ const AllDocuments = () => {
   const documents = useSelector(getAllDocumentsByUserId);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOrder, setSortOrder] = useState("asc");
+  const [currentPage, setCurrentPage] = useState(1);
+  const documentsPerPage = 7;
 
   useEffect(() => {
     if (user_id) {
@@ -61,6 +64,16 @@ const AllDocuments = () => {
     }
   };
 
+  // Paganation
+  const indexOfLastDocument = currentPage * documentsPerPage;
+  const indexOfFirstDocument = indexOfLastDocument - documentsPerPage;
+  const currentDocuments = documentList.slice(
+    indexOfFirstDocument,
+    indexOfLastDocument
+  );
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   return (
     <div className="flex flex-col gap-5">
       <div className="flex  lg:flex-row gap-5 flex-col justify-between">
@@ -79,19 +92,17 @@ const AllDocuments = () => {
           <DrowdownStatus handleFilter={handleFilter} />
         </div>
       </div>
-      <DocumentTable documents={documentList} handleSort={handleSort} />
+      <DocumentTable documents={currentDocuments} handleSort={handleSort} />
+      <div className="flex justify-end">
+        <Pagination
+          documentsPerPage={documentsPerPage}
+          totalDocuments={documentList.length}
+          paginate={paginate}
+          currentPage={currentPage}
+        />
+      </div>
     </div>
   );
-  //   <div className="flex flex-col gap-5 justify-center">
-  //   <h2 className="text-3xl font-semibold text-gray-800 text-center">
-  //     Document not found
-  //   </h2>
-  //   <img
-  //     src={noDataIMG}
-  //     alt="No data available"
-  //     className="w-64 h-64"
-  //   />
-  // </div>
 };
 
 export default AllDocuments;

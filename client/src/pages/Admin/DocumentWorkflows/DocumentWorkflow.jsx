@@ -9,11 +9,14 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import AddWorkflow from "./AddWorkflow";
+import Pagination from "../../../components/Pagination";
 const DocumentWorkflow = () => {
   const dispatch = useDispatch();
   const workflow = useSelector(getAllWorkflow);
   const [searchTerm, setSearchTerm] = useState("");
   const [modal, setModal] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const documentsPerPage = 7;
 
   useEffect(() => {
     if (workflow === "idle") {
@@ -37,6 +40,17 @@ const DocumentWorkflow = () => {
   const closeModal = () => {
     setModal(false);
   };
+
+  // Paganation
+  const indexOfLastDocument = currentPage * documentsPerPage;
+  const indexOfFirstDocument = indexOfLastDocument - documentsPerPage;
+  const currentDocuments = workflow.slice(
+    indexOfFirstDocument,
+    indexOfLastDocument
+  );
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   return (
     <div>
       <div className="flex text-sm md:text-[16px] justify-between lg:flex-row flex-col-reverse gap-5">
@@ -58,7 +72,15 @@ const DocumentWorkflow = () => {
         </button>
       </div>
       <div className="mt-8">
-        <DocumentWorkflowTable data={workflow} />
+        <DocumentWorkflowTable data={currentDocuments} />
+        <div className="flex justify-end mt-5">
+          <Pagination
+            documentsPerPage={documentsPerPage}
+            totalDocuments={workflow.length}
+            paginate={paginate}
+            currentPage={currentPage}
+          />
+        </div>
       </div>
       {modal && <AddWorkflow modal={modal} closeModal={closeModal} />}
     </div>

@@ -52,11 +52,17 @@ const DocumentRoute = ({
       }
     } else if (selectedOffice === "FACULTY") {
       if (!isOfficeInRoute("FACULTY")) {
-        handleSelectOffice(`${campus} FACULTY`, facultyId || null);
+        handleSelectOffice(
+          campus ? `${campus} FACULTY` : "FACULTY",
+          facultyId || null
+        );
       }
     } else if (selectedOffice === "REGISTRAR") {
       if (!isOfficeInRoute("REGISTRAR")) {
-        handleSelectOffice(`${campus} REGISTRAR`, registrarId || null);
+        handleSelectOffice(
+          campus ? `${campus} REGISTRAR` : "REGISTRAR",
+          registrarId || null
+        );
       }
     } else {
       const officeUser = officeUsers.find(
@@ -105,7 +111,7 @@ const DocumentRoute = ({
 DocumentRoute.propTypes = {
   route: PropTypes.array.isRequired,
   handleSelectOffice: PropTypes.func.isRequired,
-  campus: PropTypes.string.isRequired,
+  campus: PropTypes.string,
   registrarId: PropTypes.number,
   facultyId: PropTypes.number,
 };

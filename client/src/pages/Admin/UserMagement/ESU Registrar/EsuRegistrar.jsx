@@ -9,6 +9,7 @@ import {
   searchRegistrarRole,
 } from "../../../../services/usersSlice";
 import { useDispatch, useSelector } from "react-redux";
+import Pagination from "../../../../components/Pagination";
 
 const EsuRegistrar = () => {
   const dispatch = useDispatch();
@@ -16,6 +17,8 @@ const EsuRegistrar = () => {
   const registrarStatus = useSelector(getRoleStatus("registrar"));
   const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const documentsPerPage = 7;
 
   useEffect(() => {
     if (registrarStatus === "idle") {
@@ -38,6 +41,16 @@ const EsuRegistrar = () => {
       dispatch(fetchRegistrar());
     }
   }, [searchTerm, dispatch]);
+
+  // Paganation
+  const indexOfLastDocument = currentPage * documentsPerPage;
+  const indexOfFirstDocument = indexOfLastDocument - documentsPerPage;
+  const currentDocuments = registrarUser.slice(
+    indexOfFirstDocument,
+    indexOfLastDocument
+  );
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
     <div>
@@ -67,7 +80,16 @@ const EsuRegistrar = () => {
         )}
       </div>
       <div className="mt-8">
-        <RegistrarTable registrarUser={registrarUser} />
+        <RegistrarTable registrarUser={currentDocuments} />
+
+        <div className="flex justify-end mt-5">
+          <Pagination
+            documentsPerPage={documentsPerPage}
+            totalDocuments={registrarUser.length}
+            paginate={paginate}
+            currentPage={currentPage}
+          />
+        </div>
       </div>
     </div>
   );

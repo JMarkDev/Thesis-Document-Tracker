@@ -5,7 +5,7 @@ import { IoSearch } from "react-icons/io5";
 import Dropdown from "../../../components/dropdown/Dropdown";
 import wmsuCampus from "../../../constants/Campus";
 import Status from "../../../components/dropdown/Status";
-import Paganation from "../../../components/Paganation";
+import Pagination from "../../../components/Pagination";
 import {
   fetchAllDocuments,
   getAllDocuments,
@@ -31,6 +31,8 @@ const OfficeDocuments = () => {
   const [documentType, setDocumentType] = useState([]);
   const [sortOrder, setSortOrder] = useState("asc");
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const documentsPerPage = 7;
 
   useEffect(() => {
     if (status === "idle") {
@@ -87,6 +89,16 @@ const OfficeDocuments = () => {
     }
   }, [workflow]);
 
+  // Paganation
+  const indexOfLastDocument = currentPage * documentsPerPage;
+  const indexOfFirstDocument = indexOfLastDocument - documentsPerPage;
+  const currentDocuments = allDocuments.slice(
+    indexOfFirstDocument,
+    indexOfLastDocument
+  );
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   return (
     <div className="">
       <div className="flex  flex-col gap-5 justify-between mb-8">
@@ -133,9 +145,15 @@ const OfficeDocuments = () => {
           </div>
         </div>
       </div>
-      <Table documents={allDocuments} handleSort={handleSort} />
-      <div className="flex justify-end mt-10">
-        <Paganation />
+      <Table documents={currentDocuments} handleSort={handleSort} />
+
+      <div className="flex justify-end mt-5">
+        <Pagination
+          documentsPerPage={documentsPerPage}
+          totalDocuments={allDocuments.length}
+          paginate={paginate}
+          currentPage={currentPage}
+        />
       </div>
     </div>
   );
