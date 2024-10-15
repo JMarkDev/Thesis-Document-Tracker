@@ -47,8 +47,17 @@ const uploadDocument = async (req, res) => {
         recipient = user.office.officeName;
       } else if (user.esuCampus && user.role === rolesList.faculty) {
         recipient = `${user.esuCampus} FACULTY`;
-      } else if (user.esuCampus && user.role === rolesList.registrar) {
+      } else if (
+        (user.esuCampus && user.role === rolesList.registrar) ||
+        user.role === rolesList.campus_admin
+      ) {
         recipient = `${esuCampus} REGISTRAR`;
+      } else if (
+        user.role === rolesList.office ||
+        user.role === rolesList.admin ||
+        user.role === rolesList.office_staff
+      ) {
+        recipient = user.office.officeName;
       }
     }
 
