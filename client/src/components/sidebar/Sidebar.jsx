@@ -77,16 +77,17 @@ const Sidebar = ({ sidebar, handleBurger }) => {
       path: "/esu-campus/dashboard",
       src: <RiPieChart2Fill />,
     },
+
+    {
+      title: "Documents",
+      path: "/esu-campus/documents",
+      src: <IoDocuments />,
+    },
     {
       title: "Transmittal",
       path: "/esu-campus/transmittal",
       src: <MdOutlineDocumentScanner />,
       restrictedTo: [rolesList.campus_admin],
-    },
-    {
-      title: "Documents",
-      path: "/esu-campus/documents",
-      src: <IoDocuments />,
     },
 
     {

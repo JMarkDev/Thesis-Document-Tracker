@@ -58,7 +58,9 @@ const StepperMobile = ({ data }) => {
               </span>
             )}
 
-            <p className="font-bold text-[12px] ">{office_name}</p>
+            <p className="font-bold text-[12px] max-w-32 text-wrap">
+              {office_name}
+            </p>
           </li>
         ))}
       </ol>

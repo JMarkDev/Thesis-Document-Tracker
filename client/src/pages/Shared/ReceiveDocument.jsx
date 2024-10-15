@@ -65,21 +65,46 @@ const ReceiveDocument = ({
               <strong className="text-gray-800">Uploaded By:</strong>{" "}
               {documentData.uploaded_by}
             </p>
-            {documentData.esuCampus && (
+            <p>
+              <strong className="text-gray-800">Contact Number:</strong>{" "}
+              {documentData.contact_number}
+            </p>
+
+            {/* Conditional ESU Campus */}
+            {documentData.esuCampus ? (
               <p>
                 <strong className="text-gray-800">ESU Campus:</strong>{" "}
                 {documentData.esuCampus}
               </p>
+            ) : (
+              <p>&nbsp;</p> // Empty placeholder to keep the grid consistent
             )}
+
+            {documentData.document_desc ? (
+              <p>
+                <strong className="text-gray-800">Description:</strong>{" "}
+                {documentData.document_desc}
+              </p>
+            ) : (
+              <p>&nbsp;</p> // Empty placeholder to keep the grid consistent
+            )}
+
+            {/* <p>
+              <strong className="text-gray-800">Description:</strong>{" "}
+              {documentData.document_desc}
+            </p> */}
           </div>
-          {documentData.document_desc && (
-            <p>
-              <strong className="text-gray-800">Description: lorem </strong>{" "}
+
+          {/* Optional Description */}
+          {/* {documentData.document_desc && (
+            <p className="col-span-2">
+              <strong className="text-gray-800">Description:</strong>{" "}
               {documentData.document_desc}
             </p>
-          )}
+          )} */}
         </div>
 
+        {/* Footer */}
         <div className="flex justify-end items-center pt-3 border-t">
           {isForwarded ? (
             <p className="text-gray-600">
@@ -90,9 +115,7 @@ const ReceiveDocument = ({
           ) : (
             <button
               className="px-6 py-2 text-white bg-green-600 hover:bg-green-800 rounded-md shadow-md transition"
-              onClick={() => {
-                handleReceive();
-              }}
+              onClick={handleReceive}
             >
               {isReceived ? "Forward" : "Receive"}
             </button>
@@ -104,10 +127,19 @@ const ReceiveDocument = ({
 };
 
 ReceiveDocument.propTypes = {
-  modal: PropTypes.bool,
-  closeModal: PropTypes.func,
-  documentData: PropTypes.object.isRequired,
-  handleReceive: PropTypes.func,
+  modal: PropTypes.bool.isRequired,
+  closeModal: PropTypes.func.isRequired,
+  documentData: PropTypes.shape({
+    tracking_number: PropTypes.string,
+    document_name: PropTypes.string,
+    document_type: PropTypes.string,
+    file_type: PropTypes.string,
+    uploaded_by: PropTypes.string,
+    contact_number: PropTypes.string,
+    esuCampus: PropTypes.string,
+    document_desc: PropTypes.string,
+  }).isRequired,
+  handleReceive: PropTypes.func.isRequired,
   isReceived: PropTypes.bool,
   isForwarded: PropTypes.bool,
   lastRecipient: PropTypes.bool,

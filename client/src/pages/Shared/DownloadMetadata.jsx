@@ -69,6 +69,12 @@ const DownloadMetadata = ({ documentData, contentRef }) => {
                       {documentData.uploaded_by}
                     </p>
                   </div>
+                  <div>
+                    <p className="text-gray-600 flex gap-3">
+                      <strong className="text-gray-800">Contact Number:</strong>
+                      {documentData.contact_number}
+                    </p>
+                  </div>
                   {documentData.esuCampus && (
                     <div>
                       <p className="text-gray-600 flex gap-3">

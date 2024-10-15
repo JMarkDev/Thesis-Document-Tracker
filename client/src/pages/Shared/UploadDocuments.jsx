@@ -22,6 +22,7 @@ const UploadDocuments = () => {
   const [file_type, setFileType] = useState("");
   const [files, setFiles] = useState([]);
   const [uploaded_by, setUploadedBy] = useState("");
+  const [contact_number, setContactNumber] = useState("");
   const [esuCampus, setEsuCampus] = useState("");
   const [user_id, setUserId] = useState("");
   const [loading, setLoading] = useState(false);
@@ -40,6 +41,7 @@ const UploadDocuments = () => {
     );
     setEsuCampus(user?.esuCampus);
     setUserId(user?.id);
+    setContactNumber(user?.contactNumber);
 
     if (user?.role === rolesList.faculty) {
       setFacultyId(user?.id);
@@ -189,6 +191,7 @@ const UploadDocuments = () => {
       file_type: file_type,
       files: files,
       uploaded_by: uploaded_by,
+      contact_number: contact_number,
       esuCampus: esuCampus,
       user_id: user_id,
       route: route,

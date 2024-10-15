@@ -94,6 +94,20 @@ const searchOfficeUsers = () => {
   });
 };
 
+export const searchFaculty = createAsyncThunk(
+  `users/searchFaculty`,
+  async ({ name, esuCampus }, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        `/users/search-faculty/${name}/role/${rolesList.faculty}/${esuCampus}`
+      );
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 export const searchAdminRole = searchRoleUsers(rolesList.admin);
 export const searchOfficeRole = searchOfficeUsers();
 export const searchRegistrarRole = searchRoleUsers(rolesList.registrar);
@@ -120,6 +134,7 @@ const usersSlice = createSlice({
       campus_admin: [],
       faculty: [],
     },
+    facultyByESU: [],
     userByid: null,
 
     status: {
@@ -301,13 +316,24 @@ const usersSlice = createSlice({
         state.status.search = "failed";
         state.error = action.error.message;
       })
+      .addCase(searchFaculty.pending, (state) => {
+        state.status.search = "loading";
+      })
+      .addCase(searchFaculty.fulfilled, (state, action) => {
+        state.status.search = "succeeded";
+        state.facultyByESU = action.payload;
+      })
+      .addCase(searchFaculty.rejected, (state, action) => {
+        state.status.search = "failed";
+        state.error = action.error.message;
+      })
       // filter faculty by campus
       .addCase(filterFacultyByCampus.pending, (state) => {
         state.status.filter = "loading";
       })
       .addCase(filterFacultyByCampus.fulfilled, (state, action) => {
         state.status.filter = "succeeded";
-        state.roleUsers.faculty = action.payload;
+        state.facultyByESU = action.payload;
       })
       .addCase(filterFacultyByCampus.rejected, (state, action) => {
         state.status.filter = "failed";
@@ -340,6 +366,7 @@ export const getRoleStatus = (role) => (state) => state.users.status[role];
 
 export const getFilterStatus = (state) => state.users.state.filter;
 export const getSearchStatus = (state) => state.user.state.search;
+export const faculty = (state) => state.users.facultyByESU;
 
 export const { clearUser } = usersSlice.actions;
 

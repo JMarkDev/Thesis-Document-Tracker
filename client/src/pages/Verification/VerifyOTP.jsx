@@ -82,7 +82,10 @@ const VerifyOTP = ({ email, closeOTP, closeModal, onVerificationSuccess }) => {
             case rolesList.admin:
               path = "/dashboard";
               break;
-            case rolesList.office || rolesList.office_staff:
+            case rolesList.office:
+              path = "/office/dashboard";
+              break;
+            case rolesList.office_staff:
               path = "/office/dashboard";
               break;
             default:

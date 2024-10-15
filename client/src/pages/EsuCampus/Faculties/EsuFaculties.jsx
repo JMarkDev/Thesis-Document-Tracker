@@ -3,32 +3,34 @@ import FacultyTable from "../../../components/table/FacultyTable";
 import { IoSearch } from "react-icons/io5";
 
 import {
-  fetchFaculty,
   getRoleStatus,
-  getRoleUsers,
-  searchFacultyRole,
+  searchFaculty,
+  filterFacultyByCampus,
+  faculty,
 } from "../../../services/usersSlice";
 import { useDispatch, useSelector } from "react-redux";
+import { getUserData } from "../../../services/authSlice";
 
 const EsuFaculties = () => {
   const dispatch = useDispatch();
-  const facultyUser = useSelector(getRoleUsers("faculty"));
+  const facultyUser = useSelector(faculty);
   const registrarStatus = useSelector(getRoleStatus("faculty"));
   const [searchTerm, setSearchTerm] = useState("");
+  const user = useSelector(getUserData);
 
   useEffect(() => {
     if (registrarStatus === "idle") {
-      dispatch(fetchFaculty());
+      dispatch(filterFacultyByCampus(user?.esuCampus));
     }
-  }, [registrarStatus, dispatch]);
+  }, [registrarStatus, dispatch, user]);
 
   useEffect(() => {
     if (searchTerm) {
-      dispatch(searchFacultyRole(searchTerm));
+      dispatch(searchFaculty({ name: searchTerm, esuCampus: user?.esuCampus }));
     } else {
-      dispatch(fetchFaculty());
+      dispatch(filterFacultyByCampus(user?.esuCampus));
     }
-  }, [searchTerm, dispatch]);
+  }, [searchTerm, dispatch, user]);
 
   return (
     <div>

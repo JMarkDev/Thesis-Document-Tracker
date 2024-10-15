@@ -97,6 +97,11 @@ const DocumentDetails = () => {
                 <h1 className="font-bold  text-gray-800">Uploaded By:</h1>
                 <p className="text-gray-700">{documentData.uploaded_by}</p>
               </div>
+
+              <div className="flex items-center gap-5 border-b pb-2">
+                <h1 className="font-bold  text-gray-800">Contact Number:</h1>
+                <p className="text-gray-700">{documentData.contact_number}</p>
+              </div>
               {documentData.esuCampus && (
                 <div className="flex items-center gap-5 border-b pb-2">
                   <h1 className="font-bold  text-gray-800">ESU Campus:</h1>
