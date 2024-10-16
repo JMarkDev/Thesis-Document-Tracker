@@ -18,7 +18,7 @@ const Route = sequelize.define(
       allowNull: false,
     },
     deadline: {
-      type: DataTypes.DATE,
+      type: DataTypes.DATEONLY,
       allowNull: true,
     },
     createdAt: {

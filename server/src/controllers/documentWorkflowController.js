@@ -138,6 +138,78 @@ const deleteWorkflow = async (req, res) => {
   }
 };
 
+const addDeadline = async (req, res) => {
+  const { id } = req.params;
+  const { deadline_date } = req.body;
+
+  try {
+    const deadline = await documentRouteModel.update(
+      {
+        deadline: deadline_date,
+        updatedAt: createdAt,
+      },
+      {
+        where: {
+          id: id,
+        },
+      }
+    );
+
+    return res
+      .status(201)
+      .json({ deadline, status: "success", message: "Added successfully" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+const updateDeadline = async (req, res) => {
+  const { id } = req.params;
+  const { deadline_date } = req.body;
+
+  try {
+    const deadline = await documentRouteModel.update(
+      {
+        deadline: deadline_date,
+        updatedAt: createdAt,
+      },
+      { where: { id: id } }
+    );
+
+    return res.status(200).json({
+      deadline,
+      status: "success",
+      message: "Updated successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+const deleteDeadline = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const deadline = await documentRouteModel.update(
+      {
+        deadline: null,
+        updatedAt: createdAt,
+      },
+      { where: { id: id } }
+    );
+
+    return res.status(200).json({
+      deadline,
+      status: "success",
+      message: "Deleted successfully",
+    });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   addWorkflow,
   getAllDocumentRoutes,
@@ -145,4 +217,7 @@ module.exports = {
   getRouteById,
   searchWorkflow,
   deleteWorkflow,
+  addDeadline,
+  updateDeadline,
+  deleteDeadline,
 };
