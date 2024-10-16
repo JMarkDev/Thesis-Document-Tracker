@@ -80,6 +80,16 @@ export const useFormat = () => {
     }
   };
 
-  return { dateFormat, fullDateFormat };
+  const formatDateOnly = (date) => {
+    if (date) {
+      const month = parseInt(date.substring(5, 7), 10) - 1;
+      const day = date.substring(8, 10);
+      const year = date.substring(0, 4);
+
+      return `${monthName[month]}  ${day}, ${year}`;
+    }
+  };
+
+  return { dateFormat, fullDateFormat, formatDateOnly };
 };
 export default useFormat;

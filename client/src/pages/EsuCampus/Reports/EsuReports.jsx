@@ -1,8 +1,3 @@
-// const EsuReports = () => {
-//   return <div>EsuReports</div>;
-// };
-
-// export default EsuReports;
 import LineChartAdmin from "../../../components/charts/LineChartAdmin";
 import YearDropdown from "../../../components/dropdown/Dropdown";
 
@@ -19,10 +14,10 @@ const EsuReports = () => {
 
   return (
     <div className="w-full">
-      <div className="flex justify-between  lg:flex-row flex-col gap-5 ">
+      <div className="flex justify-between lg:flex-row flex-col gap-5 ">
         <div className="w-full bg-white">
           <div className="flex p-2 bg-gray-400 justify-between items-center">
-            <h1 className="font-bold">Document Type Reports</h1>
+            <h1 className="font-bold">Document Reports</h1>
             <YearDropdown data={year} option={year[0]} />
           </div>
           <LineChartAdmin />
@@ -55,10 +50,10 @@ const EsuReports = () => {
           </div>
         </div>
       </div>
-      <div className="flex mt-10 justify-between lg:flex-row flex-col gap-5 ">
+      <div className="flex justify-between  mt-10 lg:flex-row flex-col gap-5 ">
         <div className="w-full bg-white">
           <div className="flex p-2 bg-gray-400 justify-between items-center">
-            <h1 className="font-bold">Document Reports</h1>
+            <h1 className="font-bold">Document Type Reports</h1>
             <YearDropdown data={year} option={year[0]} />
           </div>
           <LineChartAdmin />

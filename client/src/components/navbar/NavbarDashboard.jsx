@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { getUserData } from "../../services/authSlice";
 import userIcon from "../../assets/images/user (1).png";
@@ -84,11 +84,11 @@ const NavDashboard = ({ handleBurger }) => {
         <div className="flex lg:text-[16px] text-sm gap-4">
           {userData?.role === rolesList.admin && (
             <div className="flex items-center gap-2">
-              <button className="flex items-center">
+              <Link to={"/deadlines"} className="flex  items-center">
                 {" "}
                 <TiPlus className="text-2xl" />
                 <span className="hidden lg:block">Deadline</span>
-              </button>
+              </Link>
             </div>
           )}
 

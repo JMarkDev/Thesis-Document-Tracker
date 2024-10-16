@@ -12,6 +12,11 @@ const OfficeDashboard = () => {
     { title: "Incoming Documents", value: 100 },
     { title: "Delayed Documents", value: 100 },
   ];
+  const sampleData = [
+    { status: "Completed", totalCount: 100 },
+    { status: "Incoming", totalCount: 50 },
+    { status: "Delayed", totalCount: 25 },
+  ];
   return (
     <div className="w-full">
       <div className=" flex flex-wrap">
@@ -27,7 +32,7 @@ const OfficeDashboard = () => {
           <LineChartAdmin />
         </div>
         <div className="min-w-[350px]">
-          <PieChart />
+          <PieChart sampleData={sampleData} />
         </div>
       </div>
     </div>

@@ -41,6 +41,8 @@ import EsuTransmittal from "./pages/EsuCampus/Transmittal/EsuTransmittal";
 import Staff from "./pages/Offices/Staff/Staff";
 import OfficeDocument from "./pages/Offices/Documents/OfficeDocuments";
 import OfficeDashboard from "./pages/Offices/Dashboard/Dashboard";
+import OfficeReports from "./pages/Offices/Reports/Reports";
+import Deadline from "./pages/Admin/Deadline/Deadline";
 
 function App() {
   // useIdleTimeout();
@@ -87,6 +89,7 @@ function App() {
       path: "/admin-document/:tracking_number",
       component: <PrintQRCode />,
     },
+    { title: "Deadlines", path: "/deadlines", component: <Deadline /> },
   ];
 
   const facultyLinks = [
@@ -165,7 +168,7 @@ function App() {
     {
       title: "Reports",
       path: "/office/reports",
-      component: <EsuReports />,
+      component: <OfficeReports />,
     },
     { title: "Staff", path: "/office-staff", component: <Staff /> },
   ];

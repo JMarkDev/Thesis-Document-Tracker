@@ -5,15 +5,29 @@ const COLORS = [
   "#93e6c9", // Received
   "#92b3f0", // Incoming
   "#f0adad", // Delayed
+  "#f6c343", // New color
+  "#b3e5fc", // New color
+  "#e57373", // New color
+  "#8d6e63", // New color
+  "#64b5f6", // New color
+  "#ba68c8", // New color
+  "#ffd54f", // New color
+  "#aed581", // New color
+  "#ff7043", // New color
+  "#90a4ae", // New color
 ];
 
-const sampleData = [
-  { status: "Completed", totalCount: 100 },
-  { status: "Incoming", totalCount: 50 },
-  { status: "Delayed", totalCount: 25 },
-];
+// Function to generate a random color
+const getRandomColor = () => {
+  const letters = "0123456789ABCDEF";
+  let color = "#";
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+};
 
-const PieChartComponent = () => {
+const PieChartComponent = ({ sampleData }) => {
   const RADIAN = Math.PI / 180;
   const renderCustomizedLabel = ({
     cx,
@@ -43,7 +57,7 @@ const PieChartComponent = () => {
   };
 
   return (
-    <div className="bg-white shadow-lg">
+    <div className="bg-white border-2 border-gray-200 shadow-lg">
       <div>
         <ResponsiveContainer width="100%" height={370}>
           <PieChart>
@@ -60,24 +74,21 @@ const PieChartComponent = () => {
               {sampleData?.map((entry, index) => (
                 <Cell
                   key={`cell-${index}`}
-                  fill={COLORS[index % COLORS.length]}
+                  fill={COLORS[index] || getRandomColor()} // Use predefined color or generate new one
                 />
               ))}
             </Pie>
           </PieChart>
         </ResponsiveContainer>
       </div>
-      <div className="grid grid-cols-3 gap-2 justify-center mx-auto items-center">
+      <div className="grid lg:grid-cols-3 text-sm lg:text-md  gap-2 justify-center mx-auto items-center px-2">
         {sampleData.map((item, index) => (
-          <div
-            key={`color-${index}`}
-            className="flex justify-start items-center mx-auto mb-5"
-          >
+          <div key={`color-${index}`} className="flex  mb-5">
             <div
               className="w-6 h-6 mr-2"
-              style={{ backgroundColor: COLORS[index % COLORS.length] }}
+              style={{ backgroundColor: COLORS[index] || getRandomColor() }}
             ></div>
-            <p className="flex cursor-pointer text-gray-800 font-bold justify-center items-center mx-auto">
+            <p className="flex cursor-pointer text-gray-800 font-bold ">
               {item.status}
             </p>
           </div>
@@ -88,7 +99,7 @@ const PieChartComponent = () => {
 };
 
 PieChartComponent.propTypes = {
-  sampleData: PropTypes.object,
+  sampleData: PropTypes.array,
 };
 
 export default PieChartComponent;
