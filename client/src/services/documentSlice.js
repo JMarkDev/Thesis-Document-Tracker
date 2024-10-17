@@ -8,6 +8,7 @@ export const fetchAllDocuments = createAsyncThunk(
       const response = await axios.get("/document/all");
       return response.data;
     } catch (error) {
+      console.log(error);
       return rejectWithValue(error.response?.data.message || error.message);
     }
   }
