@@ -143,6 +143,11 @@ const addDeadline = async (req, res) => {
   const { deadline_date } = req.body;
 
   try {
+    if (!deadline_date) {
+      return res
+        .status(400)
+        .json({ message: "Deadline is required", status: "error" });
+    }
     const deadline = await documentRouteModel.update(
       {
         deadline: deadline_date,

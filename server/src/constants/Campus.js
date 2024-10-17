@@ -1,0 +1,16 @@
+const wmsuCampus = [
+  "WMSU-ESU ALICIA",
+  "WMSU-ESU AURORA",
+  "WMSU-ESU DIPLAHAN",
+  "WMSU-ESU IMELDA",
+  "WMSU-ESU IPIL",
+  "WMSU-ESU MABUHAY",
+  "WMSU-ESU MALANGAS",
+  "WMSU-ESU NAGA",
+  "WMSU-ESU OLUTANGA",
+  "WMSU-ESU PAGADIAN",
+  "WMSU-ESU SIAY",
+  "WMSU-ESU TUNGAWAN",
+];
+
+module.exports = wmsuCampus;

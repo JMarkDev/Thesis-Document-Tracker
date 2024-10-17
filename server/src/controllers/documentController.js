@@ -8,6 +8,8 @@ const userModel = require("../models/userModel");
 const officeModel = require("../models/officeModel");
 const rolesList = require("../constants/rolesList");
 const statusList = require("../constants/statusList");
+const { addNotification } = require("./notificationController");
+const { sendNotification } = require("../utils/emailNotifications");
 
 const uploadDocument = async (req, res) => {
   const {
@@ -21,10 +23,25 @@ const uploadDocument = async (req, res) => {
     contact_number,
     esuCampus,
     user_id,
+    user_email,
     route,
+    action,
   } = req.body;
 
   try {
+    const trackingNumExists = await documentModel.findOne({
+      where: {
+        tracking_number: tracking_number,
+      },
+    });
+
+    if (trackingNumExists) {
+      return res.status(400).json({
+        status: "error",
+        message:
+          "Tracking number already exists. Please generate a new tracking number.",
+      });
+    }
     const user = await userModel.findOne({
       where: {
         id: user_id,
@@ -73,6 +90,8 @@ const uploadDocument = async (req, res) => {
       esuCampus,
       status: documentStatus.incoming,
       user_id,
+      user_email,
+      createdAt: createdAt,
     });
 
     // Format the route data to match the required schema for document history
@@ -99,6 +118,22 @@ const uploadDocument = async (req, res) => {
       recipient_user: uploaded_by,
       createdAt: createdAt,
     };
+
+    await Promise.all(
+      route.map((office) => {
+        return addNotification({
+          document_id: newDocuments.id,
+          content: `${document_name} has been ${action} by ${uploaded_by}`,
+          user_id: office.user_id,
+        });
+      })
+    );
+
+    await sendNotification({
+      email: user_email,
+      subject: `WMSU-ESU Document Tracker - Document ${action}`,
+      message: `The document ${document_name} has been ${action} by ${uploaded_by} on ${new Date().toDateString()} at ${new Date().toLocaleTimeString()}`,
+    });
 
     // Insert the formatted route data into documentHistoryModel
     await documentRecipientModel.bulkCreate(formattedRouteData);
@@ -471,9 +506,15 @@ const receiveDocuments = async (req, res) => {
     action,
     recipient_user,
     recipient_office,
+    document_name,
   } = req.body;
 
   try {
+    const document = await documentModel.findOne({
+      where: {
+        id: document_id,
+      },
+    });
     if (action === "received") {
       await documentRecipientModel.update(
         {
@@ -516,11 +557,24 @@ const receiveDocuments = async (req, res) => {
 
     await documentHistoryModel.create(documentHistory);
 
+    await addNotification({
+      document_id: document_id,
+      content: `${document_name} has been ${action} by ${recipient_user} at ${recipient_office}`,
+      user_id: document?.user_id,
+    });
+
+    await sendNotification({
+      email: document?.user_email,
+      subject: `WMSU-ESU Document Tracker - Document ${action}`,
+      message: `The document ${document_name} has been ${action} by ${recipient_user} at the ${recipient_office} on ${new Date().toDateString()} at ${new Date().toLocaleTimeString()}`,
+    });
+
     return res.status(200).json({
       status: "success",
       message: `Document ${action} successfully`,
     });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({ message: error.message });
   }
 };

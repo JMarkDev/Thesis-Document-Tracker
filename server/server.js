@@ -16,6 +16,7 @@ const documentRoute = require("./src/routes/documentRoute");
 const trackingNumberRoute = require("./src/routes/trackDocumentRoute");
 const documentWorkflowRoute = require("./src/routes/documentWorkflow");
 const chatBotRoute = require("./src/routes/chatbotRoute");
+const analyticsRoute = require("./src/routes/analiticsRoute");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -69,6 +70,7 @@ app.use("/office", officeRoute);
 app.use("/document", documentRoute);
 app.use("/workflow", documentWorkflowRoute);
 app.use("/notification", notificationRoute);
+app.use("/analytics", analyticsRoute);
 
 app.get("/");
 // Server setup
