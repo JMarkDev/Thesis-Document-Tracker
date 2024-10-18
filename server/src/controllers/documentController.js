@@ -10,6 +10,17 @@ const rolesList = require("../constants/rolesList");
 const statusList = require("../constants/statusList");
 const { addNotification } = require("./notificationController");
 const { sendNotification } = require("../utils/emailNotifications");
+const cloudinary = require("cloudinary").v2;
+require("dotenv").config();
+// const multer = require('multer');
+const path = require("path");
+const fs = require("fs");
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 const uploadDocument = async (req, res) => {
   const {
@@ -18,7 +29,7 @@ const uploadDocument = async (req, res) => {
     document_type,
     document_desc,
     file_type,
-    files,
+    // files,
     uploaded_by,
     contact_number,
     esuCampus,
@@ -78,13 +89,30 @@ const uploadDocument = async (req, res) => {
       }
     }
 
+    // upload files to cloudinary
+    const files = req.files;
+    let uploadedFileUrls = [];
+
+    if (files && files.length > 0) {
+      for (const file of files) {
+        const filePath = path.join(__dirname, `../../uploads/${file.filename}`);
+        const result = await cloudinary.uploader.upload(filePath, {
+          resource_type: file.mimetype.startsWith("image/") ? "image" : "raw",
+          folder: "files",
+        });
+
+        uploadedFileUrls.push(result.secure_url);
+        fs.unlinkSync(filePath);
+      }
+    }
+
     const newDocuments = await documentModel.create({
       tracking_number,
       document_name,
       document_type,
       document_desc,
       file_type,
-      files,
+      files: uploadedFileUrls,
       uploaded_by,
       contact_number,
       esuCampus,
@@ -94,8 +122,16 @@ const uploadDocument = async (req, res) => {
       createdAt: createdAt,
     });
 
+    // Parse the route if it's a string
+    let parsedRoute = [];
+    if (typeof route === "string") {
+      parsedRoute = JSON.parse(route);
+    } else {
+      parsedRoute = route;
+    }
+
     // Format the route data to match the required schema for document history
-    const formattedRouteData = route?.map((office) => {
+    const formattedRouteData = parsedRoute?.map((office) => {
       let received_at = null;
       if (office.office_name === recipient) {
         received_at = createdAt;
@@ -120,7 +156,7 @@ const uploadDocument = async (req, res) => {
     };
 
     await Promise.all(
-      route.map((office) => {
+      parsedRoute.map((office) => {
         return addNotification({
           document_id: newDocuments.id,
           content: `${document_name} has been ${action} by ${uploaded_by}`,

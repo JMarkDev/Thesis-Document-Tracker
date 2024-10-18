@@ -17,6 +17,7 @@ const trackingNumberRoute = require("./src/routes/trackDocumentRoute");
 const documentWorkflowRoute = require("./src/routes/documentWorkflow");
 const chatBotRoute = require("./src/routes/chatbotRoute");
 const analyticsRoute = require("./src/routes/analiticsRoute");
+const uploadFilesRoute = require("./src/routes/uploadFilesRoute");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -45,6 +46,7 @@ app.get("/uploads/:filename", (req, res) => {
 });
 
 // public routes no token required
+app.use("/files", uploadFilesRoute);
 app.use("/auth", authRoute);
 app.use("/document", trackingNumberRoute);
 app.use("/chatbot", chatBotRoute);
