@@ -1,4 +1,4 @@
-const { Op, fn, col, where } = require("sequelize"); // Import necessary Sequelize functions
+const { Op, fn, col, where, Sequelize } = require("sequelize"); // Import necessary Sequelize functions
 const documentModel = require("../models/documentModel");
 const documentHistoryModel = require("../models/documentHistoryModel");
 const documentRecipientModel = require("../models/documentRecipientModel");
@@ -45,8 +45,126 @@ const getAdminCardData = async (req, res) => {
   }
 };
 
+const processDocumentsByYear = async (year, esuCampus = null) => {
+  const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
+  // Fetch document types, optionally filtering by `esuCampus`
+  const documentTypes = await routeModel.findAll({
+    where: esuCampus ? { esuCampus } : {},
+  });
+
+  // Prepare a structure for the results
+  const results = months.map((month) => {
+    const monthResults = { month };
+    documentTypes.forEach((type) => {
+      monthResults[type.document_type] = 0; // Initialize with 0 for each document type
+    });
+    return monthResults;
+  });
+
+  return { results, months };
+};
+
+const countDocumentsByMonth = (documents, year, months, results) => {
+  documents.forEach((document) => {
+    const documentDate = new Date(document.createdAt);
+    const documentYear = documentDate.getFullYear();
+    const documentMonth = documentDate.getMonth(); // Get month as index (0 = Jan, 11 = Dec)
+
+    if (documentYear === parseInt(year, 10)) {
+      const monthName = months[documentMonth];
+      const documentType = document.document_type;
+
+      // Find the month result object and increment the count
+      const monthResult = results.find((result) => result.month === monthName);
+      if (monthResult && monthResult[documentType] !== undefined) {
+        monthResult[documentType] += 1; // Increment the count
+      }
+    }
+  });
+};
+
 const getDataByYear = async (req, res) => {
   const { year } = req.params;
+
+  try {
+    const documents = await documentModel.findAll(); // Fetch documents for the year
+    const { results, months } = await processDocumentsByYear(year);
+
+    // Populate results with actual counts
+    countDocumentsByMonth(documents, year, months, results);
+
+    return res.status(200).json(results); // Send formatted results
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+const getFacultyDataByYear = async (req, res) => {
+  const { year, user_id } = req.params;
+
+  try {
+    const documents = await documentModel.findAll({
+      where: {
+        user_id,
+      },
+    }); // Fetch documents for the year
+    const { results, months } = await processDocumentsByYear(year);
+
+    // Populate results with actual counts
+    countDocumentsByMonth(documents, year, months, results);
+
+    return res.status(200).json(results); // Send formatted results
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+const getOfficeDataByYear = async (req, res) => {
+  const { year, officeName } = req.params;
+
+  try {
+    const documents = await documentModel.findAll({
+      include: [
+        {
+          model: routeModel,
+          where: {
+            office_name: officeName,
+          },
+        },
+      ],
+    });
+
+    // Fetch documents for the year
+    const { results, months } = await processDocumentsByYear(year);
+
+    // Populate results with actual counts
+    countDocumentsByMonth(documents, year, months, results);
+
+    return res.status(200).json(results); // Send formatted results
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+const getDataByYearByEsu = async (req, res) => {
+  const { year, esuCampus } = req.params;
 
   const months = [
     "Jan",
@@ -65,7 +183,11 @@ const getDataByYear = async (req, res) => {
 
   try {
     // Fetch documents created within the specified year
-    const documents = await documentModel.findAll(); // Adjust this if you want to filter by a specific date field
+    const documents = await documentModel.findAll({
+      where: {
+        esuCampus,
+      },
+    }); // Adjust this if you want to filter by a specific date field
     const documentTypes = await routeModel.findAll();
 
     // Prepare a structure for the results
@@ -182,6 +304,26 @@ const getDocumentReports = async (req, res) => {
   }
 };
 
+const getDocumentESUReports = async (req, res) => {
+  const { year, esuCampus } = req.params;
+
+  try {
+    const documents = await documentModel.findAll({
+      where: {
+        [Op.and]: [
+          { esuCampus }, // Assuming esuCampus is correctly passed as a string
+          Sequelize.where(fn("YEAR", col("createdAt")), year), // Ensure proper comparison here
+        ],
+      },
+    });
+
+    return res.status(200).json(documents);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 const getSumittedDocumentByType = async (req, res) => {
   const { type } = req.params;
 
@@ -202,8 +344,12 @@ const getSumittedDocumentByType = async (req, res) => {
 module.exports = {
   getAdminCardData,
   getDataByYear,
+  getFacultyDataByYear,
   getDataByEsuCampus,
   getDocumentTypeData,
   getDocumentReports,
   getSumittedDocumentByType,
+  getDataByYearByEsu,
+  getDocumentESUReports,
+  getOfficeDataByYear,
 };

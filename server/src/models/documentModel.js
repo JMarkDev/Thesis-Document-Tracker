@@ -3,6 +3,7 @@ const { DataTypes } = require("sequelize");
 const DocumentHistory = require("../models/documentHistoryModel");
 const DocumentRecipient = require("../models/documentRecipientModel");
 const User = require("../models/userModel");
+const notificationModel = require("../models/notificationModel");
 
 const Document = sequelize.define(
   "documents",
@@ -119,6 +120,12 @@ User.hasMany(Document, {
   foreignKey: "user_id",
   onDelete: "CASCADE",
 });
+
 Document.belongsTo(User, { foreignKey: "user_id", onDelete: "CASCADE" });
+
+Document.hasMany(notificationModel, {
+  foreignKey: "document_id",
+  onDelete: "CASCADE",
+});
 
 module.exports = Document;
