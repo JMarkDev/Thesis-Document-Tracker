@@ -13,6 +13,7 @@ import {
   fetchDocumentByTrackingNum,
   getDocumentByTrackingNum,
   documentError,
+  reset,
 } from "../services/documentSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { toastUtils } from "../hooks/useToast";
@@ -29,7 +30,7 @@ const Homepage = () => {
   const [chatbotLoading, setChatbotLoading] = useState(false);
   const chatContainer = useRef(null);
   const option = ["track document", "upload document", "register account"];
-  const text = "Welcome to our Chatbot! How can I assist you today?".split(" ");
+  // const text = "Welcome to our Chatbot! How can I assist you today?".split(" ");
   const [openChat, setOpenChat] = useState(false);
   const [tracking_number, setTrackingNum] = useState(null);
   const [documentData, setDocumentData] = useState([]);
@@ -57,8 +58,12 @@ const Homepage = () => {
   };
 
   useEffect(() => {
+    // Check if there's an error, and reset the loading state
     if (error) {
       setIsLoading(false);
+      // Reset modal state if there's an error
+      setModal(false);
+      setDocumentData(null);
     }
   }, [error]);
 
@@ -72,7 +77,9 @@ const Homepage = () => {
 
   const closeModal = () => {
     setModal(false);
-    setDocumentData(null);
+    setDocumentData([]);
+    setTrackingNum("");
+    dispatch(reset());
   };
 
   const handleSubmit = async (e) => {
