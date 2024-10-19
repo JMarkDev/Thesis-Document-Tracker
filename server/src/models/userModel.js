@@ -39,7 +39,7 @@ const User = sequelize.define(
       allowNull: false,
     },
     designation: {
-      type: DataTypes.JSON,
+      type: DataTypes.STRING(55),
       allowNull: true,
     },
     esuCampus: {

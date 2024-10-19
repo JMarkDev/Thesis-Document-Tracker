@@ -1,8 +1,9 @@
 const { Sequelize, Op } = require("sequelize");
+const sequelize = require("../configs/database");
 const documentModel = require("../models/documentModel");
 const documentHistoryModel = require("../models/documentHistoryModel");
 const documentRecipientModel = require("../models/documentRecipientModel");
-const { createdAt } = require("../utils/formattedTime");
+// const { createdAt } = require("../utils/formattedTime");
 const documentStatus = require("../constants/documentStatus");
 const userModel = require("../models/userModel");
 const officeModel = require("../models/officeModel");
@@ -15,6 +16,7 @@ require("dotenv").config();
 // const multer = require('multer');
 const path = require("path");
 const fs = require("fs");
+const date = require("date-and-time");
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -40,6 +42,9 @@ const uploadDocument = async (req, res) => {
   } = req.body;
 
   try {
+    const createdAt = new Date();
+    const formattedDate = date.format(createdAt, "YYYY-MM-DD HH:mm:ss");
+
     const trackingNumExists = await documentModel.findOne({
       where: {
         tracking_number: tracking_number,
@@ -119,7 +124,7 @@ const uploadDocument = async (req, res) => {
       status: documentStatus.incoming,
       user_id,
       user_email,
-      createdAt: createdAt,
+      createdAt: sequelize.literal(`'${formattedDate}'`),
     });
 
     // Parse the route if it's a string
@@ -134,7 +139,7 @@ const uploadDocument = async (req, res) => {
     const formattedRouteData = parsedRoute?.map((office) => {
       let received_at = null;
       if (office.office_name === recipient) {
-        received_at = createdAt;
+        received_at = sequelize.literal(`'${formattedDate}'`);
       }
       return {
         document_id: newDocuments.id,
@@ -142,8 +147,8 @@ const uploadDocument = async (req, res) => {
         office_name: office.office_name,
         status: documentStatus.incoming,
         received_at: received_at, // Default as null for now, you can update this later
-        createdAt: createdAt,
-        updatedAt: createdAt,
+        createdAt: sequelize.literal(`'${formattedDate}'`),
+        updatedAt: sequelize.literal(`'${formattedDate}'`),
       };
     });
 
@@ -152,7 +157,7 @@ const uploadDocument = async (req, res) => {
       action: "uploaded",
       recipient_office: recipient,
       recipient_user: uploaded_by,
-      createdAt: createdAt,
+      createdAt: sequelize.literal(`'${formattedDate}'`),
     };
 
     await Promise.all(
@@ -543,9 +548,13 @@ const receiveDocuments = async (req, res) => {
     recipient_user,
     recipient_office,
     document_name,
+    next_route,
   } = req.body;
 
   try {
+    const createdAt = new Date();
+    const formattedDate = date.format(createdAt, "YYYY-MM-DD HH:mm:ss");
+
     const document = await documentModel.findOne({
       where: {
         id: document_id,
@@ -555,8 +564,8 @@ const receiveDocuments = async (req, res) => {
       await documentRecipientModel.update(
         {
           status: documentStatus.received,
-          received_at: createdAt,
-          updatedAt: createdAt,
+          received_at: sequelize.literal(`'${formattedDate}'`),
+          updatedAt: sequelize.literal(`'${formattedDate}'`),
         },
         {
           where: {
@@ -571,7 +580,7 @@ const receiveDocuments = async (req, res) => {
       await documentRecipientModel.update(
         {
           status: documentStatus.forwarded,
-          updatedAt: createdAt,
+          updatedAt: sequelize.literal(`'${formattedDate}'`),
         },
         {
           where: {
@@ -588,21 +597,45 @@ const receiveDocuments = async (req, res) => {
       action,
       recipient_office,
       recipient_user,
-      createdAt: createdAt,
+      createdAt: sequelize.literal(`'${formattedDate}'`),
     };
 
     await documentHistoryModel.create(documentHistory);
+    let content = null;
+
+    if (action === "forwarded") {
+      content = `${document_name} has been successfully ${action} to "${next_route}" by ${recipient_user}.`;
+    } else if (action === "received") {
+      content = `${document_name} has been successfully ${action} by ${recipient_user} at "${recipient_office}".`;
+    } else if (action === "uploaded") {
+      content = `${document_name} has been successfully uploaded by ${recipient_user}.`;
+    } else {
+      content = "No action has been performed.";
+    }
 
     await addNotification({
       document_id: document_id,
-      content: `${document_name} has been ${action} by ${recipient_user} at ${recipient_office}`,
+      content: content,
       user_id: document?.user_id,
     });
+
+    let message = null;
+    const currentDate = new Date().toLocaleString(); // This includes both date and time
+
+    if (action === "forwarded") {
+      message = `The document "${document_name}" has been successfully ${action} to the "${next_route}" by ${recipient_user} on ${currentDate}.`;
+    } else if (action === "received") {
+      message = `The document "${document_name}" has been ${action} by ${recipient_user} at the "${recipient_office}" on ${currentDate}.`;
+    } else if (action === "uploaded") {
+      message = `Your document "${document_name}" has been successfully uploaded on ${currentDate}.`;
+    } else {
+      message = "No action has been performed.";
+    }
 
     await sendNotification({
       email: document?.user_email,
       subject: `WMSU-ESU Document Tracker - Document ${action}`,
-      message: `The document ${document_name} has been ${action} by ${recipient_user} at the ${recipient_office} on ${new Date().toDateString()} at ${new Date().toLocaleTimeString()}`,
+      message: message,
     });
 
     return res.status(200).json({

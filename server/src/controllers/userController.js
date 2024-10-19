@@ -293,6 +293,9 @@ const updateUserData = async (req, res) => {
   } = req.body;
 
   try {
+    // Fetch the officeId from the userModel
+    const user = await userModel.findOne({ where: { id } });
+
     // upload image
     let newFileName = null;
     if (req.file) {
@@ -312,7 +315,7 @@ const updateUserData = async (req, res) => {
 
     await userModel.update(
       {
-        image: newFileName ? `/uploads/${newFileName}` : image,
+        image: newFileName ? `/uploads/${newFileName}` : user.image,
         firstName: firstName,
         lastName: lastName,
         middleInitial: middleInitial,
@@ -328,12 +331,9 @@ const updateUserData = async (req, res) => {
       }
     );
 
-    // Fetch the officeId from the userModel
-    const user = await userModel.findOne({ where: { id } });
-
-    if (!user || !user.officeId) {
-      return res.status(404).json({ message: "Office not found" });
-    }
+    // if (!user || !user.officeId) {
+    //   return res.status(404).json({ message: "Office not found" });
+    // }
 
     await officeModel.update(
       {
