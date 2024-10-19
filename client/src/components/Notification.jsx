@@ -1,8 +1,10 @@
 import PropTypes from "prop-types";
 import { useFormat } from "../hooks/useFormatDate";
+import { useNavigate } from "react-router-dom";
 
-const Notification = ({ notifications }) => {
+const Notification = ({ notifications, handleNotificationClick }) => {
   const { dateFormat } = useFormat();
+  const navigate = useNavigate();
 
   return (
     <div className="relative z-100 w-[320px]  shadow-lg bg-white rounded-lg ">
@@ -14,19 +16,25 @@ const Notification = ({ notifications }) => {
           {notifications.length === 0 && (
             <li className="p-4 text-sm text-gray-700">No notifications</li>
           )}
-          {notifications?.map(({ content, createdAt, is_read }, id) => (
-            <li
-              key={id}
-              className={`border-b border-gray-300 ${
-                is_read === 1 ? "bg-white" : "bg-gray-100"
-              }  hover:bg-gray-200 cursor-pointer p-4 text-sm`}
-            >
-              <p className="font-semibold text-gray-700">{content}</p>
-              <p className="text-gray-500 border-gray-300 text-sm">
-                {dateFormat(createdAt)}
-              </p>
-            </li>
-          ))}
+          {notifications?.map(
+            ({ content, createdAt, is_read, document_id, id }) => (
+              <li
+                key={id}
+                onClick={() => {
+                  handleNotificationClick(id);
+                  navigate(`/document-details/${document_id}`);
+                }}
+                className={`border-b border-gray-300 ${
+                  is_read === 1 ? "bg-white" : "bg-gray-200"
+                }  hover:bg-gray-200 cursor-pointer p-4 text-sm`}
+              >
+                <p className="font-semibold text-gray-700">{content}</p>
+                <p className="text-gray-500 border-gray-300 text-sm">
+                  {dateFormat(createdAt)}
+                </p>
+              </li>
+            )
+          )}
         </ul>
       </div>
     </div>
@@ -35,6 +43,7 @@ const Notification = ({ notifications }) => {
 
 Notification.propTypes = {
   notifications: PropTypes.array,
+  handleNotificationClick: PropTypes.func,
 };
 
 export default Notification;
