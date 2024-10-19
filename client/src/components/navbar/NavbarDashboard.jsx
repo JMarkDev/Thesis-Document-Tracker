@@ -14,6 +14,7 @@ import api from "../../api/axios";
 import {
   getNotificationById,
   fetchNotificationById,
+  readNotification,
 } from "../../services/notificationSlice";
 import { getUserRole } from "../../utils/userRoles";
 import rolesList from "../../constants/rolesList";
@@ -27,6 +28,7 @@ const NavDashboard = ({ handleBurger }) => {
   const [profilePic, setProfilePic] = useState(userIcon);
   const [notifications, setNotifications] = useState([]);
   const getNotification = useSelector(getNotificationById);
+  const [unread, setUnread] = useState(0);
 
   useEffect(() => {
     if (userData && userData.image) {
@@ -67,8 +69,19 @@ const NavDashboard = ({ handleBurger }) => {
   useEffect(() => {
     if (getNotification) {
       setNotifications(getNotification);
+      const unread = getNotification.filter(
+        (notification) => notification.is_read === 0
+      );
+      setUnread(unread.length);
     }
   }, [getNotification]);
+
+  const handleNotificationClick = (id) => {
+    dispatch(readNotification(id));
+    setTimeout(() => {
+      dispatch(fetchNotificationById(userData.id));
+    }, 1000);
+  };
   return (
     <div className="w-full z-20 md:w-[calc(100vw-16rem)] flex gap-5 items-center px-4 flex-grow fixed h-16 bg-[#D4A4AC]">
       <button
@@ -94,7 +107,7 @@ const NavDashboard = ({ handleBurger }) => {
 
           <div className="relative  flex items-center">
             <span className="text-sm  px-1.5 absolute right-[-10px] top-0 text-white bg-red-600 rounded-full text-center">
-              {notifications.length}
+              {unread}
             </span>
             <button
               onClick={handleNotification}
@@ -110,7 +123,10 @@ const NavDashboard = ({ handleBurger }) => {
               onMouseLeave={handleNotification}
               className="absolute top-12 right-5"
             >
-              <Notification notifications={notifications} />
+              <Notification
+                notifications={notifications}
+                handleNotificationClick={handleNotificationClick}
+              />
             </div>
           )}
 

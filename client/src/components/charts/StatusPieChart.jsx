@@ -28,6 +28,14 @@ const getRandomColor = () => {
 };
 
 const PieChartComponent = ({ data }) => {
+  // Create a new filtered array from the data
+  // const filtered =
+  //   data?.map((item) => ({
+  //     name: item.title.replace(/documents/i, "").trim(), // Adjust according to your data structure
+  //     value: item.value, // Assuming `value` is the correct property for the count
+  //   })) || [];
+
+  // console.log(filtered);
   const RADIAN = Math.PI / 180;
   const renderCustomizedLabel = ({
     cx,
@@ -58,8 +66,11 @@ const PieChartComponent = ({ data }) => {
 
   return (
     <div className="bg-white border-2 border-gray-200 shadow-lg">
+      <div className="p-2 bg-gray-300 justify-between items-center">
+        <h1 className="font-bold">Document Status Charts</h1>
+      </div>
       <div>
-        <ResponsiveContainer width="100%" height={370}>
+        <ResponsiveContainer width="100%" height={320}>
           <PieChart>
             <Pie
               data={data}
@@ -69,7 +80,7 @@ const PieChartComponent = ({ data }) => {
               label={renderCustomizedLabel}
               outerRadius={150}
               fill="#8884d8"
-              dataKey="count"
+              dataKey="value"
             >
               {data?.map((entry, index) => (
                 <Cell
@@ -81,15 +92,15 @@ const PieChartComponent = ({ data }) => {
           </PieChart>
         </ResponsiveContainer>
       </div>
-      <div className="grid lg:grid-cols-4 md:grid-cols-2 text-sm lg:text-md  gap-2 justify-center mx-auto items-center px-2">
+      <div className="grid lg:grid-cols-3 text-sm lg:text-md  gap-2 justify-center mx-auto items-center px-2">
         {data?.map((item, index) => (
-          <div key={`color-${index}`} className="flex  mb-5">
+          <div key={`color-${index}`} className="flex mb-2 ">
             <div
               className="w-6 h-6 mr-2"
               style={{ backgroundColor: COLORS[index] || getRandomColor() }}
             ></div>
             <p className="flex text-[12px] cursor-pointer text-gray-800 font-bold ">
-              {item.type}
+              {item.title.replace(/documents/i, "").trim()}
             </p>
           </div>
         ))}

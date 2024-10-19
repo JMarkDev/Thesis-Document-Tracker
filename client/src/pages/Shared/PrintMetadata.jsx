@@ -1,8 +1,10 @@
 import QRCode from "react-qr-code";
 import noDataIMG from "../../assets/images/undraw_no_data_re_kwbl.svg";
 import PropTypes from "prop-types";
-
+import { useFormat } from "../../hooks/useFormatDate";
 const PrintMetadata = ({ isLoading, contentRef, documentData }) => {
+  const { dateFormat } = useFormat();
+
   return (
     <div>
       <div
@@ -111,7 +113,7 @@ const PrintMetadata = ({ isLoading, contentRef, documentData }) => {
                 <div>
                   <p className="text-gray-600 flex gap-3">
                     <strong className="text-gray-800">Date & Time:</strong>{" "}
-                    {new Date(documentData?.createdAt).toLocaleString()}
+                    {dateFormat(documentData.createdAt)}
                   </p>
                 </div>
                 {documentData?.document_desc && (

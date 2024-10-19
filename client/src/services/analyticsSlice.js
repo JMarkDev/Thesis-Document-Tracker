@@ -14,10 +14,53 @@ export const adminAnalytics = createAsyncThunk(
 );
 
 export const fetchDataByYear = createAsyncThunk(
-  "/analytics/getDataByYear",
+  "/analytics/getDataESUByYear",
   async (year) => {
     try {
       const response = await axios.get(`/analytics/data-by-year/${year}`);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+);
+
+export const fetchFacultyDataByYear = createAsyncThunk(
+  "/analytics/getFacultyDataESUByYear",
+  async ({ user_id, year }) => {
+    try {
+      const response = await axios.get(
+        `/analytics/data-by-user/${user_id}/${year}`
+      );
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+);
+
+export const fetchDataEsuByYear = createAsyncThunk(
+  "/analytics/getDataByYear",
+  async ({ year, esuCampus }) => {
+    try {
+      const response = await axios.get(
+        `/analytics/document-by-esu/${esuCampus}/${year}`
+      );
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+);
+
+export const fetchDataOfficeByYear = createAsyncThunk(
+  "/analytics/getDataOfficeByYear",
+  async ({ officeName, year }) => {
+    try {
+      const response = await axios.get(
+        `/analytics/document-by-esu/${officeName}/${year}`
+      );
+      console.log(response.data);
       return response.data;
     } catch (error) {
       console.error(error);
@@ -61,6 +104,21 @@ export const fetchReportsByYear = createAsyncThunk(
   }
 );
 
+export const fetchReportEsuByYear = createAsyncThunk(
+  "/analytics/getReportsEsuDocumentsByYear",
+
+  async ({ year, esuCampus }) => {
+    try {
+      const response = await axios.get(
+        `/analytics/document-reports/${year}/${esuCampus}`
+      );
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+);
+
 export const fetchDocumentByType = createAsyncThunk(
   "/analytics/getDocumentByType",
   async (type) => {
@@ -78,10 +136,13 @@ const analyticsSlice = createSlice({
   initialState: {
     adminCardData: [],
     dataByYear: [],
+    facultyDataByYear: [],
+    // officeDataByYear: [],
     dataByCampus: [],
     dataByType: [],
     reportsByYear: [],
     reportsByType: [],
+    reportsDocumentByESU: [],
     loading: true,
   },
   reducers: {},
@@ -105,6 +166,16 @@ const analyticsSlice = createSlice({
         state.loading = false;
       })
       .addCase(fetchDataByYear.rejected, (state) => {
+        state.loading = false;
+      })
+      .addCase(fetchFacultyDataByYear.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchFacultyDataByYear.fulfilled, (state, action) => {
+        state.facultyDataByYear = action.payload;
+        state.loading = false;
+      })
+      .addCase(fetchFacultyDataByYear.rejected, (state) => {
         state.loading = false;
       })
       .addCase(fetchDataByCampus.pending, (state) => {
@@ -137,6 +208,16 @@ const analyticsSlice = createSlice({
       .addCase(fetchReportsByYear.rejected, (state) => {
         state.loading = false;
       })
+      .addCase(fetchReportEsuByYear.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchReportEsuByYear.fulfilled, (state, action) => {
+        state.reportsDocumentByESU = action.payload;
+        state.loading = false;
+      })
+      .addCase(fetchReportEsuByYear.rejected, (state) => {
+        state.loading = false;
+      })
       .addCase(fetchDocumentByType.pending, (state) => {
         state.loading = true;
       })
@@ -146,7 +227,27 @@ const analyticsSlice = createSlice({
       })
       .addCase(fetchDocumentByType.rejected, (state) => {
         state.loading = false;
+      })
+      .addCase(fetchDataEsuByYear.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchDataEsuByYear.fulfilled, (state, action) => {
+        state.dataByYear = action.payload;
+        state.loading = false;
+      })
+      .addCase(fetchDataEsuByYear.rejected, (state) => {
+        state.loading = false;
       });
+    // .addCase(fetchDataOfficeByYear.pending, (state) => {
+    //   state.loading = true;
+    // })
+    // .addCase(fetchDataOfficeByYear.fulfilled, (state, action) => {
+    //   state.officeDataByYear = action.payload;
+    //   state.loading = false;
+    // })
+    // .addCase(fetchDataOfficeByYear.rejected, (state) => {
+    //   state.loading = false;
+    // });
   },
 });
 
@@ -155,9 +256,15 @@ export const getAdminCardData = (state) => state.analytics.adminCardData;
 export const getDataByYear = (state) => state.analytics.dataByYear;
 export const getDataByCampus = (state) => state.analytics.dataByCampus;
 export const getDataByDocumentType = (state) => state.analytics.dataByType;
+export const getFacultyDataByYear = (state) =>
+  state.analytics.facultyDataByYear;
 
 export const getReportsByYear = (state) => state.analytics.reportsByYear;
 export const getReportsByType = (state) => state.analytics.reportsByType;
+// export const getOfficeDataByYear = (state) => state.analytics.officeDataByYear;
+
+export const getReportsDocumentByESU = (state) =>
+  state.analytics.reportsDocumentByESU;
 
 export const getLoading = (state) => state.analytics.loading;
 

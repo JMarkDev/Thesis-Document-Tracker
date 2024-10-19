@@ -12,6 +12,7 @@ import api from "../../api/axios";
 import {
   fetchNotificationById,
   getNotificationById,
+  readNotification,
 } from "../../services/notificationSlice";
 
 const Navbar = () => {
@@ -26,6 +27,7 @@ const Navbar = () => {
   const [profilePic, setProfilePic] = useState(userIcon);
   const [notifications, setNotifications] = useState([]);
   const getNotification = useSelector(getNotificationById);
+  const [unread, setUnread] = useState(0);
 
   useEffect(() => {
     dispatch(fetchUser());
@@ -36,11 +38,6 @@ const Navbar = () => {
       setProfilePic(`${api.defaults.baseURL}${userData.image}`);
     }
   }, [userData]);
-  // useEffect(() => {
-  //   if (!userData) {
-  //     setProfilePic(userIcon);
-  //   }
-  // }, [userData]);
 
   const openLogin = () => {
     setModal(true);
@@ -79,8 +76,19 @@ const Navbar = () => {
   useEffect(() => {
     if (getNotification) {
       setNotifications(getNotification);
+      const unread = getNotification.filter(
+        (notification) => notification.is_read === 0
+      );
+      setUnread(unread.length);
     }
   }, [getNotification]);
+
+  const handleNotificationClick = (id) => {
+    dispatch(readNotification(id));
+    setTimeout(() => {
+      dispatch(fetchNotificationById(userData.id));
+    }, 1000);
+  };
 
   return (
     <div className="h-16 w-full flex items-center bg-main">
@@ -98,7 +106,7 @@ const Navbar = () => {
                 <li>
                   <div className="relative">
                     <span className="text-sm absolute right-0 top-0 text-white bg-red-600 rounded-full px-1.5">
-                      {notifications.length}
+                      {unread}
                     </span>
                     <div
                       onClick={handleNotification}
@@ -113,7 +121,10 @@ const Navbar = () => {
                       onMouseLeave={handleNotification}
                       className="absolute z-50 right-5"
                     >
-                      <Notification notifications={notifications} />
+                      <Notification
+                        notifications={notifications}
+                        handleNotificationClick={handleNotificationClick}
+                      />
                     </div>
                   )}
                 </li>

@@ -78,7 +78,7 @@ const DocumentMedata = ({ modal, closeModal, document }) => {
                   </div>
 
                   <div className=" bg-gray-200 mt-10 md:p-4 rounded-lg flex flex-col lg:flex-row gap-5 justify-between text-gray-700">
-                    <div className="lg:sticky lg:top-20 flex flex-col gap-4 h-fit lg:w-1/2  p-4 bg-white text-sm md:text-[16px]  shadow-lg rounded-md">
+                    <div className=" lg:sticky lg:top-20 flex flex-col gap-4 h-fit lg:w-1/2  p-4 bg-white text-sm   shadow-lg rounded-md">
                       <div className=" flex items-center gap-5 border-b pb-2 fix">
                         <h1 className="font-bold text-gray-800">
                           Tracking Number:
@@ -135,7 +135,7 @@ const DocumentMedata = ({ modal, closeModal, document }) => {
                       </div>
                     </div>
 
-                    <div className="lg:w-1/2 w-full p-4 text-gray-600 bg-white text-sm md:text-[16px] shadow-lg rounded-md">
+                    {/* <div className="lg:w-1/2 w-full p-4 text-gray-600 bg-white text-sm md:text-[16px] shadow-lg rounded-md">
                       <h1 className="text-main lg:text-xl font-bold text-lg mb-4">
                         Tracking History
                       </h1>
@@ -159,6 +159,39 @@ const DocumentMedata = ({ modal, closeModal, document }) => {
                               </span>
                               <p className="text-gray-600">
                                 Date: {fullDateFormat(createdAt)}
+                              </p>
+                            </li>
+                          )
+                        )}
+                      </ul>
+                    </div> */}
+                    <div className="lg:w-1/2 w-full p-4 bg-white shadow-md rounded-md">
+                      <h1 className="font-bold text-md text-main mb-3">
+                        Tracking History
+                      </h1>
+                      <ul className="space-y-4">
+                        {sortedHistories.map(
+                          ({
+                            id,
+                            action,
+                            recipient_office,
+                            recipient_user,
+                            createdAt,
+                          }) => (
+                            <li
+                              key={id}
+                              className="pb-3 border-b last:border-none"
+                            >
+                              <div className="flex justify-between items-start">
+                                <span className="font-semibold text-gray-700 text-sm">
+                                  {recipient_office}
+                                </span>
+                                <span className="text-xs text-gray-500 text-nowrap">
+                                  {fullDateFormat(createdAt)}
+                                </span>
+                              </div>
+                              <p className="text-xs text-gray-600 mt-1">
+                                Document {action} by: {recipient_user}
                               </p>
                             </li>
                           )

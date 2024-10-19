@@ -4,7 +4,7 @@ import Table from "../../../components/table/DocumentTable";
 import { IoSearch } from "react-icons/io5";
 import Dropdown from "../../../components/dropdown/Dropdown";
 import wmsuCampus from "../../../constants/Campus";
-import Status from "../../../components/dropdown/Status";
+// import Status from "../../../components/dropdown/Status";
 import Pagination from "../../../components/Pagination";
 import {
   fetchAllDocuments,
@@ -13,7 +13,7 @@ import {
   searchDocument,
   filterDocumentsByESU,
   filterDocumentByType,
-  filterDocumentByStatus,
+  // filterDocumentByStatus,
   sortDocuments,
 } from "../../../services/documentSlice";
 import {
@@ -21,16 +21,21 @@ import {
   fetchAllWorkflow,
 } from "../../../services/documentWolkflowSlice";
 import { Link } from "react-router-dom";
+// import { getUserData } from "../../../services/authSlice";
+// import rolesList from "../../../constants/rolesList";
 
 const Documents = () => {
   const dispatch = useDispatch();
   const allDocuments = useSelector(getAllDocuments);
   const workflow = useSelector(getAllWorkflow);
   const status = useSelector(getStatus);
+  // const user = useSelector(getUserData);
   const [documentType, setDocumentType] = useState([]);
   const [sortOrder, setSortOrder] = useState("asc");
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  // const [updatedDocumentList, setUpdatedDocumentList] = useState([]);
+
   const documentsPerPage = 7;
 
   useEffect(() => {
@@ -57,20 +62,20 @@ const Documents = () => {
   }, [searchTerm, dispatch]);
 
   const handleFilterByType = (type) => {
-    if (type === "Type") {
+    if (type === "Document Type") {
       dispatch(fetchAllDocuments());
     } else {
       dispatch(filterDocumentByType(type));
     }
   };
 
-  const handleFIlterByStatus = (status) => {
-    if (status === "Status") {
-      dispatch(fetchAllDocuments());
-    } else {
-      dispatch(filterDocumentByStatus(status));
-    }
-  };
+  // const handleFIlterByStatus = (status) => {
+  //   if (status === "Status") {
+  //     dispatch(fetchAllDocuments());
+  //   } else {
+  //     dispatch(filterDocumentByStatus(status));
+  //   }
+  // };
 
   const handleSort = (sortBy) => {
     const newOrder = sortOrder === "asc" ? "desc" : "asc";
@@ -88,10 +93,79 @@ const Documents = () => {
     }
   }, [workflow]);
 
+  // useEffect(() => {
+  //   const updateDocumentStatuses = () => {
+  //     const updatedDocumentList = allDocuments.map((document) => {
+  //       // Check if all recipients have received the document
+  //       const allReceived = document?.document_recipients.every(
+  //         (recipient) => recipient.received_at !== null
+  //       );
+
+  //       // Find the current office and check if it has received the document
+  //       const officeReceived = document?.document_recipients.find(
+  //         (recipient) =>
+  //           recipient.office_name === user.office?.officeName &&
+  //           recipient.received_at !== null
+  //       );
+
+  //       // Get the previous office recipient to compare the time difference
+  //       const previousRecipient = document?.document_recipients.find(
+  //         (recipient) =>
+  //           recipient.office_name !== user.office?.officeName &&
+  //           recipient.received_at !== null
+  //       );
+
+  //       // Initialize status as "Incoming"
+  //       let status = "Incoming";
+
+  //       // Check if the previous office has received the document
+  //       if (previousRecipient) {
+  //         const receivedAt = new Date(previousRecipient.received_at);
+  //         const currentTime = new Date();
+
+  //         // Check if the time difference exceeds 24 hours (86400000 milliseconds)
+  //         const timeDifference = currentTime - receivedAt;
+
+  //         if (timeDifference > 86400000 && !officeReceived) {
+  //           status = "Delayed";
+  //         }
+  //       }
+
+  //       if (allReceived) {
+  //         status = "Completed";
+  //       } else if (!allReceived && user?.role === rolesList.faculty) {
+  //         status = "In Progress"; // Default status if not all are received
+  //       } else if (officeReceived) {
+  //         status = "Received";
+  //       }
+
+  //       // Only return the updated document if the status has changed
+  //       if (document.status !== status) {
+  //         return {
+  //           ...document,
+  //           status,
+  //         };
+  //       }
+
+  //       return document; // No change in status, return the same document
+  //     });
+
+  //     // Only update the state if the document list has changed
+  //     if (
+  //       JSON.stringify(updatedDocumentList) !== JSON.stringify(allDocuments)
+  //     ) {
+  //       setUpdatedDocumentList(updatedDocumentList);
+  //     }
+  //     console.log(updatedDocumentList);
+  //   };
+
+  //   updateDocumentStatuses();
+  // }, [allDocuments, user]); // Add proper dependencies
+
   // Paganation
   const indexOfLastDocument = currentPage * documentsPerPage;
   const indexOfFirstDocument = indexOfLastDocument - documentsPerPage;
-  const currentDocuments = allDocuments.slice(
+  const currentDocuments = allDocuments?.slice(
     indexOfFirstDocument,
     indexOfLastDocument
   );
@@ -134,13 +208,13 @@ const Documents = () => {
               <Dropdown
                 handleFilter={handleFilterByType}
                 data={documentType}
-                option={"Type"}
+                option={"Document Type"}
               />
             </div>
 
-            <div>
+            {/* <div>
               <Status handleFilter={handleFIlterByStatus} />
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

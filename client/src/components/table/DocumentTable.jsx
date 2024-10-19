@@ -18,6 +18,8 @@ import { useToast } from "../../hooks/useToast";
 import PrintMetadata from "../../pages/Shared/PrintMetadata";
 import { toastUtils } from "../../hooks/useToast";
 import NoData from "../NoData";
+import rolesList from "../../constants/rolesList";
+import { getUserData } from "../../services/authSlice";
 
 // Utility to detect if it's a mobile device
 const isMobileDevice = () => {
@@ -26,19 +28,34 @@ const isMobileDevice = () => {
 
 const Table = ({ documents, handleSort }) => {
   const toast = useToast();
+  const user = useSelector(getUserData);
   const { dateFormat } = useFormat();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const contentRef = useRef(); // Reference for printing and downloading
   const document = useSelector(getDocumentByTrackingNumber);
   const [documentData, setDocumentData] = useState({});
+  const [updatedDocumentList, setUpdatedDocumentList] = useState([]);
+  // const [delayed, setDelayed] = useState(false);
+  const [officeRecipient, setOfficeRecipient] = useState("");
+  const [fullName, setFullName] = useState("");
+  const normalizeString = (str) => str?.trim().replace(/\./g, "").toLowerCase();
 
-  // useEffect(() => {
-  //   if (document) {
-  //     setDocumentData(document);
-  //   }
-  // }, [document]);
-  // Download the content as a searchable PDF (not image)
+  useEffect(() => {
+    setFullName(`${user.firstName} ${user.middleInitial} ${user.lastName}`);
+  }, [user]);
+
+  useEffect(() => {
+    if (
+      user.role === rolesList.campus_admin ||
+      user.role === rolesList.registrar
+    ) {
+      setOfficeRecipient(`${user.esuCampus.toUpperCase()} REGISTRAR`);
+    } else if (user.office?.officeName) {
+      setOfficeRecipient(user.office?.officeName);
+    }
+  }, [user]);
+
   const handleDownloadPDF = () => {
     const element = contentRef.current;
 
@@ -118,6 +135,78 @@ const Table = ({ documents, handleSort }) => {
     }
   }, [document]);
 
+  useEffect(() => {
+    const updateDocumentStatuses = () => {
+      const updatedDocumentList = documents.map((document) => {
+        // Check if all recipients have received the document
+        const allReceived = document?.document_recipients.every(
+          (recipient) => recipient.received_at !== null
+        );
+
+        // Find the current office and check if it has received the document
+        const officeReceived = document?.document_recipients.find(
+          (recipient) =>
+            recipient.office_name === officeRecipient &&
+            recipient.received_at !== null
+        );
+
+        // Get the previous office recipient to compare the time difference
+        const previousRecipient = document?.document_recipients.find(
+          (recipient) =>
+            recipient.office_name !== officeRecipient &&
+            recipient.received_at !== null
+        );
+
+        // Initialize status as "Incoming"
+        let status = "Incoming";
+        let isDelayed = false;
+
+        // Check if the previous office has received the document
+        if (previousRecipient) {
+          const receivedAt = new Date(previousRecipient.received_at);
+          const currentTime = new Date();
+
+          // Check if the time difference exceeds 24 hours (86400000 milliseconds)
+          const timeDifference = currentTime - receivedAt;
+
+          if (timeDifference > 86400000 && !officeReceived && !allReceived) {
+            isDelayed = true;
+          }
+        }
+
+        if (allReceived) {
+          status = "Completed";
+        } else if (isDelayed && !officeReceived && !allReceived) {
+          status = "Delayed";
+        } else if (
+          !allReceived &&
+          normalizeString(fullName) === normalizeString(document.uploaded_by)
+        ) {
+          status = "In Progress"; // Default status if not all are received
+        } else if (officeReceived) {
+          status = "Received";
+        }
+
+        // Only return the updated document if the status has changed
+        if (document.status !== status) {
+          return {
+            ...document,
+            status,
+          };
+        }
+
+        return document; // No change in status, return the same document
+      });
+
+      // Only update the state if the document list has changed
+      if (JSON.stringify(updatedDocumentList) !== JSON.stringify(documents)) {
+        setUpdatedDocumentList(updatedDocumentList);
+      }
+    };
+
+    updateDocumentStatuses();
+  }, [documents, user, officeRecipient]); // Add proper dependencies
+
   return (
     <>
       {documents.length === 0 ? (
@@ -159,38 +248,7 @@ const Table = ({ documents, handleSort }) => {
                     </a>
                   </div>
                 </th>
-                {/* <th scope="col" className="px-6 py-3">
-                  <div className="flex items-center  whitespace-nowrap">
-                    TYPE
-                    <a href="#" onClick={() => handleSort("document_type")}>
-                      <svg
-                        className="w-3 h-3 ms-1.5"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M8.574 11.024h6.852a2.075 2.075 0 0 0 1.847-1.086 1.9 1.9 0 0 0-.11-1.986L13.736 2.9a2.122 2.122 0 0 0-3.472 0L6.837 7.952a1.9 1.9 0 0 0-.11 1.986 2.074 2.074 0 0 0 1.847 1.086Zm6.852 1.952H8.574a2.072 2.072 0 0 0-1.847 1.087 1.9 1.9 0 0 0 .11 1.985l3.426 5.05a2.123 2.123 0 0 0 3.472 0l3.427-5.05a1.9 1.9 0 0 0 .11-1.985 2.074 2.074 0 0 0-1.846-1.087Z" />
-                      </svg>
-                    </a>
-                  </div>
-                </th> */}
-                {/* <th scope="col" className="px-6 py-3">
-                <div className="flex items-center  whitespace-nowrap">
-                  FILE TYPE
-                  <a href="#" onClick={() => handleSort("file_type")}>
-                    <svg
-                      className="w-3 h-3 ms-1.5"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path d="M8.574 11.024h6.852a2.075 2.075 0 0 0 1.847-1.086 1.9 1.9 0 0 0-.11-1.986L13.736 2.9a2.122 2.122 0 0 0-3.472 0L6.837 7.952a1.9 1.9 0 0 0-.11 1.986 2.074 2.074 0 0 0 1.847 1.086Zm6.852 1.952H8.574a2.072 2.072 0 0 0-1.847 1.087 1.9 1.9 0 0 0 .11 1.985l3.426 5.05a2.123 2.123 0 0 0 3.472 0l3.427-5.05a1.9 1.9 0 0 0 .11-1.985 2.074 2.074 0 0 0-1.846-1.087Z" />
-                    </svg>
-                  </a>
-                </div>
-              </th> */}
+
                 <th scope="col" className="px-6 py-3">
                   <div className="flex items-center  whitespace-nowrap">
                     UPLOADED BY
@@ -247,7 +305,7 @@ const Table = ({ documents, handleSort }) => {
               </tr>
             </thead>
             <tbody>
-              {documents?.map(
+              {updatedDocumentList?.map(
                 (
                   {
                     id,
@@ -285,14 +343,28 @@ const Table = ({ documents, handleSort }) => {
                     <td className="px-6 py-4 whitespace-nowrap">
                       {uploaded_by}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-6 py-4 whitespace-nowrap ">
                       <p
-                        className={`${documentBackground(
-                          status
-                        )} p-2 w-20 text-center rounded-lg`}
+                        className={`px-4 py-1 text-center rounded-full text-sm ${
+                          status === "Completed"
+                            ? "bg-green-500 text-white"
+                            : status === "Received"
+                            ? "bg-blue-500 text-white"
+                            : status === "In Progress"
+                            ? "bg-[#f0d352] text-black"
+                            : status === "Delayed"
+                            ? "bg-red-700 text-white"
+                            : "bg-gray-300 text-black" // Default case if no status matches
+                        }`}
+                        // className={`px-4 py-1 w-fit rounded-full text-sm ${
+                        //   status === "Completed" || status === "Received"
+                        //     ? "bg-green-500 text-white"
+                        //     : "bg-main text-white"
+                        // }`}
                       >
                         {" "}
-                        {getDocumentStatus(status)}
+                        {status}
+                        {/* {getDocumentStatus(status)} */}
                       </p>
                     </td>
                     <td className="px-6 w-5 py-4 whitespace-nowrap">

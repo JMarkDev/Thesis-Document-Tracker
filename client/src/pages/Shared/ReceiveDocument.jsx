@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import Loader from "../../components/loader/loginloader/LoginLoading";
 
 const ReceiveDocument = ({
   modal,
@@ -8,6 +9,7 @@ const ReceiveDocument = ({
   isReceived,
   isForwarded,
   lastRecipient,
+  receivedLoader,
 }) => {
   return (
     <div
@@ -16,6 +18,7 @@ const ReceiveDocument = ({
       aria-hidden={!modal}
       className="fixed inset-0 z-50 flex items-center justify-center w-full h-full px-4 bg-black bg-opacity-50"
     >
+      {receivedLoader && <Loader />}
       <div className="relative w-full max-w-2xl p-5 bg-white rounded-lg shadow-lg">
         {/* Header */}
         <div className="flex justify-between items-center border-b pb-3">
@@ -129,20 +132,12 @@ const ReceiveDocument = ({
 ReceiveDocument.propTypes = {
   modal: PropTypes.bool.isRequired,
   closeModal: PropTypes.func.isRequired,
-  documentData: PropTypes.shape({
-    tracking_number: PropTypes.string,
-    document_name: PropTypes.string,
-    document_type: PropTypes.string,
-    file_type: PropTypes.string,
-    uploaded_by: PropTypes.string,
-    contact_number: PropTypes.string,
-    esuCampus: PropTypes.string,
-    document_desc: PropTypes.string,
-  }).isRequired,
+  documentData: PropTypes.object.isRequired,
   handleReceive: PropTypes.func.isRequired,
   isReceived: PropTypes.bool,
   isForwarded: PropTypes.bool,
   lastRecipient: PropTypes.bool,
+  receivedLoader: PropTypes.bool,
 };
 
 export default ReceiveDocument;

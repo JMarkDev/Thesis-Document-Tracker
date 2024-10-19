@@ -1,51 +1,166 @@
 import Cards from "../../../components/Cards";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import LineChartAdmin from "../../../components/charts/LineChartAdmin";
-import YearDropdown from "../../../components/dropdown/Dropdown";
-import PieChart from "../../../components/charts/PieChart";
+import YearDropdown from "../../../components/dropdown/YearDropdown";
+// import PieChart from "../../../components/charts/PieChart";
 import ChartByESU from "../../../components/charts/ChartByESU";
+import {
+  adminAnalytics,
+  getAdminCardData,
+  fetchDataByYear,
+  getDataByYear,
+  getDataByCampus,
+  fetchDataByCampus,
+  fetchDataByDocumentType,
+  // getDataByDocumentType,
+} from "../../../services/analyticsSlice";
+import { getUserData } from "../../../services/authSlice";
+import {
+  fetchAllDocuments,
+  getAllDocuments,
+} from "../../../services/documentSlice";
+import rolesList from "../../../constants/rolesList";
+import StatusPieChart from "../../../components/charts/StatusPieChart";
+import LineChartDocumentSubmissions from "../../../components/charts/LineChartDocumentSubmissions";
 
 const Dashboard = () => {
-  const cardData = [
-    { title: "Total Documents", value: 100 },
-    { title: "Received Documents", value: 100 },
-    { title: "Incoming Documents", value: 100 },
-    { title: "Delayed Documents", value: 100 },
-    { title: "Documents types", value: 100 },
-    { title: "Total Offices", value: 100 },
-    { title: "Total ESU Campus", value: 100 },
-    { title: "Total Faculties", value: 100 },
-  ];
-  const year = [2024, 2025, 2026, 2027];
+  const dispatch = useDispatch();
+  const user = useSelector(getUserData);
+  const data = useSelector(getAdminCardData);
+  const dataByYear = useSelector(getDataByYear);
+  const dataByCampus = useSelector(getDataByCampus);
+  // const dataByType = useSelector(getDataByDocumentType);
+  const [cardData, setCardData] = useState([]);
+  const [officeRecipient, setOfficeRecipient] = useState("Registrar");
+  const [updatedDocumentList, setUpdatedDocumentList] = useState([]);
+  const documents = useSelector(getAllDocuments);
+  const [statusData, setStatusData] = useState([]);
 
-  const campusData = [
-    { campus: "ALICIA", documents: 10 },
-    { campus: "AURORA", documents: 12 },
-    { campus: "DIPLAHAN", documents: 8 },
-    { campus: "IMELDA", documents: 14 },
-    { campus: "IPIL", documents: 9 },
-    { campus: "MABUHAY", documents: 11 },
-    { campus: "MALANGAS", documents: 7 },
-    { campus: "NAGA", documents: 6 },
-    { campus: "OLUTANGA", documents: 13 },
-    { campus: "PAGADIAN", documents: 15 },
-    { campus: "SIAY", documents: 10 },
-    { campus: "TUNGAWAN", documents: 9 },
-  ];
+  useEffect(() => {
+    dispatch(adminAnalytics());
+    dispatch(fetchDataByYear(new Date().getFullYear()));
+    dispatch(fetchDataByCampus());
+    dispatch(fetchDataByDocumentType());
+    dispatch(fetchAllDocuments());
 
-  const sampleData = [
-    { status: "Completed", totalCount: 100 },
-    { status: "Incoming", totalCount: 50 },
-    { status: "Delayed", totalCount: 25 },
-  ];
+    if (user?.office.officeName) {
+      setOfficeRecipient(user.office.officeName);
+    }
+  }, [dispatch, user]);
 
-  const documentType = [
-    { status: "DTR (Daily Time Record)", totalCount: 100 },
-    { status: "IOR (Internal Office Reports)", totalCount: 50 },
-    { status: "IDP (Individual Development Plans", totalCount: 25 },
-    { status: "Sample 1", totalCount: 100 },
-    { status: "Sample 2", totalCount: 50 },
-    { status: "Sample 3", totalCount: 25 },
-  ];
+  useEffect(() => {
+    if (data.length > 0) {
+      setCardData(data);
+    }
+  }, [data]);
+
+  const filterByYear = (selected) => {
+    dispatch(fetchDataByYear(selected));
+  };
+
+  useEffect(() => {
+    const updateDocumentStatuses = () => {
+      const updatedDocumentList = documents.map((document) => {
+        // Check if all recipients have received the document
+        const allReceived = document?.document_recipients.every(
+          (recipient) => recipient.received_at !== null
+        );
+
+        // Find the current office and check if it has received the document
+        const officeReceived = document?.document_recipients.find(
+          (recipient) =>
+            recipient.office_name === officeRecipient &&
+            recipient.received_at !== null
+        );
+
+        // Get the previous office recipient to compare the time difference
+        const previousRecipient = document?.document_recipients.find(
+          (recipient) =>
+            recipient.office_name !== officeRecipient &&
+            recipient.received_at !== null
+        );
+
+        // Initialize status as "Incoming"
+        let status = "Incoming";
+        let isDelayed = false;
+
+        // Check if the previous office has received the document
+        if (previousRecipient) {
+          const receivedAt = new Date(previousRecipient.received_at);
+          const currentTime = new Date();
+
+          // Check if the time difference exceeds 24 hours (86400000 milliseconds)
+          const timeDifference = currentTime - receivedAt;
+
+          if (timeDifference > 86400000 && !officeReceived && !allReceived) {
+            isDelayed = true;
+          }
+        }
+
+        if (allReceived) {
+          status = "Completed";
+        } else if (isDelayed && !officeReceived && !allReceived) {
+          status = "Delayed";
+        } else if (!allReceived && user?.role === rolesList.faculty) {
+          status = "In Progress"; // Default status if not all are received
+        } else if (officeReceived) {
+          status = "Received";
+        }
+
+        // Only return the updated document if the status has changed
+        if (document.status !== status) {
+          return {
+            ...document,
+            status,
+          };
+        }
+
+        return document; // No change in status, return the same document
+      });
+
+      // Only update the state if the document list has changed
+      if (JSON.stringify(updatedDocumentList) !== JSON.stringify(documents)) {
+        setUpdatedDocumentList(updatedDocumentList);
+      }
+    };
+
+    updateDocumentStatuses();
+  }, [documents, user, officeRecipient]); // Add proper dependencies
+
+  useEffect(() => {
+    // Ensure updatedDocumentList and data are not empty or unchanged
+    if (updatedDocumentList.length > 0 && data.length > 0) {
+      const statusList = [
+        { title: "Completed Documents", status: "Completed" },
+        { title: "Incoming Documents", status: "Incoming" },
+        { title: "Delayed Documents", status: "Delayed" },
+      ];
+
+      // Create statusCards based on the updatedDocumentList with the updated titles
+      const statusCards = statusList.map(({ title, status }) => {
+        const filteredByStatus = updatedDocumentList.filter(
+          (document) => document.status === status
+        );
+        return {
+          title,
+          value: filteredByStatus.length,
+        };
+      });
+
+      // Merge statusCards with the initial card data (Total Documents, etc.)
+      const updatedCardData = [...data, ...statusCards];
+
+      // Update the status data
+      setStatusData(statusCards);
+
+      // Check if updatedCardData has actually changed before setting state
+      if (JSON.stringify(cardData) !== JSON.stringify(updatedCardData)) {
+        // Set the updated card data, replacing the existing card data
+        setCardData(updatedCardData);
+      }
+    }
+  }, [updatedDocumentList, data, cardData]);
 
   return (
     <div className="w-full">
@@ -56,13 +171,13 @@ const Dashboard = () => {
         <div className=" w-full bg-white">
           <div className="flex p-4 bg-gray-300 justify-between items-center">
             <h1 className=" font-bold">Documents Received Chart</h1>
-            <YearDropdown data={year} option={year[0]} />
+            <YearDropdown handleFilter={filterByYear} />
           </div>
 
-          <LineChartAdmin />
+          <LineChartAdmin data={dataByYear} />
         </div>
         <div className="min-w-[350px]">
-          <PieChart sampleData={sampleData} />
+          <StatusPieChart data={statusData} />
         </div>
       </div>
       {/* <div>
@@ -70,15 +185,18 @@ const Dashboard = () => {
           <PieChart />
         </div>
       </div> */}
+
+      <div className="mt-10">
+        <h2 className="font-bold p-4 bg-gray-300">
+          Document Submissions Charts
+        </h2>
+        <LineChartDocumentSubmissions data={documents} />
+      </div>
       <div className="mt-10">
         <h2 className="font-bold p-4 bg-gray-300">
           Submitted Documents by WMSU-ESU Campus
         </h2>
-        <ChartByESU data={campusData} />
-      </div>
-      <div className="mt-10">
-        <h2 className="font-bold p-4 bg-gray-300">Document Type Charts</h2>
-        <PieChart sampleData={documentType} />
+        <ChartByESU data={dataByCampus} />
       </div>
     </div>
   );

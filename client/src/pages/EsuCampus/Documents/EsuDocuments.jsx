@@ -26,6 +26,7 @@ import {
 } from "../../../services/documentWolkflowSlice";
 import { Link } from "react-router-dom";
 import { getUserData } from "../../../services/authSlice";
+import rolesList from "../../../constants/rolesList";
 
 const Documents = () => {
   const dispatch = useDispatch();
@@ -39,6 +40,8 @@ const Documents = () => {
   const user = useSelector(getUserData);
   const [documentData, setDocumentData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  // const [updatedDocumentList, setUpdatedDocumentList] = useState([]);
+
   const documentsPerPage = 7;
 
   useEffect(() => {
@@ -74,7 +77,7 @@ const Documents = () => {
   }, [searchTerm, user, dispatch]);
 
   const handleFilterByType = (type) => {
-    if (type === "Type") {
+    if (type === "Document Type") {
       dispatch(filterDocumentsByESU(user?.esuCampus));
     } else {
       dispatch(filterDocumentByType(type));
@@ -111,6 +114,73 @@ const Documents = () => {
       setDocumentType(formattedDocumentTypes);
     }
   }, [workflow]);
+
+  // useEffect(() => {
+  //   const updateDocumentStatuses = () => {
+  //     const updatedDocumentList = documents.map((document) => {
+  //       // Check if all recipients have received the document
+  //       const allReceived = document?.document_recipients.every(
+  //         (recipient) => recipient.received_at !== null
+  //       );
+
+  //       // Find the current office and check if it has received the document
+  //       const officeReceived = document?.document_recipients.find(
+  //         (recipient) =>
+  //           recipient.office_name === user.office?.officeName &&
+  //           recipient.received_at !== null
+  //       );
+
+  //       // Get the previous office recipient to compare the time difference
+  //       const previousRecipient = document?.document_recipients.find(
+  //         (recipient) =>
+  //           recipient.office_name !== user.office?.officeName &&
+  //           recipient.received_at !== null
+  //       );
+
+  //       // Initialize status as "Incoming"
+  //       let status = "Incoming";
+
+  //       // Check if the previous office has received the document
+  //       if (previousRecipient) {
+  //         const receivedAt = new Date(previousRecipient.received_at);
+  //         const currentTime = new Date();
+
+  //         // Check if the time difference exceeds 24 hours (86400000 milliseconds)
+  //         const timeDifference = currentTime - receivedAt;
+
+  //         if (timeDifference > 86400000 && !officeReceived) {
+  //           status = "Delayed";
+  //         }
+  //       }
+
+  //       if (allReceived) {
+  //         status = "Completed";
+  //       } else if (!allReceived && user?.role === rolesList.faculty) {
+  //         status = "In Progress"; // Default status if not all are received
+  //       } else if (officeReceived) {
+  //         status = "Received";
+  //       }
+
+  //       // Only return the updated document if the status has changed
+  //       if (document.status !== status) {
+  //         return {
+  //           ...document,
+  //           status,
+  //         };
+  //       }
+
+  //       return document; // No change in status, return the same document
+  //     });
+
+  //     // Only update the state if the document list has changed
+  //     if (JSON.stringify(updatedDocumentList) !== JSON.stringify(documents)) {
+  //       setUpdatedDocumentList(updatedDocumentList);
+  //     }
+  //     console.log(updatedDocumentList);
+  //   };
+
+  //   updateDocumentStatuses();
+  // }, [documents, user]); // Add proper dependencies
 
   // Paganation
   const indexOfLastDocument = currentPage * documentsPerPage;
@@ -151,13 +221,13 @@ const Documents = () => {
               <Dropdown
                 handleFilter={handleFilterByType}
                 data={documentType}
-                option={"Type"}
+                option={"Document Type"}
               />
             </div>
 
-            <div>
+            {/* <div>
               <Status handleFilter={handleFIlterByStatus} />
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

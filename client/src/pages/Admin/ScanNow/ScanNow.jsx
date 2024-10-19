@@ -331,6 +331,8 @@ import QrReader from "react-qr-reader";
 import documentStatusList from "../../../constants/documentStatusList";
 import TrackLoader from "../../../components/loader/track_loader/Track";
 import "../../../components/qr_scanner/styles.css";
+import SuccessModal from "../../../components/SuccessModal";
+import rolesList from "../../../constants/rolesList";
 
 const ScanNow = () => {
   const dispatch = useDispatch();
@@ -338,11 +340,13 @@ const ScanNow = () => {
   const user = useSelector(getUserData);
   const document = useSelector(getDocumentByTrackingNumber);
   const status = useSelector(getStatus);
-
+  const [successModal, setSuccessModal] = useState(false);
   const [modal, setModal] = useState(false);
   const [trackingNumber, setTrackingNumber] = useState("");
   const [loading, setLoading] = useState(false);
   const [documentData, setDocumentData] = useState(null);
+  const [documentName, setDocumentName] = useState("");
+  const [documentId, setDocumentId] = useState(null);
   const [selected, setSelected] = useState("environment");
   const [startScan, setStartScan] = useState(false);
   const [loadingScan, setLoadingScan] = useState(false);
@@ -351,9 +355,26 @@ const ScanNow = () => {
   const [lastRecipient, setLastRecipient] = useState(false);
   const [recipientOffice, setRecipientOffice] = useState("");
   const [officeId, setOfficeId] = useState(null);
+  const [nextRoute, setNextRoute] = useState(null);
+  const [receivedLoader, setReceivedLoader] = useState(false);
 
   useEffect(() => {
-    if (document) setDocumentData(document);
+    if (
+      user.role === rolesList.campus_admin ||
+      user.role === rolesList.registrar
+    ) {
+      setRecipientOffice(`${user.esuCampus.toUpperCase()} REGISTRAR`);
+    } else if (user.office?.officeName) {
+      setRecipientOffice(user.office?.officeName);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (document) {
+      setDocumentData(document);
+      setDocumentName(document.document_name);
+      setDocumentId(document.id);
+    }
   }, [document]);
 
   const closeModal = () => {
@@ -387,17 +408,22 @@ const ScanNow = () => {
 
   const handleReceive = async () => {
     setLoading(true);
+    setReceivedLoader(true);
     const data = {
       document_id: documentData.id,
       user_id: officeId,
       action: isReceived ? "forwarded" : "received",
-      recipient_user: `${user?.firstName} ${user?.middleInitial} ${user?.lastName}`,
-      recipient_office: user?.office?.officeName || user?.esuCampus,
+      recipient_user: `${user?.firstName} ${user?.middleInitial}. ${user?.lastName}`,
+      recipient_office: recipientOffice,
+      document_name: documentData.document_name,
+      next_route: nextRoute,
     };
     try {
       const response = await api.post("/document/receive-document", data);
       if (response.data.status === "success") {
         toast.success(response.data.message);
+        setSuccessModal(true);
+        setReceivedLoader(false);
         closeModal();
       }
     } catch (error) {
@@ -409,11 +435,12 @@ const ScanNow = () => {
 
   useEffect(() => {
     const recipientData = documentData?.document_recipients || [];
-    if (user.esuCampus) {
-      setRecipientOffice(user.esuCampus);
-    } else {
-      setRecipientOffice(user.office.officeName);
-    }
+    // if (user.esuCampus) {
+    //   setRecipientOffice(user.esuCampus);
+    // } else {
+    //   setRecipientOffice(user.office.officeName);
+    // }
+    // console.log(recipientOffice);
 
     const recipientReceived = recipientData.find(
       (recipient) =>
@@ -454,7 +481,24 @@ const ScanNow = () => {
         !recipient.office_name.toLowerCase().includes("faculty")
     );
     if (campusRecipient) setOfficeId(campusRecipient?.user_id);
+
+    // Find the index of the current recipient office
+    const currentIndex = recipientData.findIndex((recipient) =>
+      recipient.office_name
+        .toLowerCase()
+        .includes(recipientOffice.trim().toLowerCase())
+    );
+
+    // Get the next recipient office if it exists
+    if (currentIndex !== -1 && currentIndex < recipientData.length - 1) {
+      const nextRecipient = recipientData[currentIndex + 1];
+      setNextRoute(nextRecipient?.office_name);
+      // setOfficeId(nextRecipient?.user_id); // Set the next office's user ID if needed
+    } else {
+      setNextRoute(null); // No more routes
+    }
   }, [user, recipientOffice, documentData, officeId]);
+  // console.log(nextRoute);
 
   const isMobileDevice = () => /Mobi|Android/i.test(navigator.userAgent);
 
@@ -495,71 +539,91 @@ const ScanNow = () => {
     }
   }, [startScan]);
 
-  return (
-    <div className="w-full relative">
-      <div className=" rounded-full absolute z-50 left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
-        {loading && <TrackLoader />}
-      </div>
-      {startScan ? (
-        <div className="App ">
-          <QrReader
-            facingMode={selected}
-            delay={1000}
-            onError={handleError}
-            onScan={handleScan}
-            style={{ width: "300px" }}
-          />
+  const handleSuccessModal = () => {
+    setSuccessModal(true);
+    setTimeout(() => {
+      setSuccessModal(false);
+    }, 1000);
+  };
 
-          {loadingScan && <p>Scanning...</p>}
+  return (
+    <>
+      <div className="w-full relative">
+        {successModal && (
+          <SuccessModal
+            successModal={successModal}
+            closeSuccessModal={handleSuccessModal}
+            documentName={documentName}
+            action={isReceived ? "forwarded" : "received"}
+            documentId={documentId}
+          />
+        )}
+        <div className=" rounded-full absolute z-50 left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
+          {loading && <TrackLoader />}
         </div>
-      ) : (
-        <>
-          <form onSubmit={handleSearch}>
-            <div className="flex items-center relative">
-              <input
-                type="text"
-                onChange={(e) => setTrackingNumber(e.target.value)}
-                placeholder="Enter Tracking Number"
-                value={trackingNumber}
-                className="w-full border border-gray-400 rounded-lg"
+
+        {startScan ? (
+          <div className="App ">
+            <QrReader
+              facingMode={selected}
+              delay={1000}
+              onError={handleError}
+              onScan={handleScan}
+              style={{ width: "300px" }}
+            />
+
+            {loadingScan && <p>Scanning...</p>}
+          </div>
+        ) : (
+          <>
+            <form onSubmit={handleSearch}>
+              <div className="flex items-center relative">
+                <input
+                  type="text"
+                  onChange={(e) => setTrackingNumber(e.target.value)}
+                  placeholder="Enter Tracking Number"
+                  value={trackingNumber}
+                  className="w-full border border-gray-400 rounded-lg"
+                />
+                <button
+                  type="submit"
+                  className="absolute right-4  text-blue-500 text-2xl"
+                >
+                  <MdOutlineFindInPage />
+                </button>
+              </div>
+            </form>
+            <div className="flex mt-4 bg-gray-300 justify-center flex-col gap-5 items-center h-[calc(100vh-160px)]">
+              <img
+                onClick={handleStartScan}
+                src={qrImg}
+                alt="qr-code"
+                className="w-16 hover:scale-110 transform transition-all"
               />
               <button
-                type="submit"
-                className="absolute right-4  text-blue-500 text-2xl"
+                onClick={handleStartScan}
+                className="bg-main hover:bg-main_hover text-white px-10 py-2 rounded-lg"
               >
-                <MdOutlineFindInPage />
+                Scan Now
               </button>
             </div>
-          </form>
-          <div className="flex mt-4 bg-gray-300 justify-center flex-col gap-5 items-center h-[calc(100vh-160px)]">
-            <img
-              onClick={handleStartScan}
-              src={qrImg}
-              alt="qr-code"
-              className="w-16 hover:scale-110 transform transition-all"
-            />
-            <button
-              onClick={handleStartScan}
-              className="bg-main hover:bg-main_hover text-white px-10 py-2 rounded-lg"
-            >
-              Scan Now
-            </button>
-          </div>
-        </>
-      )}
-      {modal && documentData && (
-        <ReceiveDocument
-          modal={modal}
-          closeModal={closeModal}
-          documentData={documentData}
-          handleReceive={handleReceive}
-          id={user?.id}
-          isReceived={isReceived}
-          isForwarded={isForwarded}
-          lastRecipient={lastRecipient}
-        />
-      )}
-    </div>
+          </>
+        )}
+        {modal && documentData && (
+          <ReceiveDocument
+            modal={modal}
+            closeModal={closeModal}
+            documentData={documentData}
+            handleReceive={handleReceive}
+            id={user?.id}
+            isReceived={isReceived}
+            isForwarded={isForwarded}
+            lastRecipient={lastRecipient}
+            receivedLoader={receivedLoader}
+          />
+        )}
+      </div>
+    </>
   );
 };
 

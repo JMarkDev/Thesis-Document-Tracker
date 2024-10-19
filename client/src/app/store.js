@@ -5,6 +5,7 @@ import documentsReducer from "../services/documentSlice";
 import workflowReducer from "../services/documentWolkflowSlice";
 import notificationReducer from "../services/notificationSlice";
 import staffReducer from "../services/staffSlice";
+import analyticsReducer from "../services/analyticsSlice";
 
 export const store = configureStore({
   reducer: {
@@ -14,5 +15,6 @@ export const store = configureStore({
     workflow: workflowReducer,
     notification: notificationReducer,
     staff: staffReducer,
+    analytics: analyticsReducer,
   },
 });

@@ -21,18 +21,103 @@ import {
   fetchAllWorkflow,
 } from "../../../services/documentWolkflowSlice";
 import { Link } from "react-router-dom";
+import { getUserData } from "../../../services/authSlice";
+import rolesList from "../../../constants/rolesList";
 
 const OfficeDocuments = () => {
   const dispatch = useDispatch();
   const allDocuments = useSelector(getAllDocuments);
   const workflow = useSelector(getAllWorkflow);
   const status = useSelector(getStatus);
-  // const documentType = ["IDP", "IOR", "DTR"];
+  const user = useSelector(getUserData);
   const [documentType, setDocumentType] = useState([]);
   const [sortOrder, setSortOrder] = useState("asc");
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [officeDocuments, setOfficeDocuments] = useState([]);
+  // const [updatedDocumentList, setUpdatedDocumentList] = useState([]);
+
   const documentsPerPage = 7;
+
+  useEffect(() => {
+    if (allDocuments) {
+      const filterByOffice = allDocuments?.filter((document) =>
+        document.document_recipients.some(
+          (recipient) => recipient.office_name === user?.office.officeName
+        )
+      );
+      setOfficeDocuments(filterByOffice);
+    }
+  }, [allDocuments, user]);
+
+  // useEffect(() => {
+  //   const updateDocumentStatuses = () => {
+  //     const updatedDocumentList = allDocuments.map((document) => {
+  //       // Check if all recipients have received the document
+  //       const allReceived = document?.document_recipients.every(
+  //         (recipient) => recipient.received_at !== null
+  //       );
+
+  //       // Find the current office and check if it has received the document
+  //       const officeReceived = document?.document_recipients.find(
+  //         (recipient) =>
+  //           recipient.office_name === user.office?.officeName &&
+  //           recipient.received_at !== null
+  //       );
+
+  //       // Get the previous office recipient to compare the time difference
+  //       const previousRecipient = document?.document_recipients.find(
+  //         (recipient) =>
+  //           recipient.office_name !== user.office?.officeName &&
+  //           recipient.received_at !== null
+  //       );
+
+  //       // Initialize status as "Incoming"
+  //       let status = "Incoming";
+
+  //       // Check if the previous office has received the document
+  //       if (previousRecipient) {
+  //         const receivedAt = new Date(previousRecipient.received_at);
+  //         const currentTime = new Date();
+
+  //         // Check if the time difference exceeds 24 hours (86400000 milliseconds)
+  //         const timeDifference = currentTime - receivedAt;
+
+  //         if (timeDifference > 86400000 && !officeReceived) {
+  //           status = "Delayed";
+  //         }
+  //       }
+
+  //       if (allReceived) {
+  //         status = "Completed";
+  //       } else if (!allReceived && user?.role === rolesList.faculty) {
+  //         status = "In Progress"; // Default status if not all are received
+  //       } else if (officeReceived) {
+  //         status = "Received";
+  //       }
+
+  //       // Only return the updated document if the status has changed
+  //       if (document.status !== status) {
+  //         return {
+  //           ...document,
+  //           status,
+  //         };
+  //       }
+
+  //       return document; // No change in status, return the same document
+  //     });
+
+  //     // Only update the state if the document list has changed
+  //     if (
+  //       JSON.stringify(updatedDocumentList) !== JSON.stringify(allDocuments)
+  //     ) {
+  //       setUpdatedDocumentList(updatedDocumentList);
+  //     }
+  //     console.log(updatedDocumentList);
+  //   };
+
+  //   updateDocumentStatuses();
+  // }, [allDocuments, user]); // Add proper dependencies
 
   useEffect(() => {
     if (status === "idle") {
@@ -58,7 +143,7 @@ const OfficeDocuments = () => {
   }, [searchTerm, dispatch]);
 
   const handleFilterByType = (type) => {
-    if (type === "Type") {
+    if (type === "Document Type") {
       dispatch(fetchAllDocuments());
     } else {
       dispatch(filterDocumentByType(type));
@@ -92,7 +177,7 @@ const OfficeDocuments = () => {
   // Paganation
   const indexOfLastDocument = currentPage * documentsPerPage;
   const indexOfFirstDocument = indexOfLastDocument - documentsPerPage;
-  const currentDocuments = allDocuments.slice(
+  const currentDocuments = officeDocuments.slice(
     indexOfFirstDocument,
     indexOfLastDocument
   );
@@ -135,13 +220,13 @@ const OfficeDocuments = () => {
               <Dropdown
                 handleFilter={handleFilterByType}
                 data={documentType}
-                option={"Type"}
+                option={"Document Type"}
               />
             </div>
 
-            <div>
+            {/* <div>
               <Status handleFilter={handleFIlterByStatus} />
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
@@ -150,7 +235,7 @@ const OfficeDocuments = () => {
       <div className="flex justify-end mt-5">
         <Pagination
           documentsPerPage={documentsPerPage}
-          totalDocuments={allDocuments.length}
+          totalDocuments={officeDocuments.length}
           paginate={paginate}
           currentPage={currentPage}
         />

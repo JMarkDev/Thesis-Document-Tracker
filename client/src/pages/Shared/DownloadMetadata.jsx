@@ -1,6 +1,8 @@
 import QRCode from "react-qr-code";
 import PropTypes from "prop-types";
+import { useFormat } from "../../hooks/useFormatDate";
 const DownloadMetadata = ({ documentData, contentRef }) => {
+  const { dateFormat } = useFormat();
   return (
     <>
       <div className="flex justify-center py-10">
@@ -86,7 +88,7 @@ const DownloadMetadata = ({ documentData, contentRef }) => {
                   <div>
                     <p className="text-gray-600 flex gap-3">
                       <strong className="text-gray-800">Date & Time:</strong>{" "}
-                      {new Date(documentData.createdAt).toLocaleString()}
+                      {dateFormat(documentData.createdAt)}
                     </p>
                   </div>
                   {documentData.document_desc && (

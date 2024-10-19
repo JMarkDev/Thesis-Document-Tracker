@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
 import {
   LineChart,
   Line,
@@ -9,89 +9,15 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import useColorGenerator from "../../hooks/useColorGenerator";
+import PropTypes from "prop-types";
 
-const cardData = [
-  {
-    month: "Jan",
-    "IDP Pagadian Campus": 10,
-    "DTR Pagadian Campus": 30,
-    "IOR Pagadian Campus": 20,
-  },
-  {
-    month: "Feb",
-    "IDP Pagadian Campus": 30,
-    "DTR Pagadian Campus": 30,
-    "IOR Pagadian Campus": 20,
-  },
-  {
-    month: "Mar",
-    "IDP Pagadian Campus": 50,
-    "DTR Pagadian Campus": 30,
-    "IOR Pagadian Campus": 20,
-  },
-  {
-    month: "Apr",
-    "IDP Pagadian Campus": 99,
-    "DTR Pagadian Campus": 20,
-    "IOR Pagadian Campus": 10,
-  },
-  {
-    month: "May",
-    "IDP Pagadian Campus": 30,
-    "DTR Pagadian Campus": 40,
-    "IOR Pagadian Campus": 50,
-  },
-  {
-    month: "Jun",
-    "IDP Pagadian Campus": 10,
-    "DTR Pagadian Campus": 20,
-    "IOR Pagadian Campus": 30,
-  },
-  {
-    month: "Jul",
-    "IDP Pagadian Campus": 60,
-    "DTR Pagadian Campus": 40,
-    "IOR Pagadian Campus": 30,
-  },
-  {
-    month: "Aug",
-    "IDP Pagadian Campus": 50,
-    "DTR Pagadian Campus": 30,
-    "IOR Pagadian Campus": 20,
-  },
-  {
-    month: "Sep",
-    "IDP Pagadian Campus": 50,
-    "DTR Pagadian Campus": 30,
-    "IOR Pagadian Campus": 20,
-  },
-  {
-    month: "Oct",
-    "IDP Pagadian Campus": 50,
-    "DTR Pagadian Campus": 30,
-    "IOR Pagadian Campus": 20,
-  },
-  {
-    month: "Nov",
-    "IDP Pagadian Campus": 50,
-    "DTR Pagadian Campus": 30,
-    "IOR Pagadian Campus": 20,
-  },
-  {
-    month: "Dec",
-    "IDP Pagadian Campus": 50,
-    "DTR Pagadian Campus": 30,
-    "IOR Pagadian Campus": 20,
-  },
-];
-
-const LineChartAdmin = () => {
-  const [data, setData] = useState([]);
+const LineChartAdmin = ({ data }) => {
+  // const [data, setData] = useState([]);
   const { getNextColors, usedColors } = useColorGenerator();
 
-  useEffect(() => {
-    setData(cardData);
-  }, []);
+  // useEffect(() => {
+  //   setData(cardData);
+  // }, []);
 
   return (
     <div className="w-full shadow-xl mt-4">
@@ -130,6 +56,10 @@ const LineChartAdmin = () => {
       </div>
     </div>
   );
+};
+
+LineChartAdmin.propTypes = {
+  data: PropTypes.array,
 };
 
 export default LineChartAdmin;
