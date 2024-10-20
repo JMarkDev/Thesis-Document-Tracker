@@ -31,7 +31,6 @@ const uploadDocument = async (req, res) => {
     document_type,
     document_desc,
     file_type,
-    // files,
     uploaded_by,
     contact_number,
     esuCampus,
@@ -39,6 +38,7 @@ const uploadDocument = async (req, res) => {
     user_email,
     route,
     action,
+    deadline,
   } = req.body;
 
   try {
@@ -124,6 +124,7 @@ const uploadDocument = async (req, res) => {
       status: documentStatus.incoming,
       user_id,
       user_email,
+      deadline,
       createdAt: sequelize.literal(`'${formattedDate}'`),
     });
 

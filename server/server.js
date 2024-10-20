@@ -81,7 +81,7 @@ const server = http.createServer(app);
 // Socket setup
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: "http://localhost:3000",
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   },
@@ -93,6 +93,15 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     console.log("User disconnected");
+  });
+
+  socket.on("upload_document", (data) => {
+    socket.broadcast.emit("success_upload", data);
+    console.log(data);
+  });
+
+  socket.on("received_document", (data) => {
+    socket.broadcast.emit("success_received", data);
   });
 });
 

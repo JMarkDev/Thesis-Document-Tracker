@@ -2,12 +2,14 @@ const userModel = require("../models/userModel");
 const otpController = require("../controllers/otpController");
 const bcrypt = require("bcryptjs");
 const saltsRounds = 10;
-const { createdAt } = require("../utils/formattedTime");
+const sequelize = require("../configs/database");
+// const { createdAt } = require("../utils/formattedTime");
 const { Sequelize } = require("sequelize");
 require("dotenv").config();
 const fs = require("fs");
 const rolesList = require("../constants/rolesList");
 const statusList = require("../constants/statusList");
+const date = require("date-and-time");
 
 const handleRegister = async (req, res) => {
   const {
@@ -24,6 +26,9 @@ const handleRegister = async (req, res) => {
     password,
   } = req.body;
   try {
+    const createdAt = new Date();
+    const formattedDate = date.format(createdAt, "YYYY-MM-DD HH:mm:ss");
+
     let esuCampusExist;
     if (role === rolesList.registrar) {
       esuCampusExist = await userModel.findOne({
@@ -111,7 +116,7 @@ const handleRegister = async (req, res) => {
         role,
         password: hashPassword,
         status: statusList.pending,
-        createdAt: createdAt,
+        createdAt: sequelize.literal(`'${formattedDate}'`),
       });
 
       return res.status(201).json({

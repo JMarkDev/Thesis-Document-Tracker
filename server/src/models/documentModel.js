@@ -68,10 +68,10 @@ const Document = sequelize.define(
     //   allowNull: false,
     //   defaultValue: 0,
     // },
-    // deadline: {
-    //   type: DataTypes.DATE,
-    //   allowNull: true
-    // },
+    deadline: {
+      type: DataTypes.DATEONLY,
+      allowNull: true,
+    },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,

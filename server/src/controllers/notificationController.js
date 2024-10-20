@@ -1,14 +1,19 @@
 const notificationModel = require("../models/notificationModel");
 const { createdAt } = require("../utils/formattedTime");
+const date = require("date-and-time");
+const sequelize = require("../configs/database");
 
 const addNotification = async ({ document_id, content, user_id }) => {
   try {
+    const createdAt = new Date();
+    const formattedDate = date.format(createdAt, "YYYY-MM-DD HH:mm:ss");
+
     const newNotification = await notificationModel.create({
       document_id,
       content,
       user_id,
       is_read: 0,
-      createdAt: createdAt,
+      createdAt: sequelize.literal(`'${formattedDate}'`),
     });
 
     return newNotification; // Return the created notification
