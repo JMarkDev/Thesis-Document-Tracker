@@ -14,7 +14,8 @@ import {
   getNotificationById,
   readNotification,
 } from "../../services/notificationSlice";
-
+import io from "socket.io-client";
+const socket = io.connect(`${api.defaults.baseURL}`);
 const Navbar = () => {
   const dispatch = useDispatch();
   const userData = useSelector(getUserData);
@@ -72,6 +73,28 @@ const Navbar = () => {
       dispatch(fetchNotificationById(userData.id));
     }
   }, [userData, dispatch]);
+
+  useEffect(() => {
+    if (userData) {
+      const handleUploadSuccess = () => {
+        dispatch(fetchNotificationById(userData.id));
+      };
+
+      const handleReceivedSuccess = () => {
+        dispatch(fetchNotificationById(userData.id));
+      };
+
+      socket.on("success_upload", handleUploadSuccess);
+      socket.on("success_received", handleReceivedSuccess);
+    }
+
+    // Clean up the socket connection and remove the event listener
+    return () => {
+      socket.off("success_upload");
+      socket.off("success_received");
+      socket.disconnect();
+    };
+  }, [dispatch, userData]);
 
   useEffect(() => {
     if (getNotification) {

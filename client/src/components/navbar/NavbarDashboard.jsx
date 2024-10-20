@@ -18,6 +18,8 @@ import {
 } from "../../services/notificationSlice";
 import { getUserRole } from "../../utils/userRoles";
 import rolesList from "../../constants/rolesList";
+import io from "socket.io-client";
+const socket = io.connect(`${api.defaults.baseURL}`);
 
 const NavDashboard = ({ handleBurger }) => {
   const dispatch = useDispatch();
@@ -65,6 +67,28 @@ const NavDashboard = ({ handleBurger }) => {
       dispatch(fetchNotificationById(userData.id));
     }
   }, [userData, dispatch]);
+
+  useEffect(() => {
+    if (userData) {
+      const handleUploadSuccess = () => {
+        dispatch(fetchNotificationById(userData.id));
+      };
+
+      const handleReceivedSuccess = () => {
+        dispatch(fetchNotificationById(userData.id));
+      };
+
+      socket.on("success_upload", handleUploadSuccess);
+      socket.on("success_received", handleReceivedSuccess);
+    }
+
+    // Clean up the socket connection and remove the event listener
+    return () => {
+      socket.off("success_upload");
+      socket.off("success_received");
+      socket.disconnect();
+    };
+  }, [dispatch, userData]);
 
   useEffect(() => {
     if (getNotification) {
