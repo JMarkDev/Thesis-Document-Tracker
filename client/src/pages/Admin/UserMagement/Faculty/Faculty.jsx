@@ -21,7 +21,7 @@ const Faculty = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedESU, setSelectedESU] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const documentsPerPage = 7;
+  const documentsPerPage = 5;
 
   useEffect(() => {
     if (registrarStatus === "idle") {

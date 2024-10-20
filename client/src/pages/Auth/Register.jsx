@@ -340,7 +340,9 @@ const Register = ({ modal, closeModal, openLogin }) => {
                         placeholder=" "
                       >
                         <option value="">Select Designation</option>
-                        <option value="Visiting Lecturer">Instructor</option>
+                        <option value="Visiting Lecturer">
+                          Visiting Lecturer
+                        </option>
                         <option value="Regular Faculty">Regular Faculty</option>
                         <option value="Program Head">Program Head</option>
                       </select>

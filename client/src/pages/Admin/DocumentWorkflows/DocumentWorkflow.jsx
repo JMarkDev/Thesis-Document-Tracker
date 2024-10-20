@@ -16,7 +16,7 @@ const DocumentWorkflow = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [modal, setModal] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const documentsPerPage = 7;
+  const documentsPerPage = 6;
 
   useEffect(() => {
     if (workflow === "idle") {

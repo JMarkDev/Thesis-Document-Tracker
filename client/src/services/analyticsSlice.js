@@ -60,7 +60,6 @@ export const fetchDataOfficeByYear = createAsyncThunk(
       const response = await axios.get(
         `/analytics/document-by-esu/${officeName}/${year}`
       );
-      console.log(response.data);
       return response.data;
     } catch (error) {
       console.error(error);

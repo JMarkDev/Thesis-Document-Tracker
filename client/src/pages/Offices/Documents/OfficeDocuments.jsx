@@ -37,7 +37,7 @@ const OfficeDocuments = () => {
   const [officeDocuments, setOfficeDocuments] = useState([]);
   // const [updatedDocumentList, setUpdatedDocumentList] = useState([]);
 
-  const documentsPerPage = 7;
+  const documentsPerPage = 5;
 
   useEffect(() => {
     if (allDocuments) {
@@ -186,7 +186,7 @@ const OfficeDocuments = () => {
 
   return (
     <div className="">
-      <div className="flex  flex-col gap-5 justify-between mb-8">
+      <div className="flex  flex-col gap-5 justify-between mb-5">
         <div className="flex text-sm md:text-[16px] justify-between lg:flex-row flex-col gap-5">
           <Link
             to={"/upload-documents"}

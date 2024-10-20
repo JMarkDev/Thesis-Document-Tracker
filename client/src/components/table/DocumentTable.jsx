@@ -5,8 +5,8 @@ import { FaEye, FaFileDownload } from "react-icons/fa";
 import { IoMdPrint } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
-import { getDocumentStatus } from "../../utils/documentStatus";
-import { documentBackground } from "../../utils/documentBackgroundColor";
+// import { getDocumentStatus } from "../../utils/documentStatus";
+// import { documentBackground } from "../../utils/documentBackgroundColor";
 import { useFormat } from "../../hooks/useFormatDate";
 import html2pdf from "html2pdf.js";
 import DownloadMetadata from "../../pages/Shared/DownloadMetadata";
@@ -46,7 +46,9 @@ const Table = ({ documents, handleSort }) => {
   }, [user]);
 
   useEffect(() => {
-    if (
+    if (user.role === rolesList.faculty) {
+      setOfficeRecipient(`${user.esuCampus.toUpperCase()} FACULTY`);
+    } else if (
       user.role === rolesList.campus_admin ||
       user.role === rolesList.registrar
     ) {
@@ -137,11 +139,28 @@ const Table = ({ documents, handleSort }) => {
 
   useEffect(() => {
     const updateDocumentStatuses = () => {
+      // 24 hours in milliseconds
+      const Hours = 86400000;
+      const currentTime = new Date();
+
       const updatedDocumentList = documents.map((document) => {
         // Check if all recipients have received the document
         const allReceived = document?.document_recipients.every(
           (recipient) => recipient.received_at !== null
         );
+
+        let deadlinePassed = false;
+        // Check if document have deadline
+        const hasDeadline = document?.deadline;
+        if (hasDeadline) {
+          const deadline = new Date(
+            hasDeadline?.toLocaleString("en-US", { timeZone: "UTC" })
+          );
+
+          if (currentTime > deadline) {
+            deadlinePassed = true;
+          }
+        }
 
         // Find the current office and check if it has received the document
         const officeReceived = document?.document_recipients.find(
@@ -150,41 +169,37 @@ const Table = ({ documents, handleSort }) => {
             recipient.received_at !== null
         );
 
-        // Get the previous office recipient to compare the time difference
-        const previousRecipient = document?.document_recipients.find(
-          (recipient) =>
-            recipient.office_name !== officeRecipient &&
-            recipient.received_at !== null
-        );
+        const lastReveived = document?.document_recipients
+          .filter((recipient) => recipient.received_at !== null)
+          .sort((a, b) => new Date(b.received_at) - new Date(a.received_at))[0];
 
-        // Initialize status as "Incoming"
-        let status = "Incoming";
-        let isDelayed = false;
+        const receivedAt = new Date(lastReveived?.received_at);
+        const localReceivedAt = receivedAt.toLocaleString("en-US", {
+          timeZone: "UTC",
+        });
 
-        // Check if the previous office has received the document
-        if (previousRecipient) {
-          const receivedAt = new Date(previousRecipient.received_at);
-          const currentTime = new Date();
+        const timeDifference = currentTime - new Date(localReceivedAt);
 
-          // Check if the time difference exceeds 24 hours (86400000 milliseconds)
-          const timeDifference = currentTime - receivedAt;
-
-          if (timeDifference > 86400000 && !officeReceived && !allReceived) {
-            isDelayed = true;
-          }
-        }
-
-        if (allReceived) {
-          status = "Completed";
-        } else if (isDelayed && !officeReceived && !allReceived) {
-          status = "Delayed";
-        } else if (
+        let status = null;
+        if (
           !allReceived &&
+          officeReceived &&
+          normalizeString(fullName) !== normalizeString(document.uploaded_by)
+        ) {
+          status = "Received"; // Prioritize the "Received" status
+        } else if (!allReceived && deadlinePassed) {
+          status = "Delayed";
+        } else if (timeDifference > Hours && !allReceived) {
+          status = "Delayed";
+        } else if (allReceived) {
+          status = "Completed";
+        } else if (
+          // !allReceived &&
           normalizeString(fullName) === normalizeString(document.uploaded_by)
         ) {
-          status = "In Progress"; // Default status if not all are received
-        } else if (officeReceived) {
-          status = "Received";
+          status = "In Progress";
+        } else {
+          status = "Incoming";
         }
 
         // Only return the updated document if the status has changed
@@ -205,7 +220,7 @@ const Table = ({ documents, handleSort }) => {
     };
 
     updateDocumentStatuses();
-  }, [documents, user, officeRecipient]); // Add proper dependencies
+  }, [documents, user, officeRecipient, fullName]); // Add proper dependencies
 
   return (
     <>

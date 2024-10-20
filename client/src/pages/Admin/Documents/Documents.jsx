@@ -36,7 +36,7 @@ const Documents = () => {
   const [currentPage, setCurrentPage] = useState(1);
   // const [updatedDocumentList, setUpdatedDocumentList] = useState([]);
 
-  const documentsPerPage = 7;
+  const documentsPerPage = 5;
 
   useEffect(() => {
     if (status === "idle") {
@@ -93,75 +93,6 @@ const Documents = () => {
     }
   }, [workflow]);
 
-  // useEffect(() => {
-  //   const updateDocumentStatuses = () => {
-  //     const updatedDocumentList = allDocuments.map((document) => {
-  //       // Check if all recipients have received the document
-  //       const allReceived = document?.document_recipients.every(
-  //         (recipient) => recipient.received_at !== null
-  //       );
-
-  //       // Find the current office and check if it has received the document
-  //       const officeReceived = document?.document_recipients.find(
-  //         (recipient) =>
-  //           recipient.office_name === user.office?.officeName &&
-  //           recipient.received_at !== null
-  //       );
-
-  //       // Get the previous office recipient to compare the time difference
-  //       const previousRecipient = document?.document_recipients.find(
-  //         (recipient) =>
-  //           recipient.office_name !== user.office?.officeName &&
-  //           recipient.received_at !== null
-  //       );
-
-  //       // Initialize status as "Incoming"
-  //       let status = "Incoming";
-
-  //       // Check if the previous office has received the document
-  //       if (previousRecipient) {
-  //         const receivedAt = new Date(previousRecipient.received_at);
-  //         const currentTime = new Date();
-
-  //         // Check if the time difference exceeds 24 hours (86400000 milliseconds)
-  //         const timeDifference = currentTime - receivedAt;
-
-  //         if (timeDifference > 86400000 && !officeReceived) {
-  //           status = "Delayed";
-  //         }
-  //       }
-
-  //       if (allReceived) {
-  //         status = "Completed";
-  //       } else if (!allReceived && user?.role === rolesList.faculty) {
-  //         status = "In Progress"; // Default status if not all are received
-  //       } else if (officeReceived) {
-  //         status = "Received";
-  //       }
-
-  //       // Only return the updated document if the status has changed
-  //       if (document.status !== status) {
-  //         return {
-  //           ...document,
-  //           status,
-  //         };
-  //       }
-
-  //       return document; // No change in status, return the same document
-  //     });
-
-  //     // Only update the state if the document list has changed
-  //     if (
-  //       JSON.stringify(updatedDocumentList) !== JSON.stringify(allDocuments)
-  //     ) {
-  //       setUpdatedDocumentList(updatedDocumentList);
-  //     }
-  //     console.log(updatedDocumentList);
-  //   };
-
-  //   updateDocumentStatuses();
-  // }, [allDocuments, user]); // Add proper dependencies
-
   // Paganation
   const indexOfLastDocument = currentPage * documentsPerPage;
   const indexOfFirstDocument = indexOfLastDocument - documentsPerPage;
@@ -174,7 +105,7 @@ const Documents = () => {
 
   return (
     <div className="">
-      <div className="flex  flex-col gap-5 justify-between mb-8">
+      <div className="flex  flex-col gap-5 justify-between mb-5">
         <div className="flex text-sm md:text-[16px] justify-between lg:flex-row flex-col gap-5">
           <Link
             to={"/upload-documents"}

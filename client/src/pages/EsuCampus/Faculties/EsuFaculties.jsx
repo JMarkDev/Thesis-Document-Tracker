@@ -19,7 +19,7 @@ const EsuFaculties = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const user = useSelector(getUserData);
   const [currentPage, setCurrentPage] = useState(1);
-  const documentsPerPage = 7;
+  const documentsPerPage = 5;
 
   useEffect(() => {
     if (registrarStatus === "idle") {
