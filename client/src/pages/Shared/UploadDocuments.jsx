@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Back from "../../components/buttons/Back";
-import { getAllWorkflow } from "../../services/documentWolkflowSlice";
+import {
+  getAllWorkflow,
+  fetchAllWorkflow,
+} from "../../services/documentWolkflowSlice";
 import { getUserData } from "../../services/authSlice";
 import { MdDelete } from "react-icons/md";
 import DocumentRoute from "../../components/dropdown/DocumentRoute";
@@ -10,7 +13,11 @@ import api from "../../api/axios";
 import Loading from "../../components/loader/loginloader/LoginLoading";
 import { useToast } from "../../hooks/useToast";
 import rolesList from "../../constants/rolesList";
+import io from "socket.io-client";
+const socket = io.connect(`${api.defaults.baseURL}`);
+
 const UploadDocuments = () => {
+  const dispatch = useDispatch();
   const toast = useToast();
   const navigate = useNavigate();
   const documentType = useSelector(getAllWorkflow);
@@ -30,6 +37,7 @@ const UploadDocuments = () => {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [route, setRoute] = useState([]);
   const [defaultRoute, setDefaultRoute] = useState([]);
+  const [deadline, setDeadline] = useState(null);
 
   const [trackingNumberError, setTrackingNumberError] = useState("");
   const [documentNameError, setDocumentNameError] = useState("");
@@ -38,6 +46,7 @@ const UploadDocuments = () => {
   const [fileTypeError, setFileTypeError] = useState("");
 
   useEffect(() => {
+    dispatch(fetchAllWorkflow());
     setUploadedBy(
       `${user?.firstName} ${user?.middleInitial}. ${user?.lastName}`
     );
@@ -48,7 +57,7 @@ const UploadDocuments = () => {
     if (user?.role === rolesList.faculty) {
       setFacultyId(user?.id);
     }
-  }, [user]);
+  }, [user, dispatch]);
 
   useEffect(() => {
     if (user?.esuCampus) {
@@ -102,35 +111,6 @@ const UploadDocuments = () => {
     }
   };
 
-  // const handleDocumentType = (e) => {
-  //   const selectedId = e.target.value;
-  //   const selectedDocumentType = documentType.find(
-  //     (type) => type.id === parseInt(selectedId)
-  //   );
-  //   setDocumentType(selectedDocumentType.document_type);
-
-  //   if (selectedDocumentType) {
-  //     // Ensure that route is always an array
-  //     const updatedRoute = Array.isArray(selectedDocumentType.route)
-  //       ? selectedDocumentType.route.map((routeItem) => {
-  //           if (
-  //             routeItem.office_name === "FACULTY" ||
-  //             routeItem.office_name === "REGISTRAR"
-  //           ) {
-  //             return {
-  //               ...routeItem,
-  //               office_name: `${esuCampus} ${routeItem.office_name}`,
-  //             };
-  //           }
-  //           return routeItem;
-  //         })
-  //       : [];
-
-  //     setRoute(updatedRoute);
-  //     setDefaultRoute(updatedRoute);
-  //   }
-  // };
-
   const handleDocumentType = (e) => {
     const selectedId = e.target.value;
     const selectedDocumentType = documentType.find(
@@ -139,6 +119,7 @@ const UploadDocuments = () => {
 
     if (selectedDocumentType) {
       setDocumentType(selectedDocumentType.document_type);
+      setDeadline(selectedDocumentType?.deadline || null);
       // Ensure that route is always an array
       const updatedRoute = Array.isArray(selectedDocumentType.route)
         ? selectedDocumentType.route.map((routeItem) => {
@@ -195,6 +176,7 @@ const UploadDocuments = () => {
     formData.append("document_name", document_name);
     formData.append("document_desc", document_desc);
     formData.append("document_type", document_type);
+    formData.append("deadline", deadline);
     formData.append("file_type", file_type);
     for (let i = 0; i < selectedFiles.length; i++) {
       formData.append("files", selectedFiles[i]);
@@ -212,6 +194,8 @@ const UploadDocuments = () => {
       const response = await api.post("/document/upload", formData);
       console.log(response.data);
       if (response.data.status === "success") {
+        // socket
+        socket.emit("upload_document", response.data);
         toast.success(response.data.message);
         setTimeout(() => {
           setLoading(false);
