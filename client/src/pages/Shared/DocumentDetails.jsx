@@ -21,8 +21,14 @@ import {
   FaFileWord,
   FaFileImage,
 } from "react-icons/fa6";
+import io from "socket.io-client";
+import api from "../../api/axios";
+
+// Create a single socket connection outside the component
+const socket = io.connect(`${api.defaults.baseURL}`);
 
 const DocumentDetails = () => {
+  // const socket = io.connect(`${api.defaults.baseURL}`);
   const { id } = useParams();
   const user = useSelector(getUserData);
   const dispatch = useDispatch();
@@ -48,7 +54,21 @@ const DocumentDetails = () => {
   }, [id, dispatch]);
 
   useEffect(() => {
-    if (
+    const handleSuccessReceived = () => {
+      dispatch(fetchDocumentById(id));
+    };
+
+    socket.on("success_received", handleSuccessReceived);
+
+    return () => {
+      socket.off("success_received", handleSuccessReceived);
+    };
+  }, [dispatch, id]);
+
+  useEffect(() => {
+    if (user.role === rolesList.faculty) {
+      setOfficeRecipient(`${user.esuCampus.toUpperCase()} FACULTY`);
+    } else if (
       user.role === rolesList.campus_admin ||
       user.role === rolesList.registrar
     ) {
@@ -61,18 +81,28 @@ const DocumentDetails = () => {
   useEffect(() => {
     if (!document || !document.document_recipients) return;
 
+    const currentTime = new Date();
+
+    // 24 hours in milliseconds
+    const Hours = 86400000;
+
     // Check if all recipients have received the document
     const allReceived = document?.document_recipients.every(
       (recipient) => recipient.received_at !== null
     );
-    // Find the current office and check if it has received the document
-    // const officeReceived = document?.document_recipients.find(
-    //   (recipient) =>
-    //     recipient.office_name?.trim().toLowerCase() ===
-    //       user.office?.officeName.trim().toLowerCase() &&
-    //     recipient.received_at !== null
-    // );
-    // console.log(officeReceived);
+
+    let deadlinePassed = false;
+    // Check if document have deadline
+    const hasDeadline = document?.deadline;
+    if (hasDeadline) {
+      const deadline = new Date(
+        hasDeadline?.toLocaleString("en-US", { timeZone: "UTC" })
+      );
+
+      if (currentTime > deadline) {
+        deadlinePassed = true;
+      }
+    }
 
     // Find the current office and check if it has received the document
     const officeReceived = document?.document_recipients.find(
@@ -81,39 +111,42 @@ const DocumentDetails = () => {
         recipient.received_at !== null
     );
 
-    // Get the previous office recipient to compare the time difference
-    const previousRecipient = document?.document_recipients.find(
-      (recipient) =>
-        recipient.office_name !== officeRecipient &&
-        recipient.received_at !== null
-    );
+    const lastReveived = document?.document_recipients
+      .filter((recipient) => recipient.received_at !== null)
+      .sort((a, b) => new Date(b.received_at) - new Date(a.received_at))[0];
 
-    // Check if the previous office has received the document
-    if (previousRecipient) {
-      const receivedAt = new Date(previousRecipient.received_at);
-      const currentTime = new Date();
+    const receivedAt = new Date(lastReveived?.received_at);
+    const localReceivedAt = receivedAt.toLocaleString("en-US", {
+      timeZone: "UTC",
+    });
 
-      // Check if the time difference exceeds 24 hours (86400000 milliseconds)
-      const timeDifference = currentTime - receivedAt;
+    const timeDifference = currentTime - new Date(localReceivedAt);
 
-      if (timeDifference > 86400000 && !officeReceived && !allReceived) {
-        setStatus("Delayed");
-        return;
-      }
-    }
+    let status = null;
 
-    if (allReceived) {
-      setStatus("Completed");
-    } else if (
+    // First, check if the office has received and the uploaded_by matches the user
+    if (
       !allReceived &&
+      officeReceived &&
+      normalizeString(fullName) !== normalizeString(documentData.uploaded_by)
+    ) {
+      status = "Received"; // Prioritize the "Received" status
+    } else if (!allReceived && deadlinePassed) {
+      status = "Delayed";
+    } else if (timeDifference > Hours && !allReceived) {
+      status = "Delayed";
+    } else if (allReceived) {
+      status = "Completed";
+    } else if (
+      // !allReceived &&
       normalizeString(fullName) === normalizeString(documentData.uploaded_by)
     ) {
-      setStatus("In Progress"); // Default status if not all are received
-    } else if (officeReceived) {
-      setStatus("Received");
+      status = "In Progress";
     } else {
-      setStatus("Incoming");
+      status = "Incoming";
     }
+
+    setStatus(status);
   }, [document, user, officeRecipient, documentData, fullName]);
 
   useEffect(() => {
@@ -132,32 +165,6 @@ const DocumentDetails = () => {
     }
   }, [documentData]);
 
-  // useEffect(() => {
-  //   if (
-  //     user.role === rolesList.campus_admin ||
-  //     user.role === rolesList.registrar
-  //   ) {
-  //     setRecipientOffice(user.esuCampus);
-  //   } else if (user.office?.office_name) {
-  //     setRecipientOffice(user.office.office_name);
-  //   }
-  // }, [user]);
-
-  // useEffect(() => {
-  //   if (document && recipientOffice) {
-  //     const recipientReceived = document.document_recipients.find(
-  //       (recipient) =>
-  //         recipient.office_name
-  //           .toLowerCase()
-  //           .includes(recipientOffice.trim().toLowerCase()) &&
-  //         !recipient.office_name.toLowerCase().includes("faculty") &&
-  //         recipient.received_at !== null
-  //     );
-
-  //     // Set the received status
-  //     setIsReceived(!!recipientReceived); // Use !! to ensure it sets a boolean (true/false)
-  //   }
-  // }, [document, recipientOffice]);
   // Helper function to get the file type icon
   const getFileIcon = (file) => {
     const extension = file.split(".").pop().toLowerCase();
@@ -262,12 +269,10 @@ const DocumentDetails = () => {
                   <p className="text-gray-700">{documentData.document_desc}</p>
                 </div>
               )}
-
               <div className="flex items-center gap-5 border-b pb-2">
                 <h1 className="font-bold  text-gray-800">Uploaded By:</h1>
                 <p className="text-gray-700">{documentData.uploaded_by}</p>
               </div>
-
               <div className="flex items-center gap-5 border-b pb-2">
                 <h1 className="font-bold  text-gray-800">Contact Number:</h1>
                 <p className="text-gray-700">{documentData.contact_number}</p>
@@ -278,13 +283,20 @@ const DocumentDetails = () => {
                   <p className="text-gray-700">{documentData.esuCampus}</p>
                 </div>
               )}
-
               <div className="flex items-center gap-5 border-b pb-2">
                 <h1 className="font-bold  text-gray-800">Date:</h1>
                 <p className="text-gray-700">
                   {dateFormat(documentData.createdAt)}
                 </p>
               </div>
+              {documentData.deadline && (
+                <div className="flex items-center gap-5 border-b pb-2">
+                  <h1 className="font-bold  text-gray-800">Deadline:</h1>
+                  <p className="text-gray-700">
+                    {new Date(documentData.deadline).toLocaleDateString()}
+                  </p>
+                </div>
+              )}
               <div className="flex items-center gap-5">
                 <h1 className="font-bold  text-gray-800">Status:</h1>
                 <span
