@@ -145,8 +145,17 @@ const Sidebar = ({ sidebar, handleBurger }) => {
         (link) => !link.restrictedTo || link.restrictedTo.includes(role)
       );
       setSidebarLinks(filterdLinks);
-    } else if (role === rolesList.office || role === rolesList.office_staff) {
+    } else if (role === rolesList.office) {
       setSidebarLinks(officeLinks);
+    } else if (role === rolesList.office_staff) {
+      filterdLinks = officeLinks.filter(
+        (link) =>
+          link.title === "Scan Now" ||
+          link.title === "Dashboard" ||
+          link.title === "Documents" ||
+          link.title === "Reports"
+      );
+      setSidebarLinks(filterdLinks);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [role]);

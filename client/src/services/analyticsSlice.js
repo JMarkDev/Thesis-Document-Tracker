@@ -58,7 +58,7 @@ export const fetchDataOfficeByYear = createAsyncThunk(
   async ({ officeName, year }) => {
     try {
       const response = await axios.get(
-        `/analytics/document-by-esu/${officeName}/${year}`
+        `/analytics/document-by-type/office/${officeName}/${year}`
       );
       return response.data;
     } catch (error) {
@@ -118,6 +118,35 @@ export const fetchReportEsuByYear = createAsyncThunk(
   }
 );
 
+export const fetchOfficeReportsByYear = createAsyncThunk(
+  "/analytics/getOfficeReportsByYear",
+  async ({ officeName, year }) => {
+    try {
+      const response = await axios.get(
+        `/analytics/document-reports/office/${officeName}/${year}`
+      );
+
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+);
+
+export const fetchOfficeReportByESU = createAsyncThunk(
+  "/analytics/getOfficeReportsByESU",
+  async ({ esuCampus, officeName }) => {
+    try {
+      const response = await axios.get(
+        `/analytics/document-report/esuCampus/${esuCampus}/officeName/${officeName}`
+      );
+      return response.data;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+);
+
 export const fetchDocumentByType = createAsyncThunk(
   "/analytics/getDocumentByType",
   async (type) => {
@@ -142,6 +171,8 @@ const analyticsSlice = createSlice({
     reportsByYear: [],
     reportsByType: [],
     reportsDocumentByESU: [],
+    reportsDocumentByOffice: [],
+    reportsOfficeDocumentByESU: [],
     loading: true,
   },
   reducers: {},
@@ -236,17 +267,37 @@ const analyticsSlice = createSlice({
       })
       .addCase(fetchDataEsuByYear.rejected, (state) => {
         state.loading = false;
+      })
+      .addCase(fetchDataOfficeByYear.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchDataOfficeByYear.fulfilled, (state, action) => {
+        state.officeDataByYear = action.payload;
+        state.loading = false;
+      })
+      .addCase(fetchDataOfficeByYear.rejected, (state) => {
+        state.loading = false;
+      })
+      .addCase(fetchOfficeReportsByYear.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchOfficeReportsByYear.fulfilled, (state, action) => {
+        state.reportsDocumentByOffice = action.payload;
+        state.loading = false;
+      })
+      .addCase(fetchOfficeReportsByYear.rejected, (state) => {
+        state.loading = false;
+      })
+      .addCase(fetchOfficeReportByESU.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchOfficeReportByESU.fulfilled, (state, action) => {
+        state.reportsOfficeDocumentByESU = action.payload;
+        state.loading = false;
+      })
+      .addCase(fetchOfficeReportByESU.rejected, (state) => {
+        state.loading = false;
       });
-    // .addCase(fetchDataOfficeByYear.pending, (state) => {
-    //   state.loading = true;
-    // })
-    // .addCase(fetchDataOfficeByYear.fulfilled, (state, action) => {
-    //   state.officeDataByYear = action.payload;
-    //   state.loading = false;
-    // })
-    // .addCase(fetchDataOfficeByYear.rejected, (state) => {
-    //   state.loading = false;
-    // });
   },
 });
 
@@ -260,10 +311,16 @@ export const getFacultyDataByYear = (state) =>
 
 export const getReportsByYear = (state) => state.analytics.reportsByYear;
 export const getReportsByType = (state) => state.analytics.reportsByType;
-// export const getOfficeDataByYear = (state) => state.analytics.officeDataByYear;
+export const getOfficeDataByYear = (state) => state.analytics.officeDataByYear;
 
 export const getReportsDocumentByESU = (state) =>
   state.analytics.reportsDocumentByESU;
+
+export const getReportsDocumentByOffice = (state) =>
+  state.analytics.reportsDocumentByOffice;
+
+export const getReportsOfficeDocumentByESU = (state) =>
+  state.analytics.reportsOfficeDocumentByESU;
 
 export const getLoading = (state) => state.analytics.loading;
 

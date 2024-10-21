@@ -5,43 +5,66 @@ import YearDropdown from "../../../components/dropdown/YearDropdown";
 import Dropdown from "../../../components/dropdown/Dropdown";
 import wmsuCampus from "../../../constants/Campus";
 import {
-  getDataByYear,
   fetchReportsByYear,
-  getReportsByYear,
+  // getReportsByYear,
   fetchDataByYear,
+  fetchDataOfficeByYear,
+  getOfficeDataByYear,
+  getReportsDocumentByOffice,
+  fetchOfficeReportsByYear,
+  getReportsOfficeDocumentByESU,
+  fetchOfficeReportByESU,
 } from "../../../services/analyticsSlice";
-import {
-  fetchAllDocuments,
-  filterDocumentsByESU,
-  getAllDocuments,
-} from "../../../services/documentSlice";
+
 import LineChartDocumentSubmissions from "../../../components/charts/LineChartDocumentSubmissions";
 import { useFormat } from "../../../hooks/useFormatDate";
+import { getUserData } from "../../../services/authSlice";
 
 const Reports = () => {
   const { fullDateFormat } = useFormat();
   const dispatch = useDispatch();
-  const documents = useSelector(getReportsByYear);
-  const filterDocuments = useSelector(getAllDocuments);
-  const dataByYear = useSelector(getDataByYear);
+  const user = useSelector(getUserData);
+  const officeReports = useSelector(getReportsDocumentByOffice);
+
+  const filterDocuments = useSelector(getReportsOfficeDocumentByESU);
   const [year, setYear] = useState(new Date().getFullYear());
+  const data = useSelector(getOfficeDataByYear);
 
   useEffect(() => {
     dispatch(fetchDataByYear(year));
     dispatch(fetchReportsByYear(year));
-  }, [dispatch, year]);
+    dispatch(
+      fetchDataOfficeByYear({ officeName: user?.office?.officeName, year })
+    );
+    dispatch(
+      fetchOfficeReportsByYear({ officeName: user?.office?.officeName, year })
+    );
+
+    dispatch(
+      fetchOfficeReportByESU({
+        esuCampus: "WMSU-ESU",
+        officeName: user?.office.officeName,
+      })
+    );
+  }, [dispatch, year, user]);
 
   const filterByYear = (selected) => {
     setYear(selected);
-    dispatch(fetchDataByYear(selected));
+    dispatch(
+      fetchDataOfficeByYear({
+        officeName: user?.office.officeName,
+        year: selected,
+      })
+    );
   };
 
   const handleFilterByESU = (esu) => {
-    if (esu === "WMSU-ESU") {
-      dispatch(fetchAllDocuments());
-    } else {
-      dispatch(filterDocumentsByESU(esu));
-    }
+    dispatch(
+      fetchOfficeReportByESU({
+        esuCampus: esu,
+        officeName: user?.office.officeName,
+      })
+    );
   };
 
   const downloadPdf = (data) => {
@@ -94,20 +117,20 @@ const Reports = () => {
             <h1 className="font-bold">Document Reports</h1>
             <YearDropdown handleFilter={filterByYear} />
           </div>
-          <LineChartAdmin data={dataByYear} />
+          <LineChartAdmin data={data} />
         </div>
 
         <div className="min-w-[350px] h-[400px] overflow-y-auto p-2 bg-white rounded-md shadow-lg">
           <div className="relative overflow-x-auto ">
             <button
-              onClick={() => downloadPdf(documents)}
+              onClick={() => downloadPdf(officeReports)}
               className="absolute right-0 bg-blue-500 text-white py-1 px-3 rounded-md hover:bg-blue-600 transition-all"
             >
               Download
             </button>
             <h2 className="font-semibold text-lg mb-4">Filtered Documents</h2>
 
-            {documents.length === 0 ? (
+            {officeReports.length === 0 ? (
               <div className="flex justify-center items-center h-40">
                 <p className="text-gray-500">No documents found</p>
               </div>
@@ -115,7 +138,7 @@ const Reports = () => {
               <>
                 <table className="w-full  text-sm text-left text-gray-600">
                   <tbody>
-                    {documents.map(({ document_name, id }) => (
+                    {officeReports.map(({ document_name }, id) => (
                       <tr
                         key={id}
                         className="bg-gray-100 border-b hover:bg-gray-200 transition-colors"

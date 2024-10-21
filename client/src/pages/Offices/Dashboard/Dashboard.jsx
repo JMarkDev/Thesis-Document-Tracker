@@ -2,12 +2,15 @@ import Cards from "../../../components/Cards";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import YearDropdown from "../../../components/dropdown/YearDropdown";
-
+import LineChartAdmin from "../../../components/charts/LineChartAdmin";
 import {
   adminAnalytics,
   fetchDataEsuByYear,
   fetchDataByDocumentType,
   fetchDataOfficeByYear,
+  getOfficeDataByYear,
+  getReportsOfficeDocumentByESU,
+  fetchOfficeReportByESU,
 } from "../../../services/analyticsSlice";
 import { getUserData } from "../../../services/authSlice";
 import {
@@ -15,13 +18,13 @@ import {
   getAllDocuments,
   filterDocumentsByESU,
 } from "../../../services/documentSlice";
-import rolesList from "../../../constants/rolesList";
 import StatusPieChart from "../../../components/charts/StatusPieChart";
 import LineChartDocumentSubmissions from "../../../components/charts/LineChartDocumentSubmissions";
 
 const OfficeDashboard = () => {
   const dispatch = useDispatch();
   const user = useSelector(getUserData);
+  const data = useSelector(getOfficeDataByYear);
   const [cardData, setCardData] = useState([]);
   const [officeRecipient, setOfficeRecipient] = useState("");
   const [updatedDocumentList, setUpdatedDocumentList] = useState([]);
@@ -31,17 +34,22 @@ const OfficeDashboard = () => {
   const [fullName, setFullName] = useState("");
   const normalizeString = (str) => str?.trim().replace(/\./g, "").toLowerCase();
   const [officeDocuments, setOfficeDocuments] = useState([]);
+  const [year, setYear] = useState(new Date().getFullYear());
+  const filterDocuments = useSelector(getReportsOfficeDocumentByESU);
 
   useEffect(() => {
-    if (documents) {
+    if (documents && user) {
       const filterByOffice = documents?.filter((document) =>
         document.document_recipients.some(
           (recipient) => recipient.office_name === user?.office.officeName
         )
       );
-      setOfficeDocuments(filterByOffice);
+
+      if (filterByOffice.length !== officeDocuments.length) {
+        setOfficeDocuments(filterByOffice);
+      }
     }
-  }, [documents, user]);
+  }, [documents, user, officeDocuments]);
 
   useEffect(() => {
     dispatch(adminAnalytics());
@@ -57,7 +65,7 @@ const OfficeDashboard = () => {
     dispatch(
       fetchDataOfficeByYear({
         officeName: user?.office.officeName,
-        year: new Date().getFullYear(),
+        year: year,
       })
     );
 
@@ -66,16 +74,14 @@ const OfficeDashboard = () => {
       setOfficeRecipient(user.office?.officeName);
       setFullName(`${user?.firstName} ${user.middleInitial} ${user?.lastName}`);
     }
-  }, [dispatch, user, esuCampus]);
 
-  const filterByYear = (selected) => {
     dispatch(
-      fetchDataEsuByYear({
-        esuCampus: `${user?.esuCampus}`,
-        year: selected,
+      fetchOfficeReportByESU({
+        esuCampus: "WMSU-ESU",
+        officeName: user?.office.officeName,
       })
     );
-  };
+  }, [dispatch, user, esuCampus, year]);
 
   useEffect(() => {
     const updateDocumentStatuses = () => {
@@ -162,6 +168,16 @@ const OfficeDashboard = () => {
     updateDocumentStatuses();
   }, [officeDocuments, user, officeRecipient, fullName, documents]); // Add proper dependencies
 
+  const filterByYear = (selected) => {
+    setYear(selected);
+    dispatch(
+      fetchDataOfficeByYear({
+        officeName: user?.office.officeName,
+        year: selected,
+      })
+    );
+  };
+
   useEffect(() => {
     const statusList = [
       { title: "Received Documents", status: "Received" },
@@ -170,27 +186,29 @@ const OfficeDashboard = () => {
       { title: "Completed Documents", status: "Completed" },
     ];
 
-    // Create statusCards based on the updatedDocumentList with the updated titles
-    const statusCards = statusList.map(({ title, status }) => {
-      const filteredByStatus = updatedDocumentList.filter(
-        (document) => document.status === status
-      );
-      return {
-        title,
-        value: filteredByStatus.length,
-      };
-    });
+    if (updatedDocumentList.length > 0) {
+      const statusCards = statusList.map(({ title, status }) => {
+        const filteredByStatus = updatedDocumentList.filter(
+          (document) => document.status === status
+        );
+        return {
+          title,
+          value: filteredByStatus.length,
+        };
+      });
+      // setStatusData(statusCards);
 
-    // Merge statusCards with the initial card data (Total Documents, etc.)
-    const updatedCardData = [...statusCards];
+      // Merge statusCards with the initial card data (Total Documents, etc.)
+      const updatedCardData = [...statusCards];
 
-    // Update the status data
-    setStatusData(statusCards);
+      // Update the status data
+      setStatusData(statusCards);
 
-    // Check if updatedCardData has actually changed before setting state
-    if (JSON.stringify(cardData) !== JSON.stringify(updatedCardData)) {
-      // Set the updated card data, replacing the existing card data
-      setCardData(updatedCardData);
+      // Check if updatedCardData has actually changed before setting state
+      if (JSON.stringify(cardData) !== JSON.stringify(updatedCardData)) {
+        // Set the updated card data, replacing the existing card data
+        setCardData(updatedCardData);
+      }
     }
   }, [updatedDocumentList, cardData]);
 
@@ -203,14 +221,20 @@ const OfficeDashboard = () => {
         <div className=" w-full bg-white">
           <div className="flex p-4 bg-gray-300 justify-between items-center">
             <h1 className=" font-bold">Documents Received Chart</h1>
-            {/* <YearDropdown handleFilter={filterByYear} /> */}
+            <YearDropdown handleFilter={filterByYear} />
           </div>
 
-          <LineChartDocumentSubmissions data={officeDocuments} />
+          <LineChartAdmin data={data} />
         </div>
         <div className="min-w-[350px]">
           <StatusPieChart data={statusData} />
         </div>
+      </div>
+      <div className="mt-10">
+        <h2 className="font-bold p-4 bg-gray-300">
+          Document Submissions Charts
+        </h2>
+        <LineChartDocumentSubmissions data={filterDocuments} />
       </div>
     </div>
   );

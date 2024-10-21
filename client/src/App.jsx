@@ -93,11 +93,6 @@ function App() {
   ];
 
   const facultyLinks = [
-    // {
-    //   title: "Upload",
-    //   path: "/faculty-upload-documents",
-    //   component: <UploadDocuments />,
-    // },
     {
       title: "Reports",
       path: "/faculty-reports",
@@ -149,28 +144,61 @@ function App() {
     },
   ];
 
+  // const officeLinks = [
+  //   {
+  //     title: "Dashboard",
+  //     path: "/office/dashboard",
+  //     component: <OfficeDashboard />,
+  //   },
+  //   {
+  //     title: "Scan Now",
+  //     path: "/office/scan-now",
+  //     component: <ScanNow />,
+  //   },
+  //   {
+  //     title: "Documents",
+  //     path: "/office/documents",
+  //     component: <OfficeDocument />,
+  //   },
+  //   {
+  //     title: "Reports",
+  //     path: "/office/reports",
+  //     component: <OfficeReports />,
+  //   },
+  //   { title: "Staff", path: "/office-staff", component: <Staff /> },
+  // ];
+
   const officeLinks = [
     {
       title: "Dashboard",
       path: "/office/dashboard",
       component: <OfficeDashboard />,
+      allowedRoles: [rolesList.office, rolesList.office_staff],
     },
     {
       title: "Scan Now",
       path: "/office/scan-now",
       component: <ScanNow />,
+      allowedRoles: [rolesList.office, rolesList.office_staff], // Allow both roles
     },
     {
       title: "Documents",
       path: "/office/documents",
       component: <OfficeDocument />,
+      allowedRoles: [rolesList.office, rolesList.office_staff],
     },
     {
       title: "Reports",
       path: "/office/reports",
       component: <OfficeReports />,
+      allowedRoles: [rolesList.office, rolesList.office_staff], // Only office users
     },
-    { title: "Staff", path: "/office-staff", component: <Staff /> },
+    {
+      title: "Staff",
+      path: "/office-staff",
+      component: <Staff />,
+      allowedRoles: [rolesList.office], // Only office users
+    },
   ];
 
   {
@@ -287,7 +315,7 @@ function App() {
           />
         ))}
 
-        {officeLinks.map((link, index) => (
+        {/* {officeLinks.map((link, index) => (
           <Route
             key={index}
             path={link.path}
@@ -296,6 +324,18 @@ function App() {
               <ProtectedRoute
                 element={<LayoutDashboard>{link.component}</LayoutDashboard>}
                 allowedRoles={[rolesList.office, rolesList.office_staff]}
+              />
+            }
+          />
+        ))} */}
+        {officeLinks.map((link, index) => (
+          <Route
+            key={index}
+            path={link.path}
+            element={
+              <ProtectedRoute
+                element={<LayoutDashboard>{link.component}</LayoutDashboard>}
+                allowedRoles={link.allowedRoles}
               />
             }
           />
