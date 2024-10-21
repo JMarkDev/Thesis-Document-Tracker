@@ -25,8 +25,16 @@ router.get(
 );
 
 router.get(
-  "/document-by-type/:officeName/:year",
+  "/document-by-type/office/:officeName/:year",
   analyticsController.getOfficeDataByYear
+);
+router.get(
+  "/document-reports/office/:officeName/:year",
+  analyticsController.getOfficeReports
+);
+router.get(
+  "/document-report/esuCampus/:esuCampus/officeName/:officeName",
+  analyticsController.getOfficeReportsByESU
 );
 
 module.exports = router;

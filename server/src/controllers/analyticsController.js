@@ -142,7 +142,7 @@ const getOfficeDataByYear = async (req, res) => {
     const documents = await documentModel.findAll({
       include: [
         {
-          model: routeModel,
+          model: documentRecipientModel,
           where: {
             office_name: officeName,
           },
@@ -220,6 +220,73 @@ const getDataByYearByEsu = async (req, res) => {
     });
 
     return res.status(200).json(results); // Send formatted results
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+const getOfficeReports = async (req, res) => {
+  const { year, officeName } = req.params;
+
+  try {
+    const documents = await documentModel.findAll({
+      include: [
+        {
+          model: documentRecipientModel,
+          where: {
+            office_name: officeName,
+          },
+        },
+      ],
+      where: Sequelize.where(
+        Sequelize.fn("YEAR", Sequelize.col("documents.createdAt")), // Specify the "documents" table for createdAt
+        year
+      ),
+    });
+
+    return res.status(200).json(documents);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+const getOfficeReportsByESU = async (req, res) => {
+  const { esuCampus, officeName } = req.params;
+
+  try {
+    const whereClause =
+      esuCampus === "WMSU-ESU"
+        ? {} // No condition on esuCampus for "WMSU-ESU"
+        : {
+            esuCampus,
+            // [Sequelize.Op.and]: Sequelize.where(
+            //   Sequelize.fn("YEAR", Sequelize.col("documents.createdAt")), // Specify "documents" table for createdAt
+            //   year
+            // ),
+          };
+
+    const documents = await documentModel.findAll({
+      where: whereClause,
+      // {
+      //   esuCampus,
+      //   [Sequelize.Op.and]: Sequelize.where(
+      //     Sequelize.fn("YEAR", Sequelize.col("documents.createdAt")), // Specify the "documents" table for createdAt
+      //     year
+      //   ),
+      // },
+      include: [
+        {
+          model: documentRecipientModel,
+          where: {
+            office_name: officeName,
+          },
+        },
+      ],
+    });
+
+    return res.status(200).json(documents);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -352,4 +419,6 @@ module.exports = {
   getDataByYearByEsu,
   getDocumentESUReports,
   getOfficeDataByYear,
+  getOfficeReports,
+  getOfficeReportsByESU,
 };

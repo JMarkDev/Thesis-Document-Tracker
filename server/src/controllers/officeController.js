@@ -336,6 +336,7 @@ const updateOffice = async (req, res) => {
   } = req.body;
 
   try {
+    const office = await officeModel.findOne({ where: { id } });
     if (!officeName) {
       return res.status(400).json({ message: "Office name is required" });
     }
@@ -359,7 +360,7 @@ const updateOffice = async (req, res) => {
 
     await userModel.update(
       {
-        image: newFileName ? `/uploads/${newFileName}` : image,
+        image: newFileName ? `/uploads/${newFileName}` : office.image,
         firstName: firstName,
         lastName: lastName,
         middleInitial: middleInitial,
@@ -414,6 +415,7 @@ const updateStaff = async (req, res) => {
   } = req.body;
 
   try {
+    const user = await userModel.findOne({ where: { email } });
     // upload image
     let newFileName = null;
     if (req.file) {
@@ -433,7 +435,7 @@ const updateStaff = async (req, res) => {
 
     await userModel.update(
       {
-        image: newFileName ? `/uploads/${newFileName}` : image,
+        image: newFileName ? `/uploads/${newFileName}` : user.image,
         firstName: firstName,
         lastName: lastName,
         middleInitial: middleInitial,
