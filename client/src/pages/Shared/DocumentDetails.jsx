@@ -43,6 +43,7 @@ const DocumentDetails = () => {
   const [officeRecipient, setOfficeRecipient] = useState("");
   const [fullName, setFullName] = useState("");
   const normalizeString = (str) => str?.trim().replace(/\./g, "").toLowerCase();
+  const [files, setFiles] = useState([]);
 
   useEffect(() => {
     setFullName(`${user.firstName} ${user.middleInitial} ${user.lastName}`);
@@ -84,7 +85,8 @@ const DocumentDetails = () => {
     const currentTime = new Date();
 
     // 24 hours in milliseconds
-    const Hours = 86400000;
+    // const Hours = 86400000;
+    const Hours = 1000 * 60 * 60 * 24;
 
     // Check if all recipients have received the document
     const allReceived = document?.document_recipients.every(
@@ -153,6 +155,10 @@ const DocumentDetails = () => {
     if (document) {
       setDocumentData(document);
       setData(document.document_recipients);
+      if (document.files) {
+        const parsedFiles = JSON.parse(document.files);
+        setFiles(parsedFiles);
+      }
     }
   }, [document]);
 
@@ -234,23 +240,22 @@ const DocumentDetails = () => {
                 <h1 className="font-bold  text-gray-800">File Type:</h1>
                 <p className="text-gray-700">{documentData.file_type}</p>
               </div>
-              {documentData.files && documentData.files.length > 0 && (
+              {files.length > 0 && (
                 <div className="flex flex-col gap-3 border-b ">
                   <div className="flex items-center gap-5">
                     <h1 className="font-bold text-gray-800">File Type:</h1>
                     <p className="text-gray-700">{documentData.file_type}</p>
                   </div>
                   <div>
-                    {/* <h1 className="font-bold text-gray-800">Files:</h1> */}
                     <div className="flex flex-row gap-2">
-                      {documentData.files.map((file, index) => (
+                      {files.map((file, index) => (
                         <div
                           key={index}
                           className="flex text-sm items-center gap-2"
                         >
                           <span className="text-lg">{getFileIcon(file)}</span>
                           <a
-                            href={file} // Use the URL directly
+                            href={file}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-main underline"
@@ -277,26 +282,29 @@ const DocumentDetails = () => {
                 <h1 className="font-bold  text-gray-800">Contact Number:</h1>
                 <p className="text-gray-700">{documentData.contact_number}</p>
               </div>
-              {documentData.esuCampus && (
-                <div className="flex items-center gap-5 border-b pb-2">
-                  <h1 className="font-bold  text-gray-800">ESU Campus:</h1>
-                  <p className="text-gray-700">{documentData.esuCampus}</p>
-                </div>
-              )}
+              {documentData.esuCampus !== null &&
+                documentData.esuCampus !== "null" && (
+                  <div className="flex items-center gap-5 border-b pb-2">
+                    <h1 className="font-bold  text-gray-800">ESU Campus:</h1>
+                    <p className="text-gray-700">{documentData.esuCampus}</p>
+                  </div>
+                )}
               <div className="flex items-center gap-5 border-b pb-2">
                 <h1 className="font-bold  text-gray-800">Date:</h1>
                 <p className="text-gray-700">
                   {dateFormat(documentData.createdAt)}
                 </p>
               </div>
-              {documentData.deadline && (
-                <div className="flex items-center gap-5 border-b pb-2">
-                  <h1 className="font-bold  text-gray-800">Deadline:</h1>
-                  <p className="text-gray-700">
-                    {new Date(documentData.deadline).toLocaleDateString()}
-                  </p>
-                </div>
-              )}
+
+              {documentData.deadline &&
+                documentData.deadline !== "0000-00-00" && (
+                  <div className="flex items-center gap-5 border-b pb-2">
+                    <h1 className="font-bold  text-gray-800">Deadline:</h1>
+                    <p className="text-gray-700">
+                      {new Date(documentData.deadline).toLocaleDateString()}
+                    </p>
+                  </div>
+                )}
               <div className="flex items-center gap-5">
                 <h1 className="font-bold  text-gray-800">Status:</h1>
                 <span

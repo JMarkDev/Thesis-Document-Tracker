@@ -166,7 +166,7 @@ const UserProfile = () => {
                     htmlFor=""
                     className="text-md font-semibold text-gray-700 w-1/4"
                   >
-                    Esu Campus
+                    ESU Campus
                   </label>
                   <input
                     className="rounded-lg border-2 bg-gray-200 border-gray-200 flex-grow p-2 text-sm"

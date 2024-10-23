@@ -138,6 +138,10 @@ const EditRegistrar = ({ modal, closeModal, id }) => {
     setChangeEmail(true);
   };
 
+  const handleUpdateEmail = () => {
+    dispatch(fetchRegistrar());
+  };
+
   useEffect(() => {
     if (registrar) {
       setValue("image", registrar.image);
@@ -155,7 +159,12 @@ const EditRegistrar = ({ modal, closeModal, id }) => {
   return (
     <>
       {changeEmail ? (
-        <ChangeEmail modal={changeEmail} closeModal={closeModal} id={id} />
+        <ChangeEmail
+          modal={changeEmail}
+          closeModal={closeModal}
+          id={id}
+          handleUpdateEmail={handleUpdateEmail}
+        />
       ) : (
         <div
           id="default-modal"

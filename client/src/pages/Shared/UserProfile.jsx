@@ -383,7 +383,7 @@ const UserProfile = () => {
                       htmlFor=""
                       className="text-md font-semibold text-gray-700 w-1/4"
                     >
-                      Esu Campus
+                      ESU Campus
                     </label>
                     {edit ? (
                       <input

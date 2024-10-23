@@ -88,7 +88,7 @@ const Table = ({ documents, handleSort }) => {
     );
     setTimeout(() => {
       handleDownloadPDF();
-    }, 300);
+    }, 500);
   };
 
   const handleReactToPrint = useReactToPrint({
@@ -140,7 +140,8 @@ const Table = ({ documents, handleSort }) => {
   useEffect(() => {
     const updateDocumentStatuses = () => {
       // 24 hours in milliseconds
-      const Hours = 86400000;
+      // const Hours = 86400000;
+      const Hours = 1000 * 60 * 60 * 24; // 24 hours in milliseconds
       const currentTime = new Date();
 
       const updatedDocumentList = documents.map((document) => {
@@ -390,7 +391,7 @@ const Table = ({ documents, handleSort }) => {
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          navigate(`/document/details/${id}`);
+                          navigate(`/document-details/${id}`);
                         }}
                         className=" p-2 text-lg bg-[#fca326] hover:bg-[#f58e40] text-white rounded-lg"
                       >

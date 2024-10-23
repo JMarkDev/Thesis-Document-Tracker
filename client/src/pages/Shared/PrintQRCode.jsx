@@ -12,6 +12,10 @@ import Back from "../../components/buttons/Back";
 import PrintMetadata from "./PrintMetadata";
 import { toastUtils } from "../../hooks/useToast";
 
+const isMobileDevice = () => {
+  return /Mobi|Android/i.test(navigator.userAgent);
+};
+
 const PrintQRCode = () => {
   const { tracking_number } = useParams();
   const dispatch = useDispatch();
@@ -36,13 +40,37 @@ const PrintQRCode = () => {
     }
   }, [document]);
 
-  const handlePrint = useReactToPrint({
+  // const handlePrint = useReactToPrint({
+  //   contentRef,
+  //   documentTitle: "Document Metadata",
+  //   onAfterPrint: () => console.log("Printing completed"),
+  //   onPrintError: (errorLocation, error) =>
+  //     console.error("Error:", errorLocation, error),
+  // });
+
+  const handleReactToPrint = useReactToPrint({
     contentRef,
     documentTitle: "Document Metadata",
     onAfterPrint: () => console.log("Printing completed"),
     onPrintError: (errorLocation, error) =>
       console.error("Error:", errorLocation, error),
   });
+
+  const handleMobilePrint = () => {
+    const printWindow = window.open("", "_blank");
+    printWindow.document.write(contentRef.current.outerHTML);
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+  };
+
+  const handlePrint = () => {
+    if (isMobileDevice()) {
+      handleMobilePrint();
+    } else {
+      handleReactToPrint();
+    }
+  };
 
   // Download the content as a searchable PDF (not image)
   const handleDownloadPDF = () => {

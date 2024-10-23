@@ -2,7 +2,7 @@ import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import rolesList from "./constants/rolesList";
-// import useIdleTimeout from "./hooks/useIdleTimeout";
+import { UseAutoLogout } from "./hooks/UseAutoLogout";
 
 import ProtectedRoute from "./route/ProtectedRoute";
 import PageNotFound from "./pages/PageNotFound";
@@ -45,6 +45,8 @@ import OfficeReports from "./pages/Offices/Reports/Reports";
 import Deadline from "./pages/Admin/Deadline/Deadline";
 
 function App() {
+  // logout user after 30 minutes of inactivity
+  UseAutoLogout();
   // useIdleTimeout();
   // console.log(useIdleTimeout());
   const adminLinks = [
@@ -99,7 +101,7 @@ function App() {
       component: <FacultyReports />,
     },
     {
-      title: "Uploaded Documents",
+      title: "All Documents",
       path: "/faculty/all-documents",
       component: <AllDocuments />,
     },
@@ -144,30 +146,6 @@ function App() {
     },
   ];
 
-  // const officeLinks = [
-  //   {
-  //     title: "Dashboard",
-  //     path: "/office/dashboard",
-  //     component: <OfficeDashboard />,
-  //   },
-  //   {
-  //     title: "Scan Now",
-  //     path: "/office/scan-now",
-  //     component: <ScanNow />,
-  //   },
-  //   {
-  //     title: "Documents",
-  //     path: "/office/documents",
-  //     component: <OfficeDocument />,
-  //   },
-  //   {
-  //     title: "Reports",
-  //     path: "/office/reports",
-  //     component: <OfficeReports />,
-  //   },
-  //   { title: "Staff", path: "/office-staff", component: <Staff /> },
-  // ];
-
   const officeLinks = [
     {
       title: "Dashboard",
@@ -200,40 +178,6 @@ function App() {
       allowedRoles: [rolesList.office], // Only office users
     },
   ];
-
-  {
-    /**
-    
-      const officeLinks = [
-    {
-      title: "Scan Now",
-      path: "/office/scan-now",
-      src: <MdQrCodeScanner />,
-    },
-    {
-      title: "Dashboard",
-      path: "/office/dashboard",
-      src: <RiPieChart2Fill />,
-    },
-    {
-      title: "Documents",
-      path: "/office/documents",
-      src: <IoDocuments />,
-    },
-
-    {
-      title: "Staff",
-      path: "/office-staff",
-      src: <FaUsers />,
-    },
-    {
-      title: "Reports",
-      path: "/esu-campus/reports",
-      src: <TbReportSearch />,
-    },
-  ];
-    */
-  }
 
   const sharedLinks = [
     {
@@ -315,19 +259,6 @@ function App() {
           />
         ))}
 
-        {/* {officeLinks.map((link, index) => (
-          <Route
-            key={index}
-            path={link.path}
-            // element={<LayoutFaculty>{link.component}</LayoutFaculty>}
-            element={
-              <ProtectedRoute
-                element={<LayoutDashboard>{link.component}</LayoutDashboard>}
-                allowedRoles={[rolesList.office, rolesList.office_staff]}
-              />
-            }
-          />
-        ))} */}
         {officeLinks.map((link, index) => (
           <Route
             key={index}
@@ -340,24 +271,6 @@ function App() {
             }
           />
         ))}
-        {/* Document Details - Multiple Role Access */}
-        {/* <Route
-          path="/document/details/:id"
-          element={
-            <ProtectedRoute
-              element={
-                <LayoutDashboard>
-                  <DocumentDetails />
-                </LayoutDashboard>
-              }
-              allowedRoles={[
-                rolesList.faculty,
-                rolesList.admin,
-                rolesList.campus_admin,
-              ]} // Both admin and campus_admin can access
-            />
-          }
-        /> */}
 
         {sharedLinks.map((link, index) => (
           <Route

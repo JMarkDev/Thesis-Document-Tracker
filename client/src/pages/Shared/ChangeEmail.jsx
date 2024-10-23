@@ -6,7 +6,7 @@ import LoginLoading from "../../components/loader/loginloader/LoginLoading";
 import { fetchOffice } from "../../services/usersSlice";
 import { useDispatch } from "react-redux";
 
-const ChangeEmail = ({ modal, closeModal, id }) => {
+const ChangeEmail = ({ modal, closeModal, id, handleUpdateEmail }) => {
   const dispatch = useDispatch();
   const toast = useToast();
   const [email, setEmail] = useState("");
@@ -27,6 +27,7 @@ const ChangeEmail = ({ modal, closeModal, id }) => {
       if (response.data.status === "success") {
         toast.success(response.data.message);
         setLoader(false);
+        handleUpdateEmail();
       }
     } catch (error) {
       setLoader(false);
@@ -182,6 +183,7 @@ ChangeEmail.propTypes = {
   modal: PropTypes.bool,
   closeModal: PropTypes.func,
   id: PropTypes.number,
+  handleUpdateEmail: PropTypes.func,
 };
 
 export default ChangeEmail;

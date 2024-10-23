@@ -16,7 +16,6 @@ import { getUserData } from "../../../services/authSlice";
 import {
   fetchAllDocuments,
   getAllDocuments,
-  filterDocumentsByESU,
 } from "../../../services/documentSlice";
 import StatusPieChart from "../../../components/charts/StatusPieChart";
 import LineChartDocumentSubmissions from "../../../components/charts/LineChartDocumentSubmissions";
@@ -59,7 +58,6 @@ const OfficeDashboard = () => {
         year: new Date().getFullYear(),
       })
     );
-    dispatch(filterDocumentsByESU(user?.esuCampus));
     dispatch(fetchAllDocuments());
     dispatch(fetchDataByDocumentType());
     dispatch(

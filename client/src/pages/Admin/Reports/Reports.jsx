@@ -68,7 +68,9 @@ const Reports = () => {
         formatFieldCsv(response.document_name),
         formatFieldCsv(response.uploaded_by),
         formatFieldCsv(response.contact_number),
-        formatFieldCsv(response.esuCampus),
+        formatFieldCsv(
+          response.esuCampus !== "null" ? response.esuCampus : "N/A"
+        ),
         formatFieldCsv(fullDateFormat(response.createdAt)),
       ];
     });

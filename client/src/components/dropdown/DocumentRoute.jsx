@@ -19,7 +19,28 @@ const DocumentRoute = ({
   const officeUsers = useSelector(getRoleUsers("office"));
   const officeStatus = useSelector(getRoleStatus("office"));
   const adminStatus = useSelector(getRoleStatus("admin"));
+  // const registrarUser = useSelector(getRoleUsers("registrar"));
+  const registrarStatus = useSelector(getRoleStatus("registrar"));
   const [selectedRoute, setSelectedRoute] = useState("");
+  // const [officeData, setOfficeData] = useState([]);
+  // // const [officeRoute, setRoute] = useState([]);
+
+  // useEffect(() => {
+  //   let office = officeUsers.map((office) => {
+  //     return { office_name: office.office.officeName, user_id: office.id };
+  //   });
+
+  //   let registrar = registrarUser?.map((registrar) => {
+  //     return {
+  //       office_name: `${registrar.esuCampus} REGISTRAR`,
+  //       user_id: registrar.id,
+  //     };
+  //   });
+
+  //   // console.log(route);
+  //   // setRoute([...route, ...registrar]);
+  //   setOfficeData([...office, ...registrar]);
+  // }, [officeUsers, registrarUser]);
 
   useEffect(() => {
     if (officeStatus === "idle") {
@@ -29,7 +50,11 @@ const DocumentRoute = ({
     if (adminStatus === "idle") {
       dispatch(fetchAdmin());
     }
-  }, [officeStatus, adminStatus, dispatch]);
+
+    if (registrarStatus === "idle") {
+      dispatch(fetchAdmin());
+    }
+  }, [officeStatus, adminStatus, registrarStatus, dispatch]);
 
   const isOfficeInRoute = (officeName) => {
     return route.some((office) => office.office_name === officeName);
@@ -73,6 +98,14 @@ const DocumentRoute = ({
       }
     }
 
+    // if (selectedOffice) {
+    // officeData?.map((office) => {
+    //   if (office.office_name === selectedOffice) {
+    //     handleSelectOffice(`${office.office_name}`, office.user_id);
+    //   }
+    // });
+    // }
+
     setSelectedRoute(selectedOffice);
   };
 
@@ -104,6 +137,15 @@ const DocumentRoute = ({
           {office.office.officeName}
         </option>
       ))}
+      {/* {officeData?.map((office) => (
+        <option
+          key={office.user_id}
+          value={office.office_name}
+          disabled={isOfficeInRoute(office.office_name)}
+        >
+          {office.office_name}
+        </option>
+      ))} */}
     </select>
   );
 };

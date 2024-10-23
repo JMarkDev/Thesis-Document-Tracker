@@ -102,14 +102,15 @@ const PrintMetadata = ({ isLoading, contentRef, documentData }) => {
                     {documentData?.contact_number}
                   </p>
                 </div>
-                {documentData?.esuCampus && (
-                  <div>
-                    <p className="text-gray-600 flex gap-3">
-                      <strong className="text-gray-800">ESU Campus:</strong>{" "}
-                      {documentData?.esuCampus}
-                    </p>
-                  </div>
-                )}
+                {documentData?.esuCampus &&
+                  documentData.esuCampus !== "null" && (
+                    <div>
+                      <p className="text-gray-600 flex gap-3">
+                        <strong className="text-gray-800">ESU Campus:</strong>{" "}
+                        {documentData?.esuCampus}
+                      </p>
+                    </div>
+                  )}
                 <div>
                   <p className="text-gray-600 flex gap-3">
                     <strong className="text-gray-800">Date & Time:</strong>{" "}

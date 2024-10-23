@@ -2,13 +2,10 @@ import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import LineChartAdmin from "../../../components/charts/LineChartAdmin";
 import YearDropdown from "../../../components/dropdown/YearDropdown";
-import Dropdown from "../../../components/dropdown/Dropdown";
-import wmsuCampus from "../../../constants/Campus";
 import {
   getDataByYear,
   fetchDataEsuByYear,
   getReportsDocumentByESU,
-  fetchDataByYear,
   fetchReportEsuByYear,
 } from "../../../services/analyticsSlice";
 import { getAllDocuments } from "../../../services/documentSlice";

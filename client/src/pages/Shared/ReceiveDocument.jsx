@@ -74,22 +74,18 @@ const ReceiveDocument = ({
             </p>
 
             {/* Conditional ESU Campus */}
-            {documentData.esuCampus ? (
+            {documentData.esuCampus && documentData.esuCampus !== "null" && (
               <p>
                 <strong className="text-gray-800">ESU Campus:</strong>{" "}
                 {documentData.esuCampus}
               </p>
-            ) : (
-              <p>&nbsp;</p> // Empty placeholder to keep the grid consistent
             )}
 
-            {documentData.document_desc ? (
+            {documentData.document_desc && (
               <p>
                 <strong className="text-gray-800">Description:</strong>{" "}
                 {documentData.document_desc}
               </p>
-            ) : (
-              <p>&nbsp;</p> // Empty placeholder to keep the grid consistent
             )}
 
             {/* <p>
@@ -118,7 +114,7 @@ const ReceiveDocument = ({
           ) : (
             <button
               className="px-6 py-2 text-white bg-green-600 hover:bg-green-800 rounded-md shadow-md transition"
-              onClick={handleReceive}
+              onClick={() => handleReceive()}
             >
               {isReceived ? "Forward" : "Receive"}
             </button>

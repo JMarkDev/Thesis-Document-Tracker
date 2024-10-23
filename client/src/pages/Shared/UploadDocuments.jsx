@@ -42,7 +42,6 @@ const UploadDocuments = () => {
   const [trackingNumberError, setTrackingNumberError] = useState("");
   const [documentNameError, setDocumentNameError] = useState("");
   const [documentTypeError, setDocumentTypeError] = useState("");
-  // const [routeError, setRouteError] = useState("");
   const [fileTypeError, setFileTypeError] = useState("");
 
   useEffect(() => {
@@ -50,7 +49,7 @@ const UploadDocuments = () => {
     setUploadedBy(
       `${user?.firstName} ${user?.middleInitial}. ${user?.lastName}`
     );
-    setEsuCampus(user?.esuCampus);
+    setEsuCampus(user?.esuCampus || null);
     setUserId(user?.id);
     setContactNumber(user?.contactNumber);
 
@@ -113,39 +112,56 @@ const UploadDocuments = () => {
 
   const handleDocumentType = (e) => {
     const selectedId = e.target.value;
-    const selectedDocumentType = documentType.find(
-      (type) => type.id === parseInt(selectedId)
-    );
 
-    if (selectedDocumentType) {
-      setDocumentType(selectedDocumentType.document_type);
-      setDeadline(selectedDocumentType?.deadline || null);
-      // Ensure that route is always an array
-      const updatedRoute = Array.isArray(selectedDocumentType.route)
-        ? selectedDocumentType.route.map((routeItem) => {
-            // Separate conditions for FACULTY and REGISTRAR
-            if (
-              routeItem.office_name === "FACULTY" &&
-              user.role === rolesList.faculty
-            ) {
-              return {
-                ...routeItem,
-                office_name: esuCampus ? `${esuCampus} FACULTY` : "FACULTY",
-                user_id: facultyId, // Assign facultyId for FACULTY
-              };
-            } else if (routeItem.office_name === "REGISTRAR" && registrarId) {
-              return {
-                ...routeItem,
-                office_name: esuCampus ? `${esuCampus} REGISTRAR` : "REGISTRAR",
-                user_id: registrarId, // Assign registrarId for REGISTRAR
-              };
-            }
-            return routeItem;
-          })
-        : [];
+    if (selectedId) {
+      const selectedDocumentType = documentType.find(
+        (type) => type.id === parseInt(selectedId)
+      );
 
-      setRoute(updatedRoute);
-      setDefaultRoute(updatedRoute);
+      const formattedDocumentType = {
+        ...selectedDocumentType,
+        route: JSON.parse(selectedDocumentType.route), // Stringify the route array
+      };
+
+      if (formattedDocumentType) {
+        setDocumentType(formattedDocumentType.document_type);
+        setDeadline(
+          formattedDocumentType?.deadline
+            ? formattedDocumentType?.deadline
+            : null
+        );
+        // Ensure that route is always an array
+        const updatedRoute = Array.isArray(formattedDocumentType.route)
+          ? formattedDocumentType.route.map((routeItem) => {
+              // Separate conditions for FACULTY and REGISTRAR
+              if (
+                routeItem.office_name === "FACULTY" &&
+                user.role === rolesList.faculty
+              ) {
+                return {
+                  ...routeItem,
+                  office_name: esuCampus ? `${esuCampus} FACULTY` : "FACULTY",
+                  user_id: facultyId, // Assign facultyId for FACULTY
+                };
+              } else if (routeItem.office_name === "REGISTRAR" && registrarId) {
+                return {
+                  ...routeItem,
+                  office_name: esuCampus
+                    ? `${esuCampus} REGISTRAR`
+                    : "REGISTRAR",
+                  user_id: registrarId, // Assign registrarId for REGISTRAR
+                };
+              }
+              return routeItem;
+            })
+          : [];
+
+        setRoute(updatedRoute);
+        setDefaultRoute(updatedRoute);
+      }
+    } else {
+      setDocumentType("");
+      setRoute([]);
     }
   };
 
@@ -179,7 +195,11 @@ const UploadDocuments = () => {
     formData.append("deadline", deadline);
     formData.append("file_type", file_type);
     for (let i = 0; i < selectedFiles.length; i++) {
-      formData.append("files", selectedFiles[i]);
+      if (selectedFiles.length > 0) {
+        formData.append("files", selectedFiles[i]);
+      } else {
+        formData.append("files", null);
+      }
     }
 
     formData.append("uploaded_by", uploaded_by);

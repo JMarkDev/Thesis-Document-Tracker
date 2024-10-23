@@ -71,13 +71,20 @@ const NavDashboard = ({ handleBurger }) => {
   useEffect(() => {
     if (userData) {
       const handleUploadSuccess = () => {
-        dispatch(fetchNotificationById(userData.id));
+        dispatch(fetchNotificationById(userData.id))
+          .unwrap() // Make sure the data is updated before proceeding
+          .then((newNotifications) => {
+            setNotifications(newNotifications); // Explicitly set new notifications
+          });
       };
 
       const handleReceivedSuccess = () => {
-        dispatch(fetchNotificationById(userData.id));
+        dispatch(fetchNotificationById(userData.id))
+          .unwrap() // Make sure the data is updated before proceeding
+          .then((newNotifications) => {
+            setNotifications(newNotifications); // Explicitly set new notifications
+          });
       };
-
       socket.on("success_upload", handleUploadSuccess);
       socket.on("success_received", handleReceivedSuccess);
     }
@@ -86,7 +93,7 @@ const NavDashboard = ({ handleBurger }) => {
     return () => {
       socket.off("success_upload");
       socket.off("success_received");
-      socket.disconnect();
+      // socket.disconnect();
     };
   }, [dispatch, userData]);
 

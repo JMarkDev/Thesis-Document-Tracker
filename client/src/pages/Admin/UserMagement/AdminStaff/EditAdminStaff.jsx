@@ -147,10 +147,19 @@ const EditAdminStaff = ({ modal, closeModal, id }) => {
     }
   }, [campusAdmin, setValue]);
 
+  const handleUpdateEmail = () => {
+    dispatch(fetchAdmin());
+  };
+
   return (
     <>
       {changeEmail ? (
-        <ChangeEmail modal={changeEmail} closeModal={closeModal} id={id} />
+        <ChangeEmail
+          modal={changeEmail}
+          closeModal={closeModal}
+          id={id}
+          handleUpdateEmail={handleUpdateEmail}
+        />
       ) : (
         <div
           id="default-modal"

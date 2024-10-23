@@ -142,10 +142,18 @@ const EditStaff = ({ modal, closeModal, id, email, officeId }) => {
     }
   }, [office, setValue]);
 
+  const handleUpdateEmail = () => {
+    dispatch(fetchStaff(officeId));
+  };
   return (
     <>
       {changeEmail ? (
-        <ChangeEmail modal={changeEmail} closeModal={closeModal} id={id} />
+        <ChangeEmail
+          modal={changeEmail}
+          closeModal={closeModal}
+          id={id}
+          handleUpdateEmail={handleUpdateEmail}
+        />
       ) : (
         <div
           id="default-modal"

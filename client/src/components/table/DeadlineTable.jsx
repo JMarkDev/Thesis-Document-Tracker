@@ -25,7 +25,7 @@ const DocumentWorkflow = ({ data }) => {
   const workflowDetails = useSelector(getWorkflowById);
   const [showEditModal, setShowEditModal] = useState(false);
   const [title, setTitle] = useState("");
-  const { formatDateOnly } = useFormat();
+  const { fullDateFormat } = useFormat();
 
   const closeDeleteModal = () => {
     setModal(false);
@@ -121,7 +121,7 @@ const DocumentWorkflow = ({ data }) => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     {" "}
-                    {formatDateOnly(deadline)}
+                    {fullDateFormat(deadline)}
                   </td>
                   <td className="px-6 py-4 flex gap-3 justify-center items-center">
                     <button

@@ -47,6 +47,17 @@ const ScanNow = () => {
   const [receivedLoader, setReceivedLoader] = useState(false);
 
   useEffect(() => {
+    if (status === "failed") {
+      setModal(false);
+      setLoading(false);
+      dispatch(reset());
+    } else if (status === "succeeded" && documentData) {
+      setLoading(false);
+      setModal(true); // Modal is set to open here
+    }
+  }, [status, documentData, dispatch]);
+
+  useEffect(() => {
     if (
       user.role === rolesList.campus_admin ||
       user.role === rolesList.registrar
@@ -113,6 +124,7 @@ const ScanNow = () => {
         toast.success(response.data.message);
         setSuccessModal(true);
         setReceivedLoader(false);
+        setTrackingNumber("");
         closeModal();
       }
     } catch (error) {
@@ -198,14 +210,63 @@ const ScanNow = () => {
     }
   };
 
-  const handleError = (err) => console.error(err);
+  const handleError = (err) => {
+    console.error("Error starting camera:", err);
+    if (err.name === "NotAllowedError") {
+      alert(
+        "Camera access was denied. Please enable it in your browser settings."
+      );
+    } else if (err.name === "NotFoundError") {
+      alert("No camera found on this device.");
+    } else {
+      alert("Unable to access camera: " + err.message);
+    }
+  };
 
+  // const requestCameraPermission = async () => {
+  //   try {
+  //     await navigator.mediaDevices.getUserMedia({ video: true });
+  //     console.log("Camera permission granted");
+  //   } catch (error) {
+  //     console.error("Camera permission denied or error occurred:", error);
+  //   }
+  // };
   const requestCameraPermission = async () => {
+    const isMobile = isMobileDevice();
+    const constraints = {
+      video: {
+        facingMode: isMobile ? { exact: "environment" } : "user", // Rear camera on mobile, front on desktop
+        width: { ideal: 1280 },
+        height: { ideal: 720 },
+      },
+    };
+
     try {
-      await navigator.mediaDevices.getUserMedia({ video: true });
+      await navigator.mediaDevices.getUserMedia(constraints);
       console.log("Camera permission granted");
+
+      // Handle stream (e.g., assign to video element if needed)
     } catch (error) {
-      console.error("Camera permission denied or error occurred:", error);
+      // Fallback for mobile: Try front camera if rear camera fails
+      if (error.name === "OverconstrainedError") {
+        try {
+          const fallbackConstraints = {
+            video: {
+              facingMode: "user", // Use front camera
+              width: { ideal: 1280 },
+              height: { ideal: 720 },
+            },
+          };
+          await navigator.mediaDevices.getUserMedia(fallbackConstraints);
+          console.log("Fallback to front camera successful");
+
+          // Handle fallback stream (e.g., assign to video element if needed)
+        } catch (fallbackError) {
+          handleError(fallbackError);
+        }
+      } else {
+        handleError(error);
+      }
     }
   };
 
