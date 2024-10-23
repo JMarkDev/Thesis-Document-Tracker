@@ -27,7 +27,7 @@ const handleRegister = async (req, res) => {
   } = req.body;
   try {
     const createdAt = new Date();
-    const formattedDate = date.format(createdAt, "YYYY-MM-DD HH:mm:ss");
+    const formattedDate = date.format(createdAt, "YYYY-MM-DD HH:mm:ss", true); // true for UTC time;
 
     let esuCampusExist;
     if (role === rolesList.registrar) {

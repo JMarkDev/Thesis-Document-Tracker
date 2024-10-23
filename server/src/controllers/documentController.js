@@ -42,6 +42,24 @@ const uploadDocument = async (req, res) => {
   } = req.body;
 
   try {
+    // Parse the route if it's a string
+    let parsedRoute = [];
+    if (typeof route === "string") {
+      parsedRoute = JSON.parse(route);
+    } else {
+      parsedRoute = route;
+    }
+
+    // Validate all offices before proceeding
+    const invalidRoute = parsedRoute.find((office) => !office.user_id);
+
+    if (invalidRoute) {
+      return res.status(400).json({
+        message:
+          "Unable to process the document. Please verify that all offices in the route have an assigned recipient.",
+      });
+    }
+
     const createdAt = new Date();
     const formattedDate = date.format(createdAt, "YYYY-MM-DD HH:mm:ss");
 
@@ -117,24 +135,16 @@ const uploadDocument = async (req, res) => {
       document_type,
       document_desc,
       file_type,
-      files: uploadedFileUrls,
+      files: uploadedFileUrls || null,
       uploaded_by,
       contact_number,
-      esuCampus,
+      esuCampus: esuCampus || null,
       status: documentStatus.incoming,
       user_id,
       user_email,
       deadline,
       createdAt: sequelize.literal(`'${formattedDate}'`),
     });
-
-    // Parse the route if it's a string
-    let parsedRoute = [];
-    if (typeof route === "string") {
-      parsedRoute = JSON.parse(route);
-    } else {
-      parsedRoute = route;
-    }
 
     // Format the route data to match the required schema for document history
     const formattedRouteData = parsedRoute?.map((office) => {

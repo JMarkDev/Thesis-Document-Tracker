@@ -4,7 +4,7 @@ const { sendEmail } = require("./sendEmail");
 const { AUTH_EMAIL } = process.env;
 const bcrypt = require("bcryptjs");
 const saltRounds = 10;
-const { createdAt, expiresAt } = require("../utils/formattedTime");
+// const { createdAt, expiresAt } = require("../utils/formattedTime");
 
 const sendOTP = async ({ email, subject, message, duration = 1 }) => {
   try {
@@ -41,6 +41,10 @@ const sendOTP = async ({ email, subject, message, duration = 1 }) => {
 
     //save otp record
     const hashedOtp = await bcrypt.hash(generatedOtp.toString(), saltRounds);
+
+    const createdAt = new Date(); // Change this line
+    // 60000 number of milliseconds in 1 minute
+    const expiresAt = new Date(createdAt.getTime() + 60000 * +duration); // Change this line
 
     const newOTP = await otpModel.create({
       email: email,
