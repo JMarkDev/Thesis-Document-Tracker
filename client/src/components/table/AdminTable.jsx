@@ -7,7 +7,12 @@ import api from "../../api/axios";
 import userIcon from "../../assets/images/user (1).png";
 import DeleteModal from "../DeleteModal";
 import { useDispatch } from "react-redux";
-import { deleteUser } from "../../services/usersSlice";
+import {
+  deleteUser,
+  fetchAdmin,
+  fetchAdminStaff,
+} from "../../services/usersSlice";
+import { deleteStaff } from "../../services/staffSlice";
 import { toastUtils } from "../../hooks/useToast";
 import EditAdminStaff from "../../pages/Admin/UserMagement/AdminStaff/EditAdminStaff";
 
@@ -21,6 +26,7 @@ const AdminTable = ({ adminUser }) => {
   const [name, setName] = useState("");
   const [editModal, setEditModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [selecedOffice, setSelectedOffice] = useState(null);
 
   const openModal = (image) => {
     setSelectedImage(image);
@@ -32,9 +38,9 @@ const AdminTable = ({ adminUser }) => {
     setSelectedImage(null);
   };
 
-  const openDeleteModal = ({ id, name }) => {
+  const openDeleteModal = ({ email, name }) => {
     setName(name);
-    setSelectedEsuCampus(id);
+    setSelectedOffice(email);
     setDeleteModal(true);
   };
 
@@ -53,7 +59,15 @@ const AdminTable = ({ adminUser }) => {
   };
 
   const handleDelete = () => {
-    dispatch(deleteUser({ id: selectedEsuCampus, toast: toastUtils() }));
+    // dispatch(deleteUser({ id: selectedEsuCampus, toast: toastUtils() }));
+    dispatch(deleteStaff({ email: selecedOffice, toast: toastUtils() }))
+      .then(() => {
+        dispatch(fetchAdmin());
+        dispatch(fetchAdminStaff());
+      })
+      .catch((err) => {
+        console.log(err);
+      });
     closeDeleteModal();
   };
   return (
@@ -170,7 +184,7 @@ const AdminTable = ({ adminUser }) => {
                     <button
                       onClick={(e) => {
                         openDeleteModal({
-                          id,
+                          email,
                           name: `${firstName} ${middleInitial}. ${lastName}`,
                         });
                         e.stopPropagation();

@@ -7,24 +7,37 @@ import {
   getRoleUsers,
   getRoleStatus,
   searchAdminRole,
+  fetchAdminStaff,
 } from "../../../../services/usersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Pagination from "../../../../components/Pagination";
+import { getUserData } from "../../../../services/authSlice";
 
 const AdminStaff = () => {
   const dispatch = useDispatch();
   const adminUser = useSelector(getRoleUsers("admin"));
+  const adminStaff = useSelector(getRoleUsers("admin_staff"));
   const adminStatus = useSelector(getRoleStatus("admin"));
+  const adminSfaffStatus = useSelector(getRoleStatus("admin_staff"));
   const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const user = useSelector(getUserData);
+  const [adminList, setAdminList] = useState([]);
   const documentsPerPage = 5;
 
   useEffect(() => {
     if (adminStatus === "idle") {
       dispatch(fetchAdmin());
     }
-  }, [adminStatus, dispatch]);
+    if (adminSfaffStatus === "idle") {
+      dispatch(fetchAdminStaff());
+    }
+  }, [adminStatus, dispatch, adminSfaffStatus]);
+
+  useEffect(() => {
+    setAdminList(adminUser.concat(adminStaff));
+  }, [adminUser, adminStaff]);
 
   const openModal = () => {
     setShowModal(!showModal);
@@ -45,7 +58,7 @@ const AdminStaff = () => {
   // Paganation
   const indexOfLastDocument = currentPage * documentsPerPage;
   const indexOfFirstDocument = indexOfLastDocument - documentsPerPage;
-  const currentDocuments = adminUser.slice(
+  const currentDocuments = adminList.slice(
     indexOfFirstDocument,
     indexOfLastDocument
   );
@@ -76,6 +89,7 @@ const AdminStaff = () => {
             modal={openModal}
             closeModal={closeModal}
             showModal={showModal}
+            officeId={user?.office?.id}
           />
         )}
       </div>

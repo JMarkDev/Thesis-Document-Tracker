@@ -63,6 +63,7 @@ export const fetchOfficeUsers = () => {
 };
 
 export const fetchAdmin = fetchRoleUsers(rolesList.admin);
+export const fetchAdminStaff = fetchRoleUsers(rolesList.admin_staff);
 export const fetchOffice = fetchOfficeUsers(rolesList.office);
 export const fetchRegistrar = fetchRoleUsers(rolesList.registrar);
 export const fetchCampusAdmin = fetchRoleUsers(rolesList.campus_admin);
@@ -129,6 +130,7 @@ const usersSlice = createSlice({
     users: [],
     roleUsers: {
       admin: [],
+      admin_staff: [],
       office: [],
       registrar: [],
       campus_admin: [],
@@ -141,6 +143,7 @@ const usersSlice = createSlice({
       users: "idle",
       fetchById: "idle",
       admin: "idle",
+      admin_staff: "idle",
       office: "idle",
       registar: "idle",
       campus_admin: "idle",
@@ -194,6 +197,18 @@ const usersSlice = createSlice({
         state.status.admin = "failed";
         state.error = action.error.message;
       })
+      // fetch admin staff cases
+      .addCase(fetchAdminStaff.pending, (state) => {
+        state.status.admin_staff = "loading";
+      })
+      .addCase(fetchAdminStaff.fulfilled, (state, action) => {
+        state.status.admin_staff = "succeeded";
+        state.roleUsers.admin_staff = action.payload;
+      })
+      .addCase(fetchAdminStaff.rejected, (state, action) => {
+        state.status.admin_staff = "failed";
+        state.error = action.error.message;
+      })
       // fetch office cases
       .addCase(fetchOffice.pending, (state) => {
         state.status.office = "loading";
@@ -244,13 +259,18 @@ const usersSlice = createSlice({
       })
       // delete user
       .addCase(deleteUser.fulfilled, (state, action) => {
-        ["admin", "office", "registrar", "campus_admin", "faculty"].forEach(
-          (role) => {
-            state.roleUsers[role] = state.roleUsers[role].filter(
-              (user) => user.id !== action.payload
-            );
-          }
-        );
+        [
+          "admin",
+          "admin_staff",
+          "office",
+          "registrar",
+          "campus_admin",
+          "faculty",
+        ].forEach((role) => {
+          state.roleUsers[role] = state.roleUsers[role].filter(
+            (user) => user.id !== action.payload
+          );
+        });
       })
       .addCase(deleteUser.rejected, (state, action) => {
         state.error = action.error.message;

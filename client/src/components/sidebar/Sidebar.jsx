@@ -133,7 +133,7 @@ const Sidebar = ({ sidebar, handleBurger }) => {
 
   useEffect(() => {
     let filterdLinks;
-    if (role === rolesList.admin) {
+    if (role === rolesList.admin || role === rolesList.admin_staff) {
       setSidebarLinks(adminLinks);
     } else if (role === rolesList.faculty) {
       setSidebarLinks(facultyLinks);

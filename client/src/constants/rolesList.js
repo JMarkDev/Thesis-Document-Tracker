@@ -5,6 +5,7 @@ const rolesList = {
   admin: 4,
   office: 5,
   office_staff: 6,
+  admin_staff: 7,
 };
 
 export default rolesList;

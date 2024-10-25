@@ -46,7 +46,7 @@ const EditAdminStaff = ({ modal, closeModal, id }) => {
   }, [id, dispatch]);
 
   const onSubmit = async (data) => {
-    data.role = rolesList.admin;
+    data.role = rolesList.admin_staff;
     setLoading(true);
 
     setFirstnameError("");

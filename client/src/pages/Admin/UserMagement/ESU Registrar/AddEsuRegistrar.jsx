@@ -470,7 +470,7 @@ const AddEsuRegistrar = ({ modal, closeModal }) => {
                       loading ? "cursor-not-allowed" : "cursor-pointer"
                     } w-full  mt-6 p-2 bg-main hover:bg-main_hover text-[#fff] md:text-lg text-sm rounded-lg`}
                   >
-                    Add ESU Campus
+                    Add Registrar
                   </button>
                 </form>
               </div>

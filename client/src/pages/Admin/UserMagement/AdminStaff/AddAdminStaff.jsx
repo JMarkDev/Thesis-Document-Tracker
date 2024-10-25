@@ -7,11 +7,11 @@ import VerifyOTP from "../../../../pages/Verification/VerifyOTP";
 import { useState } from "react";
 import { useToast } from "../../../../hooks/useToast";
 import { FiEyeOff, FiEye } from "react-icons/fi";
-import { fetchAdmin } from "../../../../services/usersSlice";
+import { fetchAdmin, fetchAdminStaff } from "../../../../services/usersSlice";
 import { useDispatch } from "react-redux";
 import rolesList from "../../../../constants/rolesList";
 
-const AddAdminStaff = ({ modal, closeModal }) => {
+const AddAdminStaff = ({ modal, closeModal, officeId }) => {
   const dispatch = useDispatch();
   const [showPass, setShowPass] = useState(false);
 
@@ -38,7 +38,7 @@ const AddAdminStaff = ({ modal, closeModal }) => {
 
   const onSubmit = async (data) => {
     setEmail(data.email);
-    data.role = rolesList.admin;
+    data.role = rolesList.admin_staff;
     setLoading(true);
 
     setFirstnameError("");
@@ -61,6 +61,7 @@ const AddAdminStaff = ({ modal, closeModal }) => {
       formData.append("contactNumber", data.contactNumber);
       formData.append("designation", data.designation);
       formData.append("role", data.role);
+      formData.append("officeId", officeId);
       formData.append("password", data.password);
       formData.append("confirmPassword", data.confirmPassword);
       formData.append("image", data.image); // Append the file
@@ -70,6 +71,10 @@ const AddAdminStaff = ({ modal, closeModal }) => {
         toast.success(response.data.message);
         setShowOTP(true);
         setLoading(false);
+        setTimeout(() => {
+          dispatch(fetchAdmin());
+          dispatch(fetchAdminStaff());
+        }, 1000);
       }
     } catch (error) {
       setLoading(false);
@@ -429,7 +434,7 @@ const AddAdminStaff = ({ modal, closeModal }) => {
                       loading ? "cursor-not-allowed" : "cursor-pointer"
                     } w-full  mt-6 p-2 bg-main hover:bg-main_hover text-[#fff] md:text-lg text-sm rounded-lg`}
                   >
-                    Add ESU Campus
+                    Add Admin Staff
                   </button>
                 </form>
               </div>
@@ -447,6 +452,7 @@ const AddAdminStaff = ({ modal, closeModal }) => {
 AddAdminStaff.propTypes = {
   modal: PropTypes.func,
   closeModal: PropTypes.func,
+  officeId: PropTypes.number,
 };
 
 export default AddAdminStaff;

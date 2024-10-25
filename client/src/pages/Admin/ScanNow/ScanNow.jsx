@@ -20,9 +20,9 @@ import "../../../components/qr_scanner/styles.css";
 import SuccessModal from "../../../components/SuccessModal";
 import rolesList from "../../../constants/rolesList";
 import io from "socket.io-client";
+const socket = io.connect(`${api.defaults.baseURL}`);
 
 const ScanNow = () => {
-  const socket = io.connect(`${api.defaults.baseURL}`);
   const dispatch = useDispatch();
   const toast = useToast();
   const user = useSelector(getUserData);
