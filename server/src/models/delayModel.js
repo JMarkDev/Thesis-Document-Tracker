@@ -1,20 +1,16 @@
 const sequelize = require("../configs/database");
 const { DataTypes } = require("sequelize");
 
-const Deadline = sequelize.define(
-  "deadlines",
+const Delay = sequelize.define(
+  "delay",
   {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    document_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    esuCampus: {
-      type: DataTypes.STRING(255),
+    days_before_delay: {
+      type: DataTypes.TINYINT(1),
       allowNull: true,
     },
     createdAt: {
@@ -32,4 +28,4 @@ const Deadline = sequelize.define(
   }
 );
 
-module.exports = Deadline;
+module.exports = Delay;

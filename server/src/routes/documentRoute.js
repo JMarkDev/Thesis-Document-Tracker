@@ -81,6 +81,9 @@ router.get(
   documentController.filterUserDocuments
 );
 
+router.put("/delay/id/:id", documentController.setDocumentDelay);
+router.get("/get-delay/:id", documentController.getDocumentDelay);
+
 router.post("/receive-document", documentController.receiveDocuments);
 
 module.exports = router;

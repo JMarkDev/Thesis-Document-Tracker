@@ -270,16 +270,28 @@ const searchStaff = async (req, res) => {
 
 const getAllOffice = async (req, res) => {
   try {
-    const users = await userModel.findAll({
+    // const users = await userModel.findAll({
+    //   where: {
+    //     status: statusList.verified,
+    //     [Sequelize.Op.or]: [
+    //       { role: rolesList.admin },
+    //       { role: rolesList.office },
+    //     ],
+    //     // role: rolesList.office,
+    //   },
+
+    //   include: [
+    //     {
+    //       model: officeModel,
+    //       required: true, // Ensures only users with associated office data are include
+    //     },
+    //   ],
+    // });
+    const admin = await userModel.findOne({
       where: {
         status: statusList.verified,
-        [Sequelize.Op.or]: [
-          { role: rolesList.admin },
-          { role: rolesList.office },
-        ],
-        // role: rolesList.office,
+        role: rolesList.admin,
       },
-
       include: [
         {
           model: officeModel,
@@ -287,6 +299,21 @@ const getAllOffice = async (req, res) => {
         },
       ],
     });
+
+    const office = await userModel.findAll({
+      where: {
+        status: statusList.verified,
+        role: rolesList.office,
+      },
+      include: [
+        {
+          model: officeModel,
+          required: true, // Ensures only users with associated office data are include
+        },
+      ],
+    });
+
+    const users = admin ? [admin, ...office] : office;
     return res.status(200).json(users);
   } catch (error) {
     return res.status(500).json({ message: error.message });

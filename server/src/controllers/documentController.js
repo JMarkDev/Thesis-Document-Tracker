@@ -11,6 +11,7 @@ const rolesList = require("../constants/rolesList");
 const statusList = require("../constants/statusList");
 const { addNotification } = require("./notificationController");
 const { sendNotification } = require("../utils/emailNotifications");
+const delayModel = require("../models/delayModel");
 const cloudinary = require("cloudinary").v2;
 require("dotenv").config();
 // const multer = require('multer');
@@ -659,6 +660,42 @@ const receiveDocuments = async (req, res) => {
   }
 };
 
+const setDocumentDelay = async (req, res) => {
+  const { id } = req.params;
+  const { delay } = req.body;
+
+  try {
+    const postDelay = await delayModel.update(
+      {
+        days_before_delay: delay,
+      },
+      { where: { id } }
+    );
+
+    return res.status(201).json({
+      status: "success",
+      message: "Delay has been set successfully",
+      postDelay,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+const getDocumentDelay = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const delay = await delayModel.findOne({
+      where: {
+        id,
+      },
+    });
+    return res.status(200).json(delay);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   uploadDocument,
   getAllDocuments,
@@ -672,4 +709,6 @@ module.exports = {
   searchDocumentsByUserId,
   filterUserDocuments,
   receiveDocuments,
+  setDocumentDelay,
+  getDocumentDelay,
 };
