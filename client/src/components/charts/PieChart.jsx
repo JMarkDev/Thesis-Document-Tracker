@@ -56,6 +56,8 @@ const PieChartComponent = ({ data }) => {
     );
   };
 
+  console.log(data, "data");
+
   return (
     <div className="bg-white border-2 border-gray-200 shadow-lg">
       <div>

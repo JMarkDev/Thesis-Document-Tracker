@@ -154,6 +154,7 @@ const Dashboard = () => {
         { title: "Completed Documents", status: "Completed" },
         { title: "Incoming Documents", status: "Incoming" },
         { title: "Delayed Documents", status: "Delayed" },
+        { title: "Received Documents", status: "Received" },
       ];
 
       // Create statusCards based on the updatedDocumentList with the updated titles
@@ -164,6 +165,7 @@ const Dashboard = () => {
         return {
           title,
           value: filteredByStatus.length,
+          documents: filteredByStatus,
         };
       });
 
@@ -204,18 +206,17 @@ const Dashboard = () => {
           <PieChart />
         </div>
       </div> */}
-
-      <div className="mt-10">
-        <h2 className="font-bold p-4 bg-gray-300">
-          Document Submissions Charts
-        </h2>
-        <LineChartDocumentSubmissions data={documents} />
-      </div>
       <div className="mt-10">
         <h2 className="font-bold p-4 bg-gray-300">
           Submitted Documents by WMSU-ESU Campus
         </h2>
         <ChartByESU data={dataByCampus} />
+      </div>
+      <div className="mt-10">
+        <h2 className="font-bold p-4 bg-gray-300">
+          Document Submissions Charts
+        </h2>
+        <LineChartDocumentSubmissions data={documents} />
       </div>
     </div>
   );

@@ -99,9 +99,14 @@ const PieChartComponent = ({ data }) => {
               className="w-6 h-6 mr-2"
               style={{ backgroundColor: COLORS[index] || getRandomColor() }}
             ></div>
-            <p className="flex text-[12px] cursor-pointer text-gray-800 font-bold ">
-              {item.title.replace(/documents/i, "").trim()}
-            </p>
+            <div className="flex gap-2">
+              <p className="flex text-[12px] cursor-pointer text-gray-800 font-bold ">
+                {item.value}
+              </p>
+              <p className="flex text-[12px] cursor-pointer text-gray-800 font-bold ">
+                {item.title.replace(/documents/i, "").trim()}
+              </p>
+            </div>
           </div>
         ))}
       </div>

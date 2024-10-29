@@ -35,6 +35,15 @@ const Homepage = () => {
   const [tracking_number, setTrackingNum] = useState(null);
   const [documentData, setDocumentData] = useState([]);
   const [modal, setModal] = useState(false);
+  const [tooltip, setTooltip] = useState(false);
+
+  const handleShow = () => {
+    setTooltip(true);
+  };
+
+  const handleHide = () => {
+    setTooltip(false);
+  };
 
   const searchDocument = (e) => {
     e.preventDefault();
@@ -193,9 +202,25 @@ const Homepage = () => {
           />
           <img src={esuLogo} alt="esu" className="lg:h-44 h-20" />
         </div>
+
         <div className="absolute right-5 bottom-10 z-30">
           <div
-            onClick={() => setOpenChat(!openChat)}
+            id="tooltip-no-arrow"
+            role="tooltip"
+            className={`absolute right-[75px] bottom-4 w-fit text-nowrap z-10 ${
+              tooltip ? "visible opacity-100" : "invisible opacity-0"
+            } inline-block px-3 py-2 text-sm font-medium text-gray-800 bg-gray-200 rounded-lg shadow-sm dark:bg-gray-700`}
+          >
+            Need help? Ask our chatbot!
+          </div>
+          <div
+            data-tooltip-target="tooltip-no-arrow"
+            onMouseEnter={handleShow}
+            onMouseLeave={handleHide}
+            onClick={() => {
+              setOpenChat(!openChat);
+              setTooltip(false);
+            }}
             className="p-[2px] bg-[#ffffff] rounded-full h-16 w-16 hover:scale-110 transition-all cursor-pointer flex items-center justify-center"
           >
             <img src={chatbotImg} alt="icon" className="filter-orange" />

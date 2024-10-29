@@ -44,6 +44,19 @@ const DocumentDetails = () => {
   const [fullName, setFullName] = useState("");
   const normalizeString = (str) => str?.trim().replace(/\./g, "").toLowerCase();
   const [files, setFiles] = useState([]);
+  const [delayThreshold, setDelayThreshold] = useState(0);
+
+  useEffect(() => {
+    const getDelay = async () => {
+      try {
+        const response = await api.get("/document/get-delay/1");
+        setDelayThreshold(response.data.days_before_delay);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getDelay();
+  }, []);
 
   useEffect(() => {
     setFullName(`${user.firstName} ${user.middleInitial} ${user.lastName}`);
@@ -86,7 +99,7 @@ const DocumentDetails = () => {
 
     // 24 hours in milliseconds
     // const Hours = 86400000;
-    const Hours = 1000 * 60 * 60 * 24;
+    const Hours = 1000 * 60 * 60 * (delayThreshold * 24);
 
     // Check if all recipients have received the document
     const allReceived = document?.document_recipients.every(
@@ -149,7 +162,7 @@ const DocumentDetails = () => {
     }
 
     setStatus(status);
-  }, [document, user, officeRecipient, documentData, fullName]);
+  }, [document, user, officeRecipient, documentData, fullName, delayThreshold]);
 
   useEffect(() => {
     if (document) {

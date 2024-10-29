@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 import { useFormat } from "../hooks/useFormatDate";
 import StepperMobile from "../components/StepperMobile";
 import Stepper from "../components/Stepper";
-import { documentBackground } from "../utils/documentBackgroundColor";
-import { getDocumentStatus } from "../utils/documentStatus";
+// import { documentBackground } from "../utils/documentBackgroundColor";
+// import { getDocumentStatus } from "../utils/documentStatus";
 
 const DocumentMedata = ({ modal, closeModal, document }) => {
   const [sortedHistories, setSortedHistories] = useState([]);
@@ -123,7 +123,7 @@ const DocumentMedata = ({ modal, closeModal, document }) => {
                           {fullDateFormat(documentData.createdAt)}
                         </p>
                       </div>
-                      <div className="flex items-center gap-5">
+                      {/* <div className="flex items-center gap-5">
                         <h1 className="font-bold  text-gray-800">Status:</h1>
                         <p
                           className={`${documentBackground(
@@ -132,7 +132,7 @@ const DocumentMedata = ({ modal, closeModal, document }) => {
                         >
                           {getDocumentStatus(documentData.status)}
                         </p>
-                      </div>
+                      </div> */}
                     </div>
 
                     {/* <div className="lg:w-1/2 w-full p-4 text-gray-600 bg-white text-sm md:text-[16px] shadow-lg rounded-md">
