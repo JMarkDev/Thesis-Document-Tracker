@@ -68,7 +68,7 @@ const PrintMetadata = ({ isLoading, contentRef, documentData }) => {
               <div className="space-y-3">
                 <div>
                   <p className="text-gray-600 flex gap-3">
-                    <strong className="text-gray-800">Tracking Number:</strong>{" "}
+                    <strong className="text-gray-800">Tracking Code:</strong>{" "}
                     {documentData?.tracking_number}
                   </p>
                 </div>

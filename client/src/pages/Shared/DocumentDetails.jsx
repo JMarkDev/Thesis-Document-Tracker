@@ -238,7 +238,7 @@ const DocumentDetails = () => {
           <div className=" md:bg-gray-100 mt-10 md:p-4 rounded-lg flex flex-col lg:flex-row gap-5 justify-between text-gray-700">
             <div className="lg:sticky  lg:top-20 flex flex-col gap-4 h-fit lg:w-1/2  p-4 bg-white text-sm   shadow-lg rounded-md">
               <div className=" flex items-center gap-5 border-b pb-2 fix">
-                <h1 className="font-bold text-gray-800">Tracking Number:</h1>
+                <h1 className="font-bold text-gray-800">Tracking Code:</h1>
                 <p className="text-gray-700">{documentData.tracking_number}</p>
               </div>
               <div className="flex items-center gap-5 border-b pb-2">

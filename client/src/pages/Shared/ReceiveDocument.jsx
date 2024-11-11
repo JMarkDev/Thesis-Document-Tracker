@@ -49,7 +49,7 @@ const ReceiveDocument = ({
         <div className="py-5 space-y-4 text-gray-600">
           <div className="grid grid-cols-2 gap-4">
             <p>
-              <strong className="text-gray-800">Tracking Number:</strong>{" "}
+              <strong className="text-gray-800">Tracking Code:</strong>{" "}
               {documentData.tracking_number}
             </p>
             <p>
