@@ -115,8 +115,17 @@ const NavDashboard = ({ handleBurger }) => {
             setNotifications(newNotifications); // Explicitly set new notifications
           });
       };
+
+      const handleSuccessDeadline = () => {
+        dispatch(fetchNotificationById(userData.id))
+          .unwrap() // Make sure the data is updated before proceeding
+          .then((newNotifications) => {
+            setNotifications(newNotifications); // Explicitly set new notifications
+          });
+      };
       socket.on("success_upload", handleUploadSuccess);
       socket.on("success_received", handleReceivedSuccess);
+      socket.on("success_deadline", handleSuccessDeadline);
     }
 
     // Clean up the socket connection and remove the event listener

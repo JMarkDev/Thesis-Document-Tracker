@@ -22,7 +22,9 @@ const Notification = ({ notifications, handleNotificationClick }) => {
                 key={id}
                 onClick={() => {
                   handleNotificationClick(id);
-                  navigate(`/document-details/${document_id}`);
+                  {
+                    document_id && navigate(`/document-details/${document_id}`);
+                  }
                 }}
                 className={`border-b border-gray-300 ${
                   is_read === 1 ? "bg-white" : "bg-gray-200"

@@ -7,6 +7,8 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import api from "../../../api/axios";
 import { useToast } from "../../../hooks/useToast";
+import io from "socket.io-client";
+const socket = io.connect(`${api.defaults.baseURL}`);
 
 const Deadline = ({ modal, closeModal }) => {
   const toast = useToast();
@@ -41,6 +43,7 @@ const Deadline = ({ modal, closeModal }) => {
       );
       if (response.data.status === "success") {
         toast.success(response.data.message);
+        socket.emit("add_deadline", response.data);
         dispatch(fetchAllWorkflow());
         closeModal();
       }

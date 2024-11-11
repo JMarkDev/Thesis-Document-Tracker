@@ -4,49 +4,38 @@ import { IoSearch } from "react-icons/io5";
 import Dropdown from "../../../../components/dropdown/Dropdown";
 import wmsuCampus from "../../../../constants/Campus";
 import {
-  fetchFaculty,
-  // getFacultyStatus,
-  getRoleStatus,
-  getRoleUsers,
   searchFacultyRole,
   filterFacultyByCampus,
+  faculty,
 } from "../../../../services/usersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Pagination from "../../../../components/Pagination";
 
 const Faculty = () => {
   const dispatch = useDispatch();
-  const facultyUser = useSelector(getRoleUsers("faculty"));
-  const registrarStatus = useSelector(getRoleStatus("faculty"));
+  const allFaculty = useSelector(faculty);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedESU, setSelectedESU] = useState(null);
+  const [selectedESU, setSelectedESU] = useState("WMSU-ESU-CAMPUS");
   const [currentPage, setCurrentPage] = useState(1);
   const documentsPerPage = 5;
 
   useEffect(() => {
-    if (registrarStatus === "idle") {
-      dispatch(fetchFaculty());
-    }
-  }, [registrarStatus, dispatch]);
-
-  useEffect(() => {
     if (searchTerm) {
       dispatch(searchFacultyRole(searchTerm));
-    } else if (selectedESU && selectedESU !== "WMSU-ESU-CAMPUS") {
-      dispatch(filterFacultyByCampus(selectedESU));
     } else {
-      dispatch(fetchFaculty());
+      dispatch(filterFacultyByCampus(selectedESU));
     }
   }, [searchTerm, selectedESU, dispatch]);
 
   const handleFilter = (esu) => {
     setSelectedESU(esu);
+    dispatch(filterFacultyByCampus(esu));
   };
 
   // Paganation
   const indexOfLastDocument = currentPage * documentsPerPage;
   const indexOfFirstDocument = indexOfLastDocument - documentsPerPage;
-  const currentDocuments = facultyUser.slice(
+  const currentDocuments = allFaculty.slice(
     indexOfFirstDocument,
     indexOfLastDocument
   );
@@ -84,7 +73,7 @@ const Faculty = () => {
         <div className="flex justify-end mt-5">
           <Pagination
             documentsPerPage={documentsPerPage}
-            totalDocuments={facultyUser.length}
+            totalDocuments={allFaculty.length}
             paginate={paginate}
             currentPage={currentPage}
           />

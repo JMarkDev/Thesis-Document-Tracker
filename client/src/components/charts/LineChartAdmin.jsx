@@ -1,29 +1,26 @@
 // import { useEffect, useState } from "react";
 import {
-  LineChart,
-  Line,
+  BarChart,
+  Bar,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import useColorGenerator from "../../hooks/useColorGenerator";
+// import useColorGenerator from "../../hooks/useColorGenerator";
 import PropTypes from "prop-types";
 
-const LineChartAdmin = ({ data }) => {
-  // const [data, setData] = useState([]);
-  const { getNextColors, usedColors } = useColorGenerator();
-
-  // useEffect(() => {
-  //   setData(cardData);
-  // }, []);
+const HistogramAdmin = ({ data }) => {
+  // const { getNextColors, usedColors } = useColorGenerator();
+  // / Define an array of colors to use for each bar
+  const colors = ["#8884d8", "#82ca9d", "#ffc658", "#ff7300", "#413ea0"];
 
   return (
     <div className="w-full shadow-xl mt-4">
-      <div className="lineChart">
+      <div className="histogramChart">
         <ResponsiveContainer width="100%" height={350}>
-          <LineChart
+          <BarChart
             data={data}
             margin={{
               top: 5,
@@ -36,30 +33,28 @@ const LineChartAdmin = ({ data }) => {
             <XAxis dataKey="month" />
             <YAxis width={24} />
             <Tooltip />
-            {/** Legend title of the event */}
-            {/* <Legend /> */}
+            {/** Render bars for each data key, excluding 'month' */}
             {data &&
               data.length > 0 &&
               Object.keys(data[0])
                 .filter((key) => key !== "month")
                 .map((key, index) => (
-                  <Line
+                  <Bar
                     key={index}
-                    type="monotone"
                     dataKey={key}
-                    stroke={usedColors[index] || getNextColors()}
-                    activeDot={{ r: 8 }}
+                    fill={colors[index % colors.length]} // fill={usedColors[index] || getNextColors()}
+                    barSize={30}
                   />
                 ))}
-          </LineChart>
+          </BarChart>
         </ResponsiveContainer>
       </div>
     </div>
   );
 };
 
-LineChartAdmin.propTypes = {
+HistogramAdmin.propTypes = {
   data: PropTypes.array,
 };
 
-export default LineChartAdmin;
+export default HistogramAdmin;

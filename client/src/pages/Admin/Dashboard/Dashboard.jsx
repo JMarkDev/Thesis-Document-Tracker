@@ -27,6 +27,7 @@ const Dashboard = () => {
   const data = useSelector(getAdminCardData);
   const dataByYear = useSelector(getDataByYear);
   const dataByCampus = useSelector(getDataByCampus);
+
   // const dataByType = useSelector(getDataByDocumentType);
   const [cardData, setCardData] = useState([]);
   const [officeRecipient, setOfficeRecipient] = useState("Registrar");
@@ -197,9 +198,9 @@ const Dashboard = () => {
 
           <LineChartAdmin data={dataByYear} />
         </div>
-        <div className="min-w-[350px]">
+        {/* <div className="min-w-[350px]">
           <StatusPieChart data={statusData} />
-        </div>
+        </div> */}
       </div>
       {/* <div>
         <div className="min-w-[350px]">

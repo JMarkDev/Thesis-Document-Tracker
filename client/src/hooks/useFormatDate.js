@@ -107,7 +107,6 @@ export const useFormat = () => {
           day: "numeric",
           year: "numeric",
         });
-
         return localDate;
       }
     }

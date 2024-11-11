@@ -5,7 +5,7 @@ import { logoutUser } from "../services/authSlice";
 export const UseAutoLogout = () => {
   const dispatch = useDispatch();
   const inactivityTimer = useRef(null);
-  const INACTIVITY_LIMIT = 30 * 60 * 1000;
+  const INACTIVITY_LIMIT = 5 * 60 * 1000;
 
   const resetTimer = () => {
     clearTimeout(inactivityTimer.current);

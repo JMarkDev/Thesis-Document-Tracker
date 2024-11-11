@@ -19,7 +19,7 @@ import LineChartDocumentSubmissions from "../../../components/charts/LineChartDo
 import { useFormat } from "../../../hooks/useFormatDate";
 
 const Reports = () => {
-  const { fullDateFormat } = useFormat();
+  const { dateFormat } = useFormat();
   const dispatch = useDispatch();
   const documents = useSelector(getReportsByYear);
   const filterDocuments = useSelector(getAllDocuments);
@@ -51,7 +51,7 @@ const Reports = () => {
       "Uploaded By",
       "Contact Number",
       "ESU Campus",
-      "Date Submitted",
+      "Date And Time Submitted",
     ];
 
     const formatFieldCsv = (field) => {
@@ -71,7 +71,7 @@ const Reports = () => {
         formatFieldCsv(
           response.esuCampus !== "null" ? response.esuCampus : "N/A"
         ),
-        formatFieldCsv(fullDateFormat(response.createdAt)),
+        formatFieldCsv(dateFormat(response.createdAt)),
       ];
     });
 
@@ -82,7 +82,7 @@ const Reports = () => {
     const blob = new Blob([csvContent], { type: "text/csv" });
     const link = document.createElement("a");
     link.href = window.URL.createObjectURL(blob);
-    link.download = "Documents_uploaded.csv";
+    link.download = "Documents_Reports.csv";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
