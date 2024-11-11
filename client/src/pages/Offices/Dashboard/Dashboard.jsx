@@ -192,6 +192,7 @@ const OfficeDashboard = () => {
         return {
           title,
           value: filteredByStatus.length,
+          documents: filteredByStatus,
         };
       });
       // setStatusData(statusCards);
@@ -224,9 +225,9 @@ const OfficeDashboard = () => {
 
           <LineChartAdmin data={data} />
         </div>
-        <div className="min-w-[350px]">
+        {/* <div className="min-w-[350px]">
           <StatusPieChart data={statusData} />
-        </div>
+        </div> */}
       </div>
       <div className="mt-10">
         <h2 className="font-bold p-4 bg-gray-300">

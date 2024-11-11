@@ -21,7 +21,7 @@ import { useFormat } from "../../../hooks/useFormatDate";
 import { getUserData } from "../../../services/authSlice";
 
 const Reports = () => {
-  const { fullDateFormat } = useFormat();
+  const { dateFormat } = useFormat();
   const dispatch = useDispatch();
   const user = useSelector(getUserData);
   const officeReports = useSelector(getReportsDocumentByOffice);
@@ -74,7 +74,7 @@ const Reports = () => {
       "Uploaded By",
       "Contact Number",
       "ESU Campus",
-      "Date Submitted",
+      "Date And Time Submitted",
     ];
 
     const formatFieldCsv = (field) => {
@@ -94,7 +94,7 @@ const Reports = () => {
         formatFieldCsv(
           response.esuCampus !== "null" ? response.esuCampus : "N/A"
         ),
-        formatFieldCsv(fullDateFormat(response.createdAt)),
+        formatFieldCsv(dateFormat(response.createdAt)),
       ];
     });
 

@@ -233,6 +233,19 @@ const AddStaff = ({ modal, closeModal, officeId }) => {
                           {...register("middleInitial")}
                           type="text"
                           id="middle_initial"
+                          maxLength={1}
+                          onKeyDown={(e) => {
+                            // Prevent certain symbols
+                            if (["-", "+", "."].includes(e.key)) {
+                              e.preventDefault();
+                            }
+                          }}
+                          onChange={(e) => {
+                            // Ensure only one character, and convert to uppercase
+                            e.target.value = e.target.value
+                              .slice(0, 1)
+                              .toUpperCase();
+                          }}
                           className={`${
                             middleInitialError
                               ? "border-red-500 "
@@ -308,6 +321,19 @@ const AddStaff = ({ modal, closeModal, officeId }) => {
                           {...register("contactNumber")}
                           type="number"
                           id="contact_number"
+                          maxLength={11}
+                          onKeyDown={(e) => {
+                            // Prevent non-numeric characters and certain symbols
+                            if (["-", "e", "E", "+", "."].includes(e.key)) {
+                              e.preventDefault();
+                            }
+                          }}
+                          onChange={(e) => {
+                            // Limit input to 11 characters
+                            if (e.target.value.length > 11) {
+                              e.target.value = e.target.value.slice(0, 11);
+                            }
+                          }}
                           className={`${
                             contactError
                               ? "border-red-500 "
