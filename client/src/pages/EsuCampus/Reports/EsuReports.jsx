@@ -14,7 +14,7 @@ import { useFormat } from "../../../hooks/useFormatDate";
 import { getUserData } from "../../../services/authSlice";
 
 const EsuReports = () => {
-  const { fullDateFormat } = useFormat();
+  const { dateFormat } = useFormat();
   const dispatch = useDispatch();
   const user = useSelector(getUserData);
   const documents = useSelector(getReportsDocumentByESU);
@@ -41,8 +41,6 @@ const EsuReports = () => {
     }
   }, [dispatch, year, user]);
 
-  console.log(documents);
-
   const filterByYear = (selected) => {
     setYear(selected);
     // dispatch(fetchDataByYear(selected));
@@ -68,7 +66,7 @@ const EsuReports = () => {
       "Uploaded By",
       "Contact Number",
       "ESU Campus",
-      "Date Submitted",
+      "Date And Time Submitted",
     ];
 
     const formatFieldCsv = (field) => {
@@ -86,7 +84,7 @@ const EsuReports = () => {
         formatFieldCsv(response.uploaded_by),
         formatFieldCsv(response.contact_number),
         formatFieldCsv(response.esuCampus),
-        formatFieldCsv(fullDateFormat(response.createdAt)),
+        formatFieldCsv(dateFormat(response.createdAt)),
       ];
     });
 
@@ -97,7 +95,7 @@ const EsuReports = () => {
     const blob = new Blob([csvContent], { type: "text/csv" });
     const link = document.createElement("a");
     link.href = window.URL.createObjectURL(blob);
-    link.download = "Documents_uploaded.csv";
+    link.download = "Documents_Reports.csv";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

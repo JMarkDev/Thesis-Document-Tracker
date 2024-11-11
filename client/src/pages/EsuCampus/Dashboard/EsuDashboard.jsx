@@ -163,6 +163,7 @@ const EsuDashboard = () => {
       return {
         title,
         value: filteredByStatus.length,
+        documents: filteredByStatus,
       };
     });
 
@@ -193,9 +194,9 @@ const EsuDashboard = () => {
 
           <LineChartAdmin data={dataByYear} />
         </div>
-        <div className="min-w-[350px]">
+        {/* <div className="min-w-[350px]">
           <StatusPieChart data={statusData} />
-        </div>
+        </div> */}
       </div>
       {/* <div>
         <div className="min-w-[350px]">
