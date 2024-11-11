@@ -33,7 +33,6 @@ export const approveFaculty = createAsyncThunk(
       );
 
       const updatedUser = response.data.updatedUser;
-      console.log(updatedUser);
 
       if (response.data.status === "success") {
         toast.success(response.data.message);
@@ -68,6 +67,7 @@ export const fetchOffice = fetchOfficeUsers(rolesList.office);
 export const fetchRegistrar = fetchRoleUsers(rolesList.registrar);
 export const fetchCampusAdmin = fetchRoleUsers(rolesList.campus_admin);
 export const fetchFaculty = fetchRoleUsers(rolesList.faculty);
+// export const getAllFaculty = fetchRoleUsers(rolesList.faculty);
 
 export const deleteUser = createAsyncThunk(
   "/users/deleteUser",
@@ -360,6 +360,9 @@ const usersSlice = createSlice({
         state.error = action.error.message;
       })
       // approve faculty
+      .addCase(approveFaculty.pending, (state) => {
+        state.status.faculty = "loading";
+      })
       .addCase(approveFaculty.fulfilled, (state, action) => {
         state.roleUsers.faculty = state.roleUsers.faculty.map((user) => {
           if (user.id === action.payload.id) {
@@ -367,7 +370,23 @@ const usersSlice = createSlice({
           }
           return user;
         });
+      })
+      .addCase(approveFaculty.rejected, (state, action) => {
+        state.error = action.error.message;
       });
+
+    // get all faculty
+    // .addCase(getAllFaculty.pending, (state) => {
+    //   state.status.filter = "loading";
+    // })
+    // .addCase(getAllFaculty.fulfilled, (state, action) => {
+    //   state.status.faculty = "succeeded";
+    //   state.roleUsers.faculty = action.payload;
+    // })
+    // .addCase(getAllFaculty.rejected, (state, action) => {
+    //   state.status.faculty = "failed";
+    //   state.error = action.error.message;
+    // });
   },
 });
 
