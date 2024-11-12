@@ -128,9 +128,12 @@ const Navbar = () => {
               <>
                 <li>
                   <div className="relative">
-                    <span className="text-sm absolute right-0 top-0 text-white bg-red-600 rounded-full px-1.5">
-                      {unread}
-                    </span>
+                    {unread > 0 && (
+                      <span className="text-sm absolute right-0 top-0 text-white bg-red-600 rounded-full px-1.5">
+                        {unread}
+                      </span>
+                    )}
+
                     <div
                       onClick={handleNotification}
                       onMouseEnter={handleNotification}

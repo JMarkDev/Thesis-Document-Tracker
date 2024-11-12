@@ -3,8 +3,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { getUserData } from "../../services/authSlice";
 import userIcon from "../../assets/images/user (1).png";
 import { IoMdNotificationsOutline } from "react-icons/io";
-import { FaBars, FaClock } from "react-icons/fa6";
-import { FaCalendarAlt } from "react-icons/fa";
+import { RiLogoutCircleLine } from "react-icons/ri";
+import { FaBars, FaRegClock } from "react-icons/fa6";
+import { FaRegCalendarAlt } from "react-icons/fa";
 import PropTypes from "prop-types";
 import NavProfile from "../NavProfile";
 import Notification from "../Notification";
@@ -33,7 +34,9 @@ const NavDashboard = ({ handleBurger }) => {
   const getNotification = useSelector(getNotificationById);
   const [unread, setUnread] = useState(0);
   const [delayOpen, setDelayOpen] = useState(false);
+  const [autoLogout, setAutoLogout] = useState(false);
   const [delayThreshold, setDelayThreshold] = useState(0);
+  const [autoLogoutThreshold, setAutoLogoutThreshold] = useState(0);
 
   const handleSaveDelay = async () => {
     setDelayOpen(false);
@@ -49,10 +52,25 @@ const NavDashboard = ({ handleBurger }) => {
     }
   };
 
+  const handleSaveAutoLogout = async () => {
+    setAutoLogout(false);
+    try {
+      const response = await api.put("/document/auto-logout/id/1", {
+        auto_logout_minutes: autoLogoutThreshold,
+      });
+      if (response.data.status === "success") {
+        toast.success(response.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     const getDelay = async () => {
       try {
         const response = await api.get("/document/get-delay/1");
+        setAutoLogoutThreshold(response.data.auto_logout_minutes);
         setDelayThreshold(response.data.days_before_delay);
       } catch (error) {
         console.log(error);
@@ -78,11 +96,17 @@ const NavDashboard = ({ handleBurger }) => {
     "/transmittal": "Transmittal",
     "/user-profile": "Profile",
     "/settings": "Settings",
+    "/deadlines": "Deadlines",
+    "/upload-documents": "Upload",
+    "/faculty/all-documents": "All Documents",
+    "/faculty-reports": "Reports",
   };
 
   const handleNotification = () => {
     setShowNotification(!showNotification);
     setShowProfile(false);
+    setAutoLogout(false);
+    setDelayOpen(false);
   };
 
   const handleProfile = () => {
@@ -163,17 +187,65 @@ const NavDashboard = ({ handleBurger }) => {
         <FaBars />
       </button>
       <div className="flex  justify-between items-center w-full">
-        <h1 className="md:text-2xl text-lg font-bold text-main">{title}</h1>
-        <div className="flex lg:text-[16px] text-sm gap-4">
+        <h1 className="md:text-2xl  text-sm font-bold text-main">{title}</h1>
+        <div className="flex items-center lg:text-[16px] text-sm gap-3">
           {userData?.role === rolesList.admin && (
             <>
+              <div className="relative  inline-block text-left">
+                <button
+                  onClick={() => {
+                    setAutoLogout((prev) => !prev);
+                    setDelayOpen(false);
+                    setShowNotification(false);
+                  }}
+                  className="flex  items-center gap-2 focus:outline-none"
+                >
+                  <RiLogoutCircleLine className="text-2xl" />
+                  <span className="hidden md:block text-sm">Auto-Logout</span>
+                </button>
+
+                {/* Dropdown Content */}
+                {autoLogout && (
+                  <div
+                    onMouseLeave={() => setAutoLogout(false)}
+                    className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-20"
+                  >
+                    <div className="p-2">
+                      <label
+                        htmlFor="delay-threshold"
+                        className="block text-sm font-medium text-nowrap text-gray-700"
+                      >
+                        Minutes before auto-logout:
+                      </label>
+                      <input
+                        type="number"
+                        id="delay-threshold"
+                        min="1"
+                        defaultValue={autoLogoutThreshold}
+                        onChange={(e) => setAutoLogoutThreshold(e.target.value)}
+                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-blue-200"
+                      />
+                      <button
+                        onClick={handleSaveAutoLogout}
+                        className="mt-3 w-full bg-blue-500 text-white py-1.5 rounded-md hover:bg-blue-600"
+                      >
+                        Save
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
               <div className="relative inline-block text-left">
                 <button
-                  onClick={() => setDelayOpen((prev) => !prev)}
-                  className="flex  mt-2.5 items-center gap-2 focus:outline-none"
+                  onClick={() => {
+                    setDelayOpen((prev) => !prev);
+                    setAutoLogout(false);
+                    setShowNotification(false);
+                  }}
+                  className="flex  items-center gap-2 focus:outline-none"
                 >
-                  <FaClock className="text-xl" />
-                  <span className="hidden md:block">Delay</span>
+                  <FaRegClock className="text-xl" />
+                  <span className="hidden md:block text-sm">Delay</span>
                 </button>
 
                 {/* Dropdown Content */}
@@ -182,7 +254,7 @@ const NavDashboard = ({ handleBurger }) => {
                     onMouseLeave={() => setDelayOpen(false)}
                     className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-20"
                   >
-                    <div className="p-4">
+                    <div className="p-2">
                       <label
                         htmlFor="delay-threshold"
                         className="block text-sm font-medium text-gray-700"
@@ -211,17 +283,19 @@ const NavDashboard = ({ handleBurger }) => {
               {/* Deadline link */}
               <div className="flex items-center gap-2">
                 <Link to={"/deadlines"} className="flex gap-2 items-center">
-                  <FaCalendarAlt className="text-xl" />
-                  <span className="hidden md:block">Deadline</span>
+                  <FaRegCalendarAlt className="text-xl" />
+                  <span className="hidden md:block text-sm">Deadline</span>
                 </Link>
               </div>
             </>
           )}
 
           <div className="relative  flex items-center">
-            <span className="text-sm  px-1.5 absolute right-[-10px] top-0 text-white bg-red-600 rounded-full text-center">
-              {unread}
-            </span>
+            {unread > 0 && (
+              <span className="text-sm  px-1.5 absolute right-[-10px] top-[-10px] text-white bg-red-600 rounded-full text-center">
+                {unread}
+              </span>
+            )}
             <button
               onClick={handleNotification}
               onMouseEnter={handleNotification}
@@ -244,7 +318,7 @@ const NavDashboard = ({ handleBurger }) => {
           )}
 
           <div className="flex items-center gap-3">
-            <div className="flex-col flex">
+            <div className=" hidden flex-col md:flex">
               <span className="font-bold">{userData?.firstName}</span>
               <span className="text-[12px]">
                 {userData?.role === rolesList.office_staff
