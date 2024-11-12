@@ -35,6 +35,7 @@ const CardModal = ({ isOpen, closeModal, card }) => {
     const headers = [
       "Tracking Number",
       "Document Name",
+      "Document Type",
       "Uploaded By",
       "Contact Number",
       "ESU Campus",
@@ -53,6 +54,7 @@ const CardModal = ({ isOpen, closeModal, card }) => {
       return [
         formatFieldCsv(response.tracking_number),
         formatFieldCsv(response.document_name),
+        formatFieldCsv(response.document_type),
         formatFieldCsv(response.uploaded_by),
         formatFieldCsv(response.contact_number),
         formatFieldCsv(
@@ -188,7 +190,7 @@ const CardModal = ({ isOpen, closeModal, card }) => {
       aria-hidden={!isOpen}
       className="fixed overflow-y-auto overflow-hidden  inset-0 z-50 px-5 flex items-center justify-center w-full h-full bg-gray-800 bg-opacity-40 font-normal"
     >
-      <div className="relative w-full max-w-3xl max-h-full py-5 ">
+      <div className="relative w-full max-w-5xl max-h-full py-5 ">
         <div className="relative text-gray-800 bg-white rounded-xl shadow-lg">
           {/* <div className="flex items-center p-6"> */}
           <button
@@ -244,6 +246,10 @@ const CardModal = ({ isOpen, closeModal, card }) => {
                                   Document Name
                                 </th>
                                 <th className="py-2 px-4 border-b text-left text-nowrap text-gray-600">
+                                  Document Type
+                                </th>
+
+                                <th className="py-2 px-4 border-b text-left text-nowrap text-gray-600">
                                   Uploaded By
                                 </th>
                                 <th className="py-2 px-4 border-b text-left  text-nowrap text-gray-600">
@@ -259,6 +265,9 @@ const CardModal = ({ isOpen, closeModal, card }) => {
                                   </td>
                                   <td className="py-2 px-4 border-b text-nowrap text-gray-700">
                                     {doc.document_name}
+                                  </td>
+                                  <td className="py-2 px-4 border-b text-nowrap text-gray-700">
+                                    {doc.document_type}
                                   </td>
                                   <td className="py-2 px-4 border-b  text-nowrap text-gray-700">
                                     {doc.uploaded_by}
