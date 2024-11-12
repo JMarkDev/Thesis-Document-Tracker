@@ -1,4 +1,6 @@
 const documentRouteModel = require("../models/documentRouteModel");
+const { addNotification } = require("./notificationController");
+const userModel = require("../models/userModel");
 const { Op } = require("sequelize");
 const { createdAt } = require("../utils/formattedTime");
 
@@ -143,6 +145,18 @@ const addDeadline = async (req, res) => {
   const { deadline_date } = req.body;
 
   try {
+    const users = await userModel.findAll();
+    const workflow = await documentRouteModel.findOne({
+      where: {
+        id: id,
+      },
+    });
+
+    let documentType = "";
+    if (workflow) {
+      documentType = workflow.document_type;
+    }
+
     if (!deadline_date) {
       return res
         .status(400)
@@ -158,6 +172,23 @@ const addDeadline = async (req, res) => {
           id: id,
         },
       }
+    );
+
+    // Assuming `documentType` and `deadline_date` are provided, format the date
+    const formatDate = new Date(deadline_date).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long", // full month name (e.g., November)
+      day: "numeric",
+    });
+
+    await Promise.all(
+      users.map((user) => {
+        return addNotification({
+          document_id: null, // replace null with the actual document ID if available
+          content: `Reminder: The deadline for ${documentType} is on ${formatDate}.`,
+          user_id: user.id, // assumes `user.id` is the primary key
+        });
+      })
     );
 
     return res

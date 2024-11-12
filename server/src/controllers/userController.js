@@ -228,7 +228,7 @@ const filterFacultyByCampus = async (req, res) => {
     const users = await userModel.findAll({
       where: {
         role: rolesList.faculty,
-        esuCampus: esuCampus,
+        ...(esuCampus !== "WMSU-ESU-CAMPUS" && { esuCampus: esuCampus }),
         [Sequelize.Op.or]: [
           { status: statusList.verified },
           { status: statusList.approved },
@@ -421,6 +421,9 @@ const updateProfile = async (req, res) => {
   } = req.body;
 
   try {
+    // Fetch the officeId from the userModel
+    const user = await userModel.findOne({ where: { id } });
+
     // upload image
     let newFileName = null;
     if (req.file) {
@@ -438,7 +441,7 @@ const updateProfile = async (req, res) => {
 
     await userModel.update(
       {
-        image: newFileName ? `/uploads/${newFileName}` : image,
+        image: newFileName ? `/uploads/${newFileName}` : user.image,
         firstName: firstName,
         lastName: lastName,
         middleInitial: middleInitial,
@@ -452,9 +455,6 @@ const updateProfile = async (req, res) => {
         where: { id },
       }
     );
-
-    // Fetch the officeId from the userModel
-    const user = await userModel.findOne({ where: { id } });
 
     if (user) {
       await officeModel.update(

@@ -10,7 +10,11 @@ const Delay = sequelize.define(
       autoIncrement: true,
     },
     days_before_delay: {
-      type: DataTypes.TINYINT(1),
+      type: DataTypes.TINYINT,
+      allowNull: true,
+    },
+    auto_logout_minutes: {
+      type: DataTypes.TINYINT,
       allowNull: true,
     },
     createdAt: {

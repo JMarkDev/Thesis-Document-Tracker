@@ -57,10 +57,9 @@ const verifyOTP = async (req, res) => {
     // }
 
     if (new Date(expiresAt).getTime() < Date.now()) {
-      console.log(new Date(expiresAt).getTime(), Date.now());
       return res
         .status(400)
-        .json({ message: `${new Date(expiresAt)} OTP expired. Please request a new OTP.` });
+        .json({ message: "OTP expired. Please request a new OTP" });
     }
 
     const registeredUser = await userModel.findOne({

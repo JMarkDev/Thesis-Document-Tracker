@@ -40,14 +40,16 @@ const handleRegister = async (req, res) => {
       });
     }
 
-    if (esuCampusExist) {
+    if (esuCampusExist && esuCampusExist.esuCampus === esuCampus) {
       return res
         .status(400)
         .json({ message: "ESU Campus registrar already exist" });
     }
 
     let campusAdminExist;
-    if (role === rolesList.campus_admin) {
+
+    // Check if the role is campus_admin and if esuCampus is provided
+    if (parseInt(role) === rolesList.campus_admin && esuCampus) {
       campusAdminExist = await userModel.findOne({
         where: {
           esuCampus: esuCampus,
@@ -57,7 +59,7 @@ const handleRegister = async (req, res) => {
       });
     }
 
-    if (campusAdminExist) {
+    if (campusAdminExist && campusAdminExist.esuCampus === esuCampus) {
       return res.status(400).json({
         message: "ESU Campus Admin already exist",
       });

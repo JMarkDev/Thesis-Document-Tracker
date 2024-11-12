@@ -82,6 +82,7 @@ router.get(
 );
 
 router.put("/delay/id/:id", documentController.setDocumentDelay);
+router.put("/auto-logout/id/:id", documentController.setAutoLogout);
 router.get("/get-delay/:id", documentController.getDocumentDelay);
 
 router.post("/receive-document", documentController.receiveDocuments);

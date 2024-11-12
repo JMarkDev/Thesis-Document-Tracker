@@ -682,6 +682,33 @@ const setDocumentDelay = async (req, res) => {
   }
 };
 
+const setAutoLogout = async (req, res) => {
+  const { id } = req.params;
+  const { auto_logout_minutes } = req.body;
+
+  try {
+    const createdAt = new Date();
+    const formattedDate = date.format(createdAt, "YYYY-MM-DD HH:mm:ss", true); // true for UTC time;
+
+    const autoLogout = await delayModel.update(
+      {
+        auto_logout_minutes: auto_logout_minutes,
+        updatedAt: sequelize.literal(`'${formattedDate}'`),
+      },
+      { where: { id: id } }
+    );
+
+    return res.status(200).json({
+      autoLogout,
+      status: "success",
+      message: "Auto logout has been set successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 const getDocumentDelay = async (req, res) => {
   const { id } = req.params;
   try {
@@ -710,5 +737,6 @@ module.exports = {
   filterUserDocuments,
   receiveDocuments,
   setDocumentDelay,
+  setAutoLogout,
   getDocumentDelay,
 };

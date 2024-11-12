@@ -13,17 +13,28 @@ const wmsuCampus = require("../constants/Campus");
 
 const getAdminCardData = async (req, res) => {
   try {
-    const totalDocuments = await documentModel.count();
-    const totalDocumentType = await routeModel.count();
-    const totalOffice = await officeModel.count();
-    const totalEsuCampus = await userModel.count({
-      where: {
-        role: rolesList.registrar,
-        status: statusList.verified,
-      },
+    const totalDocuments = await documentModel.findAll({
+      include: [
+        {
+          model: documentHistoryModel,
+          required: true,
+        },
+        {
+          model: documentRecipientModel,
+          required: true,
+        },
+      ],
     });
+    const totalDocumentType = await routeModel.findAll();
+    const totalOffice = await officeModel.findAll();
+    // const totalEsuCampus = await userModel.findAll({
+    //   where: {
+    //     role: rolesList.registrar,
+    //     status: statusList.verified,
+    //   },
+    // });
 
-    const totalFaculty = await userModel.count({
+    const totalFaculty = await userModel.findAll({
       where: {
         role: rolesList.faculty,
         status: statusList.approved,
@@ -31,11 +42,27 @@ const getAdminCardData = async (req, res) => {
     });
 
     const data = [
-      { title: "Total Documents", value: totalDocuments },
-      { title: "Total Documents types", value: totalDocumentType },
-      { title: "Total Offices", value: totalOffice },
-      { title: "Total ESU Campus", value: totalEsuCampus },
-      { title: "Total Faculty", value: totalFaculty },
+      {
+        title: "Total Documents",
+        value: totalDocuments.length,
+        documents: totalDocuments,
+      },
+      {
+        title: "Total Documents types",
+        value: totalDocumentType.length,
+        data: totalDocumentType,
+      },
+      { title: "Total Offices", value: totalOffice.length, data: totalOffice },
+      // {
+      //   title: "Total ESU Campus",
+      //   value: totalEsuCampus.length,
+      //   data: totalEsuCampus,
+      // },
+      {
+        title: "Total Faculty",
+        value: totalFaculty.length,
+        data: totalFaculty,
+      },
     ];
 
     res.status(200).json(data);
