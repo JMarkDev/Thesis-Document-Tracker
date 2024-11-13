@@ -80,10 +80,17 @@ export const UseAutoLogout = () => {
     getDelay();
   }, []);
 
-  // Reset the inactivity timer when autoLogoutThreshold changes
+  // Check if user should be logged out on component mount
   useEffect(() => {
     if (autoLogoutThreshold > 0) {
-      resetTimer();
+      const lastActivity = localStorage.getItem("lastActivityTime");
+      const INACTIVITY_LIMIT = autoLogoutThreshold * 60 * 1000;
+
+      if (lastActivity && Date.now() - lastActivity > INACTIVITY_LIMIT) {
+        dispatch(logoutUser());
+      } else {
+        resetTimer();
+      }
     }
   }, [autoLogoutThreshold]);
 
@@ -92,14 +99,20 @@ export const UseAutoLogout = () => {
 
     if (autoLogoutThreshold > 0) {
       const INACTIVITY_LIMIT = autoLogoutThreshold * 60 * 1000;
+
       inactivityTimer.current = setTimeout(() => {
         dispatch(logoutUser());
       }, INACTIVITY_LIMIT);
+
+      // Update last activity time in localStorage
+      localStorage.setItem("lastActivityTime", Date.now());
     }
   };
 
   const handleActivity = () => {
     resetTimer();
+    // Update last activity time in localStorage on any activity
+    localStorage.setItem("lastActivityTime", Date.now());
   };
 
   useEffect(() => {
