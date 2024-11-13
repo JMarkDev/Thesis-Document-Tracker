@@ -80,10 +80,13 @@ const uploadDocument = async (req, res) => {
     const user = await userModel.findOne({
       where: {
         id: user_id,
-        [Sequelize.Op.or]: [
-          { status: statusList.verified },
-          { status: statusList.approved },
-        ],
+        // [Sequelize.Op.or]: [
+        //   { status: statusList.verified },
+        //   { status: statusList.approved },
+        // ],
+        status: {
+          [Sequelize.Op.or]: [statusList.verified, statusList.approved],
+        },
       },
       include: [
         {
@@ -143,7 +146,7 @@ const uploadDocument = async (req, res) => {
       status: documentStatus.incoming,
       user_id,
       user_email,
-      deadline,
+      deadline: deadline !== "null" ? deadline : null,
       createdAt: sequelize.literal(`'${formattedDate}'`),
     });
 
@@ -368,32 +371,32 @@ const filterDocuments = async (req, res) => {
   }
 };
 
-const filterUserDocuments = async (req, res) => {
-  const { status, user_id } = req.params;
+// const filterUserDocuments = async (req, res) => {
+//   const { status, user_id } = req.params;
 
-  try {
-    const documents = await documentModel.findAll({
-      where: {
-        status: status,
-        user_id: user_id,
-      },
-      include: [
-        {
-          model: documentHistoryModel,
-          required: true,
-        },
-        {
-          model: documentRecipientModel,
-          required: true,
-        },
-      ],
-    });
+//   try {
+//     const documents = await documentModel.findAll({
+//       where: {
+//         status: status,
+//         user_id: user_id,
+//       },
+//       include: [
+//         {
+//           model: documentHistoryModel,
+//           required: true,
+//         },
+//         {
+//           model: documentRecipientModel,
+//           required: true,
+//         },
+//       ],
+//     });
 
-    return res.status(200).json(documents);
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
-  }
-};
+//     return res.status(200).json(documents);
+//   } catch (error) {
+//     return res.status(500).json({ message: error.message });
+//   }
+// };
 
 // quick sort algorithm
 // asc = ascending
@@ -660,64 +663,74 @@ const receiveDocuments = async (req, res) => {
   }
 };
 
-const setDocumentDelay = async (req, res) => {
+const getAllDocumentByUser = async (req, res) => {
   const { id } = req.params;
-  const { delay } = req.body;
 
   try {
-    const postDelay = await delayModel.update(
-      {
-        days_before_delay: delay,
-      },
-      { where: { id } }
-    );
-
-    return res.status(201).json({
-      status: "success",
-      message: "Delay has been set successfully",
-      postDelay,
-    });
-  } catch (error) {
-    return res.status(500).json({ message: error.message });
-  }
-};
-
-const setAutoLogout = async (req, res) => {
-  const { id } = req.params;
-  const { auto_logout_minutes } = req.body;
-
-  try {
-    const createdAt = new Date();
-    const formattedDate = date.format(createdAt, "YYYY-MM-DD HH:mm:ss", true); // true for UTC time;
-
-    const autoLogout = await delayModel.update(
-      {
-        auto_logout_minutes: auto_logout_minutes,
-        updatedAt: sequelize.literal(`'${formattedDate}'`),
-      },
-      { where: { id: id } }
-    );
-
-    return res.status(200).json({
-      autoLogout,
-      status: "success",
-      message: "Auto logout has been set successfully",
-    });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: error.message });
-  }
-};
-
-const getDocumentDelay = async (req, res) => {
-  const { id } = req.params;
-  try {
-    const delay = await delayModel.findOne({
+    const documents = await documentModel.findAll({
       where: {
-        id,
+        user_id: id,
       },
+      include: [
+        {
+          model: documentHistoryModel,
+          required: true,
+        },
+        {
+          model: documentRecipientModel,
+          required: true,
+        },
+      ],
     });
-    return res.status(200).json(delay);
+
+    return res.status(200).json(documents);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+const filterAllDocuments = async (req, res) => {
+  const { document_type, esuCampus, startDate, endDate, uploaded_by } =
+    req.query;
+
+  const whereConditions = {};
+
+  if (document_type) {
+    whereConditions.document_type = document_type;
+  }
+
+  if (esuCampus) {
+    whereConditions.esuCampus = esuCampus;
+  }
+
+  if (startDate && endDate) {
+    whereConditions.createdAt = {
+      [Sequelize.Op.between]: [startDate, endDate],
+    };
+  }
+
+  if (uploaded_by) {
+    whereConditions.uploaded_by = {
+      [Op.like]: `%${uploaded_by}%`,
+    };
+  }
+
+  try {
+    const documents = await documentModel.findAll({
+      where: whereConditions,
+      include: [
+        {
+          model: documentHistoryModel,
+          required: true,
+        },
+        {
+          model: documentRecipientModel,
+          required: true,
+        },
+      ],
+    });
+
+    return res.status(200).json(documents);
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
@@ -734,9 +747,8 @@ module.exports = {
   getAllDocumentsByUserId,
   sortDocumentsByUser,
   searchDocumentsByUserId,
-  filterUserDocuments,
+  // filterUserDocuments,
   receiveDocuments,
-  setDocumentDelay,
-  setAutoLogout,
-  getDocumentDelay,
+  getAllDocumentByUser,
+  filterAllDocuments,
 };
