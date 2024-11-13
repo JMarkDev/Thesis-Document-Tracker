@@ -29,41 +29,41 @@ const handleRegister = async (req, res) => {
     const createdAt = new Date();
     const formattedDate = date.format(createdAt, "YYYY-MM-DD HH:mm:ss", true); // true for UTC time;
 
-    let esuCampusExist;
-    if (role === rolesList.registrar) {
-      esuCampusExist = await userModel.findOne({
-        where: {
-          esuCampus: esuCampus,
-          role: rolesList.registrar,
-          status: statusList.verified,
-        },
-      });
-    }
+    // let esuCampusExist;
+    // if (role === rolesList.registrar) {
+    //   esuCampusExist = await userModel.findOne({
+    //     where: {
+    //       esuCampus: esuCampus,
+    //       role: rolesList.registrar,
+    //       status: statusList.verified,
+    //     },
+    //   });
+    // }
 
-    if (esuCampusExist && esuCampusExist.esuCampus === esuCampus) {
-      return res
-        .status(400)
-        .json({ message: "ESU Campus registrar already exist" });
-    }
+    // if (esuCampusExist && esuCampusExist.esuCampus === esuCampus) {
+    //   return res
+    //     .status(400)
+    //     .json({ message: "ESU Campus registrar already exist" });
+    // }
 
-    let campusAdminExist;
+    // let campusAdminExist;
 
-    // Check if the role is campus_admin and if esuCampus is provided
-    if (parseInt(role) === rolesList.campus_admin && esuCampus) {
-      campusAdminExist = await userModel.findOne({
-        where: {
-          esuCampus: esuCampus,
-          role: rolesList.campus_admin,
-          status: statusList.verified,
-        },
-      });
-    }
+    // // Check if the role is campus_admin and if esuCampus is provided
+    // if (parseInt(role) === rolesList.campus_admin && esuCampus) {
+    //   campusAdminExist = await userModel.findOne({
+    //     where: {
+    //       esuCampus: esuCampus,
+    //       role: rolesList.campus_admin,
+    //       status: statusList.verified,
+    //     },
+    //   });
+    // }
 
-    if (campusAdminExist && campusAdminExist.esuCampus === esuCampus) {
-      return res.status(400).json({
-        message: "ESU Campus Admin already exist",
-      });
-    }
+    // if (campusAdminExist && campusAdminExist.esuCampus === esuCampus) {
+    //   return res.status(400).json({
+    //     message: "ESU Campus Admin already exist",
+    //   });
+    // }
 
     const verifyUser = await userModel.findOne({
       where: {

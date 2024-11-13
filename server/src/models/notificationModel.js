@@ -24,6 +24,10 @@ const Notification = sequelize.define(
       },
       onDelete: "CASCADE",
     },
+    faculty_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
     content: {
       type: DataTypes.STRING(255),
       allowNull: false,

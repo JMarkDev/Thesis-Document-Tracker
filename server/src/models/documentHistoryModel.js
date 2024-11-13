@@ -37,6 +37,10 @@ const DocumentHistory = sequelize.define(
       type: DataTypes.STRING(100),
       allowNull: true,
     },
+    comments: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,

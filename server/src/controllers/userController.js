@@ -38,10 +38,13 @@ const getUserById = async (req, res) => {
     const user = await userModel.findOne({
       where: {
         id: id,
-        [Sequelize.Op.or]: [
-          { status: statusList.verified },
-          { status: statusList.approved },
-        ],
+        // [Sequelize.Op.or]: [
+        //   { status: statusList.verified },
+        //   { status: statusList.approved },
+        // ],
+        status: {
+          [Sequelize.Op.or]: [statusList.verified, statusList.approved],
+        },
       },
       include: [
         {
@@ -60,10 +63,13 @@ const getAllUser = async (req, res) => {
   try {
     const verifiedUser = await userModel.findAll({
       where: {
-        [Sequelize.Op.or]: [
-          { status: statusList.verified },
-          { status: statusList.approved },
-        ],
+        // [Sequelize.Op.or]: [
+        //   { status: statusList.verified },
+        //   { status: statusList.approved },
+        // ],
+        status: {
+          [Sequelize.Op.or]: [statusList.verified, statusList.approved],
+        },
       },
     });
     return res.status(200).json(verifiedUser);
@@ -121,10 +127,13 @@ const getUserByRole = async (req, res) => {
     const user = await userModel.findAll({
       where: {
         role: role,
-        [Sequelize.Op.or]: [
-          { status: statusList.verified },
-          { status: statusList.approved },
-        ],
+        // [Sequelize.Op.or]: [
+        //   { status: statusList.verified },
+        //   { status: statusList.approved },
+        // ],
+        status: {
+          [Sequelize.Op.or]: [statusList.verified, statusList.approved],
+        },
       },
       include: [
         {
@@ -177,10 +186,9 @@ const searchUser = async (req, res) => {
   try {
     const searchCriteria = {
       where: {
-        [Sequelize.Op.or]: [
-          { status: statusList.verified },
-          { status: statusList.approved },
-        ],
+        status: {
+          [Sequelize.Op.or]: [statusList.verified, statusList.approved],
+        },
         role: role,
         [Op.or]: [
           { firstName: { [Op.like]: `${name}%` } },
@@ -202,12 +210,16 @@ const searchFaculty = async (req, res) => {
   try {
     const searchCriteria = {
       where: {
-        [Sequelize.Op.or]: [
-          { status: statusList.verified },
-          { status: statusList.approved },
-        ],
+        // [Sequelize.Op.or]: [
+        //   { status: statusList.verified },
+        //   { status: statusList.approved },
+        // ],
+        status: {
+          [Sequelize.Op.or]: [statusList.verified, statusList.approved],
+        },
         role: role,
-        esuCampus: esuCampus,
+        ...(esuCampus !== "WMSU-ESU CAMPUS" && { esuCampus: esuCampus }),
+        // esuCampus: esuCampus,
         [Op.or]: [
           { firstName: { [Op.like]: `${name}%` } },
           { lastName: { [Op.like]: `${name}%` } },
@@ -223,16 +235,19 @@ const searchFaculty = async (req, res) => {
 };
 
 const filterFacultyByCampus = async (req, res) => {
-  const { esuCampus } = req.params;
+  const { esuCampus, role } = req.params;
   try {
     const users = await userModel.findAll({
       where: {
-        role: rolesList.faculty,
-        ...(esuCampus !== "WMSU-ESU-CAMPUS" && { esuCampus: esuCampus }),
-        [Sequelize.Op.or]: [
-          { status: statusList.verified },
-          { status: statusList.approved },
-        ],
+        role: role,
+        ...(esuCampus !== "WMSU-ESU CAMPUS" && { esuCampus: esuCampus }),
+        // [Sequelize.Op.or]: [
+        //   { status: statusList.verified },
+        //   { status: statusList.approved },
+        // ],
+        status: {
+          [Sequelize.Op.or]: [statusList.verified, statusList.approved],
+        },
       },
     });
     return res.status(200).json(users);

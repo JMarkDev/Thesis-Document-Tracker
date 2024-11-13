@@ -2,6 +2,10 @@ const notificationModel = require("../models/notificationModel");
 const { createdAt } = require("../utils/formattedTime");
 const date = require("date-and-time");
 const sequelize = require("../configs/database");
+const { Sequelize } = require("sequelize");
+const userModel = require("../models/userModel");
+const rolesList = require("../constants/rolesList");
+const statusList = require("../constants/statusList");
 
 const addNotification = async ({ document_id, content, user_id }) => {
   try {
@@ -19,6 +23,58 @@ const addNotification = async ({ document_id, content, user_id }) => {
     return newNotification; // Return the created notification
   } catch (err) {
     throw new Error(err.message); // Throw an error if something goes wrong
+  }
+};
+
+const newFacultyNotification = async ({
+  firstName,
+  lastName,
+  middleInitial,
+  esuCampus,
+  faculty_id,
+}) => {
+  try {
+    const createdAt = new Date();
+    const formattedDate = date.format(createdAt, "YYYY-MM-DD HH:mm:ss", true); // true for UTC time;
+
+    const admin = await userModel.findAll({
+      where: {
+        [Sequelize.Op.or]: [
+          { role: rolesList.admin },
+          { role: rolesList.admin_staff },
+          // { role: rolesList.campus_admin },
+        ],
+        status: statusList.verified,
+      },
+    });
+
+    const registrarAndCampusAdmin = await userModel.findAll({
+      where: {
+        [Sequelize.Op.or]: [
+          { role: rolesList.registrar },
+          { role: rolesList.campus_admin },
+        ],
+        esuCampus: esuCampus,
+        status: statusList.verified,
+      },
+    });
+
+    const recipients = [...admin, ...registrarAndCampusAdmin];
+
+    await Promise.all(
+      recipients.map(async (recipient) => {
+        await notificationModel.create({
+          document_id: null,
+          user_id: recipient.id,
+          faculty_id: faculty_id,
+          content: `New faculty account has been registered. Please review and approve the account of ${firstName} ${middleInitial}. ${lastName}.`,
+          is_read: 0,
+          createdAt: sequelize.literal(`'${formattedDate}'`),
+        });
+      })
+    );
+  } catch (error) {
+    throw new Error(error.message);
   }
 };
 
@@ -68,4 +124,5 @@ module.exports = {
   getNotificationById,
   addNotification,
   updateNotification,
+  newFacultyNotification,
 };

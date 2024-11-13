@@ -23,10 +23,13 @@ router.get("/get-user-by-role", userController.getUserByRole);
 router.delete("/delete/id/:id", userController.deleteUser);
 router.get("/search/:name/:role", userController.searchUser);
 router.get(
-  "/search-faculty/:name/role/:role/:esuCampus",
+  "/search-faculty/:name/role/:role/esuCampus/:esuCampus",
   userController.searchFaculty
 );
-router.get("/filter-faculty/:esuCampus", userController.filterFacultyByCampus);
+router.get(
+  "/filter-faculty/:esuCampus/role/:role",
+  userController.filterFacultyByCampus
+);
 router.post("/update-email", userController.updateEmail);
 router.put("/update-email/verify-otp/:id", otpController.verifyChangeEmail);
 router.put(

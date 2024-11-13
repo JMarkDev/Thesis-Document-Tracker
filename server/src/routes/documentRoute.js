@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const documentController = require("../controllers/documentController");
+const delayController = require("../controllers/delayController");
 const {
   validateForm,
   uploadDocumentValidation,
@@ -44,6 +45,10 @@ const fileFilter = (req, file, cb) => {
 const upload = multer({ storage: storage, fileFilter: fileFilter });
 
 router.get("/all", documentController.getAllDocuments);
+router.get(
+  "/all-documents-by-user-id/:user_id",
+  documentController.getAllDocumentsByUserId
+);
 router.post(
   "/upload",
   upload.array("files", 10),
@@ -76,15 +81,16 @@ router.get(
   "/search/:name/:user_id",
   documentController.searchDocumentsByUserId
 );
-router.get(
-  "/filter/status/:status/user_id/:user_id",
-  documentController.filterUserDocuments
-);
+// router.get(
+//   "/filter/status/:status/user_id/:user_id",
+//   documentController.filterUserDocuments
+// );
 
-router.put("/delay/id/:id", documentController.setDocumentDelay);
-router.put("/auto-logout/id/:id", documentController.setAutoLogout);
-router.get("/get-delay/:id", documentController.getDocumentDelay);
+router.put("/delay/id/:id", delayController.setDocumentDelay);
+router.put("/auto-logout/id/:id", delayController.setAutoLogout);
+router.get("/get-delay/:id", delayController.getDocumentDelay);
 
 router.post("/receive-document", documentController.receiveDocuments);
+router.get("/filter-all-documents", documentController.filterAllDocuments);
 
 module.exports = router;

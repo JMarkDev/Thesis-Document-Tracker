@@ -10,6 +10,8 @@ require("dotenv").config();
 const { setTokens } = require("../helpers/tokenHelpers");
 const rolesList = require("../constants/rolesList");
 const statusList = require("../constants/statusList");
+const notificationModel = require("../models/notificationModel");
+const { newFacultyNotification } = require("./notificationController");
 
 const postOTP = async (email) => {
   try {
@@ -32,7 +34,28 @@ const verifyOTP = async (req, res) => {
 
   try {
     const userData = await userModel.findOne({ where: { email: email } });
-    const { role: userRole, status } = userData;
+    const {
+      role: userRole,
+      status,
+      firstName,
+      lastName,
+      middleInitial,
+      esuCampus,
+      id,
+    } = userData;
+
+    // console.log(firstName, lastName, middleInitial, esuCampus);
+    // const admin = await userModel.findAll({
+    //   where: {
+    //     [Sequelize.Op.or]: [
+    //       { role: rolesList.admin },
+    //       { role: rolesList.admin_staff },
+    //       // { role: rolesList.campus_admin },
+    //     ],
+    //     status: statusList.verified,
+    //   },
+    // });
+    // console.log(admin);
 
     const matchedOTPRecord = await otpModel.findOne({
       where: { email: email },
@@ -48,13 +71,6 @@ const verifyOTP = async (req, res) => {
         .status(400)
         .json({ message: "Invalid OTP. Please try again." });
     }
-
-    // if (expiresAt < Date.now()) {
-    //   console.log(expiresAt, Date.now());
-    //   return res
-    //     .status(400)
-    //     .json({ message: "OTP expired. Pleae request a new OTP." });
-    // }
 
     if (new Date(expiresAt).getTime() < Date.now()) {
       return res
@@ -90,35 +106,24 @@ const verifyOTP = async (req, res) => {
         subject: "WMSU-ESU Document Tracker Registration Successful",
         message: `${
           userRole === rolesList.faculty
-            ? "Thank you for registering. Your account has been successfully created. Please wait for the registrar to approve your account."
+            ? "Thank you for registering. Your account has been successfully created. Please wait for the registrar, campus admin or Dean Office to approve your account."
             : "Thank you for registering. Your account has been successfully created."
         }`,
       });
+
+      if (userRole === rolesList.faculty) {
+        await newFacultyNotification({
+          firstName: firstName,
+          lastName: lastName,
+          middleInitial: middleInitial,
+          esuCampus: esuCampus,
+          faculty_id: id,
+        });
+      }
     } else {
       //  generate tokens
       const tokens = setTokens(res, { email, userRole });
       accessToken = tokens.accessToken;
-
-      //   accessToken = jwt.sign({ email, userRole }, process.env.ACCESS_TOKEN, {
-      //     expiresIn: "30m",
-      //   });
-      //   const refreshToken = jwt.sign(
-      //     { email, userRole },
-      //     process.env.REFRESH_TOKEN,
-      //     {
-      //       expiresIn: "60m",
-      //     }
-      //   );
-
-      //   // Set secure HTTP-only cookies
-      //   res.cookie("accessToken", accessToken, {
-      //     httpOnly: true,
-      //     maxAge: 30 * 60 * 1000,
-      //   }); // 30 minutes
-      //   res.cookie("refreshToken", refreshToken, {
-      //     httpOnly: true,
-      //     maxAge: 60 * 60 * 1000,
-      //   }); // 30 minutes
     }
 
     // Delete the OTP after successful verification
@@ -134,7 +139,9 @@ const verifyOTP = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ Error: "Error verify OTP" });
+    return res
+      .status(500)
+      .json({ message: error.message, Error: "Error verify OTP" });
   }
 };
 
