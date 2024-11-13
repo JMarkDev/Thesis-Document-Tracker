@@ -11,6 +11,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { getUserData } from "../../../services/authSlice";
 import Pagination from "../../../components/Pagination";
+import rolesList from "../../../constants/rolesList";
 
 const EsuFaculties = () => {
   const dispatch = useDispatch();
@@ -21,17 +22,44 @@ const EsuFaculties = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const documentsPerPage = 5;
 
+  const handleFetchFaculty = () => {
+    setTimeout(() => {
+      dispatch(
+        filterFacultyByCampus({
+          esuCampus: user?.esuCampus,
+          role: rolesList.faculty,
+        })
+      );
+    }, 1000);
+  };
+
   useEffect(() => {
     if (registrarStatus === "idle") {
-      dispatch(filterFacultyByCampus(user?.esuCampus));
+      dispatch(
+        filterFacultyByCampus({
+          esuCampus: user?.esuCampus,
+          role: rolesList.faculty,
+        })
+      );
     }
   }, [registrarStatus, dispatch, user]);
 
   useEffect(() => {
     if (searchTerm) {
-      dispatch(searchFaculty({ name: searchTerm, esuCampus: user?.esuCampus }));
+      dispatch(
+        searchFaculty({
+          name: searchTerm,
+          role: rolesList.faculty,
+          esuCampus: user?.esuCampus,
+        })
+      );
     } else {
-      dispatch(filterFacultyByCampus(user?.esuCampus));
+      dispatch(
+        filterFacultyByCampus({
+          esuCampus: user?.esuCampus,
+          role: rolesList.faculty,
+        })
+      );
     }
   }, [searchTerm, dispatch, user]);
 
@@ -70,7 +98,10 @@ const EsuFaculties = () => {
         </div>
       </div>
       <div className="mt-8">
-        <FacultyTable fetchFaculty={currentDocuments} />
+        <FacultyTable
+          faculty={currentDocuments}
+          handleFetchFaculty={handleFetchFaculty}
+        />
         <div className="flex justify-end mt-5">
           <Pagination
             documentsPerPage={documentsPerPage}

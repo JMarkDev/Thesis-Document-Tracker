@@ -28,17 +28,27 @@ const EsuTransmittal = () => {
     }
   }, [status, dispatch]);
 
-  const filterDocuments = allDocuments.filter((doc) => {
-    const createdAt = new Date(doc.createdAt);
+  // const filterDocuments = allDocuments.filter((doc) => {
+  //   const createdAt = new Date(doc.createdAt);
 
-    const from = startDate ? new Date(startDate) : null;
-    const to = endDate ? new Date(endDate) : null;
-    return (!from || createdAt >= from) && (!to || createdAt <= to);
-  });
+  //   const from = startDate ? new Date(startDate) : null;
+  //   const to = endDate ? new Date(endDate) : null;
+  //   return (!from || createdAt >= from) && (!to || createdAt <= to);
+  // });
 
   useEffect(() => {
     if (!startDate && !endDate) {
       setFilteredDocuments(allDocuments);
+    } else {
+      const filterDocuments = allDocuments.filter((doc) => {
+        const createdAt = new Date(doc.createdAt);
+
+        const from = startDate ? new Date(startDate) : null;
+        const to = endDate ? new Date(endDate) : null;
+        return (!from || createdAt >= from) && (!to || createdAt <= to);
+      });
+
+      setFilteredDocuments(filterDocuments);
     }
   }, [allDocuments, startDate, endDate]);
 
@@ -87,26 +97,47 @@ const EsuTransmittal = () => {
           </button>
         </div>
         <div className="flex gap-4 items-center">
-          <input
+          {/* <input
             type="date"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
             placeholder="From Date"
             className="border focus:ring-blue-500 focus:border-blue-100 rounded-lg p-2"
-          />
-          <input
-            type="date"
-            value={endDate}
-            onChange={(e) => setEndDate(e.target.value)}
-            placeholder="To Date"
-            className="border focus:ring-blue-500 focus:border-blue-100 rounded-lg p-2"
-          />
-          <button
-            onClick={() => setFilteredDocuments(filterDocuments)}
-            className="bg-blue-500 text-white text-sm text-nowrap px-4 py-2 rounded-lg"
-          >
-            Filter by Date
-          </button>
+          /> */}
+          <div className="relative  ">
+            <input
+              type="date"
+              id="start_date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              className={`border-blue-500 
+                           block  w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 appearance-none   focus:outline-none focus:ring-0 focus:border-blue-600 peer`}
+              placeholder=" "
+            />
+            <label
+              htmlFor="from_date"
+              className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"
+            >
+              Start Date
+            </label>
+          </div>
+          <div className="relative  ">
+            <input
+              type="date"
+              id="end_date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              className={`border-blue-500 
+                           block  w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 appearance-none   focus:outline-none focus:ring-0 focus:border-blue-600 peer`}
+              placeholder=" "
+            />
+            <label
+              htmlFor="from_date"
+              className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"
+            >
+              End Date
+            </label>
+          </div>
         </div>
       </div>
       <Table

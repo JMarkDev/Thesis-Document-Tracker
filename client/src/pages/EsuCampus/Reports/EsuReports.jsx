@@ -1,68 +1,258 @@
+// import { useEffect, useState } from "react";
+// import { useSelector, useDispatch } from "react-redux";
+// import LineChartAdmin from "../../../components/charts/LineChartAdmin";
+// import YearDropdown from "../../../components/dropdown/YearDropdown";
+// import {
+//   getDataByYear,
+//   fetchDataEsuByYear,
+//   getReportsDocumentByESU,
+//   fetchReportEsuByYear,
+// } from "../../../services/analyticsSlice";
+// import { getAllDocuments } from "../../../services/documentSlice";
+// import LineChartDocumentSubmissions from "../../../components/charts/LineChartDocumentSubmissions";
+// import { useFormat } from "../../../hooks/useFormatDate";
+// import { getUserData } from "../../../services/authSlice";
+
+// const EsuReports = () => {
+//   const { dateFormat } = useFormat();
+//   const dispatch = useDispatch();
+//   const user = useSelector(getUserData);
+//   const documents = useSelector(getReportsDocumentByESU);
+//   const filterDocuments = useSelector(getAllDocuments);
+//   const dataByYear = useSelector(getDataByYear);
+//   const [year, setYear] = useState(new Date().getFullYear());
+
+//   useEffect(() => {
+//     if (user?.esuCampus && year) {
+//       // Fetch data for the selected year only
+//       dispatch(
+//         fetchReportEsuByYear({
+//           esuCampus: `${user?.esuCampus}`,
+//           year: year,
+//         })
+//       );
+
+//       dispatch(
+//         fetchDataEsuByYear({
+//           esuCampus: `${user?.esuCampus}`,
+//           year: year, // Use selected year instead of the current year
+//         })
+//       );
+//     }
+//   }, [dispatch, year, user]);
+
+//   const filterByYear = (selected) => {
+//     setYear(selected);
+//     // dispatch(fetchDataByYear(selected));
+//     dispatch(
+//       fetchReportEsuByYear({
+//         esuCampus: `${user?.esuCampus}`,
+//         year: selected,
+//       })
+//     );
+
+//     dispatch(
+//       fetchDataEsuByYear({
+//         esuCampus: `${user?.esuCampus}`,
+//         year: selected,
+//       })
+//     );
+//   };
+
+//   const downloadPdf = (data) => {
+//     const headers = [
+//       "Tracking Number",
+//       "Document Name",
+//       "Uploaded By",
+//       "Contact Number",
+//       "ESU Campus",
+//       "Date And Time Submitted",
+//     ];
+
+//     const formatFieldCsv = (field) => {
+//       if (/[,]/.test(field)) {
+//         return `"${field}"`;
+//       }
+
+//       return field;
+//     };
+
+//     const dataRows = data.map((response) => {
+//       return [
+//         formatFieldCsv(response.tracking_number),
+//         formatFieldCsv(response.document_name),
+//         formatFieldCsv(response.uploaded_by),
+//         formatFieldCsv(response.contact_number),
+//         formatFieldCsv(response.esuCampus),
+//         formatFieldCsv(dateFormat(response.createdAt)),
+//       ];
+//     });
+
+//     const csvContent = [headers, ...dataRows]
+//       .map((row) => row.join(","))
+//       .join("\n");
+
+//     const blob = new Blob([csvContent], { type: "text/csv" });
+//     const link = document.createElement("a");
+//     link.href = window.URL.createObjectURL(blob);
+//     link.download = "Documents_Reports.csv";
+//     document.body.appendChild(link);
+//     link.click();
+//     document.body.removeChild(link);
+//   };
+
+//   return (
+//     <div className="w-full">
+//       <div className="flex justify-between  lg:flex-row flex-col gap-5 ">
+//         <div className="w-full bg-white">
+//           <div className="flex p-2 bg-gray-300 justify-between items-center">
+//             <h1 className="font-bold">Document Reports</h1>
+//             <YearDropdown handleFilter={filterByYear} />
+//           </div>
+//           <LineChartAdmin data={dataByYear} />
+//         </div>
+
+//         <div className="min-w-[350px] h-[400px] overflow-y-auto p-2 bg-white rounded-md shadow-lg">
+//           <div className="relative overflow-x-auto ">
+//             <button
+//               onClick={() => downloadPdf(documents)}
+//               className="absolute right-0 bg-blue-500 text-white py-1 px-3 rounded-md hover:bg-blue-600 transition-all"
+//             >
+//               Download
+//             </button>
+//             <h2 className="font-semibold text-lg mb-4">Filtered Documents</h2>
+
+//             {documents?.length === 0 ? (
+//               <div className="flex justify-center items-center h-40">
+//                 <p className="text-gray-500">No documents found</p>
+//               </div>
+//             ) : (
+//               <>
+//                 <table className="w-full  text-sm text-left text-gray-600">
+//                   <tbody>
+//                     {documents.map(({ document_name, id }) => (
+//                       <tr
+//                         key={id}
+//                         className="bg-gray-100 border-b hover:bg-gray-200 transition-colors"
+//                       >
+//                         <th
+//                           scope="row"
+//                           className="p-4 font-medium text-gray-900 whitespace-nowrap"
+//                         >
+//                           {document_name}
+//                         </th>
+//                       </tr>
+//                     ))}
+//                   </tbody>
+//                 </table>
+//               </>
+//             )}
+//           </div>
+//         </div>
+//       </div>
+
+//       <div className="flex mt-10 justify-between lg:flex-row flex-col gap-5 ">
+//         <div className="w-full bg-white">
+//           <div className="flex p-2 bg-gray-300 justify-between items-center">
+//             <h1 className="font-bold">Document Submissions Charts</h1>
+//           </div>
+//           <LineChartDocumentSubmissions data={filterDocuments} />
+//         </div>
+
+//         <div className="min-w-[350px] h-[400px] overflow-y-auto  p-2 bg-white rounded-md shadow-lg">
+//           <div className="relative overflow-x-auto ">
+//             <button
+//               onClick={() => downloadPdf(filterDocuments)}
+//               className="absolute right-0 bg-blue-500 text-white py-1 px-3 rounded-md hover:bg-blue-600 transition-all"
+//             >
+//               Download
+//             </button>
+//             <h2 className="font-semibold text-lg mb-4">Filtered Documents</h2>
+
+//             {filterDocuments.length === 0 ? (
+//               <div className="flex justify-center items-center h-40">
+//                 <p className="text-gray-500">No documents found</p>
+//               </div>
+//             ) : (
+//               <table className="w-full  text-sm text-left text-gray-600">
+//                 <tbody>
+//                   {filterDocuments.map(({ document_name, id }) => (
+//                     <tr
+//                       key={id}
+//                       className="bg-gray-100 border-b hover:bg-gray-200 transition-colors"
+//                     >
+//                       <th
+//                         scope="row"
+//                         className="p-4 font-medium text-gray-900 whitespace-nowrap"
+//                       >
+//                         {document_name}
+//                       </th>
+//                     </tr>
+//                   ))}
+//                 </tbody>
+//               </table>
+//             )}
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default EsuReports;
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import LineChartAdmin from "../../../components/charts/LineChartAdmin";
-import YearDropdown from "../../../components/dropdown/YearDropdown";
+// import wmsuCampus from "../../../constants/Campus";
+import ReportsTable from "../../../components/table/ReportsTable";
+import { IoSearch } from "react-icons/io5";
+
 import {
-  getDataByYear,
-  fetchDataEsuByYear,
-  getReportsDocumentByESU,
-  fetchReportEsuByYear,
-} from "../../../services/analyticsSlice";
-import { getAllDocuments } from "../../../services/documentSlice";
+  fetchAllDocuments,
+  filterAllDocuments,
+  getFilteredDocuments,
+} from "../../../services/documentSlice";
+import {
+  getAllWorkflow,
+  fetchAllWorkflow,
+} from "../../../services/documentWolkflowSlice";
 import LineChartDocumentSubmissions from "../../../components/charts/LineChartDocumentSubmissions";
 import { useFormat } from "../../../hooks/useFormatDate";
 import { getUserData } from "../../../services/authSlice";
 
-const EsuReports = () => {
+const Reports = () => {
   const { dateFormat } = useFormat();
   const dispatch = useDispatch();
   const user = useSelector(getUserData);
-  const documents = useSelector(getReportsDocumentByESU);
-  const filterDocuments = useSelector(getAllDocuments);
-  const dataByYear = useSelector(getDataByYear);
-  const [year, setYear] = useState(new Date().getFullYear());
+  const allDocuments = useSelector(getFilteredDocuments);
+  const allWorkflow = useSelector(getAllWorkflow);
+  const [documentType, setDocumentType] = useState("");
+  // const [esuCampus, setEsuCampus] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
-    if (user?.esuCampus && year) {
-      // Fetch data for the selected year only
-      dispatch(
-        fetchReportEsuByYear({
-          esuCampus: `${user?.esuCampus}`,
-          year: year,
-        })
-      );
-
-      dispatch(
-        fetchDataEsuByYear({
-          esuCampus: `${user?.esuCampus}`,
-          year: year, // Use selected year instead of the current year
-        })
-      );
-    }
-  }, [dispatch, year, user]);
-
-  const filterByYear = (selected) => {
-    setYear(selected);
-    // dispatch(fetchDataByYear(selected));
     dispatch(
-      fetchReportEsuByYear({
-        esuCampus: `${user?.esuCampus}`,
-        year: selected,
+      filterAllDocuments({
+        document_type: documentType,
+        esuCampus: user?.esuCampus,
+        startDate: startDate,
+        endDate: endDate,
+        uploaded_by: searchTerm,
       })
     );
+  }, [dispatch, documentType, startDate, endDate, searchTerm, user]);
 
-    dispatch(
-      fetchDataEsuByYear({
-        esuCampus: `${user?.esuCampus}`,
-        year: selected,
-      })
-    );
-  };
+  useEffect(() => {
+    dispatch(fetchAllDocuments());
+    dispatch(fetchAllWorkflow());
+  }, [dispatch]);
 
-  const downloadPdf = (data) => {
+  const downloadCsv = () => {
     const headers = [
       "Tracking Number",
       "Document Name",
+      "Document Type",
       "Uploaded By",
       "Contact Number",
       "ESU Campus",
@@ -77,13 +267,16 @@ const EsuReports = () => {
       return field;
     };
 
-    const dataRows = data.map((response) => {
+    const dataRows = allDocuments.map((response) => {
       return [
         formatFieldCsv(response.tracking_number),
         formatFieldCsv(response.document_name),
+        formatFieldCsv(response.document_type),
         formatFieldCsv(response.uploaded_by),
         formatFieldCsv(response.contact_number),
-        formatFieldCsv(response.esuCampus),
+        formatFieldCsv(
+          response.esuCampus !== "null" ? response.esuCampus : "N/A"
+        ),
         formatFieldCsv(dateFormat(response.createdAt)),
       ];
     });
@@ -103,100 +296,107 @@ const EsuReports = () => {
 
   return (
     <div className="w-full">
-      <div className="flex justify-between  lg:flex-row flex-col gap-5 ">
-        <div className="w-full bg-white">
-          <div className="flex p-2 bg-gray-300 justify-between items-center">
-            <h1 className="font-bold">Document Reports</h1>
-            <YearDropdown handleFilter={filterByYear} />
-          </div>
-          <LineChartAdmin data={dataByYear} />
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 items-center">
+        <div className="w-full">
+          <select
+            name=""
+            id=""
+            onChange={(e) => setDocumentType(e.target.value)}
+            className="text-sm w-full border-gray-400 rounded-lg focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+          >
+            <option value="">Document Type</option>
+            {allWorkflow?.map(({ document_type }) => (
+              <option key={document_type} value={document_type}>
+                {document_type}
+              </option>
+            ))}
+          </select>
         </div>
+        {/* <div className="">
+          <select
+            name=""
+            id=""
+            onChange={(e) => setEsuCampus(e.target.value)}
+            className="text-sm w-full border-gray-400 rounded-lg focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+          >
+            <option value="">WMSU-ESU CAMPUS</option>
+            {wmsuCampus?.map((campus) => (
+              <option key={campus} value={campus}>
+                {campus}
+              </option>
+            ))}
+          </select>
+        </div> */}
 
-        <div className="min-w-[350px] h-[400px] overflow-y-auto p-2 bg-white rounded-md shadow-lg">
-          <div className="relative overflow-x-auto ">
-            <button
-              onClick={() => downloadPdf(documents)}
-              className="absolute right-0 bg-blue-500 text-white py-1 px-3 rounded-md hover:bg-blue-600 transition-all"
+        <div className="">
+          <div className="relative w-full ">
+            <input
+              type="date"
+              id="start_date"
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+              className={`border-blue-500 
+                           block  w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 appearance-none   focus:outline-none focus:ring-0 focus:border-blue-600 peer`}
+              placeholder=" "
+            />
+            <label
+              htmlFor="from_date"
+              className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"
             >
-              Download
-            </button>
-            <h2 className="font-semibold text-lg mb-4">Filtered Documents</h2>
-
-            {documents?.length === 0 ? (
-              <div className="flex justify-center items-center h-40">
-                <p className="text-gray-500">No documents found</p>
-              </div>
-            ) : (
-              <>
-                <table className="w-full  text-sm text-left text-gray-600">
-                  <tbody>
-                    {documents.map(({ document_name, id }) => (
-                      <tr
-                        key={id}
-                        className="bg-gray-100 border-b hover:bg-gray-200 transition-colors"
-                      >
-                        <th
-                          scope="row"
-                          className="p-4 font-medium text-gray-900 whitespace-nowrap"
-                        >
-                          {document_name}
-                        </th>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </>
-            )}
+              Start Date
+            </label>
+          </div>
+        </div>
+        <div className="">
+          <div className="relative w-full ">
+            <input
+              type="date"
+              id="end_date"
+              value={endDate}
+              onChange={(e) => setEndDate(e.target.value)}
+              className={`border-blue-500 
+                           block  w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 appearance-none   focus:outline-none focus:ring-0 focus:border-blue-600 peer`}
+              placeholder=" "
+            />
+            <label
+              htmlFor="from_date"
+              className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"
+            >
+              End Date
+            </label>
           </div>
         </div>
       </div>
-
-      <div className="flex mt-10 justify-between lg:flex-row flex-col gap-5 ">
-        <div className="w-full bg-white">
-          <div className="flex p-2 bg-gray-300 justify-between items-center">
-            <h1 className="font-bold">Document Submissions Charts</h1>
-          </div>
-          <LineChartDocumentSubmissions data={filterDocuments} />
-        </div>
-
-        <div className="min-w-[350px] h-[400px] overflow-y-auto  p-2 bg-white rounded-md shadow-lg">
-          <div className="relative overflow-x-auto ">
-            <button
-              onClick={() => downloadPdf(filterDocuments)}
-              className="absolute right-0 bg-blue-500 text-white py-1 px-3 rounded-md hover:bg-blue-600 transition-all"
-            >
-              Download
-            </button>
-            <h2 className="font-semibold text-lg mb-4">Filtered Documents</h2>
-
-            {filterDocuments.length === 0 ? (
-              <div className="flex justify-center items-center h-40">
-                <p className="text-gray-500">No documents found</p>
-              </div>
-            ) : (
-              <table className="w-full  text-sm text-left text-gray-600">
-                <tbody>
-                  {filterDocuments.map(({ document_name, id }) => (
-                    <tr
-                      key={id}
-                      className="bg-gray-100 border-b hover:bg-gray-200 transition-colors"
-                    >
-                      <th
-                        scope="row"
-                        className="p-4 font-medium text-gray-900 whitespace-nowrap"
-                      >
-                        {document_name}
-                      </th>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
+      <div className="flex justify-between flex-col md:flex-row mt-5 gap-3 ">
+        <div className="flex md:w-[500px] w-full">
+          <div className="flex items-center relative w-full">
+            <input
+              type="text"
+              placeholder="Enter uploader's name..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full border focus:border-blue rounded-xl bg-gray-100 focus:outline-none focus:ring-0 border-blue-600 peer"
+            />
+            <IoSearch className="text-2xl right-3 absolute text-gray-600" />
           </div>
         </div>
+        <button
+          onClick={downloadCsv}
+          className="bg-blue-600 text-nowrap w-fit hover:bg-blue-700 text-white rounded-lg py-2 px-4"
+        >
+          Download Reports
+        </button>
+      </div>
+
+      <div className="mt-5">
+        <ReportsTable documents={allDocuments} />
+      </div>
+      <div className="mt-10">
+        <h1 className="font-bold mb-5">Documents Chart</h1>
+        <LineChartDocumentSubmissions data={allDocuments} />
       </div>
     </div>
   );
 };
 
-export default EsuReports;
+export default Reports;
