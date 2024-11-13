@@ -12,7 +12,7 @@ import { toastUtils } from "../../hooks/useToast";
 import EditCampusAdmin from "../../pages/Admin/UserMagement/CampusAdmin/EditCampusAdmin";
 import NoData from "../NoData";
 
-const CampusAdminTable = ({ campusAdmin }) => {
+const CampusAdminTable = ({ campusAdmin, handleFetchUpdate }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [selectedImage, setSelectedImage] = useState(null);
@@ -55,6 +55,7 @@ const CampusAdminTable = ({ campusAdmin }) => {
 
   const handleDelete = () => {
     dispatch(deleteUser({ id: selectedEsuCampus, toast: toastUtils() }));
+    handleFetchUpdate();
     closeDeleteModal();
   };
   return (
@@ -198,6 +199,7 @@ const CampusAdminTable = ({ campusAdmin }) => {
             modal={editModal}
             closeModal={closeEditModal}
             id={selectedUser}
+            handleFetchUpdate={handleFetchUpdate}
           />
         )}
 
@@ -216,6 +218,7 @@ const CampusAdminTable = ({ campusAdmin }) => {
 
 CampusAdminTable.propTypes = {
   campusAdmin: PropTypes.array.isRequired,
+  handleFetchUpdate: PropTypes.func,
 };
 
 export default CampusAdminTable;

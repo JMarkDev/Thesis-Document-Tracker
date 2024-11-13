@@ -12,7 +12,7 @@ import { toastUtils } from "../../hooks/useToast";
 import EditRegistrar from "../../pages/Admin/UserMagement/ESU Registrar/EditRegistrar";
 import NoData from "../NoData";
 
-const RegistrarTable = ({ registrarUser }) => {
+const RegistrarTable = ({ registrarUser, handleFetchUpdate }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [selectedImage, setSelectedImage] = useState(null);
@@ -55,6 +55,7 @@ const RegistrarTable = ({ registrarUser }) => {
 
   const handleDelete = () => {
     dispatch(deleteUser({ id: selectedEsuCampus, toast: toastUtils() }));
+    handleFetchUpdate();
     closeDeleteModal();
   };
   return (
@@ -198,6 +199,7 @@ const RegistrarTable = ({ registrarUser }) => {
             modal={editModal}
             closeModal={closeEditModal}
             id={selectedUser}
+            handleFetchUpdate={handleFetchUpdate}
           />
         )}
 
@@ -216,6 +218,7 @@ const RegistrarTable = ({ registrarUser }) => {
 
 RegistrarTable.propTypes = {
   registrarUser: PropTypes.array.isRequired,
+  handleFetchUpdate: PropTypes.func,
 };
 
 export default RegistrarTable;

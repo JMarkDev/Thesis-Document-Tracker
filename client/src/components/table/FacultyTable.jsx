@@ -14,7 +14,7 @@ import statusList from "../../constants/statusList";
 import Loading from "../loader/loginloader/LoginLoading";
 import NoData from "../NoData";
 
-const FacultyTable = ({ fetchFaculty }) => {
+const FacultyTable = ({ faculty, handleFetchFaculty }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [selectedImage, setSelectedImage] = useState(null);
@@ -48,6 +48,9 @@ const FacultyTable = ({ fetchFaculty }) => {
   const handleDelete = () => {
     dispatch(deleteUser({ id: selectedEsuCampus, toast: toastUtils() }));
     closeDeleteModal();
+    if (handleFetchFaculty) {
+      handleFetchFaculty();
+    }
   };
 
   const handleApprove = ({ id, email }) => {
@@ -56,6 +59,9 @@ const FacultyTable = ({ fetchFaculty }) => {
       .unwrap()
       .then(() => {
         setLoading(false);
+        if (handleFetchFaculty) {
+          handleFetchFaculty();
+        }
       })
       .catch((error) => {
         setLoading(false);
@@ -67,7 +73,7 @@ const FacultyTable = ({ fetchFaculty }) => {
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <div className="flex justify-center">{loading && <Loading />}</div>
 
-        {fetchFaculty.length === 0 ? (
+        {faculty.length === 0 ? (
           <NoData />
         ) : (
           <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -117,7 +123,7 @@ const FacultyTable = ({ fetchFaculty }) => {
               </tr>
             </thead>
             <tbody>
-              {fetchFaculty?.map(
+              {faculty?.map(
                 (
                   {
                     id,
@@ -267,7 +273,8 @@ const FacultyTable = ({ fetchFaculty }) => {
 };
 
 FacultyTable.propTypes = {
-  fetchFaculty: PropTypes.array.isRequired,
+  faculty: PropTypes.array.isRequired,
+  handleFetchFaculty: PropTypes.func,
 };
 
 export default FacultyTable;
