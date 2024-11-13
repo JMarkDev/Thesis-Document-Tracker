@@ -8,12 +8,12 @@ import { useState } from "react";
 import { useToast } from "../../../../hooks/useToast";
 import wmsuCampus from "../../../../constants/Campus";
 import { FiEyeOff, FiEye } from "react-icons/fi";
-import { fetchRegistrar } from "../../../../services/usersSlice";
-import { useDispatch } from "react-redux";
+// import { fetchRegistrar } from "../../../../services/usersSlice";
+// import { useDispatch } from "react-redux";
 import rolesList from "../../../../constants/rolesList";
 
-const AddEsuRegistrar = ({ modal, closeModal }) => {
-  const dispatch = useDispatch();
+const AddEsuRegistrar = ({ modal, closeModal, handleFetchUpdate }) => {
+  // const dispatch = useDispatch();
   const [showPass, setShowPass] = useState(false);
   const toast = useToast();
   const { register, handleSubmit, setValue } = useForm();
@@ -34,7 +34,7 @@ const AddEsuRegistrar = ({ modal, closeModal }) => {
   const [confirmPasswordError, setConfirmpasswordError] = useState("");
 
   const onVerificationSuccess = () => {
-    dispatch(fetchRegistrar());
+    handleFetchUpdate();
   };
 
   const onSubmit = async (data) => {
@@ -514,6 +514,7 @@ const AddEsuRegistrar = ({ modal, closeModal }) => {
 AddEsuRegistrar.propTypes = {
   modal: PropTypes.func,
   closeModal: PropTypes.func,
+  handleFetchUpdate: PropTypes.func,
 };
 
 export default AddEsuRegistrar;

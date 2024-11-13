@@ -3,28 +3,49 @@ import RegistrarTable from "../../../../components/table/RegistrarTable";
 import { IoSearch } from "react-icons/io5";
 import AddEsuRegistrar from "./AddEsuRegistrar";
 import {
-  fetchRegistrar,
-  getRoleStatus,
-  getRoleUsers,
-  searchRegistrarRole,
+  // fetchRegistrar,
+  // getRoleStatus,
+  // getRoleUsers,
+  // searchRegistrarRole,
+  filterFacultyByCampus,
+  searchFaculty,
+  faculty,
 } from "../../../../services/usersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Pagination from "../../../../components/Pagination";
+import Dropdown from "../../../../components/dropdown/Dropdown";
+import wmsuCampus from "../../../../constants/Campus";
+import rolesList from "../../../../constants/rolesList";
 
 const EsuRegistrar = () => {
   const dispatch = useDispatch();
-  const registrarUser = useSelector(getRoleUsers("registrar"));
-  const registrarStatus = useSelector(getRoleStatus("registrar"));
+  const registrarUser = useSelector(faculty);
+  // const registrarStatus = useSelector(getRoleStatus("registrar"));
   const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedESU, setSelectedESU] = useState("WMSU-ESU CAMPUS");
   const [currentPage, setCurrentPage] = useState(1);
   const documentsPerPage = 5;
 
+  const handleFetchUpdate = () => {
+    setTimeout(() => {
+      dispatch(
+        filterFacultyByCampus({
+          esuCampus: "WMSU-ESU CAMPUS",
+          role: rolesList.registrar,
+        })
+      );
+    }, 1000);
+  };
+
   useEffect(() => {
-    if (registrarStatus === "idle") {
-      dispatch(fetchRegistrar());
-    }
-  }, [registrarStatus, dispatch]);
+    dispatch(
+      filterFacultyByCampus({
+        esuCampus: selectedESU,
+        role: rolesList.registrar,
+      })
+    );
+  }, [dispatch, selectedESU]);
 
   const openModal = () => {
     setShowModal(!showModal);
@@ -33,14 +54,33 @@ const EsuRegistrar = () => {
   const closeModal = (modal) => {
     setShowModal(modal);
   };
-
+  const handleFilterByESU = (esu) => {
+    setSelectedESU(esu);
+    dispatch(
+      filterFacultyByCampus({
+        esuCampus: esu,
+        role: rolesList.registrar,
+      })
+    );
+  };
   useEffect(() => {
     if (searchTerm) {
-      dispatch(searchRegistrarRole(searchTerm));
+      dispatch(
+        searchFaculty({
+          name: searchTerm,
+          role: rolesList.registrar,
+          esuCampus: "WMSU-ESU CAMPUS",
+        })
+      );
     } else {
-      dispatch(fetchRegistrar());
+      dispatch(
+        filterFacultyByCampus({
+          esuCampus: selectedESU,
+          role: rolesList.registrar,
+        })
+      );
     }
-  }, [searchTerm, dispatch]);
+  }, [searchTerm, dispatch, selectedESU]);
 
   // Paganation
   const indexOfLastDocument = currentPage * documentsPerPage;
@@ -54,7 +94,14 @@ const EsuRegistrar = () => {
 
   return (
     <div>
-      <div className="flex text-sm md:text-[16px] justify-between lg:flex-row flex-col-reverse gap-5">
+      <div className="flex text-sm md:text-[16px]  justify-between lg:flex-row flex-col gap-5">
+        <button
+          onClick={openModal}
+          className="w-fit p-2 px-6 h-fit rounded-lg bg-main hover:bg-main_hover text-white font-semi"
+        >
+          Add ESU Registrar
+        </button>
+        {/* <div className="flex flex-col gap-3"> */}
         <div className=" flex max-w-[450px] w-full  items-center relative">
           <input
             type="text"
@@ -65,22 +112,36 @@ const EsuRegistrar = () => {
           />
           <IoSearch className="text-2xl absolute right-2 text-gray-600" />
         </div>
-        <button
-          onClick={openModal}
-          className="w-fit p-2 px-6 rounded-lg bg-main hover:bg-main_hover text-white font-semi"
-        >
-          Add ESU Registrar
-        </button>
+        {/* <div>
+            <Dropdown
+              handleFilter={handleFilterByESU}
+              data={wmsuCampus}
+              option={"WMSU-ESU CAMPUS"}
+            />
+          </div> */}
+        {/* </div> */}
+
         {showModal && (
           <AddEsuRegistrar
             modal={openModal}
             closeModal={closeModal}
             showModal={showModal}
+            handleFetchUpdate={handleFetchUpdate}
           />
         )}
       </div>
+      <div className="mt-3">
+        <Dropdown
+          handleFilter={handleFilterByESU}
+          data={wmsuCampus}
+          option={"WMSU-ESU CAMPUS"}
+        />
+      </div>
       <div className="mt-8">
-        <RegistrarTable registrarUser={currentDocuments} />
+        <RegistrarTable
+          registrarUser={currentDocuments}
+          handleFetchUpdate={handleFetchUpdate}
+        />
 
         <div className="flex justify-end mt-5">
           <Pagination

@@ -4,32 +4,58 @@ import { IoSearch } from "react-icons/io5";
 import Dropdown from "../../../../components/dropdown/Dropdown";
 import wmsuCampus from "../../../../constants/Campus";
 import {
-  searchFacultyRole,
+  // searchFacultyRole,
+  searchFaculty,
   filterFacultyByCampus,
   faculty,
 } from "../../../../services/usersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Pagination from "../../../../components/Pagination";
+import rolesList from "../../../../constants/rolesList";
 
 const Faculty = () => {
   const dispatch = useDispatch();
   const allFaculty = useSelector(faculty);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedESU, setSelectedESU] = useState("WMSU-ESU-CAMPUS");
+  const [selectedESU, setSelectedESU] = useState("WMSU-ESU CAMPUS");
   const [currentPage, setCurrentPage] = useState(1);
   const documentsPerPage = 5;
 
+  const handleFetchFaculty = () => {
+    setTimeout(() => {
+      dispatch(
+        filterFacultyByCampus({
+          esuCampus: "WMSU-ESU CAMPUS",
+          role: rolesList.faculty,
+        })
+      );
+    }, 1000);
+  };
+
   useEffect(() => {
     if (searchTerm) {
-      dispatch(searchFacultyRole(searchTerm));
+      dispatch(
+        searchFaculty({
+          name: searchTerm,
+          role: rolesList.faculty,
+          esuCampus: "WMSU-ESU CAMPUS",
+        })
+      );
     } else {
-      dispatch(filterFacultyByCampus(selectedESU));
+      dispatch(
+        filterFacultyByCampus({
+          esuCampus: selectedESU,
+          role: rolesList.faculty,
+        })
+      );
     }
   }, [searchTerm, selectedESU, dispatch]);
 
   const handleFilter = (esu) => {
     setSelectedESU(esu);
-    dispatch(filterFacultyByCampus(esu));
+    dispatch(
+      filterFacultyByCampus({ esuCampus: esu, role: rolesList.faculty })
+    );
   };
 
   // Paganation
@@ -62,14 +88,17 @@ const Faculty = () => {
             </span>
             <Dropdown
               data={wmsuCampus}
-              option={"WMSU-ESU-CAMPUS"}
+              option={"WMSU-ESU CAMPUS"}
               handleFilter={handleFilter}
             />
           </div>
         </div>
       </div>
       <div className="mt-8">
-        <FacultyTable fetchFaculty={currentDocuments} />
+        <FacultyTable
+          faculty={currentDocuments}
+          handleFetchFaculty={handleFetchFaculty}
+        />
         <div className="flex justify-end mt-5">
           <Pagination
             documentsPerPage={documentsPerPage}

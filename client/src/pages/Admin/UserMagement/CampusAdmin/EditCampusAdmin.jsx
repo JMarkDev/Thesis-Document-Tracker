@@ -17,7 +17,7 @@ import rolesList from "../../../../constants/rolesList";
 import ChangeEmail from "../../../Shared/ChangeEmail";
 import wmsuCampus from "../../../../constants/Campus";
 
-const EditCampusAdmin = ({ modal, closeModal, id }) => {
+const EditCampusAdmin = ({ modal, closeModal, id, handleFetchUpdate }) => {
   const dispatch = useDispatch();
   const [showPass, setShowPass] = useState(false);
   const toast = useToast();
@@ -87,7 +87,8 @@ const EditCampusAdmin = ({ modal, closeModal, id }) => {
         toast.success(response.data.message);
         closeModal(false);
         setLoading(false);
-        dispatch(fetchCampusAdmin());
+        handleFetchUpdate();
+        // dispatch(fetchCampusAdmin());
       }
     } catch (error) {
       console.log(error);
@@ -553,6 +554,7 @@ EditCampusAdmin.propTypes = {
   modal: PropTypes.bool,
   closeModal: PropTypes.func,
   id: PropTypes.number,
+  handleFetchUpdate: PropTypes.func,
 };
 
 export default EditCampusAdmin;

@@ -7,14 +7,14 @@ import VerifyOTP from "../../../../pages/Verification/VerifyOTP";
 import { useState } from "react";
 import { useToast } from "../../../../hooks/useToast";
 import wmsuCampus from "../../../../constants/Campus";
-import { fetchCampusAdmin } from "../../../../services/usersSlice";
+// import { fetchCampusAdmin } from "../../../../services/usersSlice";
 
 import { FiEyeOff, FiEye } from "react-icons/fi";
-import { useDispatch } from "react-redux";
+// import { useDispatch } from "react-redux";
 import rolesList from "../../../../constants/rolesList";
 
-const AddCampusAdmin = ({ modal, closeModal }) => {
-  const dispatch = useDispatch();
+const AddCampusAdmin = ({ modal, closeModal, handleFetchUpdate }) => {
+  // const dispatch = useDispatch();
   const [showPass, setShowPass] = useState(false);
 
   const toast = useToast();
@@ -36,7 +36,7 @@ const AddCampusAdmin = ({ modal, closeModal }) => {
   const [confirmPasswordError, setConfirmpasswordError] = useState("");
 
   const onVerificationSuccess = () => {
-    dispatch(fetchCampusAdmin());
+    handleFetchUpdate();
   };
 
   const onSubmit = async (data) => {
@@ -518,6 +518,7 @@ const AddCampusAdmin = ({ modal, closeModal }) => {
 AddCampusAdmin.propTypes = {
   modal: PropTypes.func,
   closeModal: PropTypes.func,
+  handleFetchUpdate: PropTypes.func,
 };
 
 export default AddCampusAdmin;
