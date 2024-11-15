@@ -9,6 +9,8 @@ import { FiSend } from "react-icons/fi";
 import CrossIcon from ".././assets/images/cross.png";
 import Loading from "../components/loader/chatbot_loader/loadingBall";
 import Loader from "../components/loader/track_loader/tracking_loader";
+import donwloadIcon from "../assets/images/downloading.png";
+import UserManualPdf from "../assets/User-Manual-WMSU-ESU-Document-Tracker.pdf";
 import {
   fetchDocumentByTrackingNum,
   getDocumentByTrackingNum,
@@ -36,6 +38,15 @@ const Homepage = () => {
   const [documentData, setDocumentData] = useState([]);
   const [modal, setModal] = useState(false);
   const [tooltip, setTooltip] = useState(false);
+  const [showUserManual, setShowUserManual] = useState(false);
+
+  const handleUserManual = () => {
+    setShowUserManual(!showUserManual);
+  };
+
+  const closeUserManual = () => {
+    setShowUserManual(false);
+  };
 
   const handleShow = () => {
     setTooltip(true);
@@ -194,6 +205,7 @@ const Homepage = () => {
             </div>
           </form>
         </div>
+
         <div className=" hidden sm:flex md:flex-row  absolute top-5 lg:right-20 right-5 z-30 gap-5">
           <img
             src={wmsuLogo}
@@ -330,6 +342,31 @@ const Homepage = () => {
               </div>
             </div>
           )}
+        </div>
+      </div>
+      {/* Floating User Manual Button */}
+      <div className="absolute right-6 bottom-28 z-10">
+        <div
+          id="tooltip-no-arrow"
+          role="tooltip"
+          className={`absolute right-[55px] bottom-[5px] w-fit text-nowrap z-10 ${
+            showUserManual ? "visible opacity-100" : "invisible opacity-0"
+          } inline-block px-3 py-2 text-sm font-medium text-gray-800 bg-gray-200 rounded-lg shadow-sm dark:bg-gray-700`}
+        >
+          Download User Manual
+        </div>
+
+        <div
+          className="p-1 bg-white rounded-full h-12 w-12 hover:scale-110 transition-all cursor-pointer flex items-center justify-center shadow-lg"
+          onMouseEnter={handleUserManual}
+          onMouseLeave={closeUserManual}
+        >
+          <a
+            href={UserManualPdf}
+            download="User-Manual-WMSU-ESU-Document-Tracker.pdf"
+          >
+            <img src={donwloadIcon} alt="User Manual" className="w-full" />
+          </a>
         </div>
       </div>
     </>
