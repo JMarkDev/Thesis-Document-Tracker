@@ -62,7 +62,7 @@ const uploadDocument = async (req, res) => {
     }
 
     const createdAt = new Date();
-    const formattedDate = date.format(createdAt, "YYYY-MM-DD HH:mm:ss");
+    const formattedDate = date.format(createdAt, "YYYY-MM-DD HH:mm:ss", true); // true for UTC time;
 
     const trackingNumExists = await documentModel.findOne({
       where: {
@@ -103,14 +103,18 @@ const uploadDocument = async (req, res) => {
       } else if (user.esuCampus && user.role === rolesList.faculty) {
         recipient = `${user.esuCampus} FACULTY`;
       } else if (
-        (user.esuCampus && user.role === rolesList.registrar) ||
-        user.role === rolesList.campus_admin
+        user.esuCampus &&
+        user.role === rolesList.registrar
+        // || user.role === rolesList.campus_admin
       ) {
         recipient = `${esuCampus} REGISTRAR`;
+      } else if (user.esuCampus && user.role === rolesList.campus_admin) {
+        recipient = `${esuCampus} CAMPUS ADMIN`;
       } else if (
         user.role === rolesList.office ||
         user.role === rolesList.admin ||
-        user.role === rolesList.office_staff
+        user.role === rolesList.office_staff ||
+        user.role === rolesList.admin_staff
       ) {
         recipient = user.office.officeName;
       }
@@ -175,15 +179,51 @@ const uploadDocument = async (req, res) => {
       createdAt: sequelize.literal(`'${formattedDate}'`),
     };
 
+    const adminStaff = await userModel.findAll({
+      where: {
+        [Sequelize.Op.or]: [
+          { role: rolesList.admin },
+          { role: rolesList.admin_staff },
+        ],
+        status: statusList.verified,
+      },
+    });
+
+    const routeUsers = parsedRoute.map((office) => ({
+      user_id: office.user_id,
+    }));
+
+    const allUsers = [
+      ...routeUsers,
+      ...adminStaff.map((staff) => ({ user_id: staff.id })),
+    ];
+
+    // deduplicate users id to avoid sending duplicate notifacations
+    const uniqueUsers = Array.from(
+      new Set(allUsers.map((user) => user.user_id))
+    ).map((id) => ({
+      user_id: id,
+    }));
+
     await Promise.all(
-      parsedRoute.map((office) => {
-        return addNotification({
+      uniqueUsers.map((user) =>
+        addNotification({
           document_id: newDocuments.id,
           content: `${document_name} has been ${action} by ${uploaded_by}`,
-          user_id: office.user_id,
-        });
-      })
+          user_id: user.user_id,
+        })
+      )
     );
+
+    // await Promise.all(
+    //   parsedRoute.map((office) => {
+    //     return addNotification({
+    //       document_id: newDocuments.id,
+    //       content: `${document_name} has been ${action} by ${uploaded_by}`,
+    //       user_id: office.user_id,
+    //     });
+    //   })
+    // );
 
     await sendNotification({
       email: user_email,
@@ -371,33 +411,6 @@ const filterDocuments = async (req, res) => {
   }
 };
 
-// const filterUserDocuments = async (req, res) => {
-//   const { status, user_id } = req.params;
-
-//   try {
-//     const documents = await documentModel.findAll({
-//       where: {
-//         status: status,
-//         user_id: user_id,
-//       },
-//       include: [
-//         {
-//           model: documentHistoryModel,
-//           required: true,
-//         },
-//         {
-//           model: documentRecipientModel,
-//           required: true,
-//         },
-//       ],
-//     });
-
-//     return res.status(200).json(documents);
-//   } catch (error) {
-//     return res.status(500).json({ message: error.message });
-//   }
-// };
-
 // quick sort algorithm
 // asc = ascending
 const quickSortDocuments = (documents, field, order = "asc") => {
@@ -554,115 +567,6 @@ const searchDocumentsByUserId = async (req, res) => {
   }
 };
 
-const receiveDocuments = async (req, res) => {
-  const {
-    document_id,
-    office_name,
-    user_id,
-    action,
-    recipient_user,
-    recipient_office,
-    document_name,
-    next_route,
-  } = req.body;
-
-  try {
-    const createdAt = new Date();
-    const formattedDate = date.format(createdAt, "YYYY-MM-DD HH:mm:ss");
-
-    const document = await documentModel.findOne({
-      where: {
-        id: document_id,
-      },
-    });
-    if (action === "received") {
-      await documentRecipientModel.update(
-        {
-          status: documentStatus.received,
-          received_at: sequelize.literal(`'${formattedDate}'`),
-          updatedAt: sequelize.literal(`'${formattedDate}'`),
-        },
-        {
-          where: {
-            document_id: document_id,
-            user_id: user_id,
-          },
-        }
-      );
-    }
-
-    if (action === "forwarded") {
-      await documentRecipientModel.update(
-        {
-          status: documentStatus.forwarded,
-          updatedAt: sequelize.literal(`'${formattedDate}'`),
-        },
-        {
-          where: {
-            document_id: document_id,
-            user_id: user_id,
-          },
-        }
-      );
-    }
-
-    const documentHistory = {
-      document_id,
-      office_name,
-      action,
-      recipient_office,
-      recipient_user,
-      createdAt: sequelize.literal(`'${formattedDate}'`),
-    };
-
-    await documentHistoryModel.create(documentHistory);
-    let content = null;
-
-    if (action === "forwarded") {
-      content = `${document_name} has been successfully ${action} to "${next_route}" by ${recipient_user}.`;
-    } else if (action === "received") {
-      content = `${document_name} has been successfully ${action} by ${recipient_user} at "${recipient_office}".`;
-    } else if (action === "uploaded") {
-      content = `${document_name} has been successfully uploaded by ${recipient_user}.`;
-    } else {
-      content = "No action has been performed.";
-    }
-
-    await addNotification({
-      document_id: document_id,
-      content: content,
-      user_id: document?.user_id,
-    });
-
-    let message = null;
-    const currentDate = new Date().toLocaleString(); // This includes both date and time
-
-    if (action === "forwarded") {
-      message = `The document "${document_name}" has been successfully ${action} to the "${next_route}" by ${recipient_user} on ${currentDate}.`;
-    } else if (action === "received") {
-      message = `The document "${document_name}" has been ${action} by ${recipient_user} at the "${recipient_office}" on ${currentDate}.`;
-    } else if (action === "uploaded") {
-      message = `Your document "${document_name}" has been successfully uploaded on ${currentDate}.`;
-    } else {
-      message = "No action has been performed.";
-    }
-
-    await sendNotification({
-      email: document?.user_email,
-      subject: `WMSU-ESU Document Tracker - Document ${action}`,
-      message: message,
-    });
-
-    return res.status(200).json({
-      status: "success",
-      message: `Document ${action} successfully`,
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ message: error.message });
-  }
-};
-
 const getAllDocumentByUser = async (req, res) => {
   const { id } = req.params;
 
@@ -748,7 +652,7 @@ module.exports = {
   sortDocumentsByUser,
   searchDocumentsByUserId,
   // filterUserDocuments,
-  receiveDocuments,
+  // receiveDocuments,
   getAllDocumentByUser,
   filterAllDocuments,
 };
