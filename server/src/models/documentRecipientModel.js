@@ -39,6 +39,10 @@ const DocumentRecipient = sequelize.define(
       type: DataTypes.DATE,
       allowNull: true,
     },
+    forwarded_at: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,

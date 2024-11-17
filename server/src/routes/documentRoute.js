@@ -2,9 +2,12 @@ const express = require("express");
 const router = express.Router();
 const documentController = require("../controllers/documentController");
 const delayController = require("../controllers/delayController");
+const receivedDocsController = require("../controllers/receivedDocsController");
+const updateDocumentController = require("../controllers/UpdateDocumentController");
 const {
   validateForm,
   uploadDocumentValidation,
+  updateDocumentRules,
 } = require("../middlewares/formValidation");
 // Configure multer
 const multer = require("multer");
@@ -90,7 +93,15 @@ router.put("/delay/id/:id", delayController.setDocumentDelay);
 router.put("/auto-logout/id/:id", delayController.setAutoLogout);
 router.get("/get-delay/:id", delayController.getDocumentDelay);
 
-router.post("/receive-document", documentController.receiveDocuments);
+router.post("/receive-document", receivedDocsController.receiveDocuments);
 router.get("/filter-all-documents", documentController.filterAllDocuments);
+
+router.put(
+  "/update/id/:id",
+  upload.array("files", 10),
+  updateDocumentRules(),
+  validateForm,
+  updateDocumentController.updateDocument
+);
 
 module.exports = router;

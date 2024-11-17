@@ -90,6 +90,14 @@ const registerValidationRules = () => {
   ];
 };
 
+const updateDocumentRules = () => {
+  return [
+    validateRequiredField("document_name"),
+    validateRequiredField("document_desc"),
+    validateRequiredField("file_type"),
+  ];
+};
+
 const uploadDocumentValidation = () => {
   return [
     body("tracking_number")
@@ -161,4 +169,5 @@ module.exports = {
   validateForgotPassword,
   updateProfileValidation,
   uploadDocumentValidation,
+  updateDocumentRules,
 };
