@@ -6,8 +6,13 @@ import {
   getAllWorkflow,
   fetchAllWorkflow,
 } from "../../services/documentWolkflowSlice";
+import {
+  getRoleUsers,
+  fetchCampusAdmin,
+  fetchRegistrar,
+} from "../../services/usersSlice.js";
 import { getUserData } from "../../services/authSlice";
-import { MdDelete } from "react-icons/md";
+import { MdDelete, MdDeleteOutline } from "react-icons/md";
 import DocumentRoute from "../../components/dropdown/DocumentRoute";
 import api from "../../api/axios";
 import Loading from "../../components/loader/loginloader/LoginLoading";
@@ -20,6 +25,8 @@ const UploadDocuments = () => {
   const dispatch = useDispatch();
   const toast = useToast();
   const navigate = useNavigate();
+  // const registrar = useSelector(getRoleUsers("registrar"));
+  const campusAdmin = useSelector(getRoleUsers("campus_admin"));
   const documentType = useSelector(getAllWorkflow);
   const user = useSelector(getUserData);
   const [trackingNumber, setTrackingNumber] = useState("");
@@ -33,11 +40,34 @@ const UploadDocuments = () => {
   const [user_id, setUserId] = useState("");
   const [loading, setLoading] = useState(false);
   const [registrarId, setRegistrarId] = useState(null);
+  const [campusAdminId, setCampusAdminId] = useState(null);
   const [facultyId, setFacultyId] = useState(null);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [route, setRoute] = useState([]);
   const [defaultRoute, setDefaultRoute] = useState([]);
   const [deadline, setDeadline] = useState(null);
+  // const [campus, setCampus] = useState("");
+
+  const handleDeleteFile = (fileName) => {
+    setSelectedFiles((prevFiles) =>
+      prevFiles.filter((file) => file.name !== fileName)
+    );
+  };
+
+  useEffect(() => {
+    dispatch(fetchRegistrar());
+    dispatch(fetchCampusAdmin());
+  }, [dispatch]);
+
+  useEffect(() => {
+    // if (user?.role === rolesList.campus_admin) {
+    const getCampusAdmin = campusAdmin?.find((campus) => {
+      return campus.esuCampus === user?.esuCampus;
+    });
+
+    setCampusAdminId(getCampusAdmin?.id);
+    // }
+  }, [user, campusAdmin]);
 
   const [trackingNumberError, setTrackingNumberError] = useState("");
   const [documentNameError, setDocumentNameError] = useState("");
@@ -120,7 +150,11 @@ const UploadDocuments = () => {
 
       const formattedDocumentType = {
         ...selectedDocumentType,
-        route: JSON.parse(selectedDocumentType.route), // Stringify the route array
+        // route: JSON.parse(selectedDocumentType.route), // Stringify the route array
+        route:
+          typeof selectedDocumentType.route === "string"
+            ? JSON.parse(selectedDocumentType.route)
+            : selectedDocumentType.route,
       };
 
       if (formattedDocumentType) {
@@ -130,9 +164,10 @@ const UploadDocuments = () => {
             ? formattedDocumentType?.deadline
             : null
         );
+
         // Ensure that route is always an array
         const updatedRoute = Array.isArray(formattedDocumentType.route)
-          ? formattedDocumentType.route.map((routeItem) => {
+          ? formattedDocumentType?.route?.map((routeItem) => {
               // Separate conditions for FACULTY and REGISTRAR
               if (
                 routeItem.office_name === "FACULTY" &&
@@ -151,10 +186,40 @@ const UploadDocuments = () => {
                     : "REGISTRAR",
                   user_id: registrarId, // Assign registrarId for REGISTRAR
                 };
+              } else if (
+                routeItem.office_name === "CAMPUS ADMIN" &&
+                campusAdminId
+              ) {
+                return {
+                  ...routeItem,
+                  office_name: esuCampus
+                    ? `${esuCampus} CAMPUS ADMIN`
+                    : "CAMPUS ADMIN",
+                  user_id: campusAdminId, // Assign registrarId for REGISTRAR
+                };
               }
+              // else if (
+              //   user?.role !== rolesList.faculty ||
+              //   user?.role !== rolesList.registrar ||
+              //   user?.role !== rolesList.campus_admin
+              // ) {
+              //   campusAdminId?.map((campus) => {
+              //     console.log(campus.esuCampus);
+              //     return {
+              //       ...routeItem,
+              //       office_name: esuCampus
+              //         ? `${esuCampus} CAMPUS ADMIN`
+              //         : "CAMPUS ADMIN",
+              //       user_id: campus.id,
+              //     };
+              //   });
+              // }
+
               return routeItem;
             })
           : [];
+
+        // console.log(updatedRoute);
 
         setRoute(updatedRoute);
         setDefaultRoute(updatedRoute);
@@ -181,7 +246,6 @@ const UploadDocuments = () => {
     setTrackingNumberError("");
     setDocumentNameError("");
     setDocumentTypeError("");
-    // setRouteError("");
     setFileTypeError("");
     setLoading(true);
     e.preventDefault();
@@ -212,7 +276,6 @@ const UploadDocuments = () => {
 
     try {
       const response = await api.post("/document/upload", formData);
-      console.log(response.data);
       if (response.data.status === "success") {
         // socket
         socket.emit("upload_document", response.data);
@@ -225,7 +288,6 @@ const UploadDocuments = () => {
     } catch (error) {
       toast.error(error.response.data.message);
       setLoading(false);
-      console.log(error);
       console.log(error.response.data);
       if (error.response.data.errors) {
         error.response.data.errors.forEach((error) => {
@@ -389,6 +451,7 @@ const UploadDocuments = () => {
                 handleSelectOffice={handleSelectOffice}
                 campus={esuCampus}
                 registrarId={registrarId}
+                campusAdminId={campusAdminId}
                 facultyId={facultyId}
               />
               {route?.length > 0 && (
@@ -434,7 +497,7 @@ const UploadDocuments = () => {
             </div>
           )}
 
-          <div className="mb-5">
+          <div className="mb-2">
             <label
               htmlFor="email"
               className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -471,7 +534,7 @@ const UploadDocuments = () => {
                 >
                   <div className="flex flex-col items-center justify-center pt-5 pb-6">
                     <svg
-                      className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
+                      className="w-6 h-6  text-gray-500 dark:text-gray-400"
                       aria-hidden="true"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -502,10 +565,24 @@ const UploadDocuments = () => {
                   />
                 </label>
               </div>
-              {selectedFiles.length > 0 && (
+              {selectedFiles?.length > 0 && (
                 <ul className="mt-2">
-                  {selectedFiles.map((file, index) => (
-                    <li key={index}>{file.name}</li>
+                  {selectedFiles?.map((file, index) => (
+                    <div className="flex items-center gap-3" key={index}>
+                      <li
+                        key={index}
+                        className="text-gray-900 dark:text-white text-sm font-medium"
+                      >
+                        {file.name}
+                      </li>
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteFile(file.name)}
+                        className="text-red-500 font-bold text-lg "
+                      >
+                        <MdDeleteOutline />
+                      </button>
+                    </div>
                   ))}
                 </ul>
               )}

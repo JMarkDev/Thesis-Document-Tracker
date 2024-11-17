@@ -10,6 +10,8 @@ const ReceiveDocument = ({
   isForwarded,
   lastRecipient,
   receivedLoader,
+  isRecipient,
+  handleComment,
 }) => {
   return (
     <div
@@ -102,24 +104,52 @@ const ReceiveDocument = ({
             </p>
           )} */}
         </div>
+        {isReceived && !isForwarded && (
+          <div className="w-full">
+            <label>
+              <strong className="text-gray-800">Comments:</strong>
+            </label>
+            <textarea
+              name=""
+              rows={4}
+              id=""
+              placeholder="Enter your comments here..."
+              onChange={(e) => handleComment(e.target.value)}
+              className="w-full border-gray-400 rounded-lg focus:ring-1 focus:ring-green-600 focus:border-transparent"
+            />
+          </div>
+        )}
 
-        {/* Footer */}
-        <div className="flex justify-end items-center pt-3 border-t">
-          {isForwarded ? (
-            <p className="text-gray-600">
-              Document has already been forwarded.
-            </p>
-          ) : lastRecipient ? (
-            <p className="text-gray-600">Document has already been received.</p>
-          ) : (
-            <button
-              className="px-6 py-2 text-white bg-green-600 hover:bg-green-800 rounded-md shadow-md transition"
-              onClick={() => handleReceive()}
-            >
-              {isReceived ? "Forward" : "Receive"}
-            </button>
-          )}
-        </div>
+        {isRecipient && (
+          <div className="flex justify-end items-center pt-3 border-t">
+            {isForwarded ? (
+              <p className="text-gray-600">
+                Document has already been forwarded.
+              </p>
+            ) : lastRecipient ? (
+              <p className="text-gray-600">
+                Document has already been received.
+              </p>
+            ) : (
+              <div className="flex gap-3">
+                {/* {isReceived && !isForwarded && (
+                  <button
+                    className="px-6 py-2 text-white bg-red-500 hover:bg-red-800 rounded-md shadow-md transition"
+                    onClick={() => handleReceive()}
+                  >
+                    Return
+                  </button>
+                )} */}
+                <button
+                  className="px-6 py-2 text-white bg-green-600 hover:bg-green-800 rounded-md shadow-md transition"
+                  onClick={() => handleReceive()}
+                >
+                  {isReceived ? "Forward" : "Receive"}
+                </button>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -134,6 +164,8 @@ ReceiveDocument.propTypes = {
   isForwarded: PropTypes.bool,
   lastRecipient: PropTypes.bool,
   receivedLoader: PropTypes.bool,
+  isRecipient: PropTypes.bool,
+  handleComment: PropTypes.func,
 };
 
 export default ReceiveDocument;

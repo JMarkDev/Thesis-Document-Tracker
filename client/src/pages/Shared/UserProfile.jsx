@@ -398,7 +398,7 @@ const UserProfile = () => {
                         type="text"
                         className="rounded-lg border bg-gray-200 border-gray-200 flex-grow p-2 text-sm border-1 appearance-none   focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                       >
-                        {wmsuCampus.map((campus, index) => (
+                        {wmsuCampus?.map((campus, index) => (
                           <option
                             key={index}
                             value={campus}
