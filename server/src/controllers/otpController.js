@@ -61,6 +61,12 @@ const verifyOTP = async (req, res) => {
       where: { email: email },
     });
 
+    if (!matchedOTPRecord) {
+      return res
+        .status(400)
+        .json({ message: "Invalid OTP. Please try again." });
+    }
+
     const { expiresAt, otp: storedOTP } = matchedOTPRecord;
 
     // Check if the OTP matches
@@ -131,6 +137,7 @@ const verifyOTP = async (req, res) => {
 
     return res.status(200).json({
       status: "success",
+      roles: `${userRole} ${rolesList.faculty}`,
       message: registeredUser
         ? "Login Successful."
         : "Registration Successful.",
