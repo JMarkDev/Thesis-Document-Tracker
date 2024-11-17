@@ -148,7 +148,7 @@ const VerifyOTP = ({ email, closeOTP, closeModal, onVerificationSuccess }) => {
             Please enter the 4 digit OTP sent to <span>{email}</span>
           </p>
           <div className="inputContainer">
-            {otp.map((digit, index) => (
+            {otp?.map((digit, index) => (
               <input
                 key={index}
                 required
