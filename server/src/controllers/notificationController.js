@@ -42,7 +42,6 @@ const newFacultyNotification = async ({
         [Sequelize.Op.or]: [
           { role: rolesList.admin },
           { role: rolesList.admin_staff },
-          // { role: rolesList.campus_admin },
         ],
         status: statusList.verified,
       },
@@ -73,8 +72,10 @@ const newFacultyNotification = async ({
         });
       })
     );
+    return recipients;
   } catch (error) {
-    throw new Error(error.message);
+    console.log(error);
+    throw new Error(error.message); // Throw an error if something goes wrong
   }
 };
 
