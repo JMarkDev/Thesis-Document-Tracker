@@ -23,6 +23,7 @@ const handleRegister = async (req, res) => {
     designation,
     esuCampus,
     role,
+    officeId,
     password,
   } = req.body;
   try {
@@ -116,6 +117,7 @@ const handleRegister = async (req, res) => {
         designation,
         esuCampus,
         role,
+        officeId: officeId ? officeId : null,
         password: hashPassword,
         status: statusList.pending,
         createdAt: sequelize.literal(`'${formattedDate}'`),
@@ -156,7 +158,8 @@ const handleLogin = async (req, res) => {
       user.status === statusList.verified
     ) {
       return res.status(400).json({
-        message: "Please wait for the registrar to approve your account.",
+        message:
+          "Please wait for the Registrar, Campus Admin, or Dean Office to approve your account.",
       });
     }
 
