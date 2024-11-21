@@ -12,6 +12,7 @@ const {
   validateForgotPassword,
 } = require("../middlewares/formValidation");
 const forgotPasswordController = require("../controllers/forgotPasswordController");
+const campusAdminController = require("../controllers/campusAdminCotroller");
 
 router.post(
   "/register",
@@ -43,5 +44,14 @@ router.put(
   validateForm,
   forgotPasswordController.resetPassword
 );
+
+router.post(
+  "/add-campus-admin",
+  upload.single("image"),
+  registerValidationRules(),
+  validateForm,
+  campusAdminController.AddCampusAdmin
+);
+router.post("/campus-admin-verify", otpController.verifyCampusOTP);
 
 module.exports = router;

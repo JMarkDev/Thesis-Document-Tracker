@@ -54,11 +54,16 @@ const newFacultyNotification = async ({
           { role: rolesList.campus_admin },
         ],
         esuCampus: esuCampus,
-        status: statusList.verified,
+        status: statusList.approved,
       },
     });
 
-    const recipients = [...admin, ...registrarAndCampusAdmin];
+    let recipients = [];
+    if (faculty_id === rolesList.faculty) {
+      recipients = [...admin, ...registrarAndCampusAdmin];
+    } else {
+      recipients = [...admin];
+    }
 
     await Promise.all(
       recipients.map(async (recipient) => {

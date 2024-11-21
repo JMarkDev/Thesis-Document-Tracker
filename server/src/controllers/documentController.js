@@ -205,8 +205,20 @@ const uploadDocument = async (req, res) => {
       user_id: id,
     }));
 
+    const existingUsers = await userModel.findAll({
+      where: {
+        id: uniqueUsers.map((user) => user.user_id),
+      },
+      attributes: ["id"],
+    });
+
+    const validUserIds = existingUsers.map((user) => user.id);
+    const filteredUsers = uniqueUsers.filter((user) =>
+      validUserIds.includes(user.user_id)
+    );
+
     await Promise.all(
-      uniqueUsers.map((user) =>
+      filteredUsers.map((user) =>
         addNotification({
           document_id: newDocuments.id,
           content: `${document_name} has been ${action} by ${uploaded_by}`,
@@ -594,7 +606,7 @@ const getAllDocumentByUser = async (req, res) => {
 };
 
 const filterAllDocuments = async (req, res) => {
-  const { document_type, esuCampus, startDate, endDate, uploaded_by } =
+  const { document_type, esuCampus, startDate, endDate, uploaded_by, name } =
     req.query;
 
   const whereConditions = {};
@@ -617,6 +629,13 @@ const filterAllDocuments = async (req, res) => {
     whereConditions.uploaded_by = {
       [Op.like]: `%${uploaded_by}%`,
     };
+  }
+
+  if (name) {
+    whereConditions[Sequelize.Op.or] = [
+      { document_name: { [Op.like]: `${name}%` } },
+      { uploaded_by: { [Op.like]: `${name}%` } },
+    ];
   }
 
   try {

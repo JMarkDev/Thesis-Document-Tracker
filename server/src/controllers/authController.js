@@ -25,46 +25,11 @@ const handleRegister = async (req, res) => {
     role,
     officeId,
     password,
+    status,
   } = req.body;
   try {
     const createdAt = new Date();
     const formattedDate = date.format(createdAt, "YYYY-MM-DD HH:mm:ss", true); // true for UTC time;
-
-    // let esuCampusExist;
-    // if (role === rolesList.registrar) {
-    //   esuCampusExist = await userModel.findOne({
-    //     where: {
-    //       esuCampus: esuCampus,
-    //       role: rolesList.registrar,
-    //       status: statusList.verified,
-    //     },
-    //   });
-    // }
-
-    // if (esuCampusExist && esuCampusExist.esuCampus === esuCampus) {
-    //   return res
-    //     .status(400)
-    //     .json({ message: "ESU Campus registrar already exist" });
-    // }
-
-    // let campusAdminExist;
-
-    // // Check if the role is campus_admin and if esuCampus is provided
-    // if (parseInt(role) === rolesList.campus_admin && esuCampus) {
-    //   campusAdminExist = await userModel.findOne({
-    //     where: {
-    //       esuCampus: esuCampus,
-    //       role: rolesList.campus_admin,
-    //       status: statusList.verified,
-    //     },
-    //   });
-    // }
-
-    // if (campusAdminExist && campusAdminExist.esuCampus === esuCampus) {
-    //   return res.status(400).json({
-    //     message: "ESU Campus Admin already exist",
-    //   });
-    // }
 
     const verifyUser = await userModel.findOne({
       where: {
@@ -119,7 +84,7 @@ const handleRegister = async (req, res) => {
         role,
         officeId: officeId ? officeId : null,
         password: hashPassword,
-        status: statusList.pending,
+        status: status ? status : statusList.pending,
         createdAt: sequelize.literal(`'${formattedDate}'`),
       });
 
@@ -162,6 +127,25 @@ const handleLogin = async (req, res) => {
           "Please wait for the Registrar, Campus Admin, or Dean Office to approve your account.",
       });
     }
+
+    if (
+      (user.role === rolesList.campus_admin &&
+        user.status === statusList.verified) ||
+      (user.role === rolesList.registrar && user.status === statusList.verified)
+    ) {
+      return res.status(400).json({
+        message: "Please wait for the Dean Office to approve your account.",
+      });
+    }
+
+    // if (
+    //   user.role === rolesList.registrar &&
+    //   user.status === statusList.verified
+    // ) {
+    //   return res.status(400).json({
+    //     message: "Please wait for the Dean Office to approve your account.",
+    //   });
+    // }
 
     const matchPassword = await bcrypt.compare(password, user.password);
 

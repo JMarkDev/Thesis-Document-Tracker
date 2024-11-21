@@ -45,8 +45,6 @@ const chatbotQuery = async (req, res) => {
 const trackLatestDocumentHistory = async (req, res) => {
   const tracking_number = req.body.queryResult.parameters.tracking_number;
 
-  console.log("Received tracking number:", tracking_number); // Debugging line
-
   try {
     const document = await documentModel.findOne({
       where: { tracking_number },

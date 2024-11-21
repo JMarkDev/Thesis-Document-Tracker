@@ -111,6 +111,10 @@ io.on("connection", (socket) => {
   socket.on("add_deadline", (data) => {
     socket.broadcast.emit("success_deadline", data);
   });
+
+  socket.on("new_user", (data) => {
+    socket.broadcast.emit("success_user", data);
+  });
 });
 
 // if (process.env.DEVELOPMENT !== "test") {

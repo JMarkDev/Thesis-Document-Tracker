@@ -44,19 +44,6 @@ const verifyOTP = async (req, res) => {
       id,
     } = userData;
 
-    // console.log(firstName, lastName, middleInitial, esuCampus);
-    // const admin = await userModel.findAll({
-    //   where: {
-    //     [Sequelize.Op.or]: [
-    //       { role: rolesList.admin },
-    //       { role: rolesList.admin_staff },
-    //       // { role: rolesList.campus_admin },
-    //     ],
-    //     status: statusList.verified,
-    //   },
-    // });
-    // console.log(admin);
-
     const matchedOTPRecord = await otpModel.findOne({
       where: { email: email },
     });
@@ -107,23 +94,37 @@ const verifyOTP = async (req, res) => {
         { where: { email: email } }
       );
 
+      if (userRole === rolesList.faculty) {
+        message =
+          "Thank you for registering. Please wait for the registrar, campus admin or Dean Office to approve your account.";
+      } else if (
+        userRole === rolesList.campus_admin ||
+        userRole === rolesList.registrar
+      ) {
+        message =
+          "Thank you for registering. Please wait for the Dean Office to approve your account.";
+      } else {
+        message =
+          "Thank you for registering. Your account has been successfully created.";
+      }
+
       await sendNotification({
         email: email,
         subject: "WMSU-ESU Document Tracker Registration Successful",
-        message: `${
-          userRole === rolesList.faculty
-            ? "Thank you for registering. Your account has been successfully created. Please wait for the registrar, campus admin or Dean Office to approve your account."
-            : "Thank you for registering. Your account has been successfully created."
-        }`,
+        message: message,
       });
 
-      if (userRole === rolesList.faculty) {
+      if (
+        userRole === rolesList.faculty ||
+        userRole === rolesList.campus_admin ||
+        userRole === rolesList.registrar
+      ) {
         await newFacultyNotification({
           firstName: firstName,
           lastName: lastName,
           middleInitial: middleInitial,
           esuCampus: esuCampus,
-          faculty_id: id,
+          faculty_id: userRole,
         });
       }
     } else {
@@ -229,9 +230,56 @@ const verifyChangeEmail = async (req, res) => {
   }
 };
 
+const verifyCampusOTP = async (req, res) => {
+  const { email, otp } = req.body;
+
+  try {
+    const matchedOTPRecord = await otpModel.findOne({
+      where: { email: email },
+    });
+
+    const { expiresAt, otp: storedOTP } = matchedOTPRecord;
+
+    // Check if the OTP matches
+    const matchOTP = await bcrypt.compare(otp, storedOTP);
+
+    if (!matchedOTPRecord || !matchOTP) {
+      return res
+        .status(400)
+        .json({ message: "Invalid OTP. Please try again." });
+    }
+
+    if (expiresAt < Date.now()) {
+      return res
+        .status(400)
+        .json({ message: "OTP expired. Pleae request a new OTP." });
+    }
+
+    await userModel.update(
+      {
+        status: statusList.approved,
+        updatedAt: createdAt,
+      },
+      { where: { email: email } }
+    );
+
+    // Delete the OTP after successful verification
+    await otpModel.destroy({ where: { email: email } });
+
+    return res.status(200).json({
+      status: "success",
+      message: "Account added successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   postOTP,
   verifyOTP,
   resendOTP,
   verifyChangeEmail,
+  verifyCampusOTP,
 };
