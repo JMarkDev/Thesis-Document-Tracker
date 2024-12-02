@@ -201,7 +201,15 @@ const receiveDocuments = async (req, res) => {
     });
 
     let message = null;
-    const currentDate = new Date().toLocaleString(); // This includes both date and time
+    const currentDate = createdAt.toLocaleString("en-US", {
+      timeZone: "Asia/Manila", // Set to your local time zone (Philippine Standard Time)
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true, // Use 12-hour format
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
 
     if (action === "forwarded") {
       message = `The document "${document_name}" has been successfully ${action} to the "${next_route}" by ${recipient_user} on ${currentDate}.`;

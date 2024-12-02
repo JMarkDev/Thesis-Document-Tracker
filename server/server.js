@@ -18,6 +18,7 @@ const documentWorkflowRoute = require("./src/routes/documentWorkflow");
 const chatBotRoute = require("./src/routes/chatbotRoute");
 const analyticsRoute = require("./src/routes/analiticsRoute");
 const uploadFilesRoute = require("./src/routes/uploadFilesRoute");
+const campusAndDesignationRoute = require("./src/routes/esuCampus&DesignationRoute");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -54,6 +55,7 @@ app.use("/files", uploadFilesRoute);
 app.use("/auth", authRoute);
 app.use("/document", trackingNumberRoute);
 app.use("/chatbot", chatBotRoute);
+app.use("/campus-designation", campusAndDesignationRoute);
 
 // refresh token route
 app.post("/refresh", refreshToken, async (req, res) => {
