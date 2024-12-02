@@ -30,28 +30,32 @@ const LineChartDocumentSubmissions = ({ data }) => {
     // Transform grouped data into an array for Recharts
     const chartData = Object.keys(groupedByDate).map((date) => ({
       date,
-      count: groupedByDate[date],
+      Date: groupedByDate[date],
     }));
 
     setTransformedData(chartData);
   }, [data]);
 
   return (
-    <ResponsiveContainer width="100%" height={400}>
-      <LineChart data={transformedData}>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="date" />
-        <YAxis />
-        <Tooltip />
-        <Legend />
-        <Line
-          type="monotone"
-          dataKey="count"
-          stroke="#8884d8"
-          activeDot={{ r: 8 }}
-        />
-      </LineChart>
-    </ResponsiveContainer>
+    <div className="overflow-x-auto">
+      <div style={{ minWidth: "800px" }}>
+        <ResponsiveContainer width="100%" height={400}>
+          <LineChart data={transformedData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="date" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Line
+              type="monotone"
+              dataKey="Date"
+              stroke="#8884d8"
+              activeDot={{ r: 8 }}
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+    </div>
   );
 };
 

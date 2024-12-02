@@ -8,6 +8,7 @@ import {
   searchFaculty,
   filterFacultyByCampus,
   faculty,
+  clearUser,
 } from "../../../../services/usersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Pagination from "../../../../components/Pagination";
@@ -20,6 +21,12 @@ const Faculty = () => {
   const [selectedESU, setSelectedESU] = useState("WMSU-ESU CAMPUS");
   const [currentPage, setCurrentPage] = useState(1);
   const documentsPerPage = 5;
+
+  useEffect(() => {
+    // return () => {
+    dispatch(clearUser());
+    // };
+  }, [dispatch]);
 
   const handleFetchFaculty = () => {
     setTimeout(() => {
@@ -61,7 +68,7 @@ const Faculty = () => {
   // Paganation
   const indexOfLastDocument = currentPage * documentsPerPage;
   const indexOfFirstDocument = indexOfLastDocument - documentsPerPage;
-  const currentDocuments = allFaculty.slice(
+  const currentDocuments = allFaculty?.slice(
     indexOfFirstDocument,
     indexOfLastDocument
   );

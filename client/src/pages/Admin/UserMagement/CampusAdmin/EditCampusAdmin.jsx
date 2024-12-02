@@ -10,7 +10,7 @@ import {
   fetchUserById,
   getFetchedUserById,
   clearUser,
-  fetchCampusAdmin,
+  // fetchCampusAdmin,
 } from "../../../../services/usersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import rolesList from "../../../../constants/rolesList";
@@ -93,7 +93,10 @@ const EditCampusAdmin = ({ modal, closeModal, id, handleFetchUpdate }) => {
     } catch (error) {
       console.log(error);
       setLoading(false);
-
+      setLoading(false);
+      if (data.esuCampus === "") {
+        setEsuError("ESU CAMPUS is required");
+      }
       if (error.response.data.errors) {
         error.response.data.errors.forEach((error) => {
           switch (error.path) {
@@ -156,7 +159,8 @@ const EditCampusAdmin = ({ modal, closeModal, id, handleFetchUpdate }) => {
   }, [campusAdmin, setValue]);
 
   const handleUpdateEmail = () => {
-    dispatch(fetchCampusAdmin());
+    // dispatch(fetchCampusAdmin());
+    handleFetchUpdate();
   };
 
   return (
@@ -180,7 +184,7 @@ const EditCampusAdmin = ({ modal, closeModal, id, handleFetchUpdate }) => {
             <div className="relative text-gray-800 bg-white rounded-xl shadow-lg">
               <div className="flex items-center justify-center">
                 <h1 className="md:text-2xl font-bold text-lg p-4">
-                  Update Campus Admin
+                  Update Campus Administrator
                 </h1>
                 <button
                   type="button"

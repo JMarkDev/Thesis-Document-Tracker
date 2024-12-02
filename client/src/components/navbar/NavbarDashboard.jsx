@@ -100,6 +100,10 @@ const NavDashboard = ({ handleBurger }) => {
     "/upload-documents": "Upload",
     "/faculty/all-documents": "All Documents",
     "/faculty-reports": "Reports",
+    "/users/admin-staff": "Admin",
+    "/users/faculty": "Faculty",
+    "/users/esu-registrar": "Registrar",
+    "/users/campus-administrator": "Campus Administrator",
   };
 
   const handleNotification = () => {
@@ -122,42 +126,87 @@ const NavDashboard = ({ handleBurger }) => {
     }
   }, [userData, dispatch]);
 
+  // useEffect(() => {
+  //   if (userData) {
+  //     const handleUploadSuccess = () => {
+  //       dispatch(fetchNotificationById(userData.id))
+  //         .unwrap() // Make sure the data is updated before proceeding
+  //         .then((newNotifications) => {
+  //           setNotifications(newNotifications); // Explicitly set new notifications
+  //         });
+  //     };
+
+  //     const handleReceivedSuccess = () => {
+  //       dispatch(fetchNotificationById(userData.id))
+  //         .unwrap() // Make sure the data is updated before proceeding
+  //         .then((newNotifications) => {
+  //           setNotifications(newNotifications); // Explicitly set new notifications
+  //         });
+  //     };
+
+  //     const handleSuccessDeadline = () => {
+  //       dispatch(fetchNotificationById(userData.id))
+  //         .unwrap() // Make sure the data is updated before proceeding
+  //         .then((newNotifications) => {
+  //           setNotifications(newNotifications); // Explicitly set new notifications
+  //         });
+  //     };
+
+  //     const handleSuccessUser = () => {
+  //       dispatch(fetchNotificationById(userData.id))
+  //         .unwrap() // Make sure the data is updated before proceeding
+  //         .then((newNotifications) => {
+  //           setNotifications(newNotifications); // Explicitly set new notifications
+  //         });
+  //     };
+
+  //     socket.on("success_upload", handleUploadSuccess);
+  //     socket.on("success_received", handleReceivedSuccess);
+  //     socket.on("success_deadline", handleSuccessDeadline);
+  //     socket.on("success_user", handleSuccessUser);
+  //   }
+
+  //   // Clean up the socket connection and remove the event listener
+  //   return () => {
+  //     socket.off("success_upload");
+  //     socket.off("success_received");
+  //     socket.off("success_deadline");
+  //     socket.off("success_user");
+  //     // socket.disconnect();
+  //   };
+  // }, [dispatch, userData]);
+
   useEffect(() => {
     if (userData) {
-      const handleUploadSuccess = () => {
+      // Generic success handler
+      const handleSuccess = () => {
         dispatch(fetchNotificationById(userData.id))
-          .unwrap() // Make sure the data is updated before proceeding
+          .unwrap()
           .then((newNotifications) => {
-            setNotifications(newNotifications); // Explicitly set new notifications
+            setNotifications(newNotifications);
           });
       };
 
-      const handleReceivedSuccess = () => {
-        dispatch(fetchNotificationById(userData.id))
-          .unwrap() // Make sure the data is updated before proceeding
-          .then((newNotifications) => {
-            setNotifications(newNotifications); // Explicitly set new notifications
-          });
-      };
+      // List of events to handle
+      const events = [
+        "success_upload",
+        "success_received",
+        "success_deadline",
+        "success_user",
+      ];
 
-      const handleSuccessDeadline = () => {
-        dispatch(fetchNotificationById(userData.id))
-          .unwrap() // Make sure the data is updated before proceeding
-          .then((newNotifications) => {
-            setNotifications(newNotifications); // Explicitly set new notifications
-          });
+      // Attach the event listeners
+      events.forEach((event) => {
+        socket.on(event, handleSuccess);
+      });
+
+      // Clean up the socket listeners
+      return () => {
+        events.forEach((event) => {
+          socket.off(event, handleSuccess);
+        });
       };
-      socket.on("success_upload", handleUploadSuccess);
-      socket.on("success_received", handleReceivedSuccess);
-      socket.on("success_deadline", handleSuccessDeadline);
     }
-
-    // Clean up the socket connection and remove the event listener
-    return () => {
-      socket.off("success_upload");
-      socket.off("success_received");
-      // socket.disconnect();
-    };
   }, [dispatch, userData]);
 
   useEffect(() => {
@@ -188,7 +237,7 @@ const NavDashboard = ({ handleBurger }) => {
       </button>
       <div className="flex  justify-between items-center w-full">
         <h1 className="md:text-2xl  text-sm font-bold text-main">{title}</h1>
-        <div className="flex items-center lg:text-[16px] text-sm gap-3">
+        <div className="flex items-center lg:text-[16px] text-sm sm:gap-3 gap-2">
           {userData?.role === rolesList.admin && (
             <>
               <div className="relative  inline-block text-left">
@@ -208,7 +257,7 @@ const NavDashboard = ({ handleBurger }) => {
                 {autoLogout && (
                   <div
                     onMouseLeave={() => setAutoLogout(false)}
-                    className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-20"
+                    className="absolute md:right-0 left-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-20"
                   >
                     <div className="p-2">
                       <label
@@ -252,7 +301,7 @@ const NavDashboard = ({ handleBurger }) => {
                 {delayOpen && (
                   <div
                     onMouseLeave={() => setDelayOpen(false)}
-                    className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-20"
+                    className="absolute md:right-0 left-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-20"
                   >
                     <div className="p-2">
                       <label
@@ -317,8 +366,8 @@ const NavDashboard = ({ handleBurger }) => {
             </div>
           )}
 
-          <div className="flex items-center gap-3">
-            <div className=" hidden flex-col md:flex">
+          <div className="flex text-nowrap items-center sm:gap-3 gap-2">
+            <div className=" flex-col flex">
               <span className="font-bold">{userData?.firstName}</span>
               <span className="text-[12px]">
                 {userData?.role === rolesList.office_staff

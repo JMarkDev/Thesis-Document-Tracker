@@ -50,7 +50,7 @@ const Office = () => {
   // Paganation
   const indexOfLastDocument = currentPage * documentsPerPage;
   const indexOfFirstDocument = indexOfLastDocument - documentsPerPage;
-  const currentDocuments = officeUsers.slice(
+  const currentDocuments = officeUsers?.slice(
     indexOfFirstDocument,
     indexOfLastDocument
   );
@@ -83,7 +83,7 @@ const Office = () => {
         <div className="flex justify-end mt-5">
           <Pagination
             documentsPerPage={documentsPerPage}
-            totalDocuments={officeUsers.length}
+            totalDocuments={officeUsers?.length}
             paginate={paginate}
             currentPage={currentPage}
           />

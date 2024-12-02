@@ -1,5 +1,8 @@
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
+import { getUserData } from "../services/authSlice";
+import rolesList from "../constants/rolesList";
+import { useSelector } from "react-redux";
 
 const SuccessModal = ({
   successModal,
@@ -8,7 +11,33 @@ const SuccessModal = ({
   action,
   documentId,
 }) => {
+  const user = useSelector(getUserData);
   const navigate = useNavigate();
+
+  const handleNavigate = (id) => {
+    const role = user?.role;
+
+    let path;
+
+    if (role === rolesList.faculty) {
+      path = `/faculty-document-details/${id}`;
+    } else if (
+      role === rolesList.campus_admin ||
+      role === rolesList.registrar
+    ) {
+      path = `/esu-campus-document-details/${id}`;
+    } else if (role === rolesList.admin || role === rolesList.admin_staff) {
+      path = `/admin-document-details/${id}`;
+    } else {
+      path = `/office-document-details/${id}`;
+    }
+
+    navigate(path);
+    closeSuccessModal();
+    // Refresh the page
+    // window.location.reload();
+  };
+
   return (
     <div>
       <div
@@ -69,7 +98,10 @@ const SuccessModal = ({
             </p>
 
             <button
-              onClick={() => navigate(`/document-details/${documentId}`)}
+              onClick={
+                () => handleNavigate(documentId)
+                //  navigate(`/document-details/${documentId}`)
+              }
               type="button"
               className="text-white bg-green-500 hover:bg-green-600 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center"
             >
@@ -83,11 +115,11 @@ const SuccessModal = ({
 };
 
 SuccessModal.propTypes = {
-  successModal: PropTypes.bool.isRequired,
-  closeSuccessModal: PropTypes.func.isRequired,
-  documentName: PropTypes.string.isRequired,
-  action: PropTypes.string.isRequired,
-  documentId: PropTypes.number.isRequired,
+  successModal: PropTypes.bool,
+  closeSuccessModal: PropTypes.func,
+  documentName: PropTypes.string,
+  action: PropTypes.string,
+  documentId: PropTypes.number,
 };
 
 export default SuccessModal;

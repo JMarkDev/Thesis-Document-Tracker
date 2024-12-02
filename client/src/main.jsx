@@ -18,11 +18,19 @@ import {
   fetchFaculty,
   fetchCampusAdmin,
 } from "./services/usersSlice.js";
-import { fetchAllDocuments } from "./services/documentSlice.js";
+import {
+  fetchAllDocuments,
+  filterAllDocuments,
+} from "./services/documentSlice.js";
 import { fetchAllWorkflow } from "./services/documentWolkflowSlice.js";
+import { fetchEsuCampuses } from "./services/campusSlice.js";
+import { fetchDesignation } from "./services/designationSlice.js";
 
 const token = Cookie.get("accessToken");
 //This ensures that the data is already available in the Redux store when the application starts, which can improve the user experience by preventing loading delays.
+
+store.dispatch(fetchEsuCampuses());
+store.dispatch(fetchDesignation());
 if (token) {
   // auth
   store.dispatch(fetchUser());
@@ -36,6 +44,7 @@ if (token) {
 
   // document data
   store.dispatch(fetchAllDocuments());
+  store.dispatch(filterAllDocuments({}));
 
   // workflow data
   store.dispatch(fetchAllWorkflow());

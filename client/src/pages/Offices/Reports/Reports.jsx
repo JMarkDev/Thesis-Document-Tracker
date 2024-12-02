@@ -71,6 +71,7 @@ const Reports = () => {
     const headers = [
       "Tracking Number",
       "Document Name",
+      "Document Type",
       "Uploaded By",
       "Contact Number",
       "ESU Campus",
@@ -85,10 +86,11 @@ const Reports = () => {
       return field;
     };
 
-    const dataRows = data.map((response) => {
+    const dataRows = data?.map((response) => {
       return [
         formatFieldCsv(response.tracking_number),
         formatFieldCsv(response.document_name),
+        formatFieldCsv(response.document_type),
         formatFieldCsv(response.uploaded_by),
         formatFieldCsv(response.contact_number),
         formatFieldCsv(
@@ -132,7 +134,7 @@ const Reports = () => {
             </button>
             <h2 className="font-semibold text-lg mb-4">Filtered Documents</h2>
 
-            {officeReports.length === 0 ? (
+            {officeReports?.length === 0 ? (
               <div className="flex justify-center items-center h-40">
                 <p className="text-gray-500">No documents found</p>
               </div>
@@ -140,7 +142,7 @@ const Reports = () => {
               <>
                 <table className="w-full  text-sm text-left text-gray-600">
                   <tbody>
-                    {officeReports.map(({ document_name }, id) => (
+                    {officeReports?.map(({ document_name }, id) => (
                       <tr
                         key={id}
                         className="bg-gray-100 border-b hover:bg-gray-200 transition-colors"
@@ -184,14 +186,14 @@ const Reports = () => {
             </button>
             <h2 className="font-semibold text-lg mb-4">Filtered Documents</h2>
 
-            {filterDocuments.length === 0 ? (
+            {filterDocuments?.length === 0 ? (
               <div className="flex justify-center items-center h-40">
                 <p className="text-gray-500">No documents found</p>
               </div>
             ) : (
               <table className="w-full  text-sm text-left text-gray-600">
                 <tbody>
-                  {filterDocuments.map(({ document_name, id }) => (
+                  {filterDocuments?.map(({ document_name, id }) => (
                     <tr
                       key={id}
                       className="bg-gray-100 border-b hover:bg-gray-200 transition-colors"

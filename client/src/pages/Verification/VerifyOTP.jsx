@@ -11,6 +11,9 @@ import { useToast } from "../../hooks/useToast";
 import "react-toastify/dist/ReactToastify.css";
 import rolesList from "../../constants/rolesList";
 import Cookies from "js-cookie";
+import io from "socket.io-client";
+const socket = io.connect(`${api.defaults.baseURL}`);
+
 const VerifyOTP = ({ email, closeOTP, closeModal, onVerificationSuccess }) => {
   const toast = useToast();
   const dispatch = useDispatch();
@@ -50,6 +53,7 @@ const VerifyOTP = ({ email, closeOTP, closeModal, onVerificationSuccess }) => {
       });
 
       if (response.data.status === "success") {
+        socket.emit("new_user", response.data);
         // fetch the latest added data
         if (onVerificationSuccess) {
           onVerificationSuccess();

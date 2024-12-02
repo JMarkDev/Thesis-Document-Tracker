@@ -10,7 +10,7 @@ import {
   fetchUserById,
   getFetchedUserById,
   clearUser,
-  fetchRegistrar,
+  // fetchRegistrar,
 } from "../../../../services/usersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import rolesList from "../../../../constants/rolesList";
@@ -89,6 +89,9 @@ const EditRegistrar = ({ modal, closeModal, id, handleFetchUpdate }) => {
         handleFetchUpdate();
       }
     } catch (error) {
+      if (data.esuCampus === "") {
+        setEsuError("ESU CAMPUS is required");
+      }
       console.log(error);
       setLoading(false);
 
@@ -140,7 +143,8 @@ const EditRegistrar = ({ modal, closeModal, id, handleFetchUpdate }) => {
   };
 
   const handleUpdateEmail = () => {
-    dispatch(fetchRegistrar());
+    // dispatch(fetchRegistrar());
+    handleFetchUpdate();
   };
 
   useEffect(() => {

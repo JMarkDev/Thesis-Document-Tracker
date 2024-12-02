@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getUserData } from "../../services/authSlice";
 import { Link, useLocation } from "react-router-dom";
 import { MdQrCodeScanner, MdOutlineDocumentScanner } from "react-icons/md";
-import { IoDocuments } from "react-icons/io5";
+import { IoDocuments, IoSettingsSharp } from "react-icons/io5";
 import { GoWorkflow } from "react-icons/go";
 import { HiBuildingOffice2 } from "react-icons/hi2";
 import { FaUsers, FaRegUser, FaFileUpload } from "react-icons/fa";
@@ -43,17 +43,19 @@ const Sidebar = ({ sidebar, handleBurger }) => {
       src: <FaUsers />,
       sublinks: [
         { title: "Faculty", path: "/users/faculty" },
-        { title: "Campus Admin", path: "/users/campus-admin" },
+        { title: "Campus Administrator", path: "/users/campus-administrator" },
         { title: "ESU Registrar", path: "/users/esu-registrar" },
         { title: "Admin Staff", path: "/users/admin-staff" },
         { title: "Office", path: "/offices" },
       ],
     },
     { title: "Reports", path: "/reports", src: <TbReportAnalytics /> },
+    { title: "Settings", path: "/settings", src: <IoSettingsSharp /> },
   ];
 
   const facultyLinks = [
     { title: "Profile", path: "/user-profile", src: <FaRegUser /> },
+    { title: "Scan Now", path: "/faculty-scan", src: <MdQrCodeScanner /> },
     {
       title: "Upload Documents",
       path: "/upload-documents",
@@ -184,9 +186,9 @@ const Sidebar = ({ sidebar, handleBurger }) => {
         aria-label="Sidebar"
       >
         <div className="fixed w-64 h-full px-3 py-4 overflow-y-auto bg-gray-300 border-2 border-l-0 border-main rounded-xl dark:bg-gray-800 ">
-          <Link to="/dashboard" className="flex ps-2.5 mb-5">
+          <div className="flex ps-2.5 mb-5">
             <img src={Logo} className="h-14 me-3 text-center" alt="Logo" />
-          </Link>
+          </div>
           <ul className="space-y-2 font-medium">
             {sidebarLinks.map((menu, index) => (
               <li

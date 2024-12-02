@@ -171,12 +171,7 @@ const Office = ({ officeUsers }) => {
                       {openAction === id && (
                         <div
                           onMouseLeave={() => setOpenAction(null)}
-                          className={`z-20 absolute flex flex-col right-[-25px] ${
-                            index === officeUsers.length - 1 ||
-                            index === officeUsers.length - 2
-                              ? "bottom-40"
-                              : "bottom-2"
-                          }  w-48 py-2 mt-2 bg-white rounded-md shadow-2xl transform translate-y-full`}
+                          className={`z-50 absolute flex flex-col right-[-25px]  bottom-2  w-48 py-2 mt-2 bg-white  rounded-md shadow-2xl transform translate-y-full`}
                         >
                           <button
                             onClick={(e) => {

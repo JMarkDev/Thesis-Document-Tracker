@@ -83,6 +83,7 @@ const EditWorkflow = ({ modal, closeModal, id }) => {
       setRoute([
         { office_name: "FACULTY", user_id: null },
         { office_name: "REGISTRAR", user_id: null },
+        { office_name: "CAMPUS ADMIN", user_id: null },
         ...allOffices,
       ]);
     } else {
@@ -261,6 +262,25 @@ const EditWorkflow = ({ modal, closeModal, id }) => {
                           disabled={isOfficeInRoute("REGISTRAR")}
                         >
                           REGISTRAR
+                        </a>
+                      </li>
+                      <li>
+                        <a
+                          href="#"
+                          className={`block px-4 py-2 ${
+                            isOfficeInRoute("CAMPUS ADMIN")
+                              ? "text-gray-400 cursor-not-allowed"
+                              : "hover:bg-gray-300"
+                          }`}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            if (!isOfficeInRoute("CAMPUS ADMIN")) {
+                              handleSelectOffice("CAMPUS ADMIN", null);
+                            }
+                          }}
+                          disabled={isOfficeInRoute("CAMPUS ADMIN")}
+                        >
+                          CAMPUS ADMIN
                         </a>
                       </li>
                       {officeUsers?.map((office) => (

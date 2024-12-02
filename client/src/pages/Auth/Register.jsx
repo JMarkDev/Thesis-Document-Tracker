@@ -1,23 +1,34 @@
-import wmsuCampus from "../../constants/Campus";
+// import wmsuCampus from "../../constants/Campus";
 import Profile from "../../components/profile_image/Profile";
 import PropTypes from "prop-types";
 import api from "../../api/axios";
 import { useForm } from "react-hook-form";
 import LoginLoading from "../../components/loader/loginloader/LoginLoading";
 import VerifyOTP from "../Verification/VerifyOTP";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useToast } from "../../hooks/useToast";
 import { FiEyeOff, FiEye } from "react-icons/fi";
 import rolesList from "../../constants/rolesList";
+import statusList from "../../constants/statusList";
+import {
+  getAllEsuCampuses,
+  fetchEsuCampuses,
+} from "../../services/campusSlice";
+import { useSelector, useDispatch } from "react-redux";
 
 const Register = ({ modal, closeModal, openLogin }) => {
   const [showPass, setShowPass] = useState(false);
-
+  const dispatch = useDispatch();
   const toast = useToast();
-  const { register, handleSubmit, setValue } = useForm();
+  const { register, handleSubmit, watch, setValue } = useForm();
   const [showOTP, setShowOTP] = useState(false);
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
+  const [customDesignation, setCustomDesignation] = useState("");
+  const [designationList, setDesignationList] = useState([]);
+  const { campusList, status: campusStatus } = useSelector(
+    (state) => state.campus
+  );
 
   // Error state for backend validation messages
   const [firstnameError, setFirstnameError] = useState("");
@@ -31,9 +42,51 @@ const Register = ({ modal, closeModal, openLogin }) => {
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmpasswordError] = useState("");
 
+  useEffect(() => {
+    dispatch(fetchEsuCampuses());
+  }, [dispatch]);
+
+  // // Watch the select field to handle changes dynamically
+  const designation = watch("designation");
+  const handleDesignationChange = (e) => {
+    const value = e.target.value;
+    setValue("designation", value); // Update the form value
+    if (!value.includes("Program Head")) {
+      setCustomDesignation("");
+    }
+  };
+
+  useEffect(() => {
+    const fetchDesignation = async () => {
+      try {
+        const response = await api.get("/campus-designation/designations");
+
+        setDesignationList(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchDesignation();
+  }, []);
+
   const onSubmit = async (data) => {
     setEmail(data.email);
-    data.role = rolesList.faculty;
+
+    // data.role = rolesList.faculty;
+    if (
+      data.designation === "Campus Admin" ||
+      data.designation === "Campus Administrator"
+    ) {
+      data.role = rolesList.campus_admin;
+    } else if (data.designation === "Campus Registrar") {
+      data.role = rolesList.registrar;
+    } else {
+      data.role = rolesList.faculty;
+    }
+
+    data.designation = customDesignation
+      ? `Program Head ${customDesignation}`
+      : data.designation;
     setLoading(true);
 
     setFirstnameError("");
@@ -60,8 +113,8 @@ const Register = ({ modal, closeModal, openLogin }) => {
       formData.append("role", data.role);
       formData.append("password", data.password);
       formData.append("confirmPassword", data.confirmPassword);
+      formData.append("status", statusList.pending);
       formData.append("image", data.image); // Append the file
-
       const response = await api.post("/auth/register", formData);
       if (response.data.status === "success") {
         toast.success(response.data.message);
@@ -363,15 +416,26 @@ const Register = ({ modal, closeModal, openLogin }) => {
                           designationError
                             ? "border-red-500 "
                             : "border-gray-300 "
-                        } block pb-2 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 appearance-none   focus:outline-none focus:ring-0 focus:border-blue-600 peer`}
+                        } block pb-2 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer`}
                         placeholder=" "
+                        onChange={handleDesignationChange}
                       >
                         <option value="">Select Designation</option>
-                        <option value="Visiting Lecturer">
+                        {designationList?.map(({ name, id }) => (
+                          <option value={name} key={id}>
+                            {name}
+                          </option>
+                        ))}
+
+                        {/* <option value="Visiting Lecturer">
                           Visiting Lecturer
                         </option>
                         <option value="Regular Faculty">Regular Faculty</option>
                         <option value="Program Head">Program Head</option>
+                        <option value="Campus Admin">Campus Admin</option>
+                        <option value="Campus Registrar">
+                          Campus Registrar
+                        </option> */}
                       </select>
                       <label
                         htmlFor="designation"
@@ -380,6 +444,27 @@ const Register = ({ modal, closeModal, openLogin }) => {
                         Designation
                       </label>
                     </div>
+                    {/* Manual Input for "Program Head" */}
+                    {designation && designation.includes("Program Head") && (
+                      <div className="relative mt-4">
+                        <input
+                          {...register("customInput")}
+                          type="text"
+                          id="customInput"
+                          onChange={(e) => {
+                            setCustomDesignation(e.target.value);
+                          }}
+                          // onChange={handleCustomInputChange}
+                          className="block pb-2 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-blue-600 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                        />
+                        <label
+                          htmlFor="customInput"
+                          className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"
+                        >
+                          Program
+                        </label>
+                      </div>
+                    )}
                     {designationError && (
                       <span className="text-red-500">{designationError}</span>
                     )}
@@ -396,7 +481,13 @@ const Register = ({ modal, closeModal, openLogin }) => {
                         placeholder=" "
                       >
                         <option value="">Select ESU Campus</option>
-                        {wmsuCampus.map((campus, index) => (
+                        {campusList &&
+                          campusList?.map(({ name, id }) => (
+                            <option key={id} value={name}>
+                              {name}
+                            </option>
+                          ))}
+                        {/* {wmsuCampus?.map((campus, index) => (
                           <option
                             key={index}
                             value={campus}
@@ -404,7 +495,7 @@ const Register = ({ modal, closeModal, openLogin }) => {
                           >
                             {campus}
                           </option>
-                        ))}
+                        ))} */}
                       </select>
                       <label
                         htmlFor="esu_campus"

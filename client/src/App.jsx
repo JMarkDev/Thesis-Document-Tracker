@@ -21,15 +21,18 @@ import Faculty from "./pages/Admin/UserMagement/Faculty/Faculty";
 import CampusAdmin from "./pages/Admin/UserMagement/CampusAdmin/CampusAdmin";
 import EsuRegistrar from "./pages/Admin/UserMagement/ESU Registrar/EsuRegistrar";
 import AdminStaff from "./pages/Admin/UserMagement/AdminStaff/AdminStaff";
+import EsuCampusScan from "./pages/EsuCampus/EsuCampusScan/EsuCampusScan";
 
 import LayoutDashboard from "./components/layout/LayoutDashboard";
 // import Upload from "./pages/Faculty/UploadDocuments/UploadDocuments";
 import FacultyReports from "./pages/Faculty/Reports/FacultyReports";
 import AllDocuments from "./pages/Faculty/AllDocuments/AllDocuments";
+import FacultyScan from "./pages/Faculty/FacultyScan/FacultyScan";
+import FacultyDocumentDetails from "./pages/Faculty/AllDocuments/DocumentDetails";
 
 import UserProfile from "./pages/Shared/UserProfile";
 import UserDetails from "./pages/Shared/UserDetails";
-import DocumentDetails from "./pages/Shared/DocumentDetails";
+// import DocumentDetails from "./pages/Shared/DocumentDetails";
 import UploadDocuments from "./pages/Shared/UploadDocuments";
 import PrintQRCode from "./pages/Shared/PrintQRCode";
 // import Scanner from "./components/qr_scanner/Scanner";
@@ -43,10 +46,17 @@ import OfficeDocument from "./pages/Offices/Documents/OfficeDocuments";
 import OfficeDashboard from "./pages/Offices/Dashboard/Dashboard";
 import OfficeReports from "./pages/Offices/Reports/Reports";
 import Deadline from "./pages/Admin/Deadline/Deadline";
+import OfficeScan from "./pages/Offices/OfficeScan/OfficeScan";
+
+import EsuCampusDocumentDetails from "./pages/EsuCampus/Documents/EsuCampusDocumentDetails";
+import AdminDocumentDetails from "./pages/Admin/Documents/AdminDocumentDetails";
+import OfficeDocumentDetails from "./pages/Offices/Documents/OfficeDocumentDetails";
+
+import Settings from "./pages/Admin/Settings/Settings";
 
 function App() {
-  // logout user after 30 minutes of inactivity
-  UseAutoLogout();
+  // logout user after  minutes of inactivity
+  // UseAutoLogout();
   // useIdleTimeout();
   // console.log(useIdleTimeout());
   const adminLinks = [
@@ -68,7 +78,7 @@ function App() {
     { title: "Faculty", path: "/users/faculty", component: <Faculty /> },
     {
       title: "Campus Admin",
-      path: "/users/campus-admin",
+      path: "/users/campus-administrator",
       component: <CampusAdmin />,
     },
     {
@@ -92,6 +102,16 @@ function App() {
       component: <PrintQRCode />,
     },
     { title: "Deadlines", path: "/deadlines", component: <Deadline /> },
+    {
+      title: "Document Details",
+      path: "/admin-document-details/:id",
+      component: <AdminDocumentDetails />,
+    },
+    {
+      title: "Settings",
+      path: "/settings",
+      component: <Settings />,
+    },
   ];
 
   const facultyLinks = [
@@ -105,6 +125,12 @@ function App() {
       path: "/faculty/all-documents",
       component: <AllDocuments />,
     },
+    {
+      title: "Document Details",
+      path: "/faculty-document-details/:id",
+      component: <FacultyDocumentDetails />,
+    },
+    { title: "Scan Now", path: "/faculty-scan", component: <FacultyScan /> },
     {
       title: "Print QR Code",
       path: "/faculty-document/:tracking_number",
@@ -121,7 +147,7 @@ function App() {
     {
       title: "Scan Now",
       path: "/esu-campus/scan-now",
-      component: <ScanNow />,
+      component: <EsuCampusScan />,
     },
     {
       title: "Documents",
@@ -144,6 +170,11 @@ function App() {
       path: "/esu-campus/transmittal",
       component: <EsuTransmittal />,
     },
+    {
+      title: "Document Details",
+      path: "/esu-campus-document-details/:id",
+      component: <EsuCampusDocumentDetails />,
+    },
   ];
 
   const officeLinks = [
@@ -156,7 +187,7 @@ function App() {
     {
       title: "Scan Now",
       path: "/office/scan-now",
-      component: <ScanNow />,
+      component: <OfficeScan />,
       allowedRoles: [rolesList.office, rolesList.office_staff], // Allow both roles
     },
     {
@@ -177,14 +208,20 @@ function App() {
       component: <Staff />,
       allowedRoles: [rolesList.office], // Only office users
     },
+    {
+      title: "Document Details",
+      path: "/office-document-details/:id",
+      component: <OfficeDocumentDetails />,
+      allowedRoles: [rolesList.office, rolesList.office_staff], // Only office users
+    },
   ];
 
   const sharedLinks = [
-    {
-      title: "Document Details",
-      path: "/document-details/:id",
-      component: <DocumentDetails />,
-    },
+    // {
+    //   title: "Document Details",
+    //   path: "/document-details/:id",
+    //   component: <DocumentDetails />,
+    // },
     {
       title: "Upload Documents",
       path: "/upload-documents",
@@ -209,12 +246,16 @@ function App() {
 
   return (
     <>
+      {/* 
+      auto logout user after  minutes of inactivity
+    */}
+      <UseAutoLogout />
       <ToastContainer />
       <Routes>
         <Route path="/" element={<Homepage />} />
         <Route path="/home" element={<Homepage />} />
 
-        {adminLinks.map((link, index) => (
+        {adminLinks?.map((link, index) => (
           <Route
             key={index}
             path={link.path}
@@ -227,7 +268,7 @@ function App() {
           />
         ))}
 
-        {facultyLinks.map((link, index) => (
+        {facultyLinks?.map((link, index) => (
           <Route
             key={index}
             path={link.path}
@@ -241,7 +282,7 @@ function App() {
           />
         ))}
 
-        {esuCampusLinks.map((link, index) => (
+        {esuCampusLinks?.map((link, index) => (
           <Route
             key={index}
             path={link.path}
@@ -259,7 +300,7 @@ function App() {
           />
         ))}
 
-        {officeLinks.map((link, index) => (
+        {officeLinks?.map((link, index) => (
           <Route
             key={index}
             path={link.path}
@@ -272,7 +313,7 @@ function App() {
           />
         ))}
 
-        {sharedLinks.map((link, index) => (
+        {sharedLinks?.map((link, index) => (
           <Route
             key={index}
             path={link.path}
@@ -280,15 +321,25 @@ function App() {
               // <LayoutDashboard>{link.component}</LayoutDashboard>
               <ProtectedRoute
                 element={<LayoutDashboard>{link.component}</LayoutDashboard>}
-                allowedRoles={[
-                  rolesList.faculty,
-                  rolesList.admin,
-                  rolesList.campus_admin,
-                  rolesList.registrar,
-                  rolesList.office,
-                  rolesList.office_staff,
-                  rolesList.admin_staff,
-                ]}
+                allowedRoles={
+                  link.path === "/upload-documents"
+                    ? [
+                        rolesList.faculty,
+                        rolesList.admin,
+                        rolesList.campus_admin,
+                        rolesList.registrar,
+                        rolesList.admin_staff,
+                      ]
+                    : [
+                        rolesList.faculty,
+                        rolesList.admin,
+                        rolesList.campus_admin,
+                        rolesList.registrar,
+                        rolesList.office,
+                        rolesList.office_staff,
+                        rolesList.admin_staff,
+                      ]
+                }
               />
             }
           />

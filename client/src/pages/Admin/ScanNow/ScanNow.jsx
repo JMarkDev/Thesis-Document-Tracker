@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import ReceiveDocument from "../../Shared/ReceiveDocument";
+import ReceiveDocument from "./ReceiveDocument";
 import { useDispatch, useSelector } from "react-redux";
 import {
   fetchDocumentByTrackingNum,
@@ -18,7 +18,7 @@ import documentStatusList from "../../../constants/documentStatusList";
 import TrackLoader from "../../../components/loader/track_loader/Track";
 import "../../../components/qr_scanner/styles.css";
 import SuccessModal from "../../../components/SuccessModal";
-import rolesList from "../../../constants/rolesList";
+// import rolesList from "../../../constants/rolesList";
 import io from "socket.io-client";
 const socket = io.connect(`${api.defaults.baseURL}`);
 
@@ -40,11 +40,32 @@ const ScanNow = () => {
   const [loadingScan, setLoadingScan] = useState(false);
   const [isReceived, setIsReceived] = useState(false);
   const [isForwarded, setIsForwarded] = useState(false);
+  const [isRecipient, setIsRecipient] = useState(false);
   const [lastRecipient, setLastRecipient] = useState(false);
   const [recipientOffice, setRecipientOffice] = useState("");
   const [officeId, setOfficeId] = useState(null);
   const [nextRoute, setNextRoute] = useState(null);
   const [receivedLoader, setReceivedLoader] = useState(false);
+  const [comments, setComments] = useState("");
+  const [officeUploader, setOfficeUploader] = useState(false);
+  const [action, setAction] = useState("");
+  const [isReturned, setIsReturned] = useState(false);
+
+  useEffect(() => {
+    dispatch(reset());
+  }, [dispatch]);
+
+  const handleComment = (e) => {
+    setComments(e);
+  };
+
+  useEffect(() => {
+    if (
+      user?.office?.officeName === document?.document_recipients[0]?.office_name
+    ) {
+      setOfficeUploader(true);
+    }
+  }, [user, document]);
 
   useEffect(() => {
     if (status === "failed") {
@@ -58,12 +79,7 @@ const ScanNow = () => {
   }, [status, documentData, dispatch]);
 
   useEffect(() => {
-    if (
-      user.role === rolesList.campus_admin ||
-      user.role === rolesList.registrar
-    ) {
-      setRecipientOffice(`${user.esuCampus.toUpperCase()} REGISTRAR`);
-    } else if (user.office?.officeName) {
+    if (user.office?.officeName) {
       setRecipientOffice(user.office?.officeName);
     }
   }, [user]);
@@ -82,6 +98,9 @@ const ScanNow = () => {
     setLoading(false);
     setTrackingNumber("");
     dispatch(reset());
+    setIsReturned(false);
+    setIsForwarded(false);
+    setIsReceived(false);
   };
 
   const handleSearch = (e) => {
@@ -105,17 +124,19 @@ const ScanNow = () => {
     }
   }, [status, documentData]);
 
-  const handleReceive = async () => {
+  const handleReceive = async (act) => {
+    setAction(act);
     setLoading(true);
     setReceivedLoader(true);
     const data = {
       document_id: documentData.id,
       user_id: officeId,
-      action: isReceived ? "forwarded" : "received",
+      action: act,
       recipient_user: `${user?.firstName} ${user?.middleInitial}. ${user?.lastName}`,
       recipient_office: recipientOffice,
       document_name: documentData.document_name,
       next_route: nextRoute,
+      comments: comments,
     };
     try {
       const response = await api.post("/document/receive-document", data);
@@ -136,6 +157,18 @@ const ScanNow = () => {
 
   useEffect(() => {
     const recipientData = documentData?.document_recipients || [];
+
+    const checkRecipient = recipientData.find((recipient) => {
+      return recipient.office_name === recipientOffice;
+    });
+
+    if (checkRecipient && checkRecipient?.returned_at !== null) {
+      setIsReturned(true);
+    }
+
+    if (checkRecipient && checkRecipient !== undefined) {
+      setIsRecipient(true);
+    }
 
     const recipientReceived = recipientData.find(
       (recipient) =>
@@ -193,7 +226,6 @@ const ScanNow = () => {
       setNextRoute(null); // No more routes
     }
   }, [user, recipientOffice, documentData, officeId]);
-  // console.log(nextRoute);
 
   const isMobileDevice = () => /Mobi|Android/i.test(navigator.userAgent);
 
@@ -223,14 +255,6 @@ const ScanNow = () => {
     }
   };
 
-  // const requestCameraPermission = async () => {
-  //   try {
-  //     await navigator.mediaDevices.getUserMedia({ video: true });
-  //     console.log("Camera permission granted");
-  //   } catch (error) {
-  //     console.error("Camera permission denied or error occurred:", error);
-  //   }
-  // };
   const requestCameraPermission = async () => {
     const isMobile = isMobileDevice();
     const constraints = {
@@ -298,7 +322,7 @@ const ScanNow = () => {
             successModal={successModal}
             closeSuccessModal={handleSuccessModal}
             documentName={documentName}
-            action={isReceived ? "forwarded" : "received"}
+            action={action}
             documentId={documentId}
           />
         )}
@@ -325,7 +349,7 @@ const ScanNow = () => {
                 <input
                   type="text"
                   onChange={(e) => setTrackingNumber(e.target.value)}
-                  placeholder="Enter Tracking Number"
+                  placeholder="Enter Tracking Code"
                   value={trackingNumber}
                   className="w-full border border-gray-400 rounded-lg"
                 />
@@ -364,6 +388,10 @@ const ScanNow = () => {
             isForwarded={isForwarded}
             lastRecipient={lastRecipient}
             receivedLoader={receivedLoader}
+            isRecipient={isRecipient}
+            officeUploader={officeUploader}
+            handleComment={handleComment}
+            isReturned={isReturned}
           />
         )}
       </div>

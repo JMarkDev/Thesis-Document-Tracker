@@ -170,7 +170,7 @@ const DocumentMedata = ({ modal, closeModal, document }) => {
                         Tracking History
                       </h1>
                       <ul className="space-y-4">
-                        {sortedHistories.map(
+                        {sortedHistories?.map(
                           ({
                             id,
                             action,

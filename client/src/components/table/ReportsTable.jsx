@@ -147,7 +147,7 @@ const Table = ({ documents }) => {
       const Hours = 1000 * 60 * 60 * 24; // 24 hours in milliseconds
       const currentTime = new Date();
 
-      const updatedDocumentList = documents.map((document) => {
+      const updatedDocumentList = documents?.map((document) => {
         // Check if all recipients have received the document
         const allReceived = document?.document_recipients.every(
           (recipient) => recipient.received_at !== null

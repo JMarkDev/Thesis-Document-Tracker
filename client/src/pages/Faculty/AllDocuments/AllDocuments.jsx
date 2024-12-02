@@ -64,7 +64,7 @@ const AllDocuments = () => {
   // Paganation
   const indexOfLastDocument = currentPage * documentsPerPage;
   const indexOfFirstDocument = indexOfLastDocument - documentsPerPage;
-  const currentDocuments = documentList.slice(
+  const currentDocuments = documentList?.slice(
     indexOfFirstDocument,
     indexOfLastDocument
   );

@@ -87,7 +87,7 @@ const OfficeDashboard = () => {
       const Hours = 86400000;
       const currentTime = new Date();
 
-      const updatedDocumentList = officeDocuments.map((document) => {
+      const updatedDocumentList = officeDocuments?.map((document) => {
         // Check if all recipients have received the document
         const allReceived = document?.document_recipients.every(
           (recipient) => recipient.received_at !== null
@@ -185,7 +185,7 @@ const OfficeDashboard = () => {
     ];
 
     if (updatedDocumentList.length > 0) {
-      const statusCards = statusList.map(({ title, status }) => {
+      const statusCards = statusList?.map(({ title, status }) => {
         const filteredByStatus = updatedDocumentList.filter(
           (document) => document.status === status
         );

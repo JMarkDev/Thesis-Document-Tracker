@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FaEye, FaRegEdit, FaTrashAlt } from "react-icons/fa";
+import { FaEye, FaRegEdit, FaTrashAlt, FaCheckCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import ProfileModal from "../ProfileModal";
@@ -7,10 +7,13 @@ import api from "../../api/axios";
 import userIcon from "../../assets/images/user (1).png";
 import DeleteModal from "../DeleteModal";
 import { useDispatch } from "react-redux";
-import { deleteUser } from "../../services/usersSlice";
+import { deleteUser, approveFaculty } from "../../services/usersSlice";
 import { toastUtils } from "../../hooks/useToast";
 import EditRegistrar from "../../pages/Admin/UserMagement/ESU Registrar/EditRegistrar";
 import NoData from "../NoData";
+import statusList from "../../constants/statusList";
+import { getStatus } from "../../utils/getStatus";
+import Loading from "../loader/loginloader/LoginLoading";
 
 const RegistrarTable = ({ registrarUser, handleFetchUpdate }) => {
   const navigate = useNavigate();
@@ -22,6 +25,7 @@ const RegistrarTable = ({ registrarUser, handleFetchUpdate }) => {
   const [name, setName] = useState("");
   const [editModal, setEditModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const openModal = (image) => {
     setSelectedImage(image);
@@ -58,42 +62,64 @@ const RegistrarTable = ({ registrarUser, handleFetchUpdate }) => {
     handleFetchUpdate();
     closeDeleteModal();
   };
+
+  const handleApprove = ({ id, email }) => {
+    setLoading(true);
+    dispatch(approveFaculty({ id, email, toast: toastUtils() }))
+      .unwrap()
+      .then(() => {
+        setLoading(false);
+        if (handleFetchUpdate) {
+          handleFetchUpdate();
+        }
+      })
+      .catch((error) => {
+        setLoading(false);
+        console.log(error);
+      });
+  };
   return (
     <>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+        <div className="flex justify-center">{loading && <Loading />}</div>
+
         {registrarUser.length === 0 ? (
           <NoData />
         ) : (
           <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead className="text-xs text-gray-700 uppercase bg-gray-300 dark:bg-gray-700 dark:text-gray-400">
               <tr>
-                {/* <th scope="col" className="px-6 py-3 whitespace-nowrap">
+                {/* <th scope="col" className="px-4 py-3 whitespace-nowrap">
                 <div className="flex items-center  whitespace-nowrap">
                   OFFICE ID
                 </div>
               </th> */}
-                <th scope="col" className="px-6 py-3">
+                <th scope="col" className="px-4 py-3">
                   <div className="flex items-center  whitespace-nowrap">
                     IMAGE
                   </div>
                 </th>
-                <th scope="col" className="px-6 py-3 whitespace-nowrap">
+                <th scope="col" className="px-4 py-3 whitespace-nowrap">
                   <div className="flex items-center  whitespace-nowrap">
                     FULL NAME
                   </div>
                 </th>
-                <th scope="col" className="px-6 py-3">
+                <th scope="col" className="px-4 py-3">
                   <div className="flex items-center  whitespace-nowrap">
                     ESU CAMPUS
                   </div>
                 </th>
-                <th scope="col" className="px-6 py-3">
+                <th scope="col" className="px-4 py-3">
                   <div className="flex items-center  whitespace-nowrap">
                     EMAIL
                   </div>
                 </th>
-
-                <th scope="col" className="px-6 py-3 ">
+                <th scope="col" className="px-4 py-3">
+                  <div className="flex items-center  whitespace-nowrap">
+                    STATUS
+                  </div>
+                </th>
+                <th scope="col" className="px-4 py-3 ">
                   <div className="flex items-center justify-center  whitespace-nowrap">
                     ACTION
                   </div>
@@ -111,6 +137,7 @@ const RegistrarTable = ({ registrarUser, handleFetchUpdate }) => {
                     image,
                     esuCampus,
                     email,
+                    status,
                   },
                   index
                 ) => (
@@ -121,7 +148,7 @@ const RegistrarTable = ({ registrarUser, handleFetchUpdate }) => {
                   >
                     {/* <th
                     scope="row"
-                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                    className="px-4 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                   >
                     {index + 1}
                   </th> */}
@@ -148,11 +175,36 @@ const RegistrarTable = ({ registrarUser, handleFetchUpdate }) => {
                       </div>
                     </th>
 
-                    <td className="px-6 py-4 whitespace-nowrap">{`${firstName} ${middleInitial}. ${lastName}`}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{esuCampus}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">{email}</td>
-
-                    <td className="px-6 py-4 flex gap-3 justify-center items-center">
+                    <td className="px-4 py-4 whitespace-nowrap">{`${firstName} ${middleInitial}. ${lastName}`}</td>
+                    <td className="px-4 py-4 whitespace-nowrap">{esuCampus}</td>
+                    <td className="px-4 py-4 whitespace-nowrap">{email}</td>
+                    <td className="px-4 py-4 whitespace-nowrap ">
+                      <span
+                        className={`${
+                          status === statusList.verified
+                            ? "bg-[#f3e887]"
+                            : "bg-green-400"
+                        }  text-gray-700 p-2 px-4 rounded-lg`}
+                      >
+                        {status === statusList.verified
+                          ? "pending"
+                          : getStatus(status)}
+                      </span>
+                    </td>
+                    <td className="px-4 py-4 flex gap-3 justify-center items-center">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleApprove({ id, email });
+                        }}
+                        className={`${
+                          status === statusList.verified
+                            ? "vissible"
+                            : "invisible"
+                        } p-2 text-lg bg-green-500 hover:bg-green-800 text-white rounded-lg`}
+                      >
+                        <FaCheckCircle className="h-5 w-5" />
+                      </button>
                       <button
                         onClick={(e) => {
                           e.stopPropagation();

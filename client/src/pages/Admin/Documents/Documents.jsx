@@ -46,7 +46,7 @@ const Documents = () => {
   }, [status, dispatch]);
 
   const handleFilterByESU = (esu) => {
-    if (esu === "WMSU-ESU") {
+    if (esu === "WMSU-ESU CAMPUS") {
       dispatch(fetchAllDocuments());
     } else {
       dispatch(filterDocumentsByESU(esu));
@@ -85,7 +85,7 @@ const Documents = () => {
 
   useEffect(() => {
     if (workflow) {
-      const formattedDocumentTypes = workflow.map((type) => {
+      const formattedDocumentTypes = workflow?.map((type) => {
         return type.document_type; // Split by spave and the take the first part
       });
 
@@ -132,7 +132,7 @@ const Documents = () => {
               <Dropdown
                 handleFilter={handleFilterByESU}
                 data={wmsuCampus}
-                option={"WMSU-ESU"}
+                option={"WMSU-ESU CAMPUS"}
               />
             </div>
             <div>

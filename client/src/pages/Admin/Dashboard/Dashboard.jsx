@@ -18,7 +18,7 @@ import {
   fetchAllDocuments,
   getAllDocuments,
 } from "../../../services/documentSlice";
-import StatusPieChart from "../../../components/charts/StatusPieChart";
+// import StatusPieChart from "../../../components/charts/StatusPieChart";
 import LineChartDocumentSubmissions from "../../../components/charts/LineChartDocumentSubmissions";
 
 const Dashboard = () => {
@@ -69,7 +69,7 @@ const Dashboard = () => {
       const Hours = 86400000;
       const currentTime = new Date();
 
-      const updatedDocumentList = documents.map((document) => {
+      const updatedDocumentList = documents?.map((document) => {
         // Check if all recipients have received the document
         const allReceived = document?.document_recipients.every(
           (recipient) => recipient.received_at !== null
@@ -159,7 +159,7 @@ const Dashboard = () => {
       ];
 
       // Create statusCards based on the updatedDocumentList with the updated titles
-      const statusCards = statusList.map(({ title, status }) => {
+      const statusCards = statusList?.map(({ title, status }) => {
         const filteredByStatus = updatedDocumentList.filter(
           (document) => document.status === status
         );

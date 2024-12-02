@@ -10,16 +10,44 @@ const Notification = ({ notifications, handleNotificationClick }) => {
   const navigate = useNavigate();
   const user = useSelector(getUserData);
 
-  const handleNavigate = () => {
-    if (user?.role === rolesList.admin) {
-      navigate(`/users/faculty`);
+  const handleNavigate = (faculty_id) => {
+    let path = "";
+    if (user?.role === rolesList.admin && faculty_id === rolesList.faculty) {
+      path = `/users/faculty`;
+    } else if (faculty_id === rolesList.campus_admin) {
+      console.log("test");
+      path = "/users/campus-administrator";
+    } else if (faculty_id === rolesList.registrar) {
+      path = "/users/esu-registrar";
     } else if (user?.role === rolesList.admin_staff) {
-      navigate(`/users/faculty`);
+      path = `/users/faculty`;
     } else if (user?.role === rolesList.registrar) {
-      navigate(`/esu-campus/faculties`);
+      path = `/esu-campus/faculties`;
     } else if (user?.role === rolesList.campus_admin) {
-      navigate(`/esu-campus/faculties`);
+      path = `/esu-campus/faculties`;
     }
+    navigate(path);
+  };
+
+  const handleNavigateDocs = (id) => {
+    const role = user?.role;
+
+    let path;
+
+    if (role === rolesList.faculty) {
+      path = `/faculty-document-details/${id}`;
+    } else if (
+      role === rolesList.campus_admin ||
+      role === rolesList.registrar
+    ) {
+      path = `/esu-campus-document-details/${id}`;
+    } else if (role === rolesList.admin || role === rolesList.admin_staff) {
+      path = `/admin-document-details/${id}`;
+    } else {
+      path = `/office-document-details/${id}`;
+    }
+
+    navigate(path);
   };
 
   return (
@@ -41,7 +69,8 @@ const Notification = ({ notifications, handleNotificationClick }) => {
                   handleNavigate(faculty_id);
 
                   {
-                    document_id && navigate(`/document-details/${document_id}`);
+                    document_id && handleNavigateDocs(document_id);
+                    // document_id && navigate(`/document-details/${document_id}`);
                   }
                 }}
                 className={`border-b border-gray-300 ${

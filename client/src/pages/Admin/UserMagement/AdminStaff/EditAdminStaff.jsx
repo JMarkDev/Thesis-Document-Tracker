@@ -10,13 +10,13 @@ import {
   fetchUserById,
   getFetchedUserById,
   clearUser,
-  fetchAdmin,
+  // fetchAdmin,
 } from "../../../../services/usersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import rolesList from "../../../../constants/rolesList";
 import ChangeEmail from "../../../Shared/ChangeEmail";
 
-const EditAdminStaff = ({ modal, closeModal, id }) => {
+const EditAdminStaff = ({ modal, closeModal, id, handleFetchUpdate }) => {
   const dispatch = useDispatch();
   const [showPass, setShowPass] = useState(false);
   const toast = useToast();
@@ -81,7 +81,7 @@ const EditAdminStaff = ({ modal, closeModal, id }) => {
         toast.success(response.data.message);
         closeModal(false);
         setLoading(false);
-        dispatch(fetchAdmin());
+        handleFetchUpdate();
       }
     } catch (error) {
       console.log(error);
@@ -148,7 +148,7 @@ const EditAdminStaff = ({ modal, closeModal, id }) => {
   }, [campusAdmin, setValue]);
 
   const handleUpdateEmail = () => {
-    dispatch(fetchAdmin());
+    handleFetchUpdate();
   };
 
   return (
@@ -410,6 +410,7 @@ const EditAdminStaff = ({ modal, closeModal, id }) => {
                         <option value="Dean">Dean</option>
                         <option value="Associate Dean">Associate Dean</option>
                         <option value="Office Staff">Office Staff</option>
+                        <option value="Admin Staff">Admin Staff</option>
                       </select>
                       <label
                         htmlFor="designation"
@@ -510,6 +511,7 @@ EditAdminStaff.propTypes = {
   modal: PropTypes.bool,
   closeModal: PropTypes.func,
   id: PropTypes.number,
+  handleFetchUpdate: PropTypes.func,
 };
 
 export default EditAdminStaff;

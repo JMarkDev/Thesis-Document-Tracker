@@ -7,22 +7,16 @@ import api from "../../api/axios";
 import userIcon from "../../assets/images/user (1).png";
 import DeleteModal from "../DeleteModal";
 import { useDispatch } from "react-redux";
-import {
-  deleteUser,
-  fetchAdmin,
-  fetchAdminStaff,
-} from "../../services/usersSlice";
 import { deleteStaff } from "../../services/staffSlice";
 import { toastUtils } from "../../hooks/useToast";
 import EditAdminStaff from "../../pages/Admin/UserMagement/AdminStaff/EditAdminStaff";
 
-const AdminTable = ({ adminUser }) => {
+const AdminTable = ({ adminUser, handleFetchUpdate }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [selectedImage, setSelectedImage] = useState(null);
   const [deleteModal, setDeleteModal] = useState(false);
   const [showModal, setShowModal] = useState(false);
-  const [selectedEsuCampus, setSelectedEsuCampus] = useState(null);
   const [name, setName] = useState("");
   const [editModal, setEditModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -46,7 +40,6 @@ const AdminTable = ({ adminUser }) => {
 
   const closeDeleteModal = () => {
     setDeleteModal(false);
-    setSelectedEsuCampus(null);
   };
 
   const openEditModal = (id) => {
@@ -62,8 +55,7 @@ const AdminTable = ({ adminUser }) => {
     // dispatch(deleteUser({ id: selectedEsuCampus, toast: toastUtils() }));
     dispatch(deleteStaff({ email: selecedOffice, toast: toastUtils() }))
       .then(() => {
-        dispatch(fetchAdmin());
-        dispatch(fetchAdminStaff());
+        handleFetchUpdate();
       })
       .catch((err) => {
         console.log(err);
@@ -207,6 +199,7 @@ const AdminTable = ({ adminUser }) => {
             modal={editModal}
             closeModal={closeEditModal}
             id={selectedUser}
+            handleFetchUpdate={handleFetchUpdate}
           />
         )}
         {deleteModal && (
@@ -224,6 +217,7 @@ const AdminTable = ({ adminUser }) => {
 
 AdminTable.propTypes = {
   adminUser: PropTypes.array.isRequired,
+  handleFetchUpdate: PropTypes.func,
 };
 
 export default AdminTable;

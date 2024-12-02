@@ -1,6 +1,6 @@
 const wmsuCampus = [
   "WMSU-ESU ALICIA",
-  "WMSU-ESU AURORA",
+  "WMSU-ESU CURUAN",
   "WMSU-ESU DIPLAHAN",
   "WMSU-ESU IMELDA",
   "WMSU-ESU IPIL",

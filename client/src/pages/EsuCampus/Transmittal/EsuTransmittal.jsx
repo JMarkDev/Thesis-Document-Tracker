@@ -3,19 +3,16 @@ import { useSelector, useDispatch } from "react-redux";
 import Table from "../../../components/table/TransmittalTable";
 import { IoSearch } from "react-icons/io5";
 import {
-  fetchAllDocuments,
-  getAllDocuments,
-  getStatus,
-  searchDocument,
+  filterAllDocuments,
+  getFilteredDocuments,
 } from "../../../services/documentSlice";
 import html2pdf from "html2pdf.js";
 import { getUserData } from "../../../services/authSlice";
 
 const EsuTransmittal = () => {
   const dispatch = useDispatch();
-  const allDocuments = useSelector(getAllDocuments);
+  const allDocuments = useSelector(getFilteredDocuments);
   const user = useSelector(getUserData);
-  const status = useSelector(getStatus);
   const [searchTerm, setSearchTerm] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -23,18 +20,17 @@ const EsuTransmittal = () => {
   const [filteredDocuments, setFilteredDocuments] = useState([]);
 
   useEffect(() => {
-    if (status === "idle") {
-      dispatch(fetchAllDocuments());
-    }
-  }, [status, dispatch]);
-
-  // const filterDocuments = allDocuments.filter((doc) => {
-  //   const createdAt = new Date(doc.createdAt);
-
-  //   const from = startDate ? new Date(startDate) : null;
-  //   const to = endDate ? new Date(endDate) : null;
-  //   return (!from || createdAt >= from) && (!to || createdAt <= to);
-  // });
+    dispatch(
+      filterAllDocuments({
+        document_type: "",
+        esuCampus: user?.esuCampus,
+        startDate: "",
+        endDate: "",
+        uploaded_by: "",
+        name: searchTerm,
+      })
+    );
+  }, [dispatch, searchTerm, user]);
 
   useEffect(() => {
     if (!startDate && !endDate) {
@@ -42,23 +38,28 @@ const EsuTransmittal = () => {
     } else {
       const filterDocuments = allDocuments.filter((doc) => {
         const createdAt = new Date(doc.createdAt);
+        const formattedDate = createdAt.toISOString().split("T")[0];
 
-        const from = startDate ? new Date(startDate) : null;
-        const to = endDate ? new Date(endDate) : null;
-        return (!from || createdAt >= from) && (!to || createdAt <= to);
+        const from = startDate ? startDate : null;
+        const to = endDate ? endDate : null;
+        return (!from || formattedDate >= from) && (!to || formattedDate <= to);
       });
-
       setFilteredDocuments(filterDocuments);
     }
   }, [allDocuments, startDate, endDate]);
 
   useEffect(() => {
     if (searchTerm) {
-      dispatch(searchDocument(searchTerm));
-    } else {
-      dispatch(fetchAllDocuments());
+      filterAllDocuments({
+        document_type: "",
+        esuCampus: user?.esuCampus,
+        startDate: "",
+        endDate: "",
+        uploaded_by: "",
+        name: searchTerm,
+      });
     }
-  }, [searchTerm, startDate, endDate, dispatch]);
+  }, [searchTerm, startDate, endDate, dispatch, user]);
 
   const handleDownloadPDF = () => {
     const element = contentRef.current;
@@ -97,13 +98,6 @@ const EsuTransmittal = () => {
           </button>
         </div>
         <div className="flex gap-4 items-center">
-          {/* <input
-            type="date"
-            value={startDate}
-            onChange={(e) => setStartDate(e.target.value)}
-            placeholder="From Date"
-            className="border focus:ring-blue-500 focus:border-blue-100 rounded-lg p-2"
-          /> */}
           <div className="relative  ">
             <input
               type="date"
@@ -145,9 +139,6 @@ const EsuTransmittal = () => {
         contentRef={contentRef}
         campus={user?.esuCampus}
       />
-      {/* <div className="flex justify-end mt-10">
-        <Pagination />
-      </div> */}
     </div>
   );
 };

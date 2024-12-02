@@ -13,12 +13,11 @@ import Pagination from "../../../components/Pagination";
 import {
   getAllDocumentsByUserId,
   getStatus,
-  searchDocument,
-  filterDocumentByType,
   // filterDocumentByStatus,
   sortSubmittedDocuments,
   filterDocumentsByESU,
-  getAllDocuments,
+  filterAllDocuments,
+  getFilteredDocuments,
 } from "../../../services/documentSlice";
 import {
   getAllWorkflow,
@@ -30,7 +29,7 @@ import { getUserData } from "../../../services/authSlice";
 
 const Documents = () => {
   const dispatch = useDispatch();
-  const documents = useSelector(getAllDocuments);
+  const documents = useSelector(getFilteredDocuments);
   const sorted = useSelector(getAllDocumentsByUserId);
   const workflow = useSelector(getAllWorkflow);
   const status = useSelector(getStatus);
@@ -40,6 +39,7 @@ const Documents = () => {
   const user = useSelector(getUserData);
   const [documentData, setDocumentData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [type, setType] = useState("");
   // const [updatedDocumentList, setUpdatedDocumentList] = useState([]);
 
   const documentsPerPage = 5;
@@ -51,8 +51,21 @@ const Documents = () => {
   }, [documents]);
 
   useEffect(() => {
+    dispatch(
+      filterAllDocuments({
+        document_type: type,
+        esuCampus: user?.esuCampus,
+        startDate: "",
+        endDate: "",
+        uploaded_by: "",
+        name: searchTerm,
+      })
+    );
+  }, [dispatch, searchTerm, user, type]);
+
+  useEffect(() => {
     if (workflow) {
-      const formattedDocumentTypes = workflow.map((type) => {
+      const formattedDocumentTypes = workflow?.map((type) => {
         return type.document_type; // Split by spave and the take the first part
       });
 
@@ -78,19 +91,11 @@ const Documents = () => {
     }
   }, [user, dispatch]);
 
-  useEffect(() => {
-    if (searchTerm) {
-      dispatch(searchDocument(searchTerm));
-    } else {
-      dispatch(filterDocumentsByESU(user?.esuCampus));
-    }
-  }, [searchTerm, user, dispatch]);
-
   const handleFilterByType = (type) => {
     if (type === "Document Type") {
-      dispatch(filterDocumentsByESU(user?.esuCampus));
+      setType("");
     } else {
-      dispatch(filterDocumentByType(type));
+      setType(type);
     }
   };
 

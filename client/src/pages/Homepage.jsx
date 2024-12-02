@@ -40,6 +40,12 @@ const Homepage = () => {
   const [tooltip, setTooltip] = useState(false);
   const [showUserManual, setShowUserManual] = useState(false);
 
+  useEffect(() => {
+    return () => {
+      dispatch(reset());
+    };
+  }, [dispatch]);
+
   const handleUserManual = () => {
     setShowUserManual(!showUserManual);
   };
@@ -193,7 +199,7 @@ const Homepage = () => {
               <input
                 type="text"
                 onChange={(e) => setTrackingNum(e.target.value)}
-                placeholder="Enter Tracking Number"
+                placeholder="Enter Tracking Code"
                 className="p-2 md:text-lg text-sm w-full rounded-lg border-2 outline-none border-[#8a7665] focus:outline-none focus:ring-0 focus:border-yellow shadow-lg"
               />
               <button
@@ -276,7 +282,7 @@ const Homepage = () => {
                       Welcome to our Chatbot! How can I assist you today?
                     </p>
                   </div>
-                  {conversation.map((convo, index) => {
+                  {conversation?.map((convo, index) => {
                     const lastItem = index === conversation.length - 1;
                     return (
                       <div key={index}>

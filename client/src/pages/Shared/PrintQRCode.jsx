@@ -23,6 +23,7 @@ const PrintQRCode = () => {
   const document = useSelector(getDocumentByTrackingNumber);
   const [documentData, setDocumentData] = useState({});
   const [isLoading, setIsLoading] = useState(true); // Loading state
+  const [nextOffice, setNextOffice] = useState("");
 
   useEffect(() => {
     if (tracking_number) {
@@ -37,16 +38,9 @@ const PrintQRCode = () => {
   useEffect(() => {
     if (document) {
       setDocumentData(document);
+      setNextOffice(document?.document_recipients[1].office_name);
     }
   }, [document]);
-
-  // const handlePrint = useReactToPrint({
-  //   contentRef,
-  //   documentTitle: "Document Metadata",
-  //   onAfterPrint: () => console.log("Printing completed"),
-  //   onPrintError: (errorLocation, error) =>
-  //     console.error("Error:", errorLocation, error),
-  // });
 
   const handleReactToPrint = useReactToPrint({
     contentRef,
@@ -91,11 +85,11 @@ const PrintQRCode = () => {
   return (
     <>
       {" "}
-      <div className="flex md:flex-row flex-col items-start gap-5">
+      <div className="flex lg:flex-row flex-col items-start gap-5">
         <Back />
         <div className="md:text-[16px] text-sm bg-red-100 border border-red-500 text-gray-800 px-4 py-3 rounded relative text-center">
           Please print the document details and attach them to the physical copy
-          before passing it to the office.
+          before passing it to the {nextOffice}.
         </div>
       </div>
       {/* <Back /> */}

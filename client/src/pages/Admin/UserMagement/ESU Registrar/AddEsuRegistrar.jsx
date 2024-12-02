@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import api from "../../../../api/axios";
 import { useForm } from "react-hook-form";
 import LoginLoading from "../../../../components/loader/loginloader/LoginLoading";
-import VerifyOTP from "../../../../pages/Verification/VerifyOTP";
+import VerifyCampusAdminOTP from "../../../../pages/Verification/VerifyCampusAdminOTP";
 import { useState } from "react";
 import { useToast } from "../../../../hooks/useToast";
 import wmsuCampus from "../../../../constants/Campus";
@@ -68,7 +68,7 @@ const AddEsuRegistrar = ({ modal, closeModal, handleFetchUpdate }) => {
       formData.append("confirmPassword", data.confirmPassword);
       formData.append("image", data.image); // Append the file
 
-      const response = await api.post("/auth/register", formData);
+      const response = await api.post("/auth/add-campus-admin", formData);
       if (response.data.status === "success") {
         toast.success(response.data.message);
         setShowOTP(true);
@@ -129,7 +129,7 @@ const AddEsuRegistrar = ({ modal, closeModal, handleFetchUpdate }) => {
   return (
     <>
       {showOTP ? (
-        <VerifyOTP
+        <VerifyCampusAdminOTP
           showOTP={showOTP}
           closeOTP={closeOTP}
           closeModal={closeModal}

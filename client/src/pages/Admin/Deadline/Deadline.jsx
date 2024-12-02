@@ -45,7 +45,7 @@ const Deadline = () => {
   // Paganation
   const indexOfLastDocument = currentPage * documentsPerPage;
   const indexOfFirstDocument = indexOfLastDocument - documentsPerPage;
-  const currentDocuments = deadline.slice(
+  const currentDocuments = deadline?.slice(
     indexOfFirstDocument,
     indexOfLastDocument
   );

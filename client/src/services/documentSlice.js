@@ -26,7 +26,15 @@ export const fetchDocumentsByUserId = createAsyncThunk(
 
 export const fetchDocumentById = createAsyncThunk("document/id", async (id) => {
   const response = await axios.get(`/document/id/${id}`);
-  return response.data;
+
+  const sortedRecipients = response.data.document_recipients.sort(
+    (a, b) => a.id - b.id
+  );
+
+  return {
+    ...response.data,
+    document_recipients: sortedRecipients,
+  };
 });
 
 export const searchDocument = createAsyncThunk(
@@ -76,16 +84,6 @@ export const filterDocumentByStatus = createAsyncThunk(
   }
 );
 
-export const filterUserDocuments = createAsyncThunk(
-  "document/filter/status/:status/user_id/:user_id",
-  async ({ status, user_id }) => {
-    const response = await axios.get(
-      `/document/filter/status/${status}/user_id/${user_id}`
-    );
-    return response.data;
-  }
-);
-
 export const sortDocuments = createAsyncThunk(
   "document/sort",
   async ({ sortBy, order }) => {
@@ -107,15 +105,6 @@ export const sortSubmittedDocuments = createAsyncThunk(
   }
 );
 
-// export const fetchDocumentByTrackingNum = createAsyncThunk(
-//   "document/tracking-numuber",
-//   async (tracking_number) => {
-//     const response = await axios.get(
-//       `/document/tracking-number/${tracking_number}`
-//     );
-//     return response.data;
-//   }
-// );
 export const fetchDocumentByTrackingNum = createAsyncThunk(
   "document/tracking-number",
   async ({ tracking_number, toast }, { rejectWithValue }) => {
@@ -137,11 +126,49 @@ export const fetchDocumentByTrackingNum = createAsyncThunk(
   }
 );
 
+export const fetchAllDocumentsByUser = createAsyncThunk(
+  "allDocumentsByUser",
+  async (user_id) => {
+    const response = await axios.get(
+      `/document/all-documents-by-user-id/${user_id}`
+    );
+    return response.data;
+  }
+);
+
+export const filterAllDocuments = createAsyncThunk(
+  "document/filter-all-documents",
+  async ({
+    document_type,
+    esuCampus,
+    startDate,
+    endDate,
+    uploaded_by,
+    name,
+  }) => {
+    // Build query parameters only if they are provided
+    const queryParams = new URLSearchParams();
+    if (document_type) queryParams.append("document_type", document_type);
+    if (esuCampus) queryParams.append("esuCampus", esuCampus);
+    if (startDate) queryParams.append("startDate", startDate);
+    if (endDate) queryParams.append("endDate", endDate);
+    if (uploaded_by) queryParams.append("uploaded_by", uploaded_by);
+    if (name) queryParams.append("name", name);
+
+    const response = await axios.get(
+      `/document/filter-all-documents?${queryParams.toString()}`
+    );
+    return response.data;
+  }
+);
+
 const documentsSlice = createSlice({
   name: "documents",
   initialState: {
     allDocuments: [],
     documentsByUserId: [],
+    allDocumentsByUserId: [],
+    filteredDocuments: [],
     status: "idle",
     documentId: null,
     tracing_number: null,
@@ -150,8 +177,15 @@ const documentsSlice = createSlice({
 
   reducers: {
     reset: (state) => {
+      state.documentsByUserId = [];
+      state.allDocumentsByUserId = [];
+      state.allDocuments = [];
+      state.filteredDocuments = [];
+      state.documentId = null;
       state.tracing_number = null;
       state.status = "idle";
+      state.error = null;
+      // console.log("reset");
     },
   },
   extraReducers: (builders) => {
@@ -234,17 +268,6 @@ const documentsSlice = createSlice({
         state.status = "failed";
         state.error = action.error.message;
       })
-      .addCase(filterUserDocuments.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(filterUserDocuments.fulfilled, (state, action) => {
-        state.status = "succeeded";
-        state.documentsByUserId = action.payload;
-      })
-      .addCase(filterUserDocuments.rejected, (state, action) => {
-        state.status = "failed";
-        state.error = action.error.message;
-      })
 
       // sort documents
       .addCase(sortDocuments.pending, (state) => {
@@ -292,12 +315,29 @@ const documentsSlice = createSlice({
       .addCase(fetchDocumentsByUserId.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.payload || action.error.message;
+      })
+      .addCase(fetchAllDocumentsByUser.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchAllDocumentsByUser.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.allDocumentsByUserId = action.payload;
+      })
+      .addCase(fetchAllDocumentsByUser.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload || action.error.message;
+      })
+      .addCase(filterAllDocuments.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(filterAllDocuments.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.filteredDocuments = action.payload;
+      })
+      .addCase(filterAllDocuments.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.payload || action.error.message;
       });
-    // .addCase(fetchDocumentByTrackingNum.rejected, (state, action) => {
-    //   state.status = "failed";
-    //   state.error = action.payload || action.error.message;
-    //   console.log(state.error); // Log the actual error message
-    // });
   },
 });
 
@@ -312,6 +352,10 @@ export const getDocumentByTrackingNumber = (state) =>
   state.documents.tracing_number;
 export const getAllDocumentsByUserId = (state) =>
   state.documents.documentsByUserId;
+export const getAllDocumentsByUser = (state) =>
+  state.documents.allDocumentsByUserId;
+export const getFilteredDocuments = (state) =>
+  state.documents.filteredDocuments;
 
 export const { reset } = documentsSlice.actions;
 

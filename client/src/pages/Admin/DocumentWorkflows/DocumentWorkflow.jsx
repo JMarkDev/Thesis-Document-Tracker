@@ -44,7 +44,7 @@ const DocumentWorkflow = () => {
   // Paganation
   const indexOfLastDocument = currentPage * documentsPerPage;
   const indexOfFirstDocument = indexOfLastDocument - documentsPerPage;
-  const currentDocuments = workflow.slice(
+  const currentDocuments = workflow?.slice(
     indexOfFirstDocument,
     indexOfLastDocument
   );

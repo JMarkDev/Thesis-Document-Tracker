@@ -99,7 +99,7 @@ const Navbar = () => {
   useEffect(() => {
     if (getNotification) {
       setNotifications(getNotification);
-      const unread = getNotification.filter(
+      const unread = getNotification?.filter(
         (notification) => notification.is_read === 0
       );
       setUnread(unread.length);
@@ -121,7 +121,7 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center">
-          <ul className="flex gap-5 items-center text-white lg:text-lg text-sm">
+          <ul className="flex md:gap-5 gap-3 items-center text-white lg:text-lg text-sm">
             {loading ? (
               <li>Loading...</li>
             ) : userData ? (

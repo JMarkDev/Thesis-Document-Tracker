@@ -3,10 +3,7 @@ import RegistrarTable from "../../../../components/table/RegistrarTable";
 import { IoSearch } from "react-icons/io5";
 import AddEsuRegistrar from "./AddEsuRegistrar";
 import {
-  // fetchRegistrar,
-  // getRoleStatus,
-  // getRoleUsers,
-  // searchRegistrarRole,
+  clearUser,
   filterFacultyByCampus,
   searchFaculty,
   faculty,
@@ -26,6 +23,12 @@ const EsuRegistrar = () => {
   const [selectedESU, setSelectedESU] = useState("WMSU-ESU CAMPUS");
   const [currentPage, setCurrentPage] = useState(1);
   const documentsPerPage = 5;
+
+  useEffect(() => {
+    // return () => {
+    dispatch(clearUser());
+    // };
+  }, [dispatch]);
 
   const handleFetchUpdate = () => {
     setTimeout(() => {
@@ -85,7 +88,7 @@ const EsuRegistrar = () => {
   // Paganation
   const indexOfLastDocument = currentPage * documentsPerPage;
   const indexOfFirstDocument = indexOfLastDocument - documentsPerPage;
-  const currentDocuments = registrarUser.slice(
+  const currentDocuments = registrarUser?.slice(
     indexOfFirstDocument,
     indexOfLastDocument
   );
@@ -146,7 +149,7 @@ const EsuRegistrar = () => {
         <div className="flex justify-end mt-5">
           <Pagination
             documentsPerPage={documentsPerPage}
-            totalDocuments={registrarUser.length}
+            totalDocuments={registrarUser?.length}
             paginate={paginate}
             currentPage={currentPage}
           />

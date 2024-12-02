@@ -63,7 +63,7 @@ const Reports = () => {
       return field;
     };
 
-    const dataRows = allDocuments.map((response) => {
+    const dataRows = allDocuments?.map((response) => {
       return [
         formatFieldCsv(response.tracking_number),
         formatFieldCsv(response.document_name),

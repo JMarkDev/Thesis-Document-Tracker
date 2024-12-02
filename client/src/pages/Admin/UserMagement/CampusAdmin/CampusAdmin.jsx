@@ -3,14 +3,10 @@ import CampusAdminTable from "../../../../components/table/CampusAdminTable";
 import { IoSearch } from "react-icons/io5";
 import AddCampusAdmin from "./AddCampusAdmin";
 import {
-  // fetchCampusAdmin,
-  // getRoleUsers,
-  // getRoleStatus,
-  // getCampusAdminUsers,
   filterFacultyByCampus,
-  // searchCampusAdminRole,
   faculty,
   searchFaculty,
+  clearUser,
 } from "../../../../services/usersSlice";
 import { useDispatch, useSelector } from "react-redux";
 import Pagination from "../../../../components/Pagination";
@@ -20,14 +16,18 @@ import rolesList from "../../../../constants/rolesList";
 
 const CampusAdmin = () => {
   const dispatch = useDispatch();
-  // const campusAdminUsers = useSelector(getRoleUsers("campus_admin"));
-  // const campusAdminStatus = useSelector(getRoleStatus("campus_admin"));
   const campusAdminUsers = useSelector(faculty);
   const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedESU, setSelectedESU] = useState("WMSU-ESU CAMPUS");
   const [currentPage, setCurrentPage] = useState(1);
   const documentsPerPage = 5;
+
+  useEffect(() => {
+    // return () => {
+    dispatch(clearUser());
+    // };
+  }, [dispatch]);
 
   useEffect(() => {
     dispatch(
@@ -95,7 +95,7 @@ const CampusAdmin = () => {
   // Paganation
   const indexOfLastDocument = currentPage * documentsPerPage;
   const indexOfFirstDocument = indexOfLastDocument - documentsPerPage;
-  const currentDocuments = campusAdminUsers.slice(
+  const currentDocuments = campusAdminUsers?.slice(
     indexOfFirstDocument,
     indexOfLastDocument
   );
@@ -104,12 +104,12 @@ const CampusAdmin = () => {
 
   return (
     <div>
-      <div className="flex text-sm md:text-[16px] justify-between lg:flex-row flex-col-reverse gap-5">
+      <div className="flex text-sm md:text-[16px] justify-between lg:flex-row flex-col gap-5">
         <button
           onClick={openModal}
           className="w-fit p-2 px-6 rounded-lg bg-main hover:bg-main_hover text-white font-semi"
         >
-          Add Campus Admin
+          Add Campus Administrator
         </button>
         <div className=" flex max-w-[450px] w-full  items-center relative">
           <input
@@ -147,7 +147,7 @@ const CampusAdmin = () => {
         <div className="flex justify-end mt-5">
           <Pagination
             documentsPerPage={documentsPerPage}
-            totalDocuments={campusAdminUsers.length}
+            totalDocuments={campusAdminUsers?.length}
             paginate={paginate}
             currentPage={currentPage}
           />

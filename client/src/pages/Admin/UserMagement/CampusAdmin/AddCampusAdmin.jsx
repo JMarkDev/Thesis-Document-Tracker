@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import api from "../../../../api/axios";
 import { useForm } from "react-hook-form";
 import LoginLoading from "../../../../components/loader/loginloader/LoginLoading";
-import VerifyOTP from "../../../../pages/Verification/VerifyOTP";
+import VerifyCampusAdminOTP from "../../../Verification/VerifyCampusAdminOTP";
 import { useState } from "react";
 import { useToast } from "../../../../hooks/useToast";
 import wmsuCampus from "../../../../constants/Campus";
@@ -70,7 +70,7 @@ const AddCampusAdmin = ({ modal, closeModal, handleFetchUpdate }) => {
       formData.append("confirmPassword", data.confirmPassword);
       formData.append("image", data.image); // Append the file
 
-      const response = await api.post("/auth/register", formData);
+      const response = await api.post("/auth/add-campus-admin", formData);
       if (response.data.status === "success") {
         toast.success(response.data.message);
         setShowOTP(true);
@@ -132,7 +132,7 @@ const AddCampusAdmin = ({ modal, closeModal, handleFetchUpdate }) => {
   return (
     <>
       {showOTP ? (
-        <VerifyOTP
+        <VerifyCampusAdminOTP
           showOTP={showOTP}
           closeOTP={closeOTP}
           closeModal={closeModal}
@@ -151,7 +151,7 @@ const AddCampusAdmin = ({ modal, closeModal, handleFetchUpdate }) => {
             <div className="relative text-gray-800 bg-white rounded-xl shadow-lg">
               <div className="flex items-center justify-center">
                 <h1 className="md:text-2xl font-bold text-lg p-4">
-                  Add Campus Admin
+                  Add Campus Administrator
                 </h1>
                 <button
                   type="button"
@@ -493,6 +493,7 @@ const AddCampusAdmin = ({ modal, closeModal, handleFetchUpdate }) => {
                       </span>
                     )}
                   </div>
+
                   <button
                     disabled={loading ? true : false}
                     type="submit"
@@ -500,7 +501,7 @@ const AddCampusAdmin = ({ modal, closeModal, handleFetchUpdate }) => {
                       loading ? "cursor-not-allowed" : "cursor-pointer"
                     } w-full  mt-6 p-2 bg-main hover:bg-main_hover text-[#fff] md:text-lg text-sm rounded-lg`}
                   >
-                    Add Campus Admin
+                    Add Campus Administrator
                   </button>
                 </form>
               </div>

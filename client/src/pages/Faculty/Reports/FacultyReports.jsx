@@ -44,6 +44,7 @@ const FacultyReports = () => {
     const headers = [
       "Tracking Number",
       "Document Name",
+      "Document Type",
       "Uploaded By",
       "Contact Number",
       "ESU Campus",
@@ -58,10 +59,11 @@ const FacultyReports = () => {
       return field;
     };
 
-    const dataRows = data.map((response) => {
+    const dataRows = data?.map((response) => {
       return [
         formatFieldCsv(response.tracking_number),
         formatFieldCsv(response.document_name),
+        formatFieldCsv(response.document_type),
         formatFieldCsv(response.uploaded_by),
         formatFieldCsv(response.contact_number),
         formatFieldCsv(response.esuCampus),
@@ -103,7 +105,7 @@ const FacultyReports = () => {
             </button>
             <h2 className="font-semibold text-lg mb-4">Filtered Documents</h2>
 
-            {filteredDocuments.length === 0 ? (
+            {filteredDocuments?.length === 0 ? (
               <div className="flex justify-center items-center h-40">
                 <p className="text-gray-500">No documents found</p>
               </div>
@@ -111,7 +113,7 @@ const FacultyReports = () => {
               <>
                 <table className="w-full  text-sm text-left text-gray-600">
                   <tbody>
-                    {filteredDocuments.map(({ document_name, id }) => (
+                    {filteredDocuments?.map(({ document_name, id }) => (
                       <tr
                         key={id}
                         className="bg-gray-100 border-b hover:bg-gray-200 transition-colors"
@@ -136,7 +138,9 @@ const FacultyReports = () => {
           <div className="flex p-2 bg-gray-300 justify-between items-center">
             <h1 className="font-bold">Document Submissions Charts</h1>
           </div>
-          <LineChartDocumentSubmissions data={filteredDocuments} />
+          <div className="max-w-[650px]">
+            <LineChartDocumentSubmissions data={filteredDocuments} />
+          </div>
         </div>
 
         <div className="min-w-[350px] h-[400px] overflow-y-auto  p-2 bg-white rounded-md shadow-lg">
@@ -149,14 +153,14 @@ const FacultyReports = () => {
             </button>
             <h2 className="font-semibold text-lg mb-4">Filtered Documents</h2>
 
-            {filteredDocuments.length === 0 ? (
+            {filteredDocuments?.length === 0 ? (
               <div className="flex justify-center items-center h-40">
                 <p className="text-gray-500">No documents found</p>
               </div>
             ) : (
               <table className="w-full  text-sm text-left text-gray-600">
                 <tbody>
-                  {filteredDocuments.map(({ document_name, id }) => (
+                  {filteredDocuments?.map(({ document_name, id }) => (
                     <tr
                       key={id}
                       className="bg-gray-100 border-b hover:bg-gray-200 transition-colors"

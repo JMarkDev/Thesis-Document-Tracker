@@ -22,6 +22,7 @@ export const logoutUser = createAsyncThunk("/auth/logoutUser", async () => {
   const response = await axios.post("/auth/logout", { withCredentials: true });
   if (response.data.status === "success") {
     Cookies.remove("accessToken");
+    localStorage.clear();
     return null;
   }
   // return null;

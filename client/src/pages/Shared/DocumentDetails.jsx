@@ -79,17 +79,6 @@ const DocumentDetails = () => {
     setStatus(""); // Reset status
   }, [id, dispatch]);
 
-  // useEffect(() => {
-  //   const handleSuccessReceived = () => {
-  //     dispatch(fetchDocumentById(id));
-  //   };
-
-  //   socket.on("success_received", handleSuccessReceived);
-
-  //   return () => {
-  //     socket.off("success_received", handleSuccessReceived);
-  //   };
-  // }, [dispatch, id]);
   useEffect(() => {
     const handleSuccessReceived = () => {
       dispatch(fetchDocumentById(id));
@@ -188,21 +177,6 @@ const DocumentDetails = () => {
     setStatus(status);
   }, [document, user, officeRecipient, documentData, fullName, delayThreshold]);
 
-  // useEffect(() => {
-  //   if (document) {
-  //     setDocumentData(document);
-  //     setData(document.document_recipients);
-  //     if (document.files && document.files.length > 0) {
-  //       // const parsedFiles = JSON.parse(document.files)
-  //       const parsedFiles =
-  //         typeof document.files === "string"
-  //           ? JSON.parse(document.files)
-  //           : document.files;
-
-  //       setFiles(parsedFiles);
-  //     }
-  //   }
-  // }, [document]);
   useEffect(() => {
     if (document) {
       setDocumentData(document);
@@ -218,14 +192,6 @@ const DocumentDetails = () => {
     }
   }, [document]);
 
-  // useEffect(() => {
-  //   if (documentData && documentData.document_histories) {
-  //     const sortedData = [...documentData.document_histories].sort(
-  //       (a, b) => b.id - a.id
-  //     );
-  //     setSortedHistories(sortedData);
-  //   }
-  // }, [documentData]);
   useEffect(() => {
     if (documentData && documentData.document_histories) {
       const sortedData = [...documentData.document_histories].sort(

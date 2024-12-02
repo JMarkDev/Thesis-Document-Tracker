@@ -4,7 +4,7 @@ import Table from "../../../components/table/DocumentTable";
 import { IoSearch } from "react-icons/io5";
 import Dropdown from "../../../components/dropdown/Dropdown";
 import wmsuCampus from "../../../constants/Campus";
-import Status from "../../../components/dropdown/Status";
+// import Status from "../../../components/dropdown/Status";
 import Pagination from "../../../components/Pagination";
 import {
   fetchAllDocuments,
@@ -13,16 +13,15 @@ import {
   searchDocument,
   filterDocumentsByESU,
   filterDocumentByType,
-  filterDocumentByStatus,
+  // filterDocumentByStatus,
   sortDocuments,
 } from "../../../services/documentSlice";
 import {
   getAllWorkflow,
   fetchAllWorkflow,
 } from "../../../services/documentWolkflowSlice";
-import { Link } from "react-router-dom";
 import { getUserData } from "../../../services/authSlice";
-import rolesList from "../../../constants/rolesList";
+// import rolesList from "../../../constants/rolesList";
 
 const OfficeDocuments = () => {
   const dispatch = useDispatch();
@@ -50,75 +49,6 @@ const OfficeDocuments = () => {
     }
   }, [allDocuments, user]);
 
-  // useEffect(() => {
-  //   const updateDocumentStatuses = () => {
-  //     const updatedDocumentList = allDocuments.map((document) => {
-  //       // Check if all recipients have received the document
-  //       const allReceived = document?.document_recipients.every(
-  //         (recipient) => recipient.received_at !== null
-  //       );
-
-  //       // Find the current office and check if it has received the document
-  //       const officeReceived = document?.document_recipients.find(
-  //         (recipient) =>
-  //           recipient.office_name === user.office?.officeName &&
-  //           recipient.received_at !== null
-  //       );
-
-  //       // Get the previous office recipient to compare the time difference
-  //       const previousRecipient = document?.document_recipients.find(
-  //         (recipient) =>
-  //           recipient.office_name !== user.office?.officeName &&
-  //           recipient.received_at !== null
-  //       );
-
-  //       // Initialize status as "Incoming"
-  //       let status = "Incoming";
-
-  //       // Check if the previous office has received the document
-  //       if (previousRecipient) {
-  //         const receivedAt = new Date(previousRecipient.received_at);
-  //         const currentTime = new Date();
-
-  //         // Check if the time difference exceeds 24 hours (86400000 milliseconds)
-  //         const timeDifference = currentTime - receivedAt;
-
-  //         if (timeDifference > 86400000 && !officeReceived) {
-  //           status = "Delayed";
-  //         }
-  //       }
-
-  //       if (allReceived) {
-  //         status = "Completed";
-  //       } else if (!allReceived && user?.role === rolesList.faculty) {
-  //         status = "In Progress"; // Default status if not all are received
-  //       } else if (officeReceived) {
-  //         status = "Received";
-  //       }
-
-  //       // Only return the updated document if the status has changed
-  //       if (document.status !== status) {
-  //         return {
-  //           ...document,
-  //           status,
-  //         };
-  //       }
-
-  //       return document; // No change in status, return the same document
-  //     });
-
-  //     // Only update the state if the document list has changed
-  //     if (
-  //       JSON.stringify(updatedDocumentList) !== JSON.stringify(allDocuments)
-  //     ) {
-  //       setUpdatedDocumentList(updatedDocumentList);
-  //     }
-  //     console.log(updatedDocumentList);
-  //   };
-
-  //   updateDocumentStatuses();
-  // }, [allDocuments, user]); // Add proper dependencies
-
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchAllDocuments());
@@ -127,7 +57,7 @@ const OfficeDocuments = () => {
   }, [status, dispatch]);
 
   const handleFilterByESU = (esu) => {
-    if (esu === "WMSU-ESU") {
+    if (esu === "WMSU-ESU CAMPUS") {
       dispatch(fetchAllDocuments());
     } else {
       dispatch(filterDocumentsByESU(esu));
@@ -150,14 +80,6 @@ const OfficeDocuments = () => {
     }
   };
 
-  const handleFIlterByStatus = (status) => {
-    if (status === "Status") {
-      dispatch(fetchAllDocuments());
-    } else {
-      dispatch(filterDocumentByStatus(status));
-    }
-  };
-
   const handleSort = (sortBy) => {
     const newOrder = sortOrder === "asc" ? "desc" : "asc";
     setSortOrder(newOrder);
@@ -166,7 +88,7 @@ const OfficeDocuments = () => {
 
   useEffect(() => {
     if (workflow) {
-      const formattedDocumentTypes = workflow.map((type) => {
+      const formattedDocumentTypes = workflow?.map((type) => {
         return type.document_type; // Split by spave and the take the first part
       });
 
@@ -186,15 +108,9 @@ const OfficeDocuments = () => {
 
   return (
     <div className="">
-      <div className="flex  flex-col gap-5 justify-between mb-5">
+      <div className="flex  xl:flex-row flex-col gap-5 justify-between mb-5">
         <div className="flex text-sm md:text-[16px] justify-between lg:flex-row flex-col gap-5">
-          <Link
-            to={"/upload-documents"}
-            className="w-fit p-2 flex items-center text-center px-4 rounded-lg bg-main hover:bg-main_hover text-white font-semi"
-          >
-            Upload Documents
-          </Link>
-          <div className=" flex max-w-[450px] w-full  items-center relative">
+          <div className=" flex lg:w-[450px] max-w-[450px] w-full  items-center relative">
             <input
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -205,7 +121,6 @@ const OfficeDocuments = () => {
             <IoSearch className="text-2xl absolute right-2 text-gray-600" />
           </div>
         </div>
-
         <div className="flex sm:justify-end justify-center flex-col lg:flex-row lg:items-center items-end  gap-3">
           <span className="text-gray-700">Filter documents by:</span>
           <div className="flex items-center gap-3">
@@ -213,7 +128,7 @@ const OfficeDocuments = () => {
               <Dropdown
                 handleFilter={handleFilterByESU}
                 data={wmsuCampus}
-                option={"WMSU-ESU"}
+                option={"WMSU-ESU CAMPUS"}
               />
             </div>
             <div>
@@ -223,10 +138,6 @@ const OfficeDocuments = () => {
                 option={"Document Type"}
               />
             </div>
-
-            {/* <div>
-              <Status handleFilter={handleFIlterByStatus} />
-            </div> */}
           </div>
         </div>
       </div>

@@ -35,8 +35,17 @@ const AdminStaff = () => {
     }
   }, [adminStatus, dispatch, adminSfaffStatus]);
 
+  const handleFetchUpdate = () => {
+    setTimeout(() => {
+      dispatch(fetchAdmin());
+      dispatch(fetchAdminStaff());
+    }, 1000);
+  };
+
   useEffect(() => {
-    setAdminList(adminUser.concat(adminStaff));
+    if (adminUser && adminStaff) {
+      setAdminList(adminUser.concat(adminStaff));
+    }
   }, [adminUser, adminStaff]);
 
   const openModal = () => {
@@ -58,7 +67,7 @@ const AdminStaff = () => {
   // Paganation
   const indexOfLastDocument = currentPage * documentsPerPage;
   const indexOfFirstDocument = indexOfLastDocument - documentsPerPage;
-  const currentDocuments = adminList.slice(
+  const currentDocuments = adminList?.slice(
     indexOfFirstDocument,
     indexOfLastDocument
   );
@@ -90,15 +99,19 @@ const AdminStaff = () => {
             closeModal={closeModal}
             showModal={showModal}
             officeId={user?.office?.id}
+            handleFetchUpdate={handleFetchUpdate}
           />
         )}
       </div>
       <div className="mt-8">
-        <AdminTable adminUser={currentDocuments} />
+        <AdminTable
+          adminUser={currentDocuments}
+          handleFetchUpdate={handleFetchUpdate}
+        />
         <div className="flex justify-end mt-5">
           <Pagination
             documentsPerPage={documentsPerPage}
-            totalDocuments={adminUser.length}
+            totalDocuments={adminUser?.length}
             paginate={paginate}
             currentPage={currentPage}
           />

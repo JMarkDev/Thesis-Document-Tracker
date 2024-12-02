@@ -1,15 +1,14 @@
 import { useState, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useReactToPrint } from "react-to-print";
-import { FaEye, FaFileDownload } from "react-icons/fa";
+import { FaEye, FaRegEdit, FaFileDownload } from "react-icons/fa";
 import { IoMdPrint } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
-// import { getDocumentStatus } from "../../utils/documentStatus";
-// import { documentBackground } from "../../utils/documentBackgroundColor";
 import { useFormat } from "../../hooks/useFormatDate";
 import html2pdf from "html2pdf.js";
 import DownloadMetadata from "../../pages/Shared/DownloadMetadata";
+import UpdateDocumentDetails from "../../pages/Faculty/AllDocuments/UpdateDocumentDetails";
 import {
   fetchDocumentByTrackingNum,
   getDocumentByTrackingNumber,
@@ -20,6 +19,7 @@ import { toastUtils } from "../../hooks/useToast";
 import NoData from "../NoData";
 import rolesList from "../../constants/rolesList";
 import { getUserData } from "../../services/authSlice";
+import documentStatusList from "../../constants/documentStatusList";
 
 // Utility to detect if it's a mobile device
 const isMobileDevice = () => {
@@ -40,6 +40,9 @@ const Table = ({ documents, handleSort }) => {
   const [officeRecipient, setOfficeRecipient] = useState("");
   const [fullName, setFullName] = useState("");
   const normalizeString = (str) => str?.trim().replace(/\./g, "").toLowerCase();
+  const [selectedDocument, setSelectedDocument] = useState(null);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [campusUploader, setCampusUploader] = useState(false);
 
   useEffect(() => {
     setFullName(`${user.firstName} ${user.middleInitial} ${user.lastName}`);
@@ -48,15 +51,24 @@ const Table = ({ documents, handleSort }) => {
   useEffect(() => {
     if (user.role === rolesList.faculty) {
       setOfficeRecipient(`${user.esuCampus.toUpperCase()} FACULTY`);
-    } else if (
-      user.role === rolesList.campus_admin ||
-      user.role === rolesList.registrar
-    ) {
+    } else if (user.role === rolesList.registrar) {
       setOfficeRecipient(`${user.esuCampus.toUpperCase()} REGISTRAR`);
+    } else if (user.role === rolesList.campus_admin) {
+      setOfficeRecipient(`${user.esuCampus.toUpperCase()} CAMPUS ADMIN`);
     } else if (user.office?.officeName) {
       setOfficeRecipient(user.office?.officeName);
     }
   }, [user]);
+
+  const handleUpdate = (id) => {
+    setSelectedDocument(id);
+    setShowEditModal(true);
+  };
+
+  const closeEditModal = () => {
+    setSelectedDocument(null);
+    setShowEditModal(false);
+  };
 
   const handleDownloadPDF = () => {
     const element = contentRef.current;
@@ -144,11 +156,27 @@ const Table = ({ documents, handleSort }) => {
       const Hours = 1000 * 60 * 60 * 24; // 24 hours in milliseconds
       const currentTime = new Date();
 
-      const updatedDocumentList = documents.map((document) => {
+      const updatedDocumentList = documents?.map((document) => {
         // Check if all recipients have received the document
         const allReceived = document?.document_recipients.every(
           (recipient) => recipient.received_at !== null
         );
+
+        const checkIfReturned = document?.document_recipients[0].office_name;
+        let campusName = null;
+
+        if (user?.role === rolesList.registrar) {
+          campusName = `${user?.esuCampus} REGISTRAR`;
+        } else if (user?.role === rolesList.campus_admin) {
+          campusName = `${user?.esuCampus} CAMPUS ADMIN`;
+        }
+
+        if (
+          campusName?.toUpperCase() === checkIfReturned &&
+          document.status === documentStatusList.returned
+        ) {
+          setCampusUploader(true);
+        }
 
         let deadlinePassed = false;
         // Check if document have deadline
@@ -180,7 +208,6 @@ const Table = ({ documents, handleSort }) => {
         });
 
         const timeDifference = currentTime - new Date(localReceivedAt);
-
         let status = null;
         if (
           !allReceived &&
@@ -188,6 +215,8 @@ const Table = ({ documents, handleSort }) => {
           normalizeString(fullName) !== normalizeString(document.uploaded_by)
         ) {
           status = "Received"; // Prioritize the "Received" status
+        } else if (document.status === documentStatusList.returned) {
+          status = "Returned";
         } else if (!allReceived && deadlinePassed) {
           status = "Delayed";
         } else if (timeDifference > Hours && !allReceived) {
@@ -222,6 +251,27 @@ const Table = ({ documents, handleSort }) => {
 
     updateDocumentStatuses();
   }, [documents, user, officeRecipient, fullName]); // Add proper dependencies
+
+  const handleNavigate = (id) => {
+    const role = user?.role;
+
+    let path;
+
+    if (role === rolesList.faculty) {
+      path = `/faculty-document-details/${id}`;
+    } else if (
+      role === rolesList.campus_admin ||
+      role === rolesList.registrar
+    ) {
+      path = `/esu-campus-document-details/${id}`;
+    } else if (role === rolesList.admin || role === rolesList.admin_staff) {
+      path = `/admin-document-details/${id}`;
+    } else {
+      path = `/office-document-details/${id}`;
+    }
+
+    navigate(path);
+  };
 
   return (
     <>
@@ -336,7 +386,8 @@ const Table = ({ documents, handleSort }) => {
                   index
                 ) => (
                   <tr
-                    onClick={() => navigate(`/document-details/${id}`)}
+                    // onClick={() => navigate(`/document-details/${id}`)}
+                    onClick={() => handleNavigate(id)}
                     key={index}
                     className="bg-white dark:bg-gray-800 hover:bg-gray-200 cursor-pointer"
                   >
@@ -391,7 +442,8 @@ const Table = ({ documents, handleSort }) => {
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          navigate(`/document-details/${id}`);
+                          handleNavigate(id);
+                          // navigate(`/document-details/${id}`);
                         }}
                         className=" p-2 text-lg bg-[#fca326] hover:bg-[#f58e40] text-white rounded-lg"
                       >
@@ -415,6 +467,18 @@ const Table = ({ documents, handleSort }) => {
                       >
                         <IoMdPrint className="h-5 w-5" />
                       </button>
+                      {user?.role === rolesList.faculty ||
+                        (campusUploader && status === "Returned" && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleUpdate(id);
+                            }}
+                            className="p-2 text-lg bg-red-500 hover:bg-red-700 text-white rounded-lg"
+                          >
+                            <FaRegEdit className="h-5 w-5" />
+                          </button>
+                        ))}
                     </td>
                   </tr>
                 )
@@ -440,6 +504,13 @@ const Table = ({ documents, handleSort }) => {
                 contentRef={contentRef}
               />
             </div>
+          )}
+          {selectedDocument && showEditModal && (
+            <UpdateDocumentDetails
+              documentId={selectedDocument}
+              closeEditModal={closeEditModal}
+              modal={showEditModal}
+            />
           )}
         </div>
       )}

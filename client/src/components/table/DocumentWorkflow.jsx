@@ -93,7 +93,7 @@ const DocumentWorkflow = ({ data }) => {
               </tr>
             </thead>
             <tbody>
-              {data.map(({ id, document_type, createdAt }, index) => (
+              {data?.map(({ id, document_type, createdAt }, index) => (
                 <tr
                   onClick={() => handleWorkflow(id)}
                   key={index}

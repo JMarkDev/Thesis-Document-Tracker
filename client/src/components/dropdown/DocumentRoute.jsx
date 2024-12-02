@@ -5,42 +5,60 @@ import {
   fetchAdmin,
   getRoleStatus,
   getRoleUsers,
+  faculty,
+  filterFacultyByCampus,
 } from "../../services/usersSlice";
 import PropTypes from "prop-types";
+import { getUserData } from "../../services/authSlice";
+import rolesList from "../../constants/rolesList";
 
 const DocumentRoute = ({
   route,
   handleSelectOffice,
   campus,
   registrarId,
+  campusAdminId,
   facultyId,
 }) => {
   const dispatch = useDispatch();
+  const user = useSelector(getUserData);
   const officeUsers = useSelector(getRoleUsers("office"));
   const officeStatus = useSelector(getRoleStatus("office"));
+  const facultyUser = useSelector(faculty);
   const adminStatus = useSelector(getRoleStatus("admin"));
-  // const registrarUser = useSelector(getRoleUsers("registrar"));
+  const registrar = useSelector(getRoleUsers("registrar"));
+  const campusAdmin = useSelector(getRoleUsers("campus_admin"));
   const registrarStatus = useSelector(getRoleStatus("registrar"));
   const [selectedRoute, setSelectedRoute] = useState("");
-  // const [officeData, setOfficeData] = useState([]);
-  // // const [officeRoute, setRoute] = useState([]);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [campusData, setCampusData] = useState([]);
 
-  // useEffect(() => {
-  //   let office = officeUsers.map((office) => {
-  //     return { office_name: office.office.officeName, user_id: office.id };
-  //   });
+  useEffect(() => {
+    if (
+      user?.role === rolesList.admin ||
+      user?.role === rolesList.admin_staff
+    ) {
+      setIsAdmin(true);
+    }
 
-  //   let registrar = registrarUser?.map((registrar) => {
-  //     return {
-  //       office_name: `${registrar.esuCampus} REGISTRAR`,
-  //       user_id: registrar.id,
-  //     };
-  //   });
+    if (registrar && campusAdmin) {
+      setCampusData([...registrar, ...campusAdmin]);
+    }
+  }, [user, registrar, campusAdmin]);
 
-  //   // console.log(route);
-  //   // setRoute([...route, ...registrar]);
-  //   setOfficeData([...office, ...registrar]);
-  // }, [officeUsers, registrarUser]);
+  useEffect(() => {
+    if (
+      user?.role === rolesList.campus_admin ||
+      user?.role === rolesList.registrar
+    ) {
+      dispatch(
+        filterFacultyByCampus({
+          esuCampus: user?.esuCampus,
+          role: rolesList.faculty,
+        })
+      );
+    }
+  }, [user, dispatch]);
 
   useEffect(() => {
     if (officeStatus === "idle") {
@@ -62,7 +80,11 @@ const DocumentRoute = ({
 
   const isDisabled = (officeName) => {
     // Disable only if the route contains a specific office and the campus is not matched
-    if (officeName === "FACULTY" || officeName === "REGISTRAR") {
+    if (
+      officeName === "FACULTY" ||
+      officeName === "REGISTRAR" ||
+      officeName === "CAMPUS ADMIN"
+    ) {
       return isOfficeInRoute(`${campus} ${officeName}`);
     }
     return isOfficeInRoute(officeName);
@@ -89,22 +111,50 @@ const DocumentRoute = ({
           registrarId || null
         );
       }
-    } else {
-      const officeUser = officeUsers.find(
-        (office) => office.office.officeName === selectedOffice
+    } else if (selectedOffice === "CAMPUS ADMIN") {
+      if (!isOfficeInRoute("CAMPUS ADMIN")) {
+        handleSelectOffice(
+          campus ? `${campus} CAMPUS ADMIN` : "CAMPUS ADMIN",
+          campusAdminId || null
+        );
+      }
+    } else if (selectedOffice.includes("CAMPUS ADMIN")) {
+      const campusAdminUser = campusAdmin.find(
+        (admin) => admin.esuCampus === selectedOffice.split(" CAMPUS ADMIN")[0]
       );
-      if (officeUser) {
-        handleSelectOffice(officeUser.office.officeName, officeUser.id);
+
+      if (campusAdminUser) {
+        handleSelectOffice(selectedOffice, campusAdminUser.id);
+      }
+    } else if (selectedOffice.includes("REGISTRAR")) {
+      const registrarUser = registrar.find(
+        (registrar) =>
+          registrar.esuCampus === selectedOffice.split(" REGISTRAR")[0]
+      );
+
+      if (registrarUser) {
+        handleSelectOffice(selectedOffice, registrarUser.id);
+      }
+    } else {
+      const selectedFaculty = facultyUser.find((faculty) => {
+        const fullname = `${faculty.firstName} ${faculty.middleInitial}. ${faculty.lastName}`;
+
+        return (
+          fullname === selectedOffice.split(" (FACULTY)")[0] ||
+          fullname === selectedOffice.split(" (FACULTY)")[0].toUpperCase()
+        );
+      });
+      if (selectedFaculty) {
+        handleSelectOffice(selectedOffice.toUpperCase(), selectedFaculty.id);
+      } else {
+        const officeUser = officeUsers.find(
+          (office) => office.office.officeName === selectedOffice
+        );
+        if (officeUser) {
+          handleSelectOffice(officeUser.office.officeName, officeUser.id);
+        }
       }
     }
-
-    // if (selectedOffice) {
-    // officeData?.map((office) => {
-    //   if (office.office_name === selectedOffice) {
-    //     handleSelectOffice(`${office.office_name}`, office.user_id);
-    //   }
-    // });
-    // }
 
     setSelectedRoute(selectedOffice);
   };
@@ -122,12 +172,59 @@ const DocumentRoute = ({
       <option value="DEFAULT" disabled={isOfficeInRoute("DEFAULT")}>
         DEFAULT ROUTE
       </option>
-      <option value="FACULTY" disabled={isDisabled("FACULTY")}>
-        {campus} FACULTY
-      </option>
-      <option value="REGISTRAR" disabled={isDisabled("REGISTRAR")}>
-        {campus} REGISTRAR
-      </option>
+      {isAdmin ? (
+        campusData?.map(({ id, role, esuCampus }) => (
+          <option
+            key={id}
+            value={`${esuCampus} ${
+              role === rolesList.campus_admin ? "CAMPUS ADMIN" : "REGISTRAR"
+            }`}
+            // onClick={() => handleCampusAdmin(id)}
+            disabled={isOfficeInRoute(
+              `${esuCampus.toUpperCase()} ${
+                role === rolesList.campus_admin ? "CAMPUS ADMIN" : "REGISTRAR"
+              }`
+            )}
+          >
+            {esuCampus}{" "}
+            {role === rolesList.campus_admin ? "CAMPUS ADMIN" : "REGISTRAR"}
+          </option>
+        ))
+      ) : user?.role === rolesList.campus_admin ||
+        user?.role === rolesList.registrar ? (
+        <>
+          {facultyUser?.map(({ id, firstName, lastName, middleInitial }) => (
+            <option
+              key={id}
+              value={`${firstName} ${middleInitial}. ${lastName} (FACULTY)`}
+              disabled={isDisabled(
+                `${firstName} ${middleInitial}. ${lastName} (FACULTY)`.toUpperCase()
+              )}
+            >
+              {`${firstName} ${middleInitial}. ${lastName} (FACULTY)`}
+            </option>
+          ))}
+          <option value="CAMPUS ADMIN" disabled={isDisabled("CAMPUS ADMIN")}>
+            {campus} CAMPUS ADMIN
+          </option>
+          <option value="REGISTRAR" disabled={isDisabled("REGISTRAR")}>
+            {campus} REGISTRAR
+          </option>
+        </>
+      ) : (
+        <>
+          <option value="FACULTY" disabled={isDisabled("FACULTY")}>
+            {campus} FACULTY
+          </option>
+          <option value="CAMPUS ADMIN" disabled={isDisabled("CAMPUS ADMIN")}>
+            {campus} CAMPUS ADMIN
+          </option>
+          <option value="REGISTRAR" disabled={isDisabled("REGISTRAR")}>
+            {campus} REGISTRAR
+          </option>
+        </>
+      )}
+
       {officeUsers?.map((office) => (
         <option
           key={office.id}
@@ -137,15 +234,6 @@ const DocumentRoute = ({
           {office.office.officeName}
         </option>
       ))}
-      {/* {officeData?.map((office) => (
-        <option
-          key={office.user_id}
-          value={office.office_name}
-          disabled={isOfficeInRoute(office.office_name)}
-        >
-          {office.office_name}
-        </option>
-      ))} */}
     </select>
   );
 };
@@ -156,6 +244,7 @@ DocumentRoute.propTypes = {
   campus: PropTypes.string,
   registrarId: PropTypes.number,
   facultyId: PropTypes.number,
+  campusAdminId: PropTypes.number,
 };
 
 export default DocumentRoute;

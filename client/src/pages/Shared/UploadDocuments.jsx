@@ -27,6 +27,7 @@ const UploadDocuments = () => {
   const navigate = useNavigate();
   // const registrar = useSelector(getRoleUsers("registrar"));
   const campusAdmin = useSelector(getRoleUsers("campus_admin"));
+  const registrar = useSelector(getRoleUsers("registrar"));
   const documentType = useSelector(getAllWorkflow);
   const user = useSelector(getUserData);
   const [trackingNumber, setTrackingNumber] = useState("");
@@ -46,7 +47,11 @@ const UploadDocuments = () => {
   const [route, setRoute] = useState([]);
   const [defaultRoute, setDefaultRoute] = useState([]);
   const [deadline, setDeadline] = useState(null);
-  // const [campus, setCampus] = useState("");
+
+  const [trackingNumberError, setTrackingNumberError] = useState("");
+  const [documentNameError, setDocumentNameError] = useState("");
+  const [documentTypeError, setDocumentTypeError] = useState("");
+  const [fileTypeError, setFileTypeError] = useState("");
 
   const handleDeleteFile = (fileName) => {
     setSelectedFiles((prevFiles) =>
@@ -67,12 +72,12 @@ const UploadDocuments = () => {
 
     setCampusAdminId(getCampusAdmin?.id);
     // }
-  }, [user, campusAdmin]);
 
-  const [trackingNumberError, setTrackingNumberError] = useState("");
-  const [documentNameError, setDocumentNameError] = useState("");
-  const [documentTypeError, setDocumentTypeError] = useState("");
-  const [fileTypeError, setFileTypeError] = useState("");
+    const getRegistrar = registrar?.find((registrar) => {
+      return registrar.esuCampus === user?.esuCampus;
+    });
+    setRegistrarId(getRegistrar?.id);
+  }, [user, campusAdmin, registrar]);
 
   useEffect(() => {
     dispatch(fetchAllWorkflow());
@@ -88,23 +93,21 @@ const UploadDocuments = () => {
     }
   }, [user, dispatch]);
 
-  useEffect(() => {
-    if (user?.esuCampus) {
-      const getRegistrar = async () => {
-        try {
-          const response = await api.get(
-            `/office/esu-registrar/${user?.esuCampus}`
-          );
-          if (response.data) {
-            setRegistrarId(response.data.id);
-          }
-        } catch (error) {
-          console.log(error);
-        }
-      };
-      getRegistrar();
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   const getRegistrar = async () => {
+  //     try {
+  //       const response = await api.get(
+  //         `/office/esu-registrar/${user?.esuCampus}`
+  //       );
+  //       if (response.data) {
+  //         setRegistrarId(response.data.id);
+  //       }
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   getRegistrar();
+  // }, [user]);
 
   const generageTrackingNumber = () => {
     setLoading(true);
@@ -198,28 +201,9 @@ const UploadDocuments = () => {
                   user_id: campusAdminId, // Assign registrarId for REGISTRAR
                 };
               }
-              // else if (
-              //   user?.role !== rolesList.faculty ||
-              //   user?.role !== rolesList.registrar ||
-              //   user?.role !== rolesList.campus_admin
-              // ) {
-              //   campusAdminId?.map((campus) => {
-              //     console.log(campus.esuCampus);
-              //     return {
-              //       ...routeItem,
-              //       office_name: esuCampus
-              //         ? `${esuCampus} CAMPUS ADMIN`
-              //         : "CAMPUS ADMIN",
-              //       user_id: campus.id,
-              //     };
-              //   });
-              // }
-
               return routeItem;
             })
           : [];
-
-        // console.log(updatedRoute);
 
         setRoute(updatedRoute);
         setDefaultRoute(updatedRoute);

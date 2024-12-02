@@ -34,6 +34,7 @@ const AddAdminStaff = ({ modal, closeModal, officeId }) => {
 
   const onVerificationSuccess = () => {
     dispatch(fetchAdmin());
+    dispatch(fetchAdminStaff());
   };
 
   const onSubmit = async (data) => {

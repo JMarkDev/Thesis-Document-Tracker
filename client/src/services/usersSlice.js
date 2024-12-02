@@ -97,10 +97,10 @@ const searchOfficeUsers = () => {
 
 export const searchFaculty = createAsyncThunk(
   `users/searchFaculty`,
-  async ({ name, esuCampus }, { rejectWithValue }) => {
+  async ({ name, role, esuCampus }, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `/users/search-faculty/${name}/role/${rolesList.faculty}/${esuCampus}`
+        `/users/search-faculty/${name}/role/${role}/esuCampus/${esuCampus}`
       );
       return response.data;
     } catch (error) {
@@ -117,8 +117,10 @@ export const searchFacultyRole = searchRoleUsers(rolesList.faculty);
 
 export const filterFacultyByCampus = createAsyncThunk(
   "users/filter-faculty",
-  async (esuCampus) => {
-    const response = await axios.get(`/users/filter-faculty/${esuCampus}`);
+  async ({ esuCampus, role }) => {
+    const response = await axios.get(
+      `/users/filter-faculty/${esuCampus}/role/${role}`
+    );
     return response.data;
   }
 );
@@ -156,6 +158,18 @@ const usersSlice = createSlice({
   reducers: {
     clearUser(state) {
       state.userByid = null;
+      state.error = null;
+      state.facultyByESU = [];
+      state.admin = [];
+      state.admin_staff = [];
+      state.office = [];
+      state.registrar = [];
+      state.campus_admin = [];
+      state.faculty = [];
+      state.status.users = "idle";
+      state.status.fetchById = "idle";
+      state.status.search = "idle";
+      state.status.filter = "idle";
     },
   },
   extraReducers(builders) {

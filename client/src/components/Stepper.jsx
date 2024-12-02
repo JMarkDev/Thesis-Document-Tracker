@@ -3,12 +3,11 @@ import { useFormat } from "../hooks/useFormatDate";
 
 const Stepper = ({ data }) => {
   const { dateFormat } = useFormat();
-  //first:bg-border-0 first:after:border-white last:bg-red-400
 
   return (
-    <div>
-      <ol className="flex  relative items-center h-40 w-full">
-        {data?.map(({ office_name, received_at }, index) => (
+    <div className="overflow-x-auto py-4">
+      <ol className="flex  relative items-center h-48  w-[1050px] ">
+        {data?.map(({ office_name, received_at, returned_at }, index) => (
           <li
             key={index}
             className={`${
@@ -23,11 +22,20 @@ const Stepper = ({ data }) => {
                   index % 2 === 0 ? "lg:top-0" : "bottom-0"
                 } `}
               >
-                <p className="font-bold text-[12px] max-w-40">{office_name}</p>
-                <p className="text-sm md:text-[14px]">
-                  {/* {history.office === "Faculty" ? "Uploaded: " : "Received: "} */}
-                  {dateFormat(received_at)}
-                </p>
+                <p className="font-bold text-[12px] max-w-44">{office_name}</p>
+                {received_at && (
+                  <p className="text-sm md:text-[14px]">
+                    {/* {history.office === "Faculty" ? "Uploaded: " : "Received: "} */}
+                    Received: {dateFormat(received_at)}
+                  </p>
+                )}
+
+                {returned_at && (
+                  <p className="text-sm md:text-[14px] text-red-500 ">
+                    Return: {dateFormat(returned_at)}
+                    {/* Return: Oct 20, 2024, 7:33 AM */}
+                  </p>
+                )}
               </div>
 
               {index === data.length - 1 ? (
@@ -39,7 +47,7 @@ const Stepper = ({ data }) => {
                   {received_at && (
                     <>
                       <svg
-                        className="w-4 h-4 text-blue-600 lg:w-5 lg:h-5 dark:text-gray-100"
+                        className="w-4 h-4 text-blue-600 lg:w-8 lg:h-8 dark:text-gray-100"
                         aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="currentColor"
@@ -48,6 +56,24 @@ const Stepper = ({ data }) => {
                         <path d="M16 1h-3.278A1.992 1.992 0 0 0 11 0H7a1.993 1.993 0 0 0-1.722 1H2a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2ZM7 2h4v3H7V2Zm5.7 8.289-3.975 3.857a1 1 0 0 1-1.393 0L5.3 12.182a1.002 1.002 0 1 1 1.4-1.436l1.328 1.289 3.28-3.181a1 1 0 1 1 1.392 1.435Z" />
                       </svg>
                     </>
+                  )}
+
+                  {returned_at && (
+                    <svg
+                      className="w-3.5 h-3.5 text-red-600 lg:w-8 lg:h-8 dark:text-gray-300"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M5 12h14M5 12l4-4m-4 4 4 4"
+                      />
+                    </svg>
                   )}
                 </span>
               ) : (
@@ -59,7 +85,7 @@ const Stepper = ({ data }) => {
                   {received_at && (
                     <>
                       <svg
-                        className="w-3.5 h-3.5 text-blue-600 lg:w-4 lg:h-4 dark:text-blue-300"
+                        className="w-3.5 h-3.5  text-blue-600 lg:w-5 lg:h-5 dark:text-blue-300"
                         aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -74,6 +100,24 @@ const Stepper = ({ data }) => {
                         />
                       </svg>
                     </>
+                  )}
+
+                  {returned_at && (
+                    <svg
+                      className="w-3.5 h-3.5 text-red-600 lg:w-8 lg:h-8 dark:text-gray-300"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M5 12h14M5 12l4-4m-4 4 4 4"
+                      />
+                    </svg>
                   )}
                 </span>
               )}
