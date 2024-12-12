@@ -33,6 +33,7 @@ const uploadDocument = async (req, res) => {
     document_desc,
     file_type,
     uploaded_by,
+    designation,
     contact_number,
     esuCampus,
     user_id,
@@ -102,11 +103,7 @@ const uploadDocument = async (req, res) => {
         recipient = user.office.officeName;
       } else if (user.esuCampus && user.role === rolesList.faculty) {
         recipient = `${user.esuCampus} FACULTY`;
-      } else if (
-        user.esuCampus &&
-        user.role === rolesList.registrar
-        // || user.role === rolesList.campus_admin
-      ) {
+      } else if (user.esuCampus && user.role === rolesList.registrar) {
         recipient = `${esuCampus} REGISTRAR`;
       } else if (user.esuCampus && user.role === rolesList.campus_admin) {
         recipient = `${esuCampus} CAMPUS ADMIN`;
@@ -145,6 +142,7 @@ const uploadDocument = async (req, res) => {
       file_type,
       files: uploadedFileUrls || null,
       uploaded_by,
+      designation,
       contact_number,
       esuCampus: esuCampus || null,
       status: documentStatus.incoming,

@@ -13,7 +13,6 @@ cloudinary.config({
 const uploadFilesController = async (req, res) => {
   try {
     const files = req.files;
-    console.log(req.files);
 
     if (!files || files.length === 0) {
       return res

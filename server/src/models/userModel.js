@@ -58,6 +58,10 @@ const User = sequelize.define(
       type: DataTypes.TINYINT(1),
       allowNull: false,
     },
+    employmentStatus: {
+      type: DataTypes.STRING(55),
+      allowNull: true,
+    },
     createdAt: {
       type: DataTypes.DATE,
       allowNull: false,
