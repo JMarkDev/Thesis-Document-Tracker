@@ -11,6 +11,7 @@ import {
 import PropTypes from "prop-types";
 import { getUserData } from "../../services/authSlice";
 import rolesList from "../../constants/rolesList";
+import { fetchProgramHead, getProgramHead } from "../../services/programSlice";
 
 const DocumentRoute = ({
   route,
@@ -32,6 +33,7 @@ const DocumentRoute = ({
   const [selectedRoute, setSelectedRoute] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
   const [campusData, setCampusData] = useState([]);
+  const programHead = useSelector(getProgramHead);
 
   useEffect(() => {
     if (
@@ -44,7 +46,9 @@ const DocumentRoute = ({
     if (registrar && campusAdmin) {
       setCampusData([...registrar, ...campusAdmin]);
     }
-  }, [user, registrar, campusAdmin]);
+
+    dispatch(fetchProgramHead(user?.esuCampus));
+  }, [user, registrar, campusAdmin, dispatch]);
 
   useEffect(() => {
     if (
@@ -154,6 +158,15 @@ const DocumentRoute = ({
           handleSelectOffice(officeUser.office.officeName, officeUser.id);
         }
       }
+
+      const programHeadUser = programHead?.find((program) => {
+        const fullname = `${program.firstName} ${program.middleInitial}. ${program.lastName} (${program.designation})`;
+        return fullname === selectedOffice; // Ensure the condition is returned
+      });
+
+      if (programHeadUser) {
+        handleSelectOffice(selectedOffice, programHeadUser.id);
+      }
     }
 
     setSelectedRoute(selectedOffice);
@@ -216,6 +229,18 @@ const DocumentRoute = ({
           <option value="FACULTY" disabled={isDisabled("FACULTY")}>
             {campus} FACULTY
           </option>
+          {programHead?.map((program) => (
+            <option
+              key={program.id}
+              // value={`${program.firstName} ${program.middleInitial}. ${program.lastName} (FACULTY)`}
+              value={`${program.firstName} ${program.middleInitial}. ${program.lastName} (${program.designation})`}
+              disabled={isDisabled(
+                `${program.firstName} ${program.middleInitial}. ${program.lastName} (${program.designation})`
+              )}
+            >
+              {`${program.firstName} ${program.middleInitial}. ${program.lastName} (${program.designation})`}
+            </option>
+          ))}
           <option value="CAMPUS ADMIN" disabled={isDisabled("CAMPUS ADMIN")}>
             {campus} CAMPUS ADMIN
           </option>
