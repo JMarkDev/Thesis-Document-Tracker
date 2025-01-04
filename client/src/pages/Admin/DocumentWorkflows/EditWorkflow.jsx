@@ -82,6 +82,7 @@ const EditWorkflow = ({ modal, closeModal, id }) => {
 
       setRoute([
         { office_name: "FACULTY", user_id: null },
+        { office_name: "PROGRAM HEAD", user_id: null },
         { office_name: "REGISTRAR", user_id: null },
         { office_name: "CAMPUS ADMIN", user_id: null },
         ...allOffices,
@@ -243,6 +244,25 @@ const EditWorkflow = ({ modal, closeModal, id }) => {
                           disabled={isOfficeInRoute("FACULTY")}
                         >
                           FACULTY
+                        </a>
+                      </li>
+                      <li>
+                        <a
+                          href="#"
+                          className={`block px-4 py-2  ${
+                            isOfficeInRoute("PROGRAM HEAD")
+                              ? "text-gray-400 cursor-not-allowed"
+                              : "hover:bg-gray-300"
+                          }`}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            if (!isOfficeInRoute("PROGRAM HEAD")) {
+                              handleSelectOffice("PROGRAM HEAD", null);
+                            }
+                          }}
+                          disabled={isOfficeInRoute("PROGRAM HEAD")}
+                        >
+                          PROGRAM HEAD
                         </a>
                       </li>
                       <li>
