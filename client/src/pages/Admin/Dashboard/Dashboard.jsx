@@ -20,6 +20,7 @@ import {
 } from "../../../services/documentSlice";
 // import StatusPieChart from "../../../components/charts/StatusPieChart";
 import LineChartDocumentSubmissions from "../../../components/charts/LineChartDocumentSubmissions";
+import ChartByDesignation from "../../../components/charts/ChartByDesignation";
 
 const Dashboard = () => {
   const dispatch = useDispatch();
@@ -218,6 +219,12 @@ const Dashboard = () => {
           Document Submissions Charts
         </h2>
         <LineChartDocumentSubmissions data={documents} />
+      </div>
+      <div className="mt-10">
+        <h2 className="font-bold p-4 bg-gray-300">
+          Submitted Documents by Designation
+        </h2>
+        <ChartByDesignation data={documents} />
       </div>
     </div>
   );
