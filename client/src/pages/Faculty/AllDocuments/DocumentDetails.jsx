@@ -9,9 +9,9 @@ import {
   fetchDocumentById,
   reset,
 } from "../../../services/documentSlice";
-// import { getDocumentStatus } from "../../utils/documentStatus";
+import { getDocumentStatus } from "../../../utils/documentStatus";
 import { useFormat } from "../../../hooks/useFormatDate";
-// import { documentBackground } from "../../utils/documentBackgroundColor";
+import { documentBackground } from "../../../utils/documentBackgroundColor";
 import NoData from "../../../components/NoData";
 import { getUserData } from "../../../services/authSlice";
 import rolesList from "../../../constants/rolesList";
@@ -54,6 +54,7 @@ const DocumentDetails = () => {
   const normalizeString = (str) => str?.trim().replace(/\./g, "").toLowerCase();
   const [files, setFiles] = useState([]);
   const [delayThreshold, setDelayThreshold] = useState(0);
+  const [isView, setIsView] = useState(false);
   const [isReceived, setIsReceived] = useState(false);
   const [isForwarded, setIsForwarded] = useState(false);
   const [isRecipient, setIsRecipient] = useState(false);
@@ -70,10 +71,22 @@ const DocumentDetails = () => {
   const [modal, setModal] = useState(false);
   const [trackingNumber, setTrackingNumber] = useState("");
   const [loading, setLoading] = useState(false);
+  const [comment, setComment] = useState("");
+  const [programHeadOffice, setProgramHeadOffice] = useState("");
 
   useEffect(() => {
-    setRecipientOffice(`${user?.esuCampus.toUpperCase()} FACULTY`);
+    if (user?.designation.includes("Program Head")) {
+      setProgramHeadOffice(
+        `${user?.firstName} ${user?.middleInitial}. ${user?.lastName} (${user?.designation})`
+      );
+      setRecipientOffice(
+        `${user?.firstName} ${user?.middleInitial}. ${user?.lastName} (${user?.designation})`
+      );
+    } else {
+      setRecipientOffice(`${user?.esuCampus.toUpperCase()} FACULTY`);
+    }
   }, [user]);
+  console.log(programHeadOffice);
 
   useEffect(() => {
     if (document) {
@@ -141,79 +154,79 @@ const DocumentDetails = () => {
     }
   }, [user]);
 
-  // useEffect(() => {
-  //   if (!document || !document.document_recipients) return;
+  useEffect(() => {
+    if (!document || !document.document_recipients) return;
 
-  //   const currentTime = new Date();
+    const currentTime = new Date();
 
-  //   // 24 hours in milliseconds
-  //   // const Hours = 86400000;
-  //   const Hours = 1000 * 60 * 60 * (delayThreshold * 24);
+    // 24 hours in milliseconds
+    // const Hours = 86400000;
+    const Hours = 1000 * 60 * 60 * (delayThreshold * 24);
 
-  //   // Check if all recipients have received the document
-  //   const allReceived = document?.document_recipients.every(
-  //     (recipient) => recipient.received_at !== null
-  //   );
+    // Check if all recipients have received the document
+    const allReceived = document?.document_recipients.every(
+      (recipient) => recipient.received_at !== null
+    );
 
-  //   let deadlinePassed = false;
-  //   // Check if document have deadline
-  //   const hasDeadline = document?.deadline;
-  //   if (hasDeadline) {
-  //     const deadline = new Date(
-  //       hasDeadline?.toLocaleString("en-US", { timeZone: "UTC" })
-  //     );
+    let deadlinePassed = false;
+    // Check if document have deadline
+    const hasDeadline = document?.deadline;
+    if (hasDeadline) {
+      const deadline = new Date(
+        hasDeadline?.toLocaleString("en-US", { timeZone: "UTC" })
+      );
 
-  //     if (currentTime > deadline) {
-  //       deadlinePassed = true;
-  //     }
-  //   }
+      if (currentTime > deadline) {
+        deadlinePassed = true;
+      }
+    }
 
-  //   // Find the current office and check if it has received the document
-  //   const officeReceived = document?.document_recipients.find(
-  //     (recipient) =>
-  //       recipient.office_name === officeRecipient &&
-  //       recipient.received_at !== null
-  //   );
+    // Find the current office and check if it has received the document
+    const officeReceived = document?.document_recipients.find(
+      (recipient) =>
+        recipient.office_name === officeRecipient &&
+        recipient.received_at !== null
+    );
 
-  //   const lastReveived = document?.document_recipients
-  //     .filter((recipient) => recipient.received_at !== null)
-  //     .sort((a, b) => new Date(b.received_at) - new Date(a.received_at))[0];
+    const lastReveived = document?.document_recipients
+      .filter((recipient) => recipient.received_at !== null)
+      .sort((a, b) => new Date(b.received_at) - new Date(a.received_at))[0];
 
-  //   const receivedAt = new Date(lastReveived?.received_at);
-  //   const localReceivedAt = receivedAt.toLocaleString("en-US", {
-  //     timeZone: "UTC",
-  //   });
+    const receivedAt = new Date(lastReveived?.received_at);
+    const localReceivedAt = receivedAt.toLocaleString("en-US", {
+      timeZone: "UTC",
+    });
 
-  //   const timeDifference = currentTime - new Date(localReceivedAt);
+    const timeDifference = currentTime - new Date(localReceivedAt);
 
-  //   let status = null;
+    let status = null;
 
-  //   // First, check if the office has received and the uploaded_by matches the user
-  //   if (
-  //     !allReceived &&
-  //     officeReceived &&
-  //     normalizeString(fullName) !== normalizeString(documentData.uploaded_by)
-  //   ) {
-  //     status = "Received"; // Prioritize the "Received" status
-  //   } else if (document.status === documentStatusList.returned) {
-  //     status = "Returned";
-  //   } else if (!allReceived && deadlinePassed) {
-  //     status = "Delayed";
-  //   } else if (timeDifference > Hours && !allReceived) {
-  //     status = "Delayed";
-  //   } else if (allReceived) {
-  //     status = "Completed";
-  //   } else if (
-  //     // !allReceived &&
-  //     normalizeString(fullName) === normalizeString(documentData.uploaded_by)
-  //   ) {
-  //     status = "In Progress";
-  //   } else {
-  //     status = "Incoming";
-  //   }
+    // First, check if the office has received and the uploaded_by matches the user
+    if (
+      !allReceived &&
+      officeReceived &&
+      normalizeString(fullName) !== normalizeString(documentData.uploaded_by)
+    ) {
+      status = "Received"; // Prioritize the "Received" status
+    } else if (document.status === documentStatusList.returned) {
+      status = "Returned";
+    } else if (!allReceived && deadlinePassed) {
+      status = "Delayed";
+    } else if (timeDifference > Hours && !allReceived) {
+      status = "Delayed";
+    } else if (allReceived) {
+      status = "Completed";
+    } else if (
+      // !allReceived &&
+      normalizeString(fullName) === normalizeString(documentData.uploaded_by)
+    ) {
+      status = "In Progress";
+    } else {
+      status = "Incoming";
+    }
 
-  //   setStatus(status);
-  // }, [document, user, officeRecipient, documentData, fullName, delayThreshold]);
+    setStatus(status);
+  }, [document, user, officeRecipient, documentData, fullName, delayThreshold]);
 
   useEffect(() => {
     if (document) {
@@ -273,6 +286,10 @@ const DocumentDetails = () => {
         recipient.office_name === fullName.toUpperCase()
       );
     });
+
+    if (checkRecipient?.view_at || documentData?.file_type === "Hard Copy") {
+      setIsView(true);
+    }
 
     if (checkRecipient?.received_at) {
       setIsReceived(true);
@@ -349,7 +366,7 @@ const DocumentDetails = () => {
     } else {
       setNextRoute(null); // No more routes
     }
-  }, [user, recipientOffice, documentData, officeId]);
+  }, [user, recipientOffice, documentData, officeId, isView]);
 
   const handleReceive = async (act) => {
     setAction(act);
@@ -364,6 +381,7 @@ const DocumentDetails = () => {
       document_name: documentData.document_name,
       next_route: nextRoute,
       faculty_received: act === "forwarded" ? "forwarded" : null,
+      comments: comment,
     };
 
     try {
@@ -385,6 +403,31 @@ const DocumentDetails = () => {
       setLoading(false);
     }
   };
+
+  const handleView = async () => {
+    setLoading(true);
+    const data = {
+      document_id: documentData.id,
+      user_id: user.id,
+    };
+
+    try {
+      const response = await api.put("/document/update/view-at", data);
+
+      if (response.data.status === "success") {
+        setLoading(false);
+        toast.success("Document viewed successfully");
+        window.open(files[0]);
+        dispatch(fetchDocumentById(id)); // Fetch new data
+        socket.emit("received_document", data);
+      }
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
+  };
+
+  // const handleViewed =
 
   return (
     <div className="bg-white ">
@@ -415,9 +458,9 @@ const DocumentDetails = () => {
           {/* Document Details Section */}
           <div className=" md:bg-gray-100 mt-10 md:p-4 rounded-lg flex flex-col lg:flex-row gap-5 justify-between text-gray-700">
             <div className="lg:sticky  lg:top-20 flex flex-col gap-4 h-fit lg:w-1/2  p-4 bg-white text-sm   shadow-lg rounded-md">
-              {/* <div className=" rounded-full absolute z-50 left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
+              <div className=" rounded-full absolute z-50 left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2">
                 {loading && <TrackLoader />}
-              </div> */}
+              </div>
               <div className=" flex items-center gap-5 border-b pb-2 fix">
                 <h1 className="font-bold text-gray-800">Tracking Code:</h1>
                 <p className="text-gray-700">{documentData.tracking_number}</p>
@@ -499,68 +542,119 @@ const DocumentDetails = () => {
                     </p>
                   </div>
                 )}
-              {/* <div className="flex items-center gap-5">
+              <div className="flex items-center gap-5">
                 <h1 className="font-bold  text-gray-800">Status:</h1>
                 <span
-                  className={`px-4 py-1 rounded-full text-sm ${
+                  className={` py-1 px-2 rounded-lg bg-gray-100 text-sm ${
                     status === "Completed"
-                      ? "bg-green-500 text-white"
+                      ? "text-green-500 font-bold"
                       : status === "Received"
-                      ? "bg-blue-500 text-white"
+                      ? "text-blue-500 font-bold"
                       : status === "In Progress"
-                      ? "bg-[#f0d352] text-black"
+                      ? "text-[#f0d352] font-bold"
                       : status === "Delayed"
-                      ? "bg-red-700 text-white"
-                      : "bg-gray-300 text-black" // Default case if no status matches
+                      ? "text-red-700 font-bold"
+                      : " text-black font-bold" // Default case if no status matches
                   }`}
                 >
                   {status}
                 </span>
-              </div> */}
-              <div className="flex z-50 gap-5 items-center">
-                {/* <h1 className="font-bold  text-gray-800">Action:</h1> */}
-                <ReceiveDocs trackingNumber={documentData.tracking_number} />
-
-                {/* <div className="flex justify-end items-center ">
-                  {isForwarded ? (
-                    <p className="text-gray-600">
-                      Document has already been forwarded.
-                    </p>
-                  ) : lastRecipient ? (
-                    <p className="text-gray-600">
-                      Document has already been received.
-                    </p>
-                  ) : (
-                    <div className="flex gap-3">
-                      {returnStatus && !alreadyReturn ? (
-                        <button
-                          className="px-6 py-2 text-white bg-red-600 hover:bg-red-800 rounded-md shadow-md transition"
-                          onClick={() => handleReceive("returned")}
-                        >
-                          Receive
-                        </button>
-                      ) : (
-                        isRecipient && (
-                          <button
-                            className="px-6 py-2 text-white bg-green-600 hover:bg-green-800 rounded-md shadow-md transition"
-                            onClick={() =>
-                              handleReceive(
-                                isReceived || alreadyReturn
-                                  ? "forwarded"
-                                  : "received"
-                              )
-                            }
-                          >
-                            {isReceived || alreadyReturn
-                              ? "Forward"
-                              : "Receive"}
-                          </button>
-                        )
-                      )}
-                    </div>
-                  )}
-                </div> */}
               </div>
+              <div className="flex gap-3 items-center">
+                <div className="flex space-x-4">
+                  {documentData.file_type === "Soft Copy" && (
+                    <button
+                      // disabled={isView ? true : false}
+                      //     ${isView ? "cursor-not-allowed" : "cursor-pointer"}
+                      onClick={() => handleView()}
+                      className={`
+                     
+                        px-6 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 active:bg-green-800 rounded-lg shadow-lg focus:outline-none focus:ring focus:ring-green-300 transition-all`}
+                    >
+                      View
+                    </button>
+                  )}
+
+                  {user?.designation?.includes("Program Head") && (
+                    <button
+                      onClick={() => handleReceive("returned")}
+                      disabled={isReturn || !isReceived || isForwarded}
+                      className={` ${
+                        isReturn || !isReceived || isForwarded
+                          ? "cursor-not-allowed bg-red-300"
+                          : "cursor-pointer bg-red-600 hover:bg-red-700 active:bg-red-800"
+                      } px-6 py-2 text-sm font-medium text-white  rounded-lg shadow-lg focus:outline-none focus:ring focus:ring-yellow-300 transition-all`}
+                    >
+                      Return
+                    </button>
+                  )}
+
+                  <button
+                    onClick={() => handleReceive("received")}
+                    disabled={isReceived || !isView}
+                    className={`
+                       ${
+                         isReceived || !isView
+                           ? "cursor-not-allowed bg-blue-300"
+                           : "cursor-pointer bg-blue-600 hover:bg-blue-700 active:bg-blue-800"
+                       }
+                     px-6 py-2 text-sm font-medium text-white  rounded-lg shadow-lg focus:outline-none focus:ring focus:ring-blue-300 transition-all`}
+                  >
+                    Receive
+                  </button>
+
+                  {/* <button className="px-6 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 active:bg-red-800 rounded-lg shadow-lg focus:outline-none focus:ring focus:ring-yellow-300 transition-all">
+                    Return
+                  </button> */}
+                  <button
+                    onClick={() => handleReceive("forwarded")}
+                    disabled={!isReceived || isForwarded || !isView} // Disable if not received or already forwarded
+                    className={`${
+                      !isReceived || isForwarded || !isView
+                        ? "cursor-not-allowed bg-[#f0d352]"
+                        : "cursor-pointer bg-yellow hover:bg-yellow_hover active:bg-yellow-800"
+                    } px-6 py-2 text-sm font-medium text-white  rounded-lg shadow-lg focus:outline-none focus:ring focus:ring-purple-300 transition-all`}
+                  >
+                    Forward
+                  </button>
+                </div>
+              </div>
+
+              {/* {isReceived ||
+                (alreadyReturn && (
+                  <div className="w-full">
+                    <label>
+                      <strong className="text-gray-800">
+                        Comments:(Optional)
+                      </strong>
+                    </label>
+                    <textarea
+                      name=""
+                      rows={4}
+                      id=""
+                      placeholder="Enter your comments here..."
+                      // onChange={(e) => handleComment(e.target.value)}
+                      className="w-full border-gray-400 rounded-lg focus:ring-1 focus:ring-green-600 focus:border-transparent"
+                    />
+                  </div>
+                ))} */}
+              {isReceived && !isForwarded && !isReturn && (
+                <div className="w-full">
+                  <label>
+                    <strong className="text-gray-800">
+                      Comments:(Optional)
+                    </strong>
+                  </label>
+                  <textarea
+                    name=""
+                    rows={4}
+                    id=""
+                    placeholder="Enter your comments here..."
+                    onChange={(e) => setComment(e.target.value)}
+                    className="w-full border-gray-400 rounded-lg focus:ring-1 focus:ring-green-600 focus:border-transparent"
+                  />
+                </div>
+              )}
             </div>
 
             <div className="lg:w-1/2 w-full p-4 bg-white shadow-md rounded-md">
