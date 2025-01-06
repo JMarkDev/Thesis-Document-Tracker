@@ -36,7 +36,7 @@ const Documents = () => {
   const [currentPage, setCurrentPage] = useState(1);
   // const [updatedDocumentList, setUpdatedDocumentList] = useState([]);
 
-  const documentsPerPage = 5;
+  const documentsPerPage = 10;
 
   useEffect(() => {
     if (status === "idle") {

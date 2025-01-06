@@ -410,7 +410,7 @@ const EditAdminStaff = ({ modal, closeModal, id, handleFetchUpdate }) => {
                         <option value="Dean">Dean</option>
                         <option value="Associate Dean">Associate Dean</option>
                         <option value="Office Staff">Office Staff</option>
-                        <option value="Admin Staff">Admin Staff</option>
+                        {/* <option value="Admin Staff">Admin Staff</option> */}
                       </select>
                       <label
                         htmlFor="designation"

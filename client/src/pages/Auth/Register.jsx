@@ -14,6 +14,7 @@ import {
   getAllEsuCampuses,
   fetchEsuCampuses,
 } from "../../services/campusSlice";
+import { getAllPrograms, fetchPrograms } from "../../services/programSlice";
 import { useSelector, useDispatch } from "react-redux";
 
 const Register = ({ modal, closeModal, openLogin }) => {
@@ -29,7 +30,8 @@ const Register = ({ modal, closeModal, openLogin }) => {
   const { campusList, status: campusStatus } = useSelector(
     (state) => state.campus
   );
-
+  const programs = useSelector(getAllPrograms);
+  console.log(programs);
   // Error state for backend validation messages
   const [firstnameError, setFirstnameError] = useState("");
   const [lastnameError, setLastnameError] = useState("");
@@ -44,6 +46,7 @@ const Register = ({ modal, closeModal, openLogin }) => {
 
   useEffect(() => {
     dispatch(fetchEsuCampuses());
+    dispatch(fetchPrograms());
   }, [dispatch]);
 
   // // Watch the select field to handle changes dynamically
@@ -71,21 +74,23 @@ const Register = ({ modal, closeModal, openLogin }) => {
 
   const onSubmit = async (data) => {
     setEmail(data.email);
-
-    // data.role = rolesList.faculty;
     if (
       data.designation === "Campus Admin" ||
       data.designation === "Campus Administrator"
     ) {
       data.role = rolesList.campus_admin;
-    } else if (data.designation === "Campus Registrar") {
+    } else if (
+      data.designation === "Campus Registrar" ||
+      data.designation === "Campus IT" ||
+      data.designation === "Registrar Aide"
+    ) {
       data.role = rolesList.registrar;
     } else {
       data.role = rolesList.faculty;
     }
 
     data.designation = customDesignation
-      ? `Program Head ${customDesignation}`
+      ? `Program Head (${customDesignation})`
       : data.designation;
     setLoading(true);
 
@@ -109,6 +114,7 @@ const Register = ({ modal, closeModal, openLogin }) => {
       formData.append("birthDate", data.birthDate);
       formData.append("contactNumber", data.contactNumber);
       formData.append("designation", data.designation);
+      formData.append("employmentStatus", data.employmentStatus);
       formData.append("esuCampus", data.esuCampus);
       formData.append("role", data.role);
       formData.append("password", data.password);
@@ -426,16 +432,6 @@ const Register = ({ modal, closeModal, openLogin }) => {
                             {name}
                           </option>
                         ))}
-
-                        {/* <option value="Visiting Lecturer">
-                          Visiting Lecturer
-                        </option>
-                        <option value="Regular Faculty">Regular Faculty</option>
-                        <option value="Program Head">Program Head</option>
-                        <option value="Campus Admin">Campus Admin</option>
-                        <option value="Campus Registrar">
-                          Campus Registrar
-                        </option> */}
                       </select>
                       <label
                         htmlFor="designation"
@@ -447,7 +443,7 @@ const Register = ({ modal, closeModal, openLogin }) => {
                     {/* Manual Input for "Program Head" */}
                     {designation && designation.includes("Program Head") && (
                       <div className="relative mt-4">
-                        <input
+                        <select
                           {...register("customInput")}
                           type="text"
                           id="customInput"
@@ -455,18 +451,81 @@ const Register = ({ modal, closeModal, openLogin }) => {
                             setCustomDesignation(e.target.value);
                           }}
                           // onChange={handleCustomInputChange}
-                          className="block pb-2 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-blue-600 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-                        />
-                        <label
+                          className="block p-2.5 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 border-blue-600 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                        >
+                          <option value="" defaultValue>
+                            Select Program
+                          </option>
+                          {programs?.map(({ name, abbreviation, id }) => (
+                            <option key={id} value={abbreviation}>
+                              {name}
+                            </option>
+                          ))}
+                        </select>
+                        {/* <label
                           htmlFor="customInput"
                           className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"
                         >
                           Program
-                        </label>
+                        </label> */}
                       </div>
                     )}
                     {designationError && (
                       <span className="text-red-500">{designationError}</span>
+                    )}
+                    {designation === "Regular Faculty" && (
+                      <>
+                        <div className="flex flex-col">
+                          <div className="relative mt-4">
+                            <select
+                              {...register("employmentStatus")}
+                              type="text"
+                              id="employmentStatus"
+                              className="border-gray-300  block pb-2 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                              required
+                            >
+                              <option value="" defaultValue>
+                                Select Employment Status
+                              </option>
+                              <option value="Temporary">Temporary</option>
+                              <option value="Permanent">Permanent</option>
+                            </select>
+                            <label
+                              htmlFor="employmentStatus"
+                              className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"
+                            >
+                              Employment Status
+                            </label>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                    {designation === "Visiting Lecturer" && (
+                      <>
+                        <div className="flex flex-col">
+                          <div className="relative mt-4">
+                            <select
+                              {...register("employmentStatus")}
+                              type="text"
+                              id="employmentStatus"
+                              className="border-gray-300  block pb-2 pt-4 w-full text-sm text-gray-900 bg-transparent rounded-lg border-1 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                              required
+                            >
+                              <option value="" defaultValue>
+                                Select Employment Status
+                              </option>
+                              <option value="Full Time">Full Time</option>
+                              <option value="Part Time">Part Time</option>
+                            </select>
+                            <label
+                              htmlFor="employmentStatus"
+                              className="absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white dark:bg-gray-900 px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1"
+                            >
+                              Employment Status
+                            </label>
+                          </div>
+                        </div>
+                      </>
                     )}
                   </div>
                   <div className="flex flex-col mt-4">
@@ -593,9 +652,6 @@ const Register = ({ modal, closeModal, openLogin }) => {
           </div>
         </div>
       )}
-      {/* {modal && ( */}
-
-      {/* )} */}
     </>
   );
 };

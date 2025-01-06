@@ -8,6 +8,7 @@ import staffReducer from "../services/staffSlice";
 import analyticsReducer from "../services/analyticsSlice";
 import designationReducer from "../services/designationSlice";
 import campusReducer from "../services/campusSlice";
+import programReducer from "../services/programSlice";
 
 export const store = configureStore({
   reducer: {
@@ -20,5 +21,6 @@ export const store = configureStore({
     analytics: analyticsReducer,
     designation: designationReducer,
     campus: campusReducer,
+    program: programReducer,
   },
 });

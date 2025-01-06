@@ -257,6 +257,7 @@ const UploadDocuments = () => {
     formData.append("user_email", user?.email);
     formData.append("route", JSON.stringify(route));
     formData.append("action", "uploaded");
+    formData.append("designation", user?.designation);
 
     try {
       const response = await api.post("/document/upload", formData);
@@ -278,17 +279,21 @@ const UploadDocuments = () => {
           switch (error.path) {
             case "tracking_number":
               setTrackingNumberError(error.msg);
+              toast.error(error.msg);
               break;
             case "document_name":
               setDocumentNameError(error.msg);
+              toast.error(error.msg);
               break;
             case "document_type":
+              toast.error(error.msg);
               setDocumentTypeError(error.msg);
               break;
             // case "route":
             //   setRouteError(error.msg);
             //   break;
             case "file_type":
+              toast.error(error.msg);
               setFileTypeError(error.msg);
               break;
             default:
