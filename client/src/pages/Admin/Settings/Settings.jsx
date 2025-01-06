@@ -198,23 +198,33 @@ const Settings = () => {
                   ) : (
                     <>
                       <span>{designation.name}</span>
-                      <div className="flex items-center gap-2">
-                        <button
-                          type="button"
-                          onClick={() => handleEditDesignation(designation)}
-                          className="p-2 text-lg bg-yellow-500 bg-blue-500 hover:bg-blue-600 text-white rounded-lg hover:bg-yellow-600"
-                        >
-                          <FaEdit />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() =>
-                            handleDeleteDesignation(designation.id)
-                          }
-                          className="p-2 text-lg bg-red-500 text-white rounded-lg hover:bg-red-600"
-                        >
-                          <MdDelete />
-                        </button>
+                      <div className="relative flex items-center gap-2">
+                        <div className="relative group">
+                          <button
+                            type="button"
+                            onClick={() => handleEditDesignation(designation)}
+                            className="p-2 text-lg bg-blue-500 hover:bg-blue-600 text-white rounded-lg"
+                          >
+                            <FaEdit />
+                          </button>
+                          <span className="absolute top-[-1.5rem] left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs font-medium px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            Edit
+                          </span>
+                        </div>
+                        <div className="relative group">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              handleDeleteDesignation(designation.id)
+                            }
+                            className="p-2 text-lg bg-red-500 hover:bg-red-600 text-white rounded-lg"
+                          >
+                            <MdDelete />
+                          </button>
+                          <span className="absolute top-[-1.5rem] left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs font-medium px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            Delete
+                          </span>
+                        </div>
                       </div>
                     </>
                   )}
@@ -286,21 +296,31 @@ const Settings = () => {
                   ) : (
                     <>
                       <span>{campus.name}</span>
-                      <div className="flex items-center gap-2">
-                        <button
-                          type="button"
-                          onClick={() => handleEditCampus(campus)}
-                          className="p-2 text-lg bg-yellow-500 bg-blue-500 hover:bg-blue-600 text-white rounded-lg hover:bg-yellow-600"
-                        >
-                          <FaEdit />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => handleDeleteCampus(campus.id)}
-                          className="p-2 text-lg bg-red-500 text-white rounded-lg hover:bg-red-600"
-                        >
-                          <MdDelete />
-                        </button>
+                      <div className="relative flex gap-4">
+                        <div className="relative group flex  items-center">
+                          <button
+                            type="button"
+                            onClick={() => handleEditCampus(campus)}
+                            className="p-2 text-lg bg-blue-500 hover:bg-blue-600 text-white rounded-lg"
+                          >
+                            <FaEdit />
+                          </button>
+                          <span className="absolute top-[-1.5rem] left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs font-medium px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            Edit
+                          </span>
+                        </div>
+                        <div className="relative group flex flex-col items-center">
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteCampus(campus.id)}
+                            className="p-2 text-lg bg-red-500 hover:bg-red-600 text-white rounded-lg"
+                          >
+                            <MdDelete />
+                          </button>
+                          <span className="absolute top-[-1.5rem] left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs font-medium px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            Delete
+                          </span>
+                        </div>
                       </div>
                     </>
                   )}
@@ -425,20 +445,32 @@ const Settings = () => {
                       {program.abbreviation} ({program.name})
                     </span>
                     <div className="flex items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => handleEditProgram(program)}
-                        className="p-2 text-lg bg-yellow-500 bg-blue-500 hover:bg-blue-600 text-white rounded-lg hover:bg-yellow-600"
-                      >
-                        <FaEdit />
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => handleDeleteProgram(program.id)}
-                        className="p-2 text-lg bg-red-500 text-white rounded-lg hover:bg-red-600"
-                      >
-                        <MdDelete />
-                      </button>
+                      <div className="relative flex gap-4">
+                        <div className="relative group flex flex-col items-center">
+                          <button
+                            type="button"
+                            onClick={() => handleEditProgram(program)}
+                            className="p-2 text-lg bg-blue-500 hover:bg-blue-600 text-white rounded-lg"
+                          >
+                            <FaEdit />
+                          </button>
+                          <span className="absolute top-[-1.5rem] left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs font-medium px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            Edit
+                          </span>
+                        </div>
+                        <div className="relative group flex flex-col items-center">
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteProgram(program.id)}
+                            className="p-2 text-lg bg-red-500 hover:bg-red-600 text-white rounded-lg"
+                          >
+                            <MdDelete />
+                          </button>
+                          <span className="absolute top-[-1.5rem] left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs font-medium px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            Delete
+                          </span>
+                        </div>
+                      </div>
                     </div>
                   </>
                 )}
