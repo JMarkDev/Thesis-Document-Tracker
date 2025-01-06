@@ -191,7 +191,7 @@ const CampusAdminTable = ({ campusAdmin, handleFetchUpdate }) => {
                           : getStatus(status)}
                       </span>
                     </td>
-                    <td className="px-4 py-4 flex gap-3 justify-center items-center">
+                    {/* <td className="px-4 py-4 flex gap-3 justify-center items-center">
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
@@ -239,6 +239,74 @@ const CampusAdminTable = ({ campusAdmin, handleFetchUpdate }) => {
                       </button>
 
                       {}
+                    </td> */}
+                    <td className="px-4 py-4 flex gap-3 justify-center items-center">
+                      <div className="relative group">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleApprove({ id, email });
+                          }}
+                          className={`${
+                            status === statusList.verified
+                              ? "visible"
+                              : "invisible"
+                          } p-2 text-lg bg-green-500 hover:bg-green-800 text-white rounded-lg`}
+                        >
+                          <FaCheckCircle className="h-5 w-5" />
+                        </button>
+                        <span className="absolute top-[-1.5rem] left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs font-medium px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          Approve
+                        </span>
+                      </div>
+
+                      <div className="relative group">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/user-details/${id}`);
+                          }}
+                          className="p-2 text-lg bg-[#fca326] hover:bg-[#f58e40] text-white rounded-lg"
+                        >
+                          <FaEye className="h-5 w-5" />
+                        </button>
+                        <span className="absolute top-[-1.5rem] left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs font-medium px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          View
+                        </span>
+                      </div>
+
+                      <div className="relative group">
+                        <button
+                          onClick={(e) => {
+                            openEditModal(id);
+                            e.stopPropagation();
+                          }}
+                          className="p-2 md:text-lg text-sm bg-[#3577c2] hover:bg-[#2d4199] text-white rounded-lg"
+                        >
+                          <FaRegEdit className="h-5 w-5" />
+                        </button>
+                        <span className="absolute top-[-1.5rem] left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs font-medium px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          Edit
+                        </span>
+                      </div>
+
+                      <div className="relative group">
+                        <button
+                          onClick={(e) => {
+                            openDeleteModal({
+                              id,
+                              name: `${firstName} ${middleInitial}. ${lastName}`,
+                            });
+                            e.stopPropagation();
+                          }}
+                          className="p-2 md:text-lg text-sm hover:bg-red-700 bg-red-500 text-white rounded-lg"
+                        >
+                          <FaTrashAlt className="h-5 w-5" />
+                        </button>
+                        <span className="absolute top-[-1.5rem] left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs font-medium px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          Delete
+                        </span>
+                      </div>
                     </td>
                   </tr>
                 )

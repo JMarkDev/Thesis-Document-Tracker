@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaEye, FaRegEdit, FaTrashAlt, FaCheckCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
@@ -78,6 +78,13 @@ const RegistrarTable = ({ registrarUser, handleFetchUpdate }) => {
         console.log(error);
       });
   };
+
+  useEffect(() => {
+    if (!editModal || !deleteModal) {
+      handleFetchUpdate(); // Fetch data again after modal closes
+    }
+  }, [editModal, deleteModal, handleFetchUpdate]);
+
   return (
     <>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -191,7 +198,7 @@ const RegistrarTable = ({ registrarUser, handleFetchUpdate }) => {
                           : getStatus(status)}
                       </span>
                     </td>
-                    <td className="px-4 py-4 flex gap-3 justify-center items-center">
+                    {/* <td className="px-4 py-4 flex gap-3 justify-center items-center">
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
@@ -239,6 +246,78 @@ const RegistrarTable = ({ registrarUser, handleFetchUpdate }) => {
                       </button>
 
                       {}
+                    </td> */}
+                    <td className="px-4 py-4 flex gap-4 justify-center items-center relative">
+                      {/* Approve Button */}
+                      <div className="relative group flex flex-col items-center">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleApprove({ id, email });
+                          }}
+                          className={`${
+                            status === statusList.verified
+                              ? "visible"
+                              : "invisible"
+                          } p-2 text-lg bg-green-500 hover:bg-green-800 text-white rounded-lg`}
+                        >
+                          <FaCheckCircle className="h-5 w-5" />
+                        </button>
+                        <span className="absolute top-[-1.5rem] left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs font-medium px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          Approve
+                        </span>
+                      </div>
+
+                      {/* View Button */}
+                      <div className="relative group flex flex-col items-center">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/user-details/${id}`);
+                          }}
+                          className="p-2 text-lg bg-[#fca326] hover:bg-[#f58e40] text-white rounded-lg"
+                        >
+                          <FaEye className="h-5 w-5" />
+                        </button>
+                        <span className="absolute top-[-1.5rem] left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs font-medium px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          View
+                        </span>
+                      </div>
+
+                      {/* Edit Button */}
+                      <div className="relative group flex flex-col items-center">
+                        <button
+                          onClick={(e) => {
+                            openEditModal(id);
+                            e.stopPropagation();
+                          }}
+                          className="p-2 md:text-lg text-sm bg-[#3577c2] hover:bg-[#2d4199] text-white rounded-lg"
+                        >
+                          <FaRegEdit className="h-5 w-5" />
+                        </button>
+                        <span className="absolute top-[-1.5rem] left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs font-medium px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          Edit
+                        </span>
+                      </div>
+
+                      {/* Delete Button */}
+                      <div className="relative group flex flex-col items-center">
+                        <button
+                          onClick={(e) => {
+                            openDeleteModal({
+                              id,
+                              name: `${firstName} ${middleInitial}. ${lastName}`,
+                            });
+                            e.stopPropagation();
+                          }}
+                          className="p-2 md:text-lg text-sm hover:bg-red-700 bg-red-500 text-white rounded-lg"
+                        >
+                          <FaTrashAlt className="h-5 w-5" />
+                        </button>
+                        <span className="absolute top-[-1.5rem] left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs font-medium px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          Delete
+                        </span>
+                      </div>
                     </td>
                   </tr>
                 )

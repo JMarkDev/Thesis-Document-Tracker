@@ -113,7 +113,7 @@ const DocumentWorkflow = ({ data }) => {
                     {" "}
                     {dateFormat(createdAt)}
                   </td>
-                  <td className="px-6 py-4 flex gap-3 justify-center items-center">
+                  {/* <td className="px-6 py-4 flex gap-3 justify-center items-center">
                     <button
                       onClick={(e) => {
                         handleWorkflow(id);
@@ -144,6 +144,53 @@ const DocumentWorkflow = ({ data }) => {
                     >
                       <MdDelete className="h-5 w-5" />
                     </button>
+                  </td> */}
+                  <td className="px-6 py-4 flex gap-3 justify-center items-center">
+                    <div className="relative group">
+                      <button
+                        onClick={(e) => {
+                          handleWorkflow(id);
+                          e.stopPropagation();
+                        }}
+                        className="p-2 md:text-lg text-sm bg-[#fca326] hover:bg-[#f58e40] text-white rounded-lg"
+                      >
+                        <FaEye className="h-5 w-5" />
+                      </button>
+                      <span className="absolute top-[-1.5rem] left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs font-medium px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        View
+                      </span>
+                    </div>
+
+                    <div className="relative group">
+                      <button
+                        onClick={(e) => {
+                          handleEdit(id);
+                          e.stopPropagation();
+                        }}
+                        className="p-2 md:text-lg text-sm bg-[#3577c2] hover:bg-[#2d4199] text-white rounded-lg"
+                      >
+                        <FaRegEdit className="h-5 w-5" />
+                      </button>
+                      <span className="absolute top-[-1.5rem] left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs font-medium px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        Edit
+                      </span>
+                    </div>
+
+                    <div className="relative group">
+                      <button
+                        onClick={(e) => {
+                          openModal(id);
+                          setTitle(document_type);
+                          e.stopPropagation();
+                        }}
+                        className="p-2 md:text-lg text-sm hover:bg-red-700 bg-red-500 text-white rounded-lg"
+                      >
+                        <MdDelete className="h-5 w-5" />
+                      </button>
+                      <span className="absolute top-[-1.5rem] left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs font-medium px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        Delete
+                      </span>
+                    </div>
                   </td>
                 </tr>
               ))}

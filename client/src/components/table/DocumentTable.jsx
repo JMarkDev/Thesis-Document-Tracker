@@ -282,7 +282,7 @@ const Table = ({ documents, handleSort }) => {
           <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead className="text-xs text-gray-700 uppercase bg-gray-300 dark:bg-gray-700 dark:text-gray-400">
               <tr>
-                <th scope="col" className="px-6 py-3 whitespace-nowrap">
+                <th scope="col" className="px-4 py-3 whitespace-nowrap">
                   <div className="flex items-center  whitespace-nowrap">
                     ID
                     <a href="#" onClick={() => handleSort("id")}>
@@ -298,7 +298,7 @@ const Table = ({ documents, handleSort }) => {
                     </a>
                   </div>
                 </th>
-                <th scope="col" className="px-6 py-3">
+                <th scope="col" className="px-4 py-3">
                   <div className="flex items-center  whitespace-nowrap">
                     DOCUMENT NAME
                     <a href="#" onClick={() => handleSort("document_name")}>
@@ -314,8 +314,24 @@ const Table = ({ documents, handleSort }) => {
                     </a>
                   </div>
                 </th>
+                <th scope="col" className="px-4 py-3">
+                  <div className="flex items-center  whitespace-nowrap">
+                    DOCUMENT TYPE
+                    <a href="#" onClick={() => handleSort("document_type")}>
+                      <svg
+                        className="w-3 h-3 ms-1.5"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M8.574 11.024h6.852a2.075 2.075 0 0 0 1.847-1.086 1.9 1.9 0 0 0-.11-1.986L13.736 2.9a2.122 2.122 0 0 0-3.472 0L6.837 7.952a1.9 1.9 0 0 0-.11 1.986 2.074 2.074 0 0 0 1.847 1.086Zm6.852 1.952H8.574a2.072 2.072 0 0 0-1.847 1.087 1.9 1.9 0 0 0 .11 1.985l3.426 5.05a2.123 2.123 0 0 0 3.472 0l3.427-5.05a1.9 1.9 0 0 0 .11-1.985 2.074 2.074 0 0 0-1.846-1.087Z" />
+                      </svg>
+                    </a>
+                  </div>
+                </th>
 
-                <th scope="col" className="px-6 py-3">
+                <th scope="col" className="px-4 py-3">
                   <div className="flex items-center  whitespace-nowrap">
                     UPLOADED BY
                     <a href="#" onClick={() => handleSort("uploaded_by")}>
@@ -331,7 +347,7 @@ const Table = ({ documents, handleSort }) => {
                     </a>
                   </div>
                 </th>
-                <th scope="col" className="px-6 py-3">
+                <th scope="col" className="px-4 py-3">
                   <div className="flex items-center  whitespace-nowrap">
                     STATUS
                     {/* <a href="#" onClick={() => handleSort("status")}>
@@ -347,7 +363,7 @@ const Table = ({ documents, handleSort }) => {
                     </a> */}
                   </div>
                 </th>
-                <th scope="col" className="px-6 py-3">
+                <th scope="col" className="px-4 py-3">
                   <div className="flex items-center  whitespace-nowrap">
                     DATE
                     <a href="#" onClick={() => handleSort("createdAt")}>
@@ -377,7 +393,7 @@ const Table = ({ documents, handleSort }) => {
                     id,
                     tracking_number,
                     document_name,
-                    // document_type,
+                    document_type,
                     // file_type,
                     uploaded_by,
                     status,
@@ -393,24 +409,25 @@ const Table = ({ documents, handleSort }) => {
                   >
                     <th
                       scope="row"
-                      className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                      className="px-4 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     >
                       {index + 1}
                     </th>
-                    {/* <td className="px-6 py-4 whitespace-nowrap">
+                    {/* <td className="px-4 py-4 whitespace-nowrap">
                     {tracking_number}
                   </td> */}
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-4 py-4 whitespace-nowrap overflow-hidden text-ellipsis max-w-[200px]">
                       {document_name}
                     </td>
-                    {/* <td className="px-6 py-4 whitespace-nowrap">
+
+                    <td className="px-4 py-4 whitespace-nowrap overflow-hidden text-ellipsis max-w-[200px]">
                       {document_type}
-                    </td> */}
-                    {/* <td className="px-6 py-4 whitespace-nowrap">{file_type}</td> */}
-                    <td className="px-6 py-4 whitespace-nowrap">
+                    </td>
+                    {/* <td className="px-4 py-4 whitespace-nowrap">{file_type}</td> */}
+                    <td className="px-4 py-4 whitespace-nowrap">
                       {uploaded_by}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap ">
+                    <td className="px-4 py-4 whitespace-nowrap ">
                       <p
                         className={`px-2 py-1 text-center rounded-full text-sm ${
                           status === "Completed"
@@ -434,11 +451,11 @@ const Table = ({ documents, handleSort }) => {
                         {/* {getDocumentStatus(status)} */}
                       </p>
                     </td>
-                    <td className="px-6 w-5 py-4 whitespace-nowrap">
+                    <td className="px-4 w-5 py-4 whitespace-nowrap">
                       {" "}
                       {dateFormat(createdAt)}
                     </td>
-                    <td className=" py-4 flex gap-3">
+                    {/* <td className=" py-4 flex gap-3">
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
@@ -478,6 +495,74 @@ const Table = ({ documents, handleSort }) => {
                           >
                             <FaRegEdit className="h-5 w-5" />
                           </button>
+                        ))}
+                    </td> */}
+                    <td className="py-4 flex gap-3">
+                      {/* View Button */}
+                      <div className="relative group">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleNavigate(id);
+                          }}
+                          className="p-2 text-lg bg-[#fca326] hover:bg-[#f58e40] text-white rounded-lg"
+                        >
+                          <FaEye className="h-5 w-5" />
+                        </button>
+                        <span className="absolute top-[-1.5rem] left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs font-medium px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          View
+                        </span>
+                      </div>
+
+                      {/* Download Button */}
+                      <div className="relative group">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDownload(tracking_number);
+                          }}
+                          className="p-2 text-lg bg-[#3b9c3e] hover:bg-[#47a632] text-white rounded-lg"
+                        >
+                          <FaFileDownload className="h-5 w-5" />
+                        </button>
+                        <span className="absolute top-[-1.5rem] left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs font-medium px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          Download
+                        </span>
+                      </div>
+
+                      {/* Print Button */}
+                      <div className="relative group">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            printMetadata(tracking_number);
+                          }}
+                          className="p-2 text-lg bg-[#3577c2] hover:bg-[#2d4199] text-white rounded-lg"
+                        >
+                          <IoMdPrint className="h-5 w-5" />
+                        </button>
+                        <span className="absolute top-[-1.5rem] left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs font-medium px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          Print
+                        </span>
+                      </div>
+
+                      {/* Conditional Update Button */}
+                      {user?.role === rolesList.faculty ||
+                        (campusUploader && status === "Returned" && (
+                          <div className="relative group">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleUpdate(id);
+                              }}
+                              className="p-2 text-lg bg-red-500 hover:bg-red-700 text-white rounded-lg"
+                            >
+                              <FaRegEdit className="h-5 w-5" />
+                            </button>
+                            <span className="absolute top-[-1.5rem] left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs font-medium px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                              Update
+                            </span>
+                          </div>
                         ))}
                     </td>
                   </tr>

@@ -6,13 +6,15 @@ import ProfileModal from "../ProfileModal";
 import api from "../../api/axios";
 import userIcon from "../../assets/images/user (1).png";
 import DeleteModal from "../DeleteModal";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { deleteUser, approveFaculty } from "../../services/usersSlice";
 import { toastUtils } from "../../hooks/useToast";
 import { getStatus } from "../../utils/getStatus";
 import statusList from "../../constants/statusList";
 import Loading from "../loader/loginloader/LoginLoading";
 import NoData from "../NoData";
+import { getUserData } from "../../services/authSlice";
+import rolesList from "../../constants/rolesList";
 
 const FacultyTable = ({ faculty, handleFetchFaculty }) => {
   const navigate = useNavigate();
@@ -23,6 +25,7 @@ const FacultyTable = ({ faculty, handleFetchFaculty }) => {
   const [selectedEsuCampus, setSelectedEsuCampus] = useState(null);
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
+  const user = useSelector(getUserData);
 
   const openModal = (image) => {
     setSelectedImage(image);
@@ -189,7 +192,7 @@ const FacultyTable = ({ faculty, handleFetchFaculty }) => {
                           : getStatus(status)}
                       </span>
                     </td>
-                    <td className="px-6 py-4 flex gap-3 justify-center items-center relative">
+                    {/* <td className="px-6 py-4 flex gap-3 justify-center items-center relative">
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
@@ -212,20 +215,82 @@ const FacultyTable = ({ faculty, handleFetchFaculty }) => {
                       >
                         <FaEye className="h-5 w-5" />
                       </button>
+                      {user?.role === rolesList.admin ||
+                      user?.role === rolesList.admin_staff ? (
+                        <button
+                          onClick={(e) => {
+                            openDeleteModal({
+                              id,
+                              name: `${firstName} ${middleInitial}. ${lastName}`,
+                            });
+                            e.stopPropagation();
+                          }}
+                          className="p-2 text-lg hover:bg-red-700 bg-red-500 text-white rounded-lg"
+                        >
+                          <FaTrashAlt className="h-5 w-5" />
+                        </button>
+                      ) : null}
+                    </td> */}
+                    <td className="px-6 py-4 flex gap-4 justify-center items-center relative">
+                      {/* Approve Button */}
+                      <div className="relative group flex flex-col items-center">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleApprove({ id, email });
+                          }}
+                          className={`${
+                            status === statusList.verified
+                              ? "visible"
+                              : "invisible"
+                          } p-2 text-lg bg-green-500 hover:bg-green-800 text-white rounded-lg`}
+                        >
+                          <FaCheckCircle className="h-5 w-5" />
+                        </button>
+                        <span className="absolute top-[-1.5rem] left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs font-medium px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          Approve
+                        </span>
+                      </div>
 
-                      <button
-                        onClick={(e) => {
-                          openDeleteModal({
-                            id,
-                            name: `${firstName} ${middleInitial}. ${lastName}`,
-                          });
-                          e.stopPropagation();
-                        }}
-                        className="p-2 text-lg hover:bg-red-700 bg-red-500 text-white rounded-lg"
-                      >
-                        <FaTrashAlt className="h-5 w-5" />
-                      </button>
+                      {/* View Button */}
+                      <div className="relative group flex flex-col items-center">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            navigate(`/user-details/${id}`);
+                          }}
+                          className="p-2 text-lg bg-[#fca326] hover:bg-[#f58e40] text-white rounded-lg"
+                        >
+                          <FaEye className="h-5 w-5" />
+                        </button>
+                        <span className="absolute top-[-1.5rem] left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs font-medium px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          View
+                        </span>
+                      </div>
+
+                      {/* Delete Button */}
+                      {user?.role === rolesList.admin ||
+                      user?.role === rolesList.admin_staff ? (
+                        <div className="relative group flex flex-col items-center">
+                          <button
+                            onClick={(e) => {
+                              openDeleteModal({
+                                id,
+                                name: `${firstName} ${middleInitial}. ${lastName}`,
+                              });
+                              e.stopPropagation();
+                            }}
+                            className="p-2 text-lg hover:bg-red-700 bg-red-500 text-white rounded-lg"
+                          >
+                            <FaTrashAlt className="h-5 w-5" />
+                          </button>
+                          <span className="absolute top-[-1.5rem] left-1/2 transform -translate-x-1/2 bg-gray-800 text-white text-xs font-medium px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            Delete
+                          </span>
+                        </div>
+                      ) : null}
                     </td>
+
                     {/* <td className=" py-4 flex gap-3 justify-center items-center">
                     <button
                       onClick={(e) => {

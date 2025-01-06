@@ -263,7 +263,7 @@ const CardModal = ({ isOpen, closeModal, card }) => {
                                   <td className="py-2 px-4 border-b text-nowrap text-gray-700">
                                     {doc.tracking_number}
                                   </td>
-                                  <td className="py-2 px-4 border-b text-nowrap text-gray-700">
+                                  <td className="py-2 px-4 border-b  whitespace-nowrap overflow-hidden text-ellipsis max-w-[200px] text-gray-700">
                                     {doc.document_name}
                                   </td>
                                   <td className="py-2 px-4 border-b text-nowrap text-gray-700">
